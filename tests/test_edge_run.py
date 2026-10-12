@@ -39,6 +39,7 @@ def test_engine_runs_end_to_end(tmp_path, monkeypatch):
     s = edge_run.run(2025, log=lambda *_: None)
     assert s["counts"]["tells"] > 0 and s["counts"]["stuff_pitches"] > 0
     assert "slope_per_0.1_auc" in s["tell_cost"]["2025"]
-    t = pd.read_parquet(tmp_path / "edge" / "2025" / "tells.parquet")
+    assert s["seasons"] == [2024, 2025] and "2024->2025" in s["validation"]
+    t = pd.read_parquet(tmp_path / "edge" / "2025" / "tells_2025.parquet")
     planted = t[(t["pitcher"] < 5) & (t["pitch_type"] == "CH")]
     assert (planted["tell_auc"] > 0.85).all()          # the planted changeup tells are found

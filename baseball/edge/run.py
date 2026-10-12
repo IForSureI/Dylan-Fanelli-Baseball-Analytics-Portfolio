@@ -78,8 +78,24 @@ def tell_cost(tells_df: pd.DataFrame, stuff_df: pd.DataFrame) -> dict:
     return out
 
 
+def _available(season: int) -> bool:
+    try:
+        load_season(season, ["game_pk"])
+        return True
+    except FileNotFoundError:
+        return False
+
+
 def run(season: int, log=print) -> dict:
-    prev_season = season - 1
+    """Engine run centered on `season`, using up to two prior seasons for validation and replication.
+
+    - Detectors (tells, shifts, stuff, baselines) report on `season`.
+    - The stuff model is validated on every consecutive pair available (e.g. 2024->2025 and 2025->2026).
+    - The tell-cost test runs in every season available; a finding must hold in all of them.
+    """
+    seasons = [s for s in (season - 2, season - 1, season) if _available(s)]
+    if season not in seasons or season - 1 not in seasons:
+        raise FileNotFoundError(f"Need league data for {season - 1} and {season}. Run: uv run bb pull-league <season>")
     out_dir = OUT_DIR / str(season)
     out_dir.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
@@ -87,44 +103,48 @@ def run(season: int, log=print) -> dict:
     def step(msg):
         log(f"[{time.time() - t0:6.0f}s] {msg}")
 
-    step(f"Loading {prev_season} and {season} league data")
-    prev = phase(load_season(prev_season, COLUMNS))
-    curr = phase(load_season(season, COLUMNS))
-    step(f"  {len(prev):,} and {len(curr):,} regular-season pitches")
+    data, tell_tables, stuff_tables, diags = {}, {}, {}, {}
+    for s_ in seasons:
+        step(f"{s_}: loading")
+        data[s_] = phase(load_season(s_, COLUMNS))
+        step(f"{s_}: {len(data[s_]):,} regular-season pitches; release tells")
+        tell_tables[s_] = tells.league_tells(data[s_])
+        step(f"{s_}: stuff model (cross-fitted by pitcher)")
+        sw = stuff.prepare(data[s_])
+        x, diags[s_] = stuff.fit_crossfit(sw)
+        stuff_tables[s_] = stuff.pitch_table(sw, x)
+        tell_tables[s_].to_parquet(out_dir / f"tells_{s_}.parquet")
+        stuff_tables[s_].to_parquet(out_dir / f"stuff_{s_}.parquet")
 
-    step("Release tells")
-    t_prev, t_curr = tells.league_tells(prev), tells.league_tells(curr)
-    t_prev.to_parquet(out_dir / "tells_prev.parquet"); t_curr.to_parquet(out_dir / "tells.parquet")
-
-    step("Hidden in-season changes")
-    sh = shifts.league_shifts(curr)
+    step(f"{season}: hidden in-season changes")
+    sh = shifts.league_shifts(data[season])
     sh.to_parquet(out_dir / "shifts.parquet")
 
-    step("Stuff model (cross-fitted by pitcher), both seasons")
-    sw_prev, sw_curr = stuff.prepare(prev), stuff.prepare(curr)
-    x_prev, diag_prev = stuff.fit_crossfit(sw_prev)
-    x_curr, diag_curr = stuff.fit_crossfit(sw_curr)
-    st_prev, st_curr = stuff.pitch_table(sw_prev, x_prev), stuff.pitch_table(sw_curr, x_curr)
-    st_prev.to_parquet(out_dir / "stuff_prev.parquet"); st_curr.to_parquet(out_dir / "stuff.parquet")
-    val = stuff.validate(st_prev, st_curr)
-    proj = stuff.project(st_curr, val["blend"])
+    step("Validating the stuff model year to year")
+    validations = {}
+    for a, b in zip(seasons, seasons[1:]):
+        v = stuff.validate(stuff_tables[a], stuff_tables[b])
+        validations[f"{a}->{b}"] = {k: val for k, val in v.items() if k != "matched"}
+    blend = validations[f"{season - 1}->{season}"]["blend"]
+    proj = stuff.project(stuff_tables[season], blend)
     proj.to_parquet(out_dir / "projection.parquet")
 
     step("League baselines")
-    bl = baselines.changes(prev, curr)
+    bl = baselines.changes(data[season - 1], data[season])
     bl.to_parquet(out_dir / "baselines.parquet")
 
-    step("Do release tells cost whiffs? (both seasons, must replicate)")
-    cost = {str(prev_season): tell_cost(t_prev, st_prev), str(season): tell_cost(t_curr, st_curr)}
+    step("Do release tells cost whiffs? (every season)")
+    cost = {str(s_): tell_cost(tell_tables[s_], stuff_tables[s_]) for s_ in seasons}
 
     summary = {
         "season": season,
-        "prev_season": prev_season,
-        "pitches": {str(prev_season): int(len(prev)), str(season): int(len(curr))},
-        "stuff_model": {str(prev_season): diag_prev, str(season): diag_curr},
-        "validation": {k: v for k, v in val.items() if k != "matched"},
+        "seasons": seasons,
+        "pitches": {str(s_): int(len(data[s_])) for s_ in seasons},
+        "stuff_model": {str(s_): diags[s_] for s_ in seasons},
+        "validation": validations,
+        "projection_blend": blend,
         "tell_cost": cost,
-        "counts": {"tells": int(len(t_curr)), "shifts": int(len(sh)), "stuff_pitches": int(len(st_curr))},
+        "counts": {"tells": int(len(tell_tables[season])), "shifts": int(len(sh)), "stuff_pitches": int(len(stuff_tables[season]))},
     }
     (out_dir / "summary.json").write_text(json.dumps(summary, indent=2, default=float))
     step(f"Done. Outputs in {out_dir}")

@@ -5,7 +5,7 @@
   uv run bb arsenal skubal tarik 2025 --phase postseason
   uv run bb compare skubal tarik 2024 2025  his arsenal in two seasons side by side, with significance
   uv run bb pull-league 2025                every pitch of a season, month by month (resumable)
-  uv run bb edge 2025                       run the edge engine on 2024-25 league data
+  uv run bb edge 2026                       run the edge engine on 2026 (2024-25 for validation)
   uv run bb db                              what is in the warehouse
   uv run bb db rebuild                      rebuild the warehouse from the cached pulls in data/raw/
 """
@@ -75,20 +75,21 @@ def cmd_compare(a: argparse.Namespace) -> None:
 def cmd_pull_league(a: argparse.Namespace) -> None:
     import time
 
-    from baseball.ingest.league import SEASON_MONTHS, pull_month
+    from baseball.ingest.league import SEASON_MONTHS, pull_month, recent_months
 
+    refresh = set(SEASON_MONTHS) if a.refresh else set(recent_months(a.season) if a.refresh_recent else [])
     con = warehouse.connect()
     total = 0
     print(f"Pulling every {a.season} pitch, month by month. Finished months are saved and skipped on a re-run.")
     for m in SEASON_MONTHS:
         t0 = time.time()
         try:
-            path, rows, cached = pull_month(a.season, m, refresh=a.refresh)
+            path, rows, cached = pull_month(a.season, m, refresh=m in refresh)
         except Exception as e:  # Savant timeouts happen; keep the months that worked
             print(f"  {a.season}-{m:02d}: failed ({type(e).__name__}: {e}). Re-run the same command to retry.")
             continue
         new = 0
-        if rows:
+        if rows and not cached:  # cached months were loaded when first pulled (bb db rebuild reloads everything)
             new = warehouse.load_pitches(con, pd.read_parquet(path), source="statcast-league", description=path.name)
         total += rows
         state = "cached" if cached else f"pulled in {time.time() - t0:,.0f}s"
@@ -100,10 +101,17 @@ def cmd_edge(a: argparse.Namespace) -> None:
     from baseball.edge.run import run
 
     s = run(a.season)
-    v = s["validation"]
-    print(f"\nStuff model AUC {s['stuff_model'][str(a.season)]['auc']:.3f}. "
-          f"Predicting {a.season} whiff% from {a.season - 1}: actual r = {v['r_actual_prev']:.3f}, "
-          f"expected r = {v['r_xwhiff_prev']:.3f}, blend r = {v['r_blend']:.3f} ({v['matched_pitches']} pitches).")
+    print(f"\nStuff model AUC {s['stuff_model'][str(a.season)]['auc']:.3f}")
+    for pair, v in s["validation"].items():
+        print(f"  {pair}: next-season whiff% from actual r = {v['r_actual_prev']:.3f}, from expected r = "
+              f"{v['r_xwhiff_prev']:.3f}, blend r = {v['r_blend']:.3f} ({v['matched_pitches']} pitches)")
+
+
+def cmd_slim(a: argparse.Namespace) -> None:
+    from baseball.ingest.league import write_slim
+
+    paths = write_slim(a.season)
+    print(f"{a.season}: {len(paths)} slim parts in data/slim/")
 
 
 def cmd_db(a: argparse.Namespace) -> None:
@@ -138,12 +146,17 @@ def main(argv: list[str] | None = None) -> None:
 
     lg = sub.add_parser("pull-league", help="every pitch of a season into the warehouse (resumable)")
     lg.add_argument("season", type=int)
-    lg.add_argument("--refresh", action="store_true", help="download months again even if cached")
+    lg.add_argument("--refresh", action="store_true", help="download every month again even if cached")
+    lg.add_argument("--refresh-recent", action="store_true", help="re-download months that may still be growing")
     lg.set_defaults(func=cmd_pull_league)
 
     e = sub.add_parser("edge", help="run the edge engine on two seasons of league data")
     e.add_argument("season", type=int)
     e.set_defaults(func=cmd_edge)
+
+    sl = sub.add_parser("slim", help="write the compact engine copy of a season (data/slim/)")
+    sl.add_argument("season", type=int)
+    sl.set_defaults(func=cmd_slim)
 
     d = sub.add_parser("db", help="what is in the warehouse")
     d.add_argument("action", nargs="?", choices=["rebuild"])
