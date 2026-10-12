@@ -1,7 +1,7 @@
 [project]
 name = "baseball"
 version = "0.1.0"
-description = "Baseball analytics workspace: Statcast pulls, arsenal tables, and analysis notebooks."
+description = "Dylan Fanelli's baseball operations workspace: data, evaluation, development, roster and business tools."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -13,6 +13,9 @@ dependencies = [
     "pybaseball>=2.2.7",
     "seaborn>=0.13",
 ]
+
+[project.scripts]
+bb = "baseball.cli:main"
 
 [dependency-groups]
 dev = ["pytest>=8"]

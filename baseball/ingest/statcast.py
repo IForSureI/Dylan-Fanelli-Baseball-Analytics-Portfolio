@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pandas as pd
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+DATA_DIR = Path(__file__).resolve().parents[2] / "data"
 RAW_DIR = DATA_DIR / "raw"
 
 
@@ -28,7 +28,10 @@ def lookup_mlbam(last: str, first: str) -> int:
 
 
 def pitcher_season(mlbam_id: int, season: int, refresh: bool = False) -> pd.DataFrame:
-    """All Statcast pitches thrown by one pitcher in one season (regular season and postseason)."""
+    """All Statcast pitches thrown by one pitcher in one season.
+
+    Includes spring training and the postseason; filter with baseball.phases.phase() before analysis.
+    """
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     path = RAW_DIR / f"pitcher_{mlbam_id}_{season}.parquet"
     if path.exists() and not refresh:

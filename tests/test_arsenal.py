@@ -1,8 +1,8 @@
 import pandas as pd
 import pytest
 
-from baseball.arsenal import arsenal, arsenal_sql
-from baseball.sample import fictional_pitcher
+from baseball.evaluation.arsenal import arsenal, arsenal_sql, outcomes, usage_by_hand
+from baseball.ingest.sample import fictional_pitcher
 
 
 def _tiny() -> pd.DataFrame:
@@ -59,3 +59,26 @@ def test_rejects_multiple_pitchers():
     p = pd.concat([_tiny(), _tiny().assign(pitcher=2)])
     with pytest.raises(ValueError):
         arsenal(p)
+
+
+def test_outcomes_hand_checked():
+    t = _tiny().assign(
+        zone=[5, 5, 12, 13, 5],                     # FF: 2 in zone, 2 out; the foul (zone 12) is a chase
+        type=["S", "S", "S", "B", "X"],
+        launch_speed=[None, None, None, None, 100.0],
+        estimated_woba_using_speedangle=[None, None, None, None, 0.6],
+        delta_run_exp=[-0.05, -0.05, -0.03, 0.04, 0.10],
+        release_extension=6.5,
+    )
+    o = outcomes(t, min_n=1).set_index("pitch_type")
+    assert o.loc["FF", "zone_pct"] == 50.0
+    assert o.loc["FF", "chase_pct"] == 50.0       # 1 chase / 2 pitches out of the zone
+    assert o.loc["FF", "rv_per100"] == 2.25       # -(-0.09)/4 x 100
+    assert o.loc["SL", "hard_hit_pct"] == 100.0
+    assert o.loc["SL", "xwoba_con"] == 0.6
+
+
+def test_usage_by_hand_sums_to_100():
+    u = usage_by_hand(fictional_pitcher(), min_n=1)
+    assert abs(u["vs_LHH_pct"].sum() - 100) < 0.5
+    assert abs(u["vs_RHH_pct"].sum() - 100) < 0.5

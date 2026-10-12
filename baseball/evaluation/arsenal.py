@@ -121,3 +121,62 @@ def arsenal_sql(pitches: pd.DataFrame, min_n: int = 20) -> pd.DataFrame:
     con = duckdb.connect()
     con.register("pitches", pitches)
     return con.execute(ARSENAL_SQL, {"min_n": min_n}).df()
+
+
+OUTCOME_COLUMNS = ["pitch_type", "n", "ext_ft", "zone_pct", "chase_pct", "bip", "xwoba_con", "hard_hit_pct", "rv_per100"]
+
+
+def outcomes(pitches: pd.DataFrame, min_n: int = 20) -> pd.DataFrame:
+    """What happens when he throws each pitch: location, chase, contact quality and run value.
+
+    - ext_ft       : mean release extension (ft)
+    - zone_pct     : pitches in Statcast zones 1-9 / all pitches
+    - chase_pct    : swings at pitches outside the zone / pitches outside the zone
+    - bip          : balls in play (the sample behind the next two columns)
+    - xwoba_con    : mean expected wOBA on balls in play (a model from exit velocity and launch angle)
+    - hard_hit_pct : balls in play at 95+ mph / balls in play
+    - rv_per100    : runs saved per 100 pitches, from Statcast delta_run_exp (positive = good for the pitcher)
+    """
+    p = pitches.dropna(subset=["pitch_type"]).copy()
+    p["in_zone"] = p["zone"].between(1, 9)
+    p["out_zone"] = p["zone"].notna() & ~p["in_zone"]
+    p["is_swing"] = p["description"].isin(SWINGS)
+    p["chase"] = p["out_zone"] & p["is_swing"]
+    p["is_bip"] = p["type"].eq("X")
+    p["hard"] = p["is_bip"] & p["launch_speed"].ge(95)
+    p["xwoba_bip"] = p["estimated_woba_using_speedangle"].where(p["is_bip"])
+
+    out = (
+        p.groupby("pitch_type")
+        .agg(
+            n=("pitch_type", "size"),
+            ext_ft=("release_extension", "mean"),
+            in_zone=("in_zone", "sum"),
+            out_zone=("out_zone", "sum"),
+            chases=("chase", "sum"),
+            bip=("is_bip", "sum"),
+            hard=("hard", "sum"),
+            xwoba_con=("xwoba_bip", "mean"),
+            rv=("delta_run_exp", "sum"),
+        )
+        .reset_index()
+    )
+    out["zone_pct"] = 100 * out["in_zone"] / out["n"]
+    out["chase_pct"] = 100 * out["chases"] / out["out_zone"].replace(0, np.nan)
+    out["hard_hit_pct"] = 100 * out["hard"] / out["bip"].replace(0, np.nan)
+    out["rv_per100"] = -100 * out["rv"] / out["n"]  # delta_run_exp is from the offense's side, so flip it
+
+    out = out[out["n"] >= min_n].sort_values("n", ascending=False)
+    return out[OUTCOME_COLUMNS].round({"ext_ft": 2, "zone_pct": 1, "chase_pct": 1, "xwoba_con": 3, "hard_hit_pct": 1, "rv_per100": 2}).reset_index(drop=True)
+
+
+def usage_by_hand(pitches: pd.DataFrame, min_n: int = 20) -> pd.DataFrame:
+    """Usage % of each pitch type against left-handed (L) and right-handed (R) hitters."""
+    p = pitches.dropna(subset=["pitch_type"])
+    keep = p["pitch_type"].value_counts().loc[lambda s: s >= min_n].index
+    table = pd.crosstab(p["pitch_type"], p["stand"], normalize="columns").mul(100).round(1)
+    table = table.loc[table.index.isin(keep)]
+    table.columns = [f"vs_{c}HH_pct" for c in table.columns]
+    counts = p["stand"].value_counts()
+    table.attrs["pitches_vs"] = counts.to_dict()
+    return table.sort_values(table.columns[-1], ascending=False).reset_index()
