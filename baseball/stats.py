@@ -31,3 +31,27 @@ def two_proportion(k1: int, n1: int, k2: int, n2: int) -> tuple[float, float]:
         return (0.0, 1.0)
     z = (k2 / n2 - k1 / n1) / se
     return (z, math.erfc(abs(z) / math.sqrt(2)))
+
+
+def benjamini_hochberg(p_values) -> list[float]:
+    """False-discovery-rate q-values for a list of p-values (NaN stays NaN).
+
+    When hundreds of changes are each tested, about 5% clear p < 0.05 by chance alone. A q-value is
+    the expected share of false findings among everything at least that significant, so q < 0.10
+    means about 1 in 10 of those findings is noise.
+    """
+    import numpy as np
+
+    p = np.asarray(p_values, dtype=float)
+    q = np.full_like(p, np.nan)
+    ok = ~np.isnan(p)
+    if not ok.any():
+        return q.tolist()
+    pv = p[ok]
+    order = np.argsort(pv)
+    ranked = pv[order] * len(pv) / np.arange(1, len(pv) + 1)
+    ranked = np.minimum.accumulate(ranked[::-1])[::-1]
+    out = np.empty_like(pv)
+    out[order] = np.minimum(ranked, 1.0)
+    q[ok] = out
+    return q.tolist()

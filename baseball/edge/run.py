@@ -113,12 +113,23 @@ def run(season: int, log=print) -> dict:
         sw = stuff.prepare(data[s_])
         x, diags[s_] = stuff.fit_crossfit(sw)
         stuff_tables[s_] = stuff.pitch_table(sw, x)
+        if s_ == season:
+            swings_curr = sw.assign(x_whiff=x)
         tell_tables[s_].to_parquet(out_dir / f"tells_{s_}.parquet")
         stuff_tables[s_].to_parquet(out_dir / f"stuff_{s_}.parquet")
 
     step(f"{season}: hidden in-season changes")
-    sh = shifts.league_shifts(data[season])
+    sh = shifts.score_shifts(shifts.league_shifts(data[season]), swings_curr)
     sh.to_parquet(out_dir / "shifts.parquet")
+
+    step("Pitches that beat (or trail) their stuff across seasons")
+    pg = stuff.persistent_gaps(stuff_tables)
+    pg.to_parquet(out_dir / "persistent_gaps.parquet")
+    gap_persistence = {}
+    for a_, b_ in zip(seasons, seasons[1:]):
+        m = stuff_tables[a_].merge(stuff_tables[b_], on=["pitcher", "pitch_type"], suffixes=("_a", "_b"))
+        m = m[(m["swings_a"] >= 60) & (m["swings_b"] >= 60)]
+        gap_persistence[f"{a_}->{b_}"] = {"pitches": int(len(m)), "r_gap": float(np.corrcoef(m["gap_a"], m["gap_b"])[0, 1])}
 
     step("Validating the stuff model year to year")
     validations = {}
@@ -144,6 +155,7 @@ def run(season: int, log=print) -> dict:
         "validation": validations,
         "projection_blend": blend,
         "tell_cost": cost,
+        "gap_persistence": gap_persistence,
         "counts": {"tells": int(len(tell_tables[season])), "shifts": int(len(sh)), "stuff_pitches": int(len(stuff_tables[season]))},
     }
     (out_dir / "summary.json").write_text(json.dumps(summary, indent=2, default=float))

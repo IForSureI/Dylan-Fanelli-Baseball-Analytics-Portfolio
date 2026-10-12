@@ -174,3 +174,33 @@ def pitcher_shifts(pitches: pd.DataFrame) -> pd.DataFrame:
 def league_shifts(pitches: pd.DataFrame) -> pd.DataFrame:
     parts = [s for _, g in pitches.groupby("pitcher", sort=False) if not (s := pitcher_shifts(g)).empty]
     return pd.concat(parts, ignore_index=True) if parts else pd.DataFrame()
+
+
+def score_shifts(shifts_df: pd.DataFrame, swings: pd.DataFrame) -> pd.DataFrame:
+    """Add two judgments to each detected change.
+
+    - x_whiff_before / _after / x_whiff_change: the stuff model's expected whiff% for the pitch on either
+      side of the split. Physics-based, so far less noisy than actual whiffs: it says whether the change
+      made the pitch better by its shape, before results have had time to show it.
+    - whiff_q: false-discovery-rate q-value for the actual whiff change across all changes tested.
+    `swings` must carry pitcher, pitch_type, game_date and x_whiff (stuff.prepare + fit_crossfit).
+    """
+    from baseball.stats import benjamini_hochberg
+
+    out = shifts_df.copy()
+    if out.empty:
+        return out
+    s = swings[["pitcher", "pitch_type", "game_date", "x_whiff"]].copy()
+    s["game_date"] = pd.to_datetime(s["game_date"])
+    before, after = [], []
+    for row in out.itertuples():
+        g = s[(s["pitcher"] == row.pitcher) & (s["pitch_type"] == row.pitch_type)]
+        split = pd.Timestamp(row.split_date)
+        b, a = g.loc[g["game_date"] < split, "x_whiff"], g.loc[g["game_date"] >= split, "x_whiff"]
+        before.append(100 * b.mean() if len(b) else np.nan)
+        after.append(100 * a.mean() if len(a) else np.nan)
+    out["x_whiff_before"] = before
+    out["x_whiff_after"] = after
+    out["x_whiff_change"] = out["x_whiff_after"] - out["x_whiff_before"]
+    out["whiff_q"] = benjamini_hochberg(out["whiff_p"])
+    return out

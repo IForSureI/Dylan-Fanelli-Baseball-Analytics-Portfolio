@@ -155,3 +155,25 @@ def project(curr: pd.DataFrame, blend: dict) -> pd.DataFrame:
     out["proj_whiff_pct"] = blend["intercept"] + blend["actual"] * out["whiff_pct"] + blend["x_whiff"] * out["x_whiff_pct"]
     out["proj_change"] = out["proj_whiff_pct"] - out["whiff_pct"]
     return out
+
+
+def persistent_gaps(tables: dict[int, pd.DataFrame], min_swings: int = MIN_SWINGS) -> pd.DataFrame:
+    """Pitches that beat (or trail) their stuff season after season.
+
+    The gap between actual and expected whiff% is a stable trait (it carries over from one season to
+    the next), so a pitch that beats its physics two or three years running is showing deception,
+    command or sequencing, not luck. Grain: pitcher x pitch type, across every season given.
+    """
+    rows = []
+    for season, t in tables.items():
+        t = t[t["swings"] >= min_swings]
+        rows.append(t[["pitcher", "player_name", "pitch_type", "pitch_name", "swings", "whiff_pct", "x_whiff_pct", "gap"]].assign(season=season))
+    allr = pd.concat(rows, ignore_index=True)
+    g = allr.groupby(["pitcher", "pitch_type"])
+    out = g.agg(player_name=("player_name", "last"), pitch_name=("pitch_name", "last"), seasons=("season", "nunique"),
+                swings=("swings", "sum"), min_gap=("gap", "min"), max_gap=("gap", "max")).reset_index()
+    out["mean_gap"] = g.apply(lambda d: np.average(d["gap"], weights=d["swings"]), include_groups=False).to_numpy()
+    out["same_sign"] = (np.sign(out["min_gap"]) == np.sign(out["max_gap"]))
+    by_season = allr.pivot_table(index=["pitcher", "pitch_type"], columns="season", values="gap").add_prefix("gap_")
+    out = out.merge(by_season.reset_index(), on=["pitcher", "pitch_type"], how="left")
+    return out.sort_values("mean_gap", ascending=False).reset_index(drop=True)
