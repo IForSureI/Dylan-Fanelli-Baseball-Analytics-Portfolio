@@ -5,6 +5,7 @@
   uv run bb arsenal skubal tarik 2025 --phase postseason
   uv run bb compare skubal tarik 2024 2025  his arsenal in two seasons side by side, with significance
   uv run bb pull-league 2025                every pitch of a season, month by month (resumable)
+  uv run bb edge 2025                       run the edge engine on 2024-25 league data
   uv run bb db                              what is in the warehouse
   uv run bb db rebuild                      rebuild the warehouse from the cached pulls in data/raw/
 """
@@ -95,6 +96,16 @@ def cmd_pull_league(a: argparse.Namespace) -> None:
     print(f"Done: {total:,} pitches for {a.season}.")
 
 
+def cmd_edge(a: argparse.Namespace) -> None:
+    from baseball.edge.run import run
+
+    s = run(a.season)
+    v = s["validation"]
+    print(f"\nStuff model AUC {s['stuff_model'][str(a.season)]['auc']:.3f}. "
+          f"Predicting {a.season} whiff% from {a.season - 1}: actual r = {v['r_actual_prev']:.3f}, "
+          f"expected r = {v['r_xwhiff_prev']:.3f}, blend r = {v['r_blend']:.3f} ({v['matched_pitches']} pitches).")
+
+
 def cmd_db(a: argparse.Namespace) -> None:
     con = warehouse.connect()
     if a.action == "rebuild":
@@ -129,6 +140,10 @@ def main(argv: list[str] | None = None) -> None:
     lg.add_argument("season", type=int)
     lg.add_argument("--refresh", action="store_true", help="download months again even if cached")
     lg.set_defaults(func=cmd_pull_league)
+
+    e = sub.add_parser("edge", help="run the edge engine on two seasons of league data")
+    e.add_argument("season", type=int)
+    e.set_defaults(func=cmd_edge)
 
     d = sub.add_parser("db", help="what is in the warehouse")
     d.add_argument("action", nargs="?", choices=["rebuild"])
