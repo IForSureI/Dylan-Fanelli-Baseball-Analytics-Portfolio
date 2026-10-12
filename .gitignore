@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Data: pulled or generated locally, never committed (too big, and re-pullable)
+data/**
+!data/**/
+!data/**/.gitkeep
+*.parquet
+*.csv
+*.duckdb
+*.db
+
+# Mac / editors
+.DS_Store
