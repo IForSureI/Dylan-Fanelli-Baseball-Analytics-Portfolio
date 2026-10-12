@@ -31,8 +31,9 @@ WHIFFS = ("swinging_strike", "swinging_strike_blocked", "foul_tip", "missed_bunt
 COLUMNS = ["pitch_type", "pitch_name", "n", "usage_pct", "velo", "spin", "ivb_in", "hb_arm_in", "whiff_pct", "csw_pct"]
 
 
-def arsenal(pitches: pd.DataFrame, min_n: int = 20) -> pd.DataFrame:
-    """Arsenal table in pandas. `pitches` must hold one pitcher's pitches."""
+def arsenal_counts(pitches: pd.DataFrame) -> pd.DataFrame:
+    """The arsenal before rounding and floors, keeping the counts behind every rate (swings, whiffs,
+    called strikes). Other tools (comparisons, intervals) build on this."""
     p = pitches.dropna(subset=["pitch_type"]).copy()
     if p["pitcher"].nunique() != 1:
         raise ValueError("arsenal() expects exactly one pitcher; filter first.")
@@ -62,8 +63,13 @@ def arsenal(pitches: pd.DataFrame, min_n: int = 20) -> pd.DataFrame:
     out["usage_pct"] = 100 * out["n"] / out["n"].sum()
     out["whiff_pct"] = 100 * out["whiffs"] / out["swings"].replace(0, np.nan)
     out["csw_pct"] = 100 * (out["called"] + out["whiffs"]) / out["n"]
+    return out.sort_values("n", ascending=False).reset_index(drop=True)
 
-    out = out[out["n"] >= min_n].sort_values("n", ascending=False)
+
+def arsenal(pitches: pd.DataFrame, min_n: int = 20) -> pd.DataFrame:
+    """Arsenal table in pandas. `pitches` must hold one pitcher's pitches."""
+    out = arsenal_counts(pitches)
+    out = out[out["n"] >= min_n]
     # Round last
     out = out[COLUMNS].round({"usage_pct": 1, "velo": 1, "spin": 0, "ivb_in": 1, "hb_arm_in": 1, "whiff_pct": 1, "csw_pct": 1})
     return out.reset_index(drop=True)

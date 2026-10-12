@@ -7,13 +7,13 @@ It's organized around the jobs a front office does: getting data in, evaluating 
 ## Reports
 | Date | Report |
 |---|---|
-| 2026-10-12 | [Tarik Skubal: 2025 arsenal read](reports/2025-skubal-arsenal.md) |
+| 2026-10-12 | [Tarik Skubal: 2025 arsenal read, with 2024 comparison](reports/2025-skubal-arsenal.md) |
 
 ## What's built
 | Area | Tools |
 |---|---|
 | **Data** | Statcast pulls cached locally; a DuckDB warehouse that skips duplicate pitches, adapts to new Statcast columns, and logs every load |
-| **Evaluation** | Arsenal tables in pandas and SQL (cross-checked by tests), outcome metrics, usage by batter handedness, movement charts |
+| **Evaluation** | Arsenal tables in pandas and SQL (cross-checked by tests), outcome metrics, usage by batter handedness, season-vs-season comparison with significance tests, movement charts |
 | **Development** | Planned |
 | **Roster** | Planned |
 | **Business** | Planned |
@@ -27,9 +27,10 @@ Requires [uv](https://docs.astral.sh/uv/).
 git clone https://github.com/IForSureI/Baseball.git ~/Baseball
 cd ~/Baseball
 uv sync
-uv run pytest                          # 12 tests
+uv run pytest                          # 19 tests
 uv run bb pull skubal tarik 2025       # Statcast pitcher-season into the warehouse
 uv run bb arsenal skubal tarik 2025    # his arsenal, regular season
+uv run bb compare skubal tarik 2024 2025
 ```
 
 Notebooks are in `notebooks/`. Open one in VS Code, choose the `.venv` kernel, and click **Run All**.

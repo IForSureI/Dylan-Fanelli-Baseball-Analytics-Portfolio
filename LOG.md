@@ -2,6 +2,27 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-10-12 (evening): Skubal 2024 vs 2025, issue #2
+**Built**
+- `bb compare <last> <first> <season_a> <season_b>`: one pitcher's arsenal in two samples side by side. It shows shape changes, whiff% with 95% intervals, and a verdict on each change (real change, noise, or small sample).
+- `baseball/stats.py`: Wilson intervals and a two-proportion test, kept in one shared place for every tool.
+- `arsenal_counts()`: the arsenal with the swing and whiff counts kept, so other tools can build intervals and tests on it.
+- 19 tests (up from 12).
+
+**Answered**
+- Skubal's changeup whiff rate is his real level: 46.4% in 2024 and 46.8% in 2025, or 46.6% on 997 swings across both (95% interval 43.6–49.7%).
+
+**Decided**
+- Every finished report gets an independent review before it's final.
+- A change counts as confirmed at p < 0.05 with at least 30 swings in each sample. Anything near 0.05 is called borderline, because many tests run at once.
+
+**Learned**
+- An independent review of the report caught three wrong claims and several sentences that went stale once the 2024 data arrived. Examples: "a full mph harder from the first month" was really +0.7 for the season, and "fewest misses" was wrong because the sinker has fewer.
+  - Lesson: when new data comes in, re-check every earlier claim, not just the new section.
+- Use one evidence standard throughout. I had called a non-significant rise in four-seamer damage noise, then presented an equally non-significant changeup improvement as a gain.
+- Velocity, spin, extension and arm angle all rose on every pitch in 2025. The same rise on every pitch in one year can be a change in how Statcast measured him, so season-to-season comparisons need league-wide changes as a baseline (issue #3).
+- Statcast's "splitters" from Skubal (3 per season) spin at 882–995 rpm, about half his changeup. They're either mislabels or a rare separate grip, so don't assume either.
+
 ## 2026-10-12: Foundation and first real analysis
 **Built**
 - Set up the tools on the Mac: Homebrew, uv, DuckDB, Git, GitHub CLI, R, Positron, RStudio, Tableau Public, DBeaver Community, DB Browser for SQLite, plus the VS Code extensions.
