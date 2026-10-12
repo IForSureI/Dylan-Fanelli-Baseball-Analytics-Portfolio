@@ -45,3 +45,21 @@ def test_shared_velocity_jump_is_labeled_all_pitches():
 
 def test_quiet_season_finds_nothing():
     assert pitcher_shifts(_season()).empty
+
+
+def test_relabel_is_flagged():
+    # Slider "changes" into the curveball's exact shape: that's a label moving, not a new pitch
+    rows = []
+    for g in range(20):
+        date = str(pd.Timestamp("2025-04-01") + pd.Timedelta(days=5 * g))[:10]
+        after = g >= 10
+        for pt, n, velo, ivb in [("FF", 40, 95.0, 16.0), ("SL", 20, 80.0 if after else 86.0, -8.0 if after else 2.0), ("CU", 20, 80.0, -8.0)]:
+            for i in range(n):
+                rows.append({"pitcher": 9, "player_name": "Example, Fictional", "game_year": 2025, "p_throws": "R",
+                             "game_pk": 700 + g, "game_date": date, "pitch_type": pt, "pitch_name": pt,
+                             "release_speed": velo + 0.3 * ((i % 5) - 2), "pfx_z": (ivb + 0.5 * ((i % 3) - 1)) / 12, "pfx_x": -0.5,
+                             "release_spin_rate": 2300.0 + i, "arm_angle": 45.0, "description": "ball", "type": "B",
+                             "estimated_woba_using_speedangle": np.nan})
+    s = pitcher_shifts(pd.DataFrame(rows))
+    sl = s[s["pitch_type"] == "SL"]
+    assert len(sl) and (sl["label_check"] == "possible relabel from CU").all()

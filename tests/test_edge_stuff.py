@@ -56,3 +56,17 @@ def test_validate_and_project_shapes():
     assert set(v["blend"]) == {"intercept", "actual", "x_whiff"}
     proj = project(t25, v["blend"])
     assert proj["proj_whiff_pct"].notna().all()
+
+
+def test_two_year_validation_and_projection():
+    from baseball.edge.stuff import project_two_year, validate_two_year
+
+    tabs = {}
+    for season, seed in [(2024, 5), (2025, 6), (2026, 7)]:
+        s = prepare(_league(seed=seed, season=season))
+        tabs[season] = pitch_table(s, fit_crossfit(s)[0])
+    v = validate_two_year(tabs[2024], tabs[2025], tabs[2026])
+    assert v["matched_pitches"] > 50 and set(v["weights"]) == {"intercept", "actual_last", "actual_prior", "x_whiff_last"}
+    one = validate(tabs[2025], tabs[2026])["blend"]
+    p = project_two_year(tabs[2025], tabs[2026], v["weights"], one)
+    assert (p["proj_basis"] == "two seasons").mean() > 0.9 and p["proj_whiff_pct"].notna().all()

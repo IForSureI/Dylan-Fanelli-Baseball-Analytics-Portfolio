@@ -88,6 +88,31 @@ def _game_stats(p: pd.DataFrame, col: str) -> pd.DataFrame:
     return g[g["n"] >= MIN_PITCHES_PER_GAME].reset_index(drop=True)
 
 
+SHAPE = ["release_speed", "ivb_in", "hb_arm_in"]
+
+
+def _label_check(p: pd.DataFrame, pt: str, split_date) -> str:
+    """Is this a real change, or Statcast relabeling another pitch as this one?
+
+    If the pitch's shape after the split sits closer to a different pitch type's shape before the
+    split than to its own, the 'change' may be a label moving between pitches. Distance is in mph and
+    inches on velocity, IVB and arm-side break.
+    """
+    before, after = p[p["game_date"] < split_date], p[p["game_date"] >= split_date]
+    own_b = before[before["pitch_type"] == pt][SHAPE].mean()
+    own_a = after[after["pitch_type"] == pt][SHAPE].mean()
+    if own_b.isna().any() or own_a.isna().any():
+        return "ok"
+    own_dist = float(np.sqrt(((own_a - own_b) ** 2).sum()))
+    for other, o in before[before["pitch_type"] != pt].groupby("pitch_type"):
+        if len(o) < 30:
+            continue
+        d = float(np.sqrt(((own_a - o[SHAPE].mean()) ** 2).sum()))
+        if d < own_dist:
+            return f"possible relabel from {other}"
+    return "ok"
+
+
 def _results(p: pd.DataFrame) -> dict:
     sw = p["description"].isin(SWINGS)
     wh = p["description"].isin(WHIFFS)
@@ -131,6 +156,7 @@ def pitcher_shifts(pitches: pd.DataFrame) -> pd.DataFrame:
             else:
                 ratio, scope = np.nan, "no other pitch to compare"
 
+            label_check = _label_check(p, pt, split_date)
             b, a = _results(g[g["game_date"] < split_date]), _results(g[g["game_date"] >= split_date])
             _, p_whiff = two_proportion(b["whiffs"], b["swings"], a["whiffs"], a["swings"])
             usage_b = (p.loc[before_mask, "pitch_type"] == pt).mean()
@@ -150,6 +176,7 @@ def pitcher_shifts(pitches: pd.DataFrame) -> pd.DataFrame:
                     "persistence": persistence,
                     "others_ratio": ratio,
                     "scope": scope,
+                    "label_check": label_check,
                     "usage_before_pct": 100 * usage_b,
                     "usage_after_pct": 100 * usage_a,
                     "swings_before": b["swings"],

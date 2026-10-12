@@ -137,7 +137,13 @@ def run(season: int, log=print) -> dict:
         v = stuff.validate(stuff_tables[a], stuff_tables[b])
         validations[f"{a}->{b}"] = {k: val for k, val in v.items() if k != "matched"}
     blend = validations[f"{season - 1}->{season}"]["blend"]
-    proj = stuff.project(stuff_tables[season], blend)
+    two_year = None
+    if season - 2 in seasons:
+        two_year = stuff.validate_two_year(stuff_tables[season - 2], stuff_tables[season - 1], stuff_tables[season])
+    if two_year and two_year["rmse_two_year_blend"] < two_year["rmse_one_year_blend"]:
+        proj = stuff.project_two_year(stuff_tables[season - 1], stuff_tables[season], two_year["weights"], blend)
+    else:
+        proj = stuff.project(stuff_tables[season], blend).assign(proj_basis="one season")
     proj.to_parquet(out_dir / "projection.parquet")
 
     step("League baselines")
@@ -154,6 +160,7 @@ def run(season: int, log=print) -> dict:
         "stuff_model": {str(s_): diags[s_] for s_ in seasons},
         "validation": validations,
         "projection_blend": blend,
+        "projection_two_year": two_year,
         "tell_cost": cost,
         "gap_persistence": gap_persistence,
         "counts": {"tells": int(len(tell_tables[season])), "shifts": int(len(sh)), "stuff_pitches": int(len(stuff_tables[season]))},
