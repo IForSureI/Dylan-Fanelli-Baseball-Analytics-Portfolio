@@ -4,6 +4,7 @@
   uv run bb arsenal skubal tarik 2025       his arsenal from the warehouse (regular season by default)
   uv run bb arsenal skubal tarik 2025 --phase postseason
   uv run bb compare skubal tarik 2024 2025  his arsenal in two seasons side by side, with significance
+  uv run bb pull-league 2025                every pitch of a season, month by month (resumable)
   uv run bb db                              what is in the warehouse
   uv run bb db rebuild                      rebuild the warehouse from the cached pulls in data/raw/
 """
@@ -70,6 +71,30 @@ def cmd_compare(a: argparse.Namespace) -> None:
         print(out["results"].to_string(index=False))
 
 
+def cmd_pull_league(a: argparse.Namespace) -> None:
+    import time
+
+    from baseball.ingest.league import SEASON_MONTHS, pull_month
+
+    con = warehouse.connect()
+    total = 0
+    print(f"Pulling every {a.season} pitch, month by month. Finished months are saved and skipped on a re-run.")
+    for m in SEASON_MONTHS:
+        t0 = time.time()
+        try:
+            path, rows, cached = pull_month(a.season, m, refresh=a.refresh)
+        except Exception as e:  # Savant timeouts happen; keep the months that worked
+            print(f"  {a.season}-{m:02d}: failed ({type(e).__name__}: {e}). Re-run the same command to retry.")
+            continue
+        new = 0
+        if rows:
+            new = warehouse.load_pitches(con, pd.read_parquet(path), source="statcast-league", description=path.name)
+        total += rows
+        state = "cached" if cached else f"pulled in {time.time() - t0:,.0f}s"
+        print(f"  {a.season}-{m:02d}: {rows:>8,} pitches ({state}), {new:,} new in the warehouse")
+    print(f"Done: {total:,} pitches for {a.season}.")
+
+
 def cmd_db(a: argparse.Namespace) -> None:
     con = warehouse.connect()
     if a.action == "rebuild":
@@ -99,6 +124,11 @@ def main(argv: list[str] | None = None) -> None:
     c.add_argument("--phase", default="regular", choices=sorted(PHASES))
     c.add_argument("--min-n", type=int, default=20)
     c.set_defaults(func=cmd_compare)
+
+    lg = sub.add_parser("pull-league", help="every pitch of a season into the warehouse (resumable)")
+    lg.add_argument("season", type=int)
+    lg.add_argument("--refresh", action="store_true", help="download months again even if cached")
+    lg.set_defaults(func=cmd_pull_league)
 
     d = sub.add_parser("db", help="what is in the warehouse")
     d.add_argument("action", nargs="?", choices=["rebuild"])
