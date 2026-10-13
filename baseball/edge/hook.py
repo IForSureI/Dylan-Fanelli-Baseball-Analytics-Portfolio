@@ -98,7 +98,8 @@ def plate_appearances(p: pd.DataFrame) -> pd.DataFrame:
       pitches, pa_swings, pa_whiffs, sw_<T> (swings by pitch type), mid_pa_change (another pitcher threw part of it)
     - state at the first pitch: inning, half, outs, base (1st=1, 2nd=2, 3rd=4), lead (fielding team's), same_hand
     - roles: fld_team, bat_team, starter (pitcher threw his team's first pitch of the game), bat_idx (the
-      batting team's PA number in the game, 0-based; lineup slot = bat_idx % 9)
+      batting team's PA number in the game, 0-based), lineup_idx (lineup position, 0-based; slot = lineup_idx % 9;
+      equal to bat_idx unless a PA was cut off by an inning-ending baserunning out and the batter came back)
     - pitcher before the PA: bf, pitch_count, rv_so_far, whiffs_so_far, swings_so_far, velo_drop (mean FF/SI
       velocity over his last three PAs minus his first inning; 0 with velo_missing = 1 when either is missing)
     - the same five after the PA (suffix _after), for decision points
@@ -196,6 +197,11 @@ def plate_appearances(p: pd.DataFrame) -> pd.DataFrame:
     first = pa.groupby(["game_pk", "half"], sort=False)["pitcher"].transform("first")
     pa["starter"] = pa["pitcher"].eq(first).astype(int)
     pa["bat_idx"] = pa.groupby(["game_pk", "half"], sort=False).cumcount()
+    # Lineup position: a PA that ends without the batter finishing it (the inning ends on a baserunning out and
+    # the same batter leads off the next inning) doesn't advance the order.
+    same_next = pa.groupby(["game_pk", "half"], sort=False)["batter"].shift(-1).eq(pa["batter"])
+    adv = (~same_next).astype(int)
+    pa["lineup_idx"] = adv.groupby([pa["game_pk"], pa["half"]], sort=False).cumsum() - adv
 
     keep = ["game_pk", "at_bat_number", "pitcher", "bf", "prior_pa", "pitch_count", "rv_so_far", "whiffs_so_far",
             "swings_so_far", "velo_drop", "velo_missing", "pitch_count_after", "rv_so_far_after",
@@ -475,7 +481,7 @@ def decisions(pa: pd.DataFrame, use: pd.DataFrame, cost: dict[str, float], ppa: 
     """
     pa = pa.sort_values(["game_pk", "at_bat_number"]).reset_index(drop=True)
     grp = pa.groupby(["game_pk", "half"], sort=False)
-    nxt = pd.DataFrame({c: grp[c].shift(-1) for c in ("pitcher", "inning", "outs", "base", "lead", "bat_idx", "at_bat_number")})
+    nxt = pd.DataFrame({c: grp[c].shift(-1) for c in ("pitcher", "inning", "outs", "base", "lead", "lineup_idx", "at_bat_number")})
     d = pa[pa["starter"].eq(1) & pa["mid_pa_change"].eq(0) & nxt["pitcher"].notna()].copy()
     nx = nxt.loc[d.index]
     d["removed"] = nx["pitcher"].ne(d["pitcher"]).astype(int)
@@ -484,7 +490,7 @@ def decisions(pa: pd.DataFrame, use: pd.DataFrame, cost: dict[str, float], ppa: 
     for c in ("inning", "outs", "base"):
         d[c] = nx[c].astype(int)
     d["lead"] = nx["lead"].astype(float)
-    d["next_bat_idx"] = nx["bat_idx"].astype(int)
+    d["next_bat_idx"] = nx["lineup_idx"].astype(int)
     for c in DECISION_STATE:
         d[c] = d[f"{c}_after"]
     d["bf"] = d["bf"] + 1
@@ -492,11 +498,21 @@ def decisions(pa: pd.DataFrame, use: pd.DataFrame, cost: dict[str, float], ppa: 
     today_after = d[[f"today_after_{t}" for t in types] + ["today_after_total"]].copy()
     today_after.columns = [c.replace("today_after", "today") for c in today_after.columns]
 
-    slot = pa.set_index(["game_pk", "half", "bat_idx"])
+    keys = ["game_pk", "half", "lineup_idx"]
+    slot_last = pa.drop_duplicates(keys, keep="last").set_index(keys)     # his completed turn
+    slot_first = pa.drop_duplicates(keys, keep="first").set_index(keys)   # a turn cut off by the third out
+    g_, h_ = d["game_pk"].to_numpy(), d["half"].to_numpy()
     new = {}
     for j in range(ahead):
-        pos = d["next_bat_idx"].to_numpy() + j - 9
-        s = slot.reindex(pd.MultiIndex.from_arrays([d["game_pk"].to_numpy(), d["half"].to_numpy(), pos]))
+        cur = d["next_bat_idx"].to_numpy() + j
+        pos = cur - 9
+        s = slot_last.reindex(pd.MultiIndex.from_arrays([g_, h_, pos]))
+        # if this lineup turn already started (cut off by an inning-ending out before the decision), it is his
+        # latest look; otherwise his previous turn
+        sc = slot_first.reindex(pd.MultiIndex.from_arrays([g_, h_, cur]))
+        started = (sc["at_bat_number"].to_numpy(dtype=float) <= d["at_bat_number"].to_numpy(dtype=float))
+        s = s.reset_index(drop=True).where(~pd.Series(started), sc.reset_index(drop=True))
+        pos = np.where(started, cur, pos)
         ok = (pos >= 0) & (s["pitcher"].to_numpy(dtype=float) == d["pitcher"].to_numpy(dtype=float))
         h = pd.DataFrame(index=d.index)
         h["pitcher"], h["game_pk"] = d["pitcher"].to_numpy(), d["game_pk"].to_numpy()
@@ -560,16 +576,27 @@ def matchup(p: pd.DataFrame, pa: pd.DataFrame, k: float = 200.0, ppa: float = 1.
     """How well this hitter does against this pitcher's mix, from his season: sum over pitch groups g of the
     pitcher's usage of g x the hitter's run value per pitch against g this season (offense's view, shrunk
     toward 0 with k pitches), times ppa. A PA-level stand-in for the familiarity study's batter x pitch group x
-    season fixed effect. It uses the whole season, as that fixed effect does."""
+    season fixed effect. When both inputs carry game_pk, the current game is left out (the rest of his season,
+    before and after), so the control never contains the PA's own outcome."""
     from baseball.edge.familiarity import GROUP, GROUPS
 
-    q = p[["batter", "game_year", "pitch_type", "delta_run_exp"]].copy()
+    loo = "game_pk" in p and "game_pk" in pa
+    q = p[["batter", "game_year", "pitch_type", "delta_run_exp"] + (["game_pk"] if loo else [])].copy()
     q["g"] = q["pitch_type"].map(GROUP)
-    s = q.dropna(subset=["g"]).groupby(["batter", "game_year", "g"])["delta_run_exp"].agg(["sum", "size"])
-    bv = (s["sum"] / (s["size"] + k)).unstack(fill_value=0.0)
-    bv = bv.reindex(columns=GROUPS, fill_value=0.0)
+    q = q.dropna(subset=["g"])
+    s = q.groupby(["batter", "game_year", "g"])["delta_run_exp"].agg(["sum", "size"])
+    ssum = s["sum"].unstack(fill_value=0.0).reindex(columns=GROUPS, fill_value=0.0)
+    snum = s["size"].unstack(fill_value=0).reindex(columns=GROUPS, fill_value=0)
     key = pd.MultiIndex.from_arrays([pa["batter"], pa["game_year"]])
-    b = bv.reindex(key).fillna(0.0).to_numpy()
+    tot, n = ssum.reindex(key).fillna(0.0).to_numpy(), snum.reindex(key).fillna(0).to_numpy(float)
+    if loo:
+        gs = q.groupby(["batter", "game_year", "game_pk", "g"])["delta_run_exp"].agg(["sum", "size"])
+        gsum = gs["sum"].unstack(fill_value=0.0).reindex(columns=GROUPS, fill_value=0.0)
+        gnum = gs["size"].unstack(fill_value=0).reindex(columns=GROUPS, fill_value=0)
+        gkey = pd.MultiIndex.from_arrays([pa["batter"], pa["game_year"], pa["game_pk"]])
+        tot = tot - gsum.reindex(gkey).fillna(0.0).to_numpy()
+        n = n - gnum.reindex(gkey).fillna(0).to_numpy(float)
+    b = tot / (n + k)
     use = np.column_stack([sum(pa[f"use_{t}"].fillna(0).to_numpy(float) for t in COST_TYPES if GROUP[t] == g) for g in GROUPS])
     return ppa * (use * b).sum(axis=1)
 
@@ -577,10 +604,16 @@ def matchup(p: pd.DataFrame, pa: pd.DataFrame, k: float = 200.0, ppa: float = 1.
 # ---------------------------------------------------------------- the card's model
 
 def starter_cells(pa: pd.DataFrame) -> pd.DataFrame:
-    """League starter run value per PA (offense's view) and mean exposure index by times through (1-4+,
-    from prior_pa) and platoon (same_hand). Starters' PAs without a mid-PA change."""
+    """League starter run value per PA (offense's view) and mean exposure index by times through (1, 2, 3+,
+    from prior_pa) and platoon (same_hand). Starters' PAs without a mid-PA change.
+
+    The fourth time through is pooled into the third: only ~1,000 PAs a season reach it, all from starters their
+    managers chose to leave in, and on its own its mean run value came out below the third time's, which would
+    rate a starter better the fourth time. These are raw means: third-time PAs over-represent the top of the
+    order, so a cell's mean also carries its hitter mix (the card assumes batter quality cancels; it doesn't
+    fully)."""
     d = pa[pa["starter"].eq(1) & pa["mid_pa_change"].eq(0)].copy()
-    d["times"] = d["prior_pa"].clip(upper=3).astype(int) + 1
+    d["times"] = d["prior_pa"].clip(upper=2).astype(int) + 1
     return d.groupby(["times", "same_hand"]).agg(rv=("rv", "mean"), idx=("idx", "mean"), n=("rv", "size")).reset_index()
 
 
@@ -648,14 +681,15 @@ def expected_vs_reliever(times, same_hand, idx, q, model: dict) -> pd.DataFrame:
     """For upcoming hitters: the starter's expected run value per PA (offense's view) and the reliever
     baseline, both in runs per PA.
 
-    starter_base  = league starter mean at his times through and platoon + the starter's quality deviation q
+    starter_base  = league starter mean at his times through (3 = third or later) and platoon + the starter's
+                    quality deviation q
     starter_index = starter_base + (idx - that cell's mean idx)    (the index at face value)
     reliever      = the pooled reliever baseline (same_hand = -1 row)
     cost_base / cost_index = starter - reliever (positive: the average reliever is expected to be better)
     """
     cells = model["cells"].set_index(["times", "same_hand"])
     rel = float(model["reliever"].set_index("same_hand").loc[-1, "rv"])
-    t = np.clip(np.asarray(times, int), 1, 4)
+    t = np.clip(np.asarray(times, int), 1, int(model["cells"]["times"].max()))   # 4th+ uses the last (3+) cell
     sh = np.asarray(same_hand, int)
     key = pd.MultiIndex.from_arrays([t, sh])
     cell_rv = cells["rv"].reindex(key).to_numpy()
@@ -998,17 +1032,79 @@ def card_validation(pai: pd.DataFrame, quality: pd.DataFrame, model: dict) -> di
             "reliever_baseline": float(rel)}
 
 
+def fe_ols_cov(d: pd.DataFrame, y: str, xcols: list[str], fe: list[str], cluster: str = "pitcher"):
+    """Like fe_ols, but returns (terms, beta, clustered covariance matrix) for joint tests."""
+    d = _drop_singletons(d.dropna(subset=[y, *xcols]), fe)
+    r = absorb(d, [y, *xcols], fe)
+    keep = [c for c in xcols if r[c].abs().max() > 1e-9]
+    X, Y = r[keep].to_numpy(), r[y].to_numpy()
+    bread = np.linalg.pinv(X.T @ X)
+    beta = bread @ (X.T @ Y)
+    e = Y - X @ beta
+    groups, inv = np.unique(d[cluster].to_numpy(), return_inverse=True)
+    S = np.zeros((len(groups), X.shape[1]))
+    np.add.at(S, inv, X * e[:, None])
+    n, k, G = len(Y), X.shape[1], len(groups)
+    adj = (G / max(G - 1, 1)) * ((n - 1) / max(n - k, 1))
+    return keep, beta, adj * bread @ (S.T @ S) @ bread
+
+
+def pooled_calibration(frames: dict, seasons: list[int]) -> dict:
+    """Seasons pooled in one PA-level fit, SEs clustered by pitcher (the same pitchers recur across seasons).
+    Fixed effects stay pitcher-season and batter-season. Returns the common slope, and the season-specific slopes
+    with a clustered Wald test that they are equal (chi-square, seasons - 1 degrees of freedom)."""
+    from scipy.stats import chi2, norm
+
+    parts, cols = [], set()
+    for s in seasons:
+        D, c = frames[s]
+        parts.append(D.assign(season_=s))
+        cols |= set(c)
+    cols = sorted(cols)
+    P = pd.concat(parts, ignore_index=True)
+    P[cols] = P[cols].fillna(0.0)                     # a dummy missing from one season is 0 there
+    t = fe_ols(P, "y", ["x"] + cols, ["pkey", "bkey"], report=["x"]).iloc[0]
+    xs = []
+    for s in seasons:
+        P[f"x_{s}"] = P["x"] * P["season_"].eq(s)
+        xs.append(f"x_{s}")
+    names, b, V = fe_ols_cov(P, "y", xs + cols, ["pkey", "bkey"])
+    i = [names.index(x) for x in xs]
+    R = np.zeros((len(xs) - 1, len(names)))
+    for r_, j in enumerate(i[1:]):
+        R[r_, i[0]], R[r_, j] = -1, 1
+    diff = R @ b
+    wald = float(diff @ np.linalg.pinv(R @ V @ R.T) @ diff)
+    return {"slope": float(t["coef"]), "se": float(t["se"]), "p_vs_1": float(2 * norm.sf(abs(t["coef"] - 1) / t["se"])),
+            "n": int(t["n"]), "clusters": int(t["clusters"]), "seasons": list(seasons),
+            "by_season": {str(s): {"slope": float(b[j]), "se": float(np.sqrt(V[j, j]))} for s, j in zip(seasons, i)},
+            "wald_equal": wald, "wald_p": float(chi2.sf(wald, len(xs) - 1))}
+
+
 def season_value(D: pd.DataFrame, slope: float, slope_se: float, teams: int = 30) -> dict:
-    """What the index could be worth to a rotation: third-time-through starter PAs in the top decile of the
-    index, times their excess over the median, per team-season; at face value (slope 1) and at the
-    out-of-sample slope with its 95% upper bound."""
-    t3 = D[D["prior_pa"].ge(2)]
-    cut, med = t3["x"].quantile(0.9), t3["x"].median()
-    top = t3[t3["x"] >= cut]
-    excess = float((top["x"] - med).sum()) / 100 / teams          # runs per team-season at face value
-    return {"tto3_pas_per_team": len(t3) / teams, "top_decile_pas_per_team": len(top) / teams,
-            "mean_excess_runs_per100": float((top["x"] - med).mean()), "face_value_runs": excess,
-            "slope": slope, "estimate_runs": slope * excess, "upper95_runs": max(0.0, (slope + 1.96 * slope_se)) * excess}
+    """The top-decile tail at face value: third-time-through starter PAs (prior_pa == 2) in the top decile of
+    the index, times their excess over the median, per team-season; at face value (slope 1) and at the
+    out-of-sample slope with its 95% upper bound. Not the value of a decision rule: only the tail's size.
+
+    Also the same tail for the mix-specific part of the index (the index net of a linear fit on pitches seen
+    within the third time through), the part the calibration models leave to the index."""
+    t3 = D[D["prior_pa"].eq(2)]
+
+    def tail(x):
+        cut, med = x.quantile(0.9), x.median()
+        top = x[x >= cut]
+        return len(top), float((top - med).mean()), float((top - med).sum()) / 100 / teams
+
+    n_top, mean_ex, face = tail(t3["x"])
+    s = t3["seen_total"].to_numpy(float)
+    X = np.column_stack([np.ones(len(s)), s])
+    resid = t3["x"] - X @ np.linalg.lstsq(X, t3["x"].to_numpy(float), rcond=None)[0]
+    _, mean_ex_mix, face_mix = tail(resid)
+    up = max(0.0, slope + 1.96 * slope_se)
+    return {"tto3_pas_per_team": len(t3) / teams, "top_decile_pas_per_team": n_top / teams,
+            "mean_excess_runs_per100": mean_ex, "face_value_runs": face,
+            "slope": slope, "estimate_runs": slope * face, "upper95_runs": up * face,
+            "mix_mean_excess_runs_per100": mean_ex_mix, "mix_face_value_runs": face_mix, "mix_upper95_runs": up * face_mix}
 
 
 def run(season: int = 2026, cost_seasons: tuple = (2024, 2025), out_dir: Path | None = None, log=print) -> dict:
@@ -1129,16 +1225,12 @@ def run(season: int = 2026, cost_seasons: tuple = (2024, 2025), out_dir: Path | 
     tables["removal_by_cost"]["cost_bin"] = tables["removal_by_cost"]["cost_bin"].astype(str)
     tables["costs"] = costs
 
-    # every season's main slope, pooled by inverse variance, with Cochran's Q for heterogeneity
-    from scipy.stats import chi2, norm
-
-    m = tables["calibration"].query("spec == 'main'")
-    w = 1 / m["se"] ** 2
-    pooled = float((w * m["coef"]).sum() / w.sum())
-    pooled_se = float(np.sqrt(1 / w.sum()))
-    q_stat = float((w * (m["coef"] - pooled) ** 2).sum())
-    pooled_cal = {"slope": pooled, "se": pooled_se, "p_vs_1": float(2 * norm.sf(abs(pooled - 1) / pooled_se)),
-                  "Q": q_stat, "Q_p": float(chi2.sf(q_stat, len(m) - 1)), "seasons": m["season"].tolist()}
+    # Seasons pooled in one fit with SEs clustered by pitcher (pitchers recur across seasons), and a clustered
+    # test that the season slopes are equal. The pooled slope mixes in-sample and out-of-sample seasons, so the
+    # in-sample seasons are also pooled on their own.
+    pooled_cal = pooled_calibration(frames, seasons)
+    pooled_in = pooled_calibration(frames, list(cost_seasons))
+    log(f"pooled calibration ({time.time() - t0:.0f}s)")
 
     for name, t in tables.items():
         t.to_parquet(D_ / f"{name}.parquet", index=False)
@@ -1146,6 +1238,7 @@ def run(season: int = 2026, cost_seasons: tuple = (2024, 2025), out_dir: Path | 
         "season": season, "cost_seasons": list(cost_seasons), "cost": cost, "whiff_cost": wcost, "ppa": ppa,
         "runs_per_woba": rpw, "k_usage": K_USAGE, "k_pitcher": k_p, "k_pitcher_moments": k_mom,
         "league_starter": model["league_starter"], "pooled_calibration": pooled_cal,
+        "pooled_calibration_in_sample": pooled_in,
         "tto3_decile_adjusted_with_seen": adj2_diff,
         "starter_pas": {str(s): int(len(frames[s][0])) for s in seasons},
         "decisions": {str(s): int(len(dec_frames[s][0])) for s in seasons},
@@ -1190,13 +1283,16 @@ def figure(out_path: Path | None = None, tables_dir: Path | None = None) -> Path
     w = wob[wob["season"] == oos].iloc[0]
     rows.append((f"wOBA, {oos}", w["slope"], w["slope_se"], True, "rv"))
     pc = S["pooled_calibration"]
-    rows.append((f"Run value, pooled {min(pc['seasons'])}-{str(max(pc['seasons']))[2:]}", pc["slope"], pc["se"], False, "rv"))
-    for test, lab in (("whiff rate per swing on the whiff index (calibrated = -1)", "Whiffs per swing"),
-                      ("same, holding the PA's swing mix by pitch type fixed", "Whiffs per swing, swing mix held")):
-        m = mech[(mech["season"] == oos) & (mech["test"] == test)].iloc[0]
-        rows.append((f"{lab}, {oos}", -m["coef"], m["se"], True, "whiff"))    # sign flipped: 1 = calibrated
+    rows.append((f"Run value, pooled {min(pc['seasons'])}-{str(max(pc['seasons']))[2:]} (clustered by pitcher)", pc["slope"], pc["se"], False, "rv"))
+    wtest = "whiff rate per swing on the whiff index (calibrated = -1)"
+    for s in sorted(mech["season"].unique()):
+        m = mech[(mech["season"] == s) & (mech["test"] == wtest)].iloc[0]
+        tag = f"out of sample, p = {m['p']:.2f}" if s == oos else "in sample"
+        rows.append((f"Whiffs per swing in the PA, {s} ({tag})", -m["coef"], m["se"], s == oos, "whiff"))  # sign flipped
+    m = mech[(mech["season"] == oos) & (mech["test"] == "same, holding the PA's swing mix by pitch type fixed")].iloc[0]
+    rows.append((f"Same, swing mix held (a mediator), {oos}", -m["coef"], m["se"], True, "whiff"))
 
-    fig, (a, c) = plt.subplots(1, 2, figsize=(14, 5.6), gridspec_kw={"width_ratios": [1, 1]})
+    fig, (a, c) = plt.subplots(1, 2, figsize=(14.5, 6.2), gridspec_kw={"width_ratios": [1, 1]})
     yy = np.arange(len(rows))[::-1]
     a.axvline(0, color=GRID, lw=1.2)
     a.axvline(1, color=MUTED, lw=1, ls="--")
@@ -1208,9 +1304,10 @@ def figure(out_path: Path | None = None, tables_dir: Path | None = None) -> Path
         a.errorbar(b, y, xerr=1.96 * se, fmt="s" if grp == "whiff" else "o", color=col, ms=6, capsize=3, lw=1.6)
     a.set_yticks(yy)
     a.set_yticklabels([r[0] for r in rows], fontsize=8.5)
-    a.axhline(yy[-2] + 0.5, color=MUTED, lw=0.8)
+    first_whiff = next(i for i, r in enumerate(rows) if r[4] == "whiff")
+    a.axhline(yy[first_whiff] + 0.5, color=MUTED, lw=0.8)
     a.set_xlabel("Calibration slope (1 = the index means what it says), 95% interval")
-    a.set_title("Out of sample the index predicts whiffs, not runs", loc="left", fontsize=12, fontweight="bold")
+    a.set_title("Out of sample: no run signal; whiffs borderline", loc="left", fontsize=12, fontweight="bold")
     _style(a)
 
     short = {"Next hitter's exposure index (runs/100 PA)": ("Exposure index\n(next hitter)", (10, 10)),
@@ -1231,15 +1328,17 @@ def figure(out_path: Path | None = None, tables_dir: Path | None = None) -> Path
     c.set_ylabel("Chance the starter is removed before it, per 1 SD (points)")
     c.set_title("Managers act on runs allowed, not exposure", loc="left", fontsize=12, fontweight="bold")
     _style(c)
-    n_pa, n_dec = S["starter_pas"][str(oos)], S["decisions"][str(oos)]
+    n_pa = int(cal[(cal["season"] == oos) & (cal["spec"] == "main")]["n"].iloc[0])
+    rem = pd.read_parquet(D / "removal.parquet")
+    n_dec = int(rem[(rem["season"] == oos) & (rem["spec"] == "next hitter")]["n"].iloc[0])
     first = min(int(s) for s in S["starter_pas"])
     fig.text(0.01, 0.005,
              f"MLB regular seasons {first}-{str(oos)[2:]}, Statcast via Baseball Savant. Index costs estimated on "
              f"{S['cost_seasons'][0]}-{str(S['cost_seasons'][-1])[2:]} only, so {oos} is out of sample. Left: {n_pa:,} starter PAs in "
              f"{oos}; pitcher-season and batter-season fixed effects, times through, pitch count, in-game form,\nplatoon, base-out "
              "state, score and pitches seen held fixed; whiff slopes sign-flipped so 1 = calibrated. Right: "
-             f"{oos}; {n_dec:,} decisions from the second time through (removal) and the matching starter PAs (run value); same "
-             "controls\nplus leverage, bullpen workload and lineup slot. Associations, not causal effects. 95% intervals "
+             f"{oos}; removal from {n_dec:,} decisions from the second time through; run value from all starter PAs from the second "
+             "time through,\nsame controls; the removal model adds leverage, bullpen workload and lineup slot. Associations, not causal effects. 95% intervals "
              "clustered by pitcher.", fontsize=7.3, color="#555")
     fig.tight_layout(rect=(0, 0.1, 1, 1))
     out_path.parent.mkdir(parents=True, exist_ok=True)
