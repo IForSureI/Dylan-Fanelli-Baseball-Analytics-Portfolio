@@ -156,6 +156,52 @@ def test_decisions_flag_state_and_lineup_slots(pa):
     assert d.loc[3, "next_ok"] == 0
 
 
+def test_cut_off_pa_does_not_advance_the_lineup():
+    """FICTIONAL: 103's first PA is cut off (one pitch, the inning ends on a caught stealing) and he leads off the
+    2nd; then 104-109 and 101 again. Lineup positions must not count 103 twice."""
+    seq = [(101, 1, True), (102, 1, True), (103, 1, False), (103, 2, True), (104, 2, True), (105, 2, True),
+           (106, 3, True), (107, 3, True), (108, 3, True), (109, 4, True), (101, 4, True)]
+    rows = [_pitch(5, "2026-06-01", ab, 1, inn, "Top", 1, b, "FF", 95.0, "hit_into_play" if done else "ball", last=done)
+            for ab, (b, inn, done) in enumerate(seq, start=1)]
+    rows.append(_pitch(5, "2026-06-01", 99, 1, 1, "Bot", 9, 201, "SL", 85.0, "hit_into_play", last=True))
+    pa = h.plate_appearances(pd.DataFrame(rows))
+    top = pa[pa["half"].eq("Top")].set_index("at_bat_number")
+    assert (top.loc[3, "lineup_idx"], top.loc[4, "lineup_idx"], top.loc[5, "lineup_idx"]) == (2, 2, 3)
+    assert (top.loc[11, "bat_idx"], top.loc[11, "lineup_idx"]) == (10, 9)      # 101 is back in slot 0
+    use = h.usage_table(pd.DataFrame(rows))
+    d = h.decisions(h.add_index(pa, use, COST, PPA), use, COST, PPA)
+    d = d[d["pitcher"].eq(1)].set_index("at_bat_number")
+    # after the cut-off PA the next hitter is 103 himself, who has already seen one FF in it
+    assert (d.loc[3, "batter_0"], d.loc[3, "times_0"], d.loc[3, "slot"]) == (103, 1, 2)
+    # after 109 (lineup 8) the next hitter is 101 (slot 0), not 109's own slot shifted by the extra PA
+    assert (d.loc[10, "batter_0"], d.loc[10, "batter_1"], d.loc[10, "slot"]) == (101, 102, 0)
+    # every pitch was a FF: usage 1, so idx_0 = 4 x 1 x 1 x 0.002
+    assert d.loc[10, "idx_0"] == pytest.approx(0.008)
+
+
+def test_card_pools_fourth_time_into_third():
+    cells = pd.DataFrame({"times": [3], "same_hand": [0], "rv": [0.02], "idx": [0.02]})
+    model = {"cells": cells, "reliever": pd.DataFrame({"same_hand": [-1], "rv": [0.0]})}
+    e = h.expected_vs_reliever([3, 4], [0, 0], [0.02, 0.03], [0.0, 0.0], model)
+    # the fourth time uses the third-or-later cell: base 0.02 both times; with the index 0.02 + 0.01 = 0.03
+    assert e["starter_base"].tolist() == pytest.approx([0.02, 0.02])
+    assert e["starter_index"].tolist() == pytest.approx([0.02, 0.03])
+    pa = pd.DataFrame({"starter": 1, "mid_pa_change": 0, "same_hand": 0, "prior_pa": [2, 3, 4], "rv": [0.1, 0.2, 0.3],
+                       "idx": [0.01, 0.02, 0.03]})
+    c = h.starter_cells(pa)
+    assert (c["times"].tolist(), c["n"].tolist(), c["rv"].iloc[0]) == ([3], [3], pytest.approx(0.2))
+
+
+def test_season_value_tail_hand_checked():
+    """FICTIONAL third-time PAs: index 1..10 runs/100 PAs, pitches seen 0..9 (so the mix-specific part is 0)."""
+    D = pd.DataFrame({"prior_pa": 2, "x": np.arange(1.0, 11.0), "seen_total": np.arange(10.0)})
+    v = h.season_value(D, slope=0.5, slope_se=0.1, teams=1)
+    # top decile = {10}; median 5.5; excess 4.5 runs/100 -> 0.045 runs; at slope .5 -> .0225; upper (.5+.196) x .045
+    assert (v["top_decile_pas_per_team"], v["mean_excess_runs_per100"]) == (1, pytest.approx(4.5))
+    assert (v["face_value_runs"], v["estimate_runs"], v["upper95_runs"]) == (pytest.approx(0.045), pytest.approx(0.0225), pytest.approx(0.696 * 0.045))
+    assert abs(v["mix_face_value_runs"]) < 1e-9          # x is exactly linear in pitches seen
+
+
 def test_leverage_shrinks_toward_parent():
     # FICTIONAL PAs: cell A (two PAs, |dWE| .02 and .04), cell B in the same inning/half/lead (.06), one more
     # elsewhere (.08). Overall mean .05; parent of A = .04. With k = 1: (.06 + 1 x .04) / 3 = .03333 -> / .05
@@ -216,6 +262,27 @@ def test_calibration_slope_recovered_with_fixed_effects():
     assert abs(h.fe_ols(d, "y0", ["x"], ["pkey", "bkey"]).iloc[0]["coef"]) < 4 * t["se"]
 
 
+def test_pooled_calibration_clusters_by_pitcher_across_seasons():
+    """FICTIONAL: two seasons, the same 120 pitchers in both, slope 1 in each. The covariance helper matches
+    fe_ols's clustered SEs; the pooled slope is ~1 and equal slopes are not rejected."""
+    rng = np.random.default_rng(6)
+    frames = {}
+    for s in (2025, 2026):
+        n = 12_000
+        d = pd.DataFrame({"pitcher": rng.integers(0, 120, n), "batter": rng.integers(0, 300, n), "x": rng.gamma(2, 1, n),
+                          "c1": rng.normal(size=n)})
+        d["pkey"] = d["pitcher"].astype(str) + f"|{s}"
+        d["bkey"] = d["batter"].astype(str) + f"|{s}"
+        d["y"] = d["x"] + 0.5 * d["c1"] + rng.normal(0, 1, 120)[d["pitcher"]] + rng.normal(0, 3, n)
+        frames[s] = (d, ["c1"])
+    names, b, V = h.fe_ols_cov(frames[2026][0], "y", ["x", "c1"], ["pkey", "bkey"])
+    t = h.fe_ols(frames[2026][0], "y", ["x", "c1"], ["pkey", "bkey"])
+    assert np.sqrt(np.diag(V)) == pytest.approx(t["se"].to_numpy(), rel=1e-8)
+    r = h.pooled_calibration(frames, [2025, 2026])
+    assert r["slope"] == pytest.approx(1.0, abs=4 * r["se"])
+    assert r["wald_p"] > 0.001 and r["clusters"] == 120
+
+
 def test_expected_vs_reliever_arithmetic():
     model = {"cells": pd.DataFrame({"times": [3], "same_hand": [1], "rv": [0.02], "idx": [0.015]}),
              "reliever": pd.DataFrame({"same_hand": [-1], "rv": [-0.01]})}
@@ -255,6 +322,10 @@ def test_runs_per_woba_and_matchup():
             pa[f"use_{t}"] = 0.0
     # fastballs: 0.2 / (2 + 2) = 0.05 per pitch; breaking: none -> 0. 0.5 x 0.05 = 0.025
     assert h.matchup(p, pa, k=2)[0] == pytest.approx(0.025)
+    # with game ids the current game is left out: game 1 FF 0.1, game 2 FF 0.3; for a game-2 PA only game 1
+    # counts: 0.1 / (1 + 2) x 0.5 = 0.016667
+    p2 = pd.DataFrame({"batter": 1, "game_year": 2026, "game_pk": [1, 2], "pitch_type": "FF", "delta_run_exp": [0.1, 0.3]})
+    assert h.matchup(p2, pa.assign(game_pk=2), k=2)[0] == pytest.approx(0.1 / 3 * 0.5)
 
 
 def test_hook_card_on_the_fictional_game(pa):
