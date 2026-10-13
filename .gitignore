@@ -16,3 +16,6 @@ data/**
 
 # Mac / editors
 .DS_Store
+
+# Cloned external data (never committed)
+data/people/register/

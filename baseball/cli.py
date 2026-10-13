@@ -160,6 +160,13 @@ def cmd_familiarity(a: argparse.Namespace) -> None:
         print(f"  {r['group']:<9} {r['coef']:+.2f} pts (SE {r['se']:.2f}, t {r['t']:.1f}; {int(r['n']):,} swings)")
 
 
+def cmd_people(a: argparse.Namespace) -> None:
+    from baseball.ingest import people
+
+    path = people.refresh()
+    print(f"{len(people.load(path)):,} people with MLBAM ids -> {path}")
+
+
 def cmd_db(a: argparse.Namespace) -> None:
     con = warehouse.connect()
     if a.action == "rebuild":
@@ -220,6 +227,9 @@ def main(argv: list[str] | None = None) -> None:
     fm.add_argument("season", type=int)
     fm.add_argument("--years", type=int, default=3, help="seasons to pool, ending at <season> (default 3)")
     fm.set_defaults(func=cmd_familiarity)
+
+    pe = sub.add_parser("people", help="player names and ids from the Chadwick register (data/people/)")
+    pe.set_defaults(func=cmd_people)
 
     d = sub.add_parser("db", help="what is in the warehouse")
     d.add_argument("action", nargs="?", choices=["rebuild"])

@@ -20,6 +20,7 @@ SEASON=$YEAR
 
 git pull --ff-only || echo "git pull skipped (local changes?)"
 uv sync --quiet
+uv run bb people || echo "people register refresh skipped"
 
 for S in $((SEASON - 2)) $((SEASON - 1)); do      # earlier seasons: only fill gaps
   caffeinate -i uv run bb pull-league "$S" && uv run bb slim "$S" && uv run bb seq "$S"
