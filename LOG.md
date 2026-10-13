@@ -2,6 +2,20 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-10-13 (morning): A claims audit of the summaries
+**Checked**
+- Every summary number in the README, the portfolio page and this log was re-read against its full report. Four summaries said more than their reports do, and were tightened:
+  - Fairbanks: "not a 2027 option" (the memo assumes about a third of 2027), not "out for 2027."
+  - Bat speed: r = 0.5 after about 3 swings and r = 0.7 after about 6. "Reliable" at r = 0.5 overstated it.
+  - wOBA's r = 0.5 at about 500 PA is an extrapolation past the largest measured sample (256 PA).
+  - The expected-whiff vs. lever comparison holds pooled across pitch types, given the realized shape, against the full lever model. By type only sinkers separate.
+
+**Answered**
+- **Skubal's slider in 2026:** 28.8% whiffs on 146 swings (42 whiffs), between 2024 (34.4%) and 2025 (25.5%) and not distinguishable from either (p = 0.52 vs. 2025, p = 0.27 vs. 2024; two-proportion tests, regular season, `data/seq`). Over 2025-26: 27.0% on 307 swings, below the league's 33% for sliders. The 2025 drop is neither confirmed nor reversed.
+
+**Learned**
+- **Summaries drift stronger than reports.** A one-line answer drops the qualifier ("extrapolated," "pooled," "borderline"). Check every summary against its report, not only the report against its data.
+
 ## 2026-10-13: The capstone. A bullpen acquisition memo for the Rangers (closes #13 and #8)
 **Built**
 - **`baseball/evaluation/reliever.py`** (`bb compare-relievers <season> <id> ...`): one comparison table for any list of pitchers. It covers:
@@ -73,7 +87,7 @@ Each study was built and integrated, then independently reviewed against its own
   - **2026 halves:** 135 of 147 metrics better, median error cut 27%.
   - **2025 → 2026:** 91 of 96 better.
   - **Clean replication** (fit 2024, test 2025): 140 of 145 better.
-  - **Speed of stabilizing:** bat speed is reliable after about 3 competitive swings; wOBA needs about 500+ PA for r = 0.5.
+  - **Speed of stabilizing:** bat speed reaches r = 0.5 after about 3 competitive swings and r = 0.7 after about 6; wOBA's fitted curve reaches r = 0.5 at about 500 PA, an extrapolation past the largest measured sample (256 PA).
 - **The familiarity cost doesn't carry to plate-appearance runs.** The 2026 calibration slope is −0.28 (SE 0.37). Managers show no response to it (MDE about 0.75 points). Keep exposure for pitch selection, not the hook.
 - **Pitch design:**
   - **Four-seam ride:** +1.62 whiff points per 2 in, the best-supported lever.

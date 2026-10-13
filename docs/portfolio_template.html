@@ -135,7 +135,7 @@ footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-
           <p class="eyebrow">Evaluation · the analyst's reference</p>
           <h3>Which numbers can you trust, and when?</h3>
           <p class="answer"><b>The Reliability Atlas covers 29 metrics in 157 groups.</b> For each, it measures how fast the metric becomes signal, how much carries into next season, how much true talent moves within a season, and how far to regress it, with a regress() function that returns intervals. Regressing beat raw numbers out of sample for 135 of 147 groups, and a clean 2024 → 2025 replication agrees. Pitch physics are regressed by games, not pitches: one 100-pitch outing is one look.</p>
-          <div class="nums"><span class="num">bat speed: r = 0.5 after ~3 swings</span><span class="num">wOBA: 500+ PA for r = 0.5</span><span class="num">135 / 147 better than raw</span></div>
+          <div class="nums"><span class="num">bat speed: r = 0.5 after ~3 swings</span><span class="num">wOBA: ~500 PA for r = 0.5 (extrapolated)</span><span class="num">135 / 147 better than raw</span></div>
           <p class="read"><a href="{{REPO}}/reports/2026-reliability-atlas.md">Read the atlas →</a></p>
         </div>
         <div class="fig"><img alt="How fast each metric becomes signal against how much it carries over" src="{{IMG:2026-reliability-atlas.png}}"></div>
@@ -145,7 +145,7 @@ footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-
         <div class="text">
           <p class="eyebrow">Player development</p>
           <h3>Which pitch-design changes stick and pay?</h3>
-          <p class="answer"><b>Four-seam ride is the best-supported lever.</b> It's worth +1.62 whiff points per 2 inches, and the gain's point estimate held into year two. Velocity's payoff fails a placebo, so recovery from a down year isn't ruled out. Slider levers pay but aren't shown to last. Out of sample, the single change in expected whiff predicts better than any list of levers. Also built: an individual development plan engine that issues on-track, behind, flat and inconclusive verdicts and checks power when the plan is written.</p>
+          <p class="answer"><b>Four-seam ride is the best-supported lever.</b> It's worth +1.62 whiff points per 2 inches, and the gain's point estimate held into year two. Velocity's payoff fails a placebo, so recovery from a down year isn't ruled out. Slider levers pay but aren't shown to last. Given the shape change, the single change in expected whiff predicts next season's whiff change better than the full lever model, pooled across pitch types. Also built: an individual development plan engine that issues on-track, behind, flat and inconclusive verdicts and checks power when the plan is written.</p>
           <div class="nums"><span class="num">FF ride +1.62 per 2 in (q = 0.02)</span><span class="num null">velocity: placebo fails</span><span class="num">1,822 season-to-season pitch pairs</span></div>
           <p class="read"><a href="{{REPO}}/reports/2026-pitch-design-levers.md">Read the report →</a></p>
         </div>
