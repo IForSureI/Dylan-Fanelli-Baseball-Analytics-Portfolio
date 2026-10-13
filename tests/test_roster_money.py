@@ -1,10 +1,11 @@
 """The Competitive Balance Tax against real 2025 bills, and valuation arithmetic checked by hand.
-Payrolls and bills are real (CBS Sports, Dec. 20, 2025); every other player here is fictional."""
+Real: the 2025 payrolls and bills (CBS Sports, Dec. 20, 2025), Skenes and the comparable contracts (sources in
+baseball/roster/facts.py). Every other player or club here is fictional and labeled so."""
 import pytest
 
 from baseball.roster import facts
-from baseball.roster.money import (arb_path, cbt_bill, dollars_per_war, extension_band, level_aav, project_war, pv,
-                                   qualifying_offer, tax_cost_of_signing, value_seasons)
+from baseball.roster.money import (arb_path, cbt_bill, cbt_pick_dropped, dollars_per_war, extension_band, implied_dpw, implied_war1,
+                                   level_aav, project_war, pv, qualifying_offer, tax_cost_of_signing, value_seasons)
 
 DOLLAR = 1e-6   # $1 in $ millions
 
@@ -46,6 +47,14 @@ def test_red_sox_2025_gap_is_documented_not_hidden():
     computed = cbt_bill(payroll, years, season=2025).total
     assert computed - actual == pytest.approx(facts.RED_SOX_GAP, abs=DOLLAR)
     assert cbt_bill(payroll - 0.375, years, season=2025).total == pytest.approx(actual, abs=DOLLAR)
+
+
+def test_cbt_pick_penalty_top_six_exception():
+    # MLB.com glossary: $40M+ over moves the highest pick back 10 places, or the second-highest if the
+    # highest is in the top six. Fictional club picking 5th and 40th.
+    assert cbt_pick_dropped(45.0, [5, 40]) == 40
+    assert cbt_pick_dropped(45.0, [12, 40]) == 12
+    assert cbt_pick_dropped(39.9, [12, 40]) is None
 
 
 def test_cbt_resets_and_thresholds():
@@ -116,9 +125,27 @@ def test_extension_band_by_hand():
     b = extension_band([4.0], [5.0], [16.0], [22.0])
     assert b["club_ceiling_pv"] == pytest.approx(25.0) and b["player_floor_pv"] == pytest.approx(18.545455)
     assert b["midpoint_pv"] == pytest.approx(21.772727) and b["overlap"]
-    # A market cap of 12 on the FA year lowers the player's outside option, not the club's value of him
+    # A cap of 12 on his outside offers lowers the player's floor; it moves the club's ceiling only if the
+    # club's own cost of keeping him is capped too (club_fa_max)
     c = extension_band([4.0], [5.0], [16.0], [22.0], fa_max_salary=[12.0])
     assert c["club_ceiling_pv"] == pytest.approx(25.0) and c["player_floor_pv"] == pytest.approx(4 + 12 / 1.1)
+    d = extension_band([4.0], [5.0], [16.0], [22.0], fa_max_salary=[12.0], club_fa_max=[18.0])
+    assert d["club_ceiling_pv"] == pytest.approx(5 + 18 / 1.1)                    # 21.363636
+    # split: a quarter of the surplus to the player: 18.545455 + 0.25 x (25 - 18.545455) = 20.159091
+    assert extension_band([4.0], [5.0], [16.0], [22.0], split=0.25)["midpoint_pv"] == pytest.approx(20.159091)
+
+
+def test_implied_dpw_and_war1_by_hand():
+    # Fictional 2 years, $100M: pay 50 + 50 / 1.05 = 97.619048; wins 3.0 + 2.6 = 5.6 -> 17.431973 per WAR
+    assert implied_dpw(100.0, 2, 3.0) == pytest.approx(17.431973)
+    # and back: (97.619048 / 17.431973 + 0.4 x 1) / 2 = (5.6 + 0.4) / 2 = 3.0
+    assert implied_war1(100.0, 2, 17.431973) == pytest.approx(3.0, abs=1e-6)
+
+
+def test_dollars_per_war_base_year_and_tier_cliff():
+    assert dollars_per_war(4.0, 2026, base_season=2025) == pytest.approx(12.84 * 1.03)
+    # 1.99 WAR prices at the 1-2 tier: 1.99 x 8.51 = 16.93, against 2.0 x 12.84 = 25.68
+    assert 1.99 * dollars_per_war(1.99) == pytest.approx(16.9349) and 2.0 * dollars_per_war(2.0) == pytest.approx(25.68)
 
 
 def test_qualifying_offer_by_status():
@@ -143,9 +170,55 @@ def test_skenes_case_numbers():
     assert base["arb_mlbtr"][0] == 7.2                              # MLBTR, Oct. 2, 2026
     # FanGraphs year 1: 15% x 4.2 x 12.84 = 8.0892
     assert base["arb_fangraphs"][0] == pytest.approx(8.0892)
-    sq = e["bands"]["status quo (2022-26 rules)"]
-    mlb = e["bands"]["MLB proposal (15% max on the open market)"]
-    assert sq["overlap"] and mlb["club_ceiling_pv"] == pytest.approx(sq["club_ceiling_pv"])
-    assert mlb["player_floor_pv"] < sq["player_floor_pv"]            # a capped market lowers his outside option
-    # first-year max under MLB's plan in 2030: 15% x 245.3 x 1.03^3 = 40.2069
-    assert e["mlb_cap_path"][0] == pytest.approx(0.15 * 245.3 * 1.03 ** 3)
+    # MLB plan maxima in 2030: 16% x 245.3 x 1.03^3 = 42.8874 (own club); 15% -> 40.2069 (other clubs)
+    assert e["own_club_max"][0] == pytest.approx(0.16 * 245.3 * 1.03 ** 3)
+    assert e["new_club_max"][0] == pytest.approx(0.15 * 245.3 * 1.03 ** 3)
+
+
+def test_skenes_mlb_plan_ceiling_uses_the_capped_alternative():
+    from baseball.roster.cases import skenes_extension
+    e = skenes_extension()
+    sq, mlb = e["bands"]["current rules"], e["bands"]["MLB plan"]
+    # every base free-agent value (72.1 ... 55.2) exceeds the 16% path (42.9 ... 52.1), so the club's
+    # alternative is the capped path: ceiling = PV(base arbitration) + PV(16% path from t = 3)
+    expected = pv(e["paths"]["base"]["arb_mlbtr"]) + pv([0.0] * 3 + e["own_club_max"])
+    assert mlb["club_ceiling_pv"] == pytest.approx(expected)
+    assert mlb["club_ceiling_pv"] < sq["club_ceiling_pv"] and mlb["player_floor_pv"] < sq["player_floor_pv"]
+    # 15% outside offers lower his floor further but not the club's cost of keeping him
+    m15 = e["bands"]["MLB plan, 15% outside offers"]
+    assert m15["player_floor_pv"] < mlb["player_floor_pv"] and m15["club_ceiling_pv"] == mlb["club_ceiling_pv"]
+
+
+def test_skenes_durability_and_break_even():
+    from baseball.roster.cases import club_ceiling, skenes_extension, skenes_paths, skenes_war_base, SCENARIOS
+    e = skenes_extension()
+    paths = {k: skenes_paths(skenes_war_base() * m) for k, m in SCENARIOS.items()}
+    c0, c1 = club_ceiling(paths, 0.0, None), club_ceiling(paths, 1.0, None)
+    # the ceiling is linear in the stress chance: 0.8 x healthy + 0.2 x stress
+    assert e["ceilings"][("current rules", 0.2)] == pytest.approx(0.8 * c0 + 0.2 * c1)
+    assert c1 < c0 and e["ceilings"][("current rules", 0.0)] == pytest.approx(e["bands"]["current rules"]["club_ceiling_pv"])
+    # break-even mixes the two rule sets: q = 0.25 -> 0.75 x current + 0.25 x MLB plan
+    be = e["breakeven"][(0.25, 0.2)]
+    assert be == pytest.approx(0.75 * e["ceilings"][("current rules", 0.2)] + 0.25 * e["ceilings"][("MLB plan", 0.2)])
+
+
+def test_skenes_dpw_base_year_sensitivity():
+    from baseball.roster.cases import skenes_extension
+    e = skenes_extension()
+    # Arbitration is anchored to MLBTR, so only the free-agent part scales: +3% on it
+    arb = pv(e["paths"]["base"]["arb_mlbtr"])
+    sq = e["bands"]["current rules"]["club_ceiling_pv"]
+    assert e["ceiling_if_dpw_base_2025"] == pytest.approx(arb + 1.03 * (sq - arb))
+
+
+def test_comps_check_by_hand():
+    from baseball.roster.cases import comps_check
+    t = comps_check().set_index("pitcher")
+    # Yamamoto: 325/12 = 27.0833 a year x sum of 1/1.05^t, t = 0..11 (9.306414) = 252.049;
+    # wins 3.1 + 2.7 + ... + 0.3 (then 0) = 13.6 -> $18.53M per WAR vs $14.13M (FanGraphs 2024 2+ row)
+    assert t.loc["Yoshinobu Yamamoto", "implied_dpw"] == pytest.approx(18.533, abs=1e-3)
+    assert t.loc["Yoshinobu Yamamoto", "ratio_to_rate"] == pytest.approx(18.533 / 14.13, abs=1e-3)
+    # Cole on MLB.com's Oliver path: 36 x 7.463213 = 268.676 over 37.3 WAR (the yearly figures; MLB.com's
+    # 37.4 total is rounded) = 7.203
+    assert t.loc["Gerrit Cole", "implied_dpw"] == pytest.approx(7.203, abs=1e-3)
+    assert 2.5 < t.loc["Corbin Burnes", "implied_war1_at_rate"] < 4.0

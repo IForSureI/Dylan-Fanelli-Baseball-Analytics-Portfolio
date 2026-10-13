@@ -83,6 +83,15 @@ def cbt_bill(payroll: float, consecutive_years: int, season: int | None = None,
                    over >= PICK_DROP_OVER)
 
 
+def cbt_pick_dropped(over: float, pick_numbers: list[int]) -> int | None:
+    """Which of next year's picks moves back 10 places for a club $40M+ over: the highest, or the second
+    highest when the highest is in the top six (MLB.com glossary, Competitive Balance Tax)."""
+    if over < PICK_DROP_OVER or not pick_numbers:
+        return None
+    picks = sorted(pick_numbers)
+    return picks[1] if picks[0] <= 6 and len(picks) > 1 else picks[0]
+
+
 def tax_cost_of_signing(payroll: float, added_aav: float, consecutive_years: int, season: int | None = None,
                         threshold: float | None = None) -> dict:
     """Extra tax from adding `added_aav` of CBT payroll (the club's true cost is salary + this)."""
@@ -95,20 +104,53 @@ def tax_cost_of_signing(payroll: float, added_aav: float, consecutive_years: int
 # ------------------------------------------------------------------ $/WAR and aging
 DPW_TIERS_2026 = ((2.0, 12.84), (1.0, 8.51), (0.0, 6.74))   # (projected WAR at least, $M per WAR)
 DPW_FLAT_2026 = 11.23
-DPW_BASE_SEASON = 2026       # the FanGraphs 2026 study prices contracts signed for the 2026 season
+DPW_BASE_SEASON = 2026       # see note below
 DPW_GROWTH = 0.03            # ASSUMPTION: FanGraphs' July 2026 methodology (3% a year)
 DISCOUNT = 0.10              # ASSUMPTION: FanGraphs' July 2026 methodology (10%; net 7% with growth)
 ARB_SHARES = (0.15, 0.35, 0.50, 0.75)   # ASSUMPTION: FanGraphs July 2026 prospect methodology
+# Base year. Clemens (Feb. 24, 2026): "I put everything in terms of 2025 dollars" and "applied a 5% annual
+# inflation rate to future year guarantees." Read here as: first-year (2026-season) salaries enter at face
+# in the 2025-26 offseason's dollars, so $12.84M prices a 2026-season win. If it instead prices a 2025
+# win, every free-agent value here is 3% too low (pass base_season=2025); cases.py reports that sensitivity.
+
+# FanGraphs' $/WAR by offseason (row = the season the contracts start), (0-1, 1-2, 2+), $M. Same article.
+DPW_TIERS_HISTORY = {
+    2020: (10.93, 8.52, 11.99), 2021: (4.09, 6.31, 7.22), 2022: (9.46, 8.77, 12.15), 2023: (6.87, 9.77, 10.81),
+    2024: (8.22, 8.83, 14.13), 2025: (5.96, 8.95, 13.91), 2026: (6.74, 8.51, 12.84),
+}
+FANGRAPHS_STUDY_DECLINE = 0.4     # the study's aging: -0.4 WAR every contract year
+FANGRAPHS_STUDY_INFLATION = 0.05  # the study's deflator on future-year salaries
 
 
 def dollars_per_war(war: float, season: int = DPW_BASE_SEASON, tiered: bool = True,
-                    growth: float = DPW_GROWTH) -> float:
-    """Free-agent price of a win for a player projected at `war`, in `season` dollars."""
+                    growth: float = DPW_GROWTH, base_season: int = DPW_BASE_SEASON) -> float:
+    """Free-agent price of a win for a player projected at `war`, in `season` dollars.
+
+    Tier cliff: the price per win drops from $12.84M to $8.51M when a projection falls below 2.0 WAR, so
+    a season projected at 1.9 WAR is worth much less than one at 2.0 (FanGraphs' tiers)."""
     if tiered:
         rate = next(r for lo, r in DPW_TIERS_2026 if war >= lo) if war >= 0 else DPW_TIERS_2026[-1][1]
     else:
         rate = DPW_FLAT_2026
-    return rate * (1 + growth) ** (season - DPW_BASE_SEASON)
+    return rate * (1 + growth) ** (season - base_season)
+
+
+def implied_dpw(total: float, years: int, war1: float, decline: float = FANGRAPHS_STUDY_DECLINE,
+                inflation: float = FANGRAPHS_STUDY_INFLATION) -> float:
+    """$/WAR a free-agent contract implies under FanGraphs' study method: level salaries deflated 5% a
+    year, divided by the year-1 projection aged -0.4 a year (floored at 0). Compare with the study's
+    2+ WAR rate for that offseason (DPW_TIERS_HISTORY)."""
+    pay = sum((total / years) / (1 + inflation) ** t for t in range(years))
+    wins = sum(max(war1 - decline * t, 0.0) for t in range(years))
+    return pay / wins
+
+
+def implied_war1(total: float, years: int, dpw: float, decline: float = FANGRAPHS_STUDY_DECLINE,
+                 inflation: float = FANGRAPHS_STUDY_INFLATION) -> float:
+    """Year-1 projection at which the contract prices at `dpw` under the study's method (no zero floor;
+    valid when the aged path stays positive)."""
+    pay = sum((total / years) / (1 + inflation) ** t for t in range(years))
+    return (pay / dpw + decline * years * (years - 1) / 2) / years
 
 
 def project_war(war: float, first_age: int, years: int, aging: float = 0.4, decline_from: int = 29,
@@ -174,11 +216,12 @@ class Valuation:
 
 
 def value_seasons(war: list[float], first_season: int, salaries: list[float] | None = None,
-                  tiered: bool = True, growth: float = DPW_GROWTH, discount: float = DISCOUNT) -> Valuation:
+                  tiered: bool = True, growth: float = DPW_GROWTH, discount: float = DISCOUNT,
+                  base_season: int = DPW_BASE_SEASON) -> Valuation:
     """Free-agent value of each season (WAR x that season's $/WAR at the WAR's tier), less salary,
     discounted to the start of the first season (t = 0)."""
     seasons = [first_season + t for t in range(len(war))]
-    value = [w * dollars_per_war(w, s, tiered, growth) for w, s in zip(war, seasons)]
+    value = [w * dollars_per_war(w, s, tiered, growth, base_season) for w, s in zip(war, seasons)]
     salary = list(salaries) if salaries is not None else [0.0] * len(war)
     if len(salary) != len(war):
         raise ValueError("one salary per season")
@@ -208,39 +251,42 @@ def level_aav(present_value: float, years: int, discount: float = DISCOUNT) -> f
 # ------------------------------------------------------------------ extensions
 def extension_band(arb_low: list[float], arb_base: list[float], fa_value_low: list[float],
                    fa_value_base: list[float], discount: float = DISCOUNT,
-                   fa_max_salary: list[float] | None = None) -> dict:
+                   fa_max_salary: list[float] | None = None, club_fa_max: list[float] | None = None,
+                   split: float = 0.5) -> dict:
     """Price band for an extension that replaces the arbitration years and buys free-agent years.
 
-    Counterfactual (no extension): the club pays arbitration salaries, then the player is paid his
-    market value as a free agent (by this club or another).
-    - Club ceiling: PV of base arbitration salaries + PV of base free-agent value. Paying more gives
-      the club negative expected surplus against going year to year and then paying market.
-    - Player floor: PV of low arbitration + PV of low free-agent value. ASSUMPTION: the low (x0.8 WAR)
-      case stands in for a risk-averse player's certainty equivalent.
-    - fa_max_salary: a per-season cap on what the open market may pay (MLB's June 25, 2026 proposal);
-      free-agent value is min(value, cap) for the player's outside option. The club's value of the
-      wins is unchanged.
+    Both ends use the same counterfactual: no extension, the club pays arbitration salaries, then the
+    free-agent seasons are paid at the going price (by this club or another).
+    - Club ceiling: what the club would otherwise pay to have him: base arbitration + the base free-agent
+      price, min(value, club_fa_max) when a rule caps what the club must pay to keep him (MLB's own-club
+      "Cornerstone" maximum). Above it the club pays more than its alternative. For a durability-adjusted
+      ceiling, pass probability-weighted (expected) paths.
+    - Player floor: low arbitration + the low free-agent price, min(value, fa_max_salary) when a rule caps
+      his best outside offer. ASSUMPTION: the low (x0.8 WAR) case stands in for a risk-averse player's
+      certainty equivalent.
+    - Point price: floor + split x (ceiling - floor). split = 0.5 divides the bargaining surplus evenly:
+      a BARGAINING ASSUMPTION (equal bargaining power), not a market fact.
     All amounts are per season starting with the first arbitration season (t = 0).
     """
     n_arb = len(arb_base)
     if len(arb_low) != n_arb or len(fa_value_low) != len(fa_value_base):
         raise ValueError("low and base paths need the same length")
     fa_low = list(fa_value_low)
-    fa_base_player = list(fa_value_base)
     if fa_max_salary is not None:
         fa_low = [min(v, c) for v, c in zip(fa_low, fa_max_salary)]
-        fa_base_player = [min(v, c) for v, c in zip(fa_base_player, fa_max_salary)]
+    fa_club = list(fa_value_base)
+    if club_fa_max is not None:
+        fa_club = [min(v, c) for v, c in zip(fa_club, club_fa_max)]
     lead = [0.0] * n_arb
-    club_ceiling = pv(arb_base, discount) + pv(lead + list(fa_value_base), discount)
+    club_ceiling = pv(arb_base, discount) + pv(lead + fa_club, discount)
     player_floor = pv(arb_low, discount) + pv(lead + fa_low, discount)
-    player_expected = pv(arb_base, discount) + pv(lead + fa_base_player, discount)
     years = n_arb + len(fa_value_base)
-    mid = (club_ceiling + player_floor) / 2
+    point = player_floor + split * (club_ceiling - player_floor)
     return {"years": years, "club_ceiling_pv": club_ceiling, "player_floor_pv": player_floor,
-            "player_expected_pv": player_expected, "midpoint_pv": mid,
+            "midpoint_pv": point, "split": split,
             "club_ceiling_aav": level_aav(club_ceiling, years, discount),
             "player_floor_aav": level_aav(player_floor, years, discount),
-            "midpoint_aav": level_aav(mid, years, discount),
+            "midpoint_aav": level_aav(point, years, discount),
             "overlap": club_ceiling >= player_floor}
 
 
