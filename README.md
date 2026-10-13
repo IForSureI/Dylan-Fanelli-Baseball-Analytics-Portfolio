@@ -18,6 +18,7 @@ The edge engine runs league-wide detectors on every pitch of the last three seas
 | **Data** | Statcast pulls cached locally; a DuckDB warehouse that skips duplicate pitches, adapts to new Statcast columns, and logs every load |
 | **Evaluation** | Arsenal tables in pandas and SQL (cross-checked by tests), outcome metrics, usage by batter handedness, season-vs-season comparison with significance tests, movement charts |
 | **Edge engine** | Release tells, hidden in-season changes, expected whiffs cross-fitted by pitcher, persistent gaps, two-season projections, league baselines, the Edge Board |
+| **Familiarity** | Does a pitch wear out? Pitch-type exposure within games, across games and across pitchers; usage break-even; exposure ledger (`bb familiarity`) |
 | **Development** | Planned |
 | **Roster** | Planned |
 | **Business** | Planned |

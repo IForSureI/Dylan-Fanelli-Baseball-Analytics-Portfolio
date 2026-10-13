@@ -1,0 +1,390 @@
+<title>Does a Pitch Wear Out?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+/* Layout: one reading column like a scouting packet; charts and the ledger break wider. Tally marks are the motif. */
+:root {
+  --paper: #f5f7f4; --card: #ffffff; --ink: #17201c; --muted: #5a6761; --rule: #d7ddd8;
+  --accent: #0d6a5a; --accent-soft: #dcefe9; --warn: #a3471b; --warn-soft: #f6e3d8;
+  --ff: #2a78d6; --si: #eb6834; --fc: #008300; --ch: #1baf7a; --sl: #eda100; --st: #c98500; --cu: #e87ba4; --kc: #d55181;
+  --display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #111714; --card: #18201c; --ink: #e6ece8; --muted: #9ba9a2; --rule: #2a352f;
+  --accent: #52c3a6; --accent-soft: #173a31; --warn: #f08a5d; --warn-soft: #3a2219; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #111714; --card: #18201c; --ink: #e6ece8; --muted: #9ba9a2; --rule: #2a352f;
+  --accent: #52c3a6; --accent-soft: #173a31; --warn: #f08a5d; --warn-soft: #3a2219; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; }
+.wrap { max-width: 1040px; margin: 0 auto; padding-inline: 20px; padding-block: 40px 72px; display: grid; gap: 56px; }
+.col { max-width: 680px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 700; line-height: 1.02; text-wrap: balance; margin: 0; letter-spacing: 0.005em; }
+h1 { font-size: clamp(48px, 9vw, 96px); text-transform: uppercase; }
+h2 { font-size: clamp(30px, 4.6vw, 44px); text-transform: uppercase; }
+h3 { font-size: 22px; text-transform: uppercase; letter-spacing: 0.03em; }
+p { margin: 0; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.lede { font-size: 21px; line-height: 1.5; max-width: 680px; }
+.stack { display: grid; gap: 14px; }
+.hero { display: grid; gap: 22px; }
+.hero h1 .tally { color: var(--accent); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); }
+.stat { padding: 16px 18px 18px 0; display: grid; gap: 4px; align-content: start; }
+.stat + .stat { padding-left: 18px; border-left: 1px solid var(--rule); }
+.stat b { font-family: var(--display); font-size: 52px; line-height: 1; font-weight: 600; font-variant-numeric: tabular-nums; }
+.stat span { font-size: 15px; color: var(--muted); line-height: 1.4; }
+.figure { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: 20px; display: grid; gap: 12px; min-width: 0; }
+.figure svg { width: 100%; height: auto; display: block; overflow: visible; }
+.cap { font-family: var(--mono); font-size: 12px; color: var(--muted); line-height: 1.5; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-family: var(--mono); font-size: 13px; }
+.legend i { display: inline-block; width: 22px; height: 3px; vertical-align: middle; margin-right: 6px; border-radius: 2px; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px; align-items: start; }
+.two > * { min-width: 0; }
+ul.plain { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; font-size: 15px; }
+th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+th { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+td.num, th.num { text-align: right; font-family: var(--mono); font-size: 14px; }
+.ledger td { white-space: nowrap; }
+.ledger .who { font-family: var(--display); font-size: 19px; font-weight: 600; }
+.ledger .who small { font-family: var(--mono); font-size: 11px; color: var(--muted); font-weight: 400; margin-left: 6px; }
+.tal { font-family: var(--mono); font-size: 13px; letter-spacing: 1px; }
+.cell { display: grid; gap: 2px; }
+.pen { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.hot { background: var(--warn-soft); }
+.hot .pen { color: var(--warn); font-weight: 500; }
+.chips { display: flex; gap: 4px; flex-wrap: nowrap; }
+.chip { font-family: var(--mono); font-size: 11px; padding: 2px 5px; border-radius: 3px; color: #fff; font-weight: 500; }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: baseline; }
+.calc { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; align-items: start; }
+.calc > * { min-width: 0; }
+.ctrl { display: grid; gap: 14px; }
+.row { display: grid; gap: 6px; }
+label { font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+select, input[type=range] { width: 100%; font: inherit; font-size: 16px; }
+select { padding: 8px 10px; border: 1px solid var(--rule); border-radius: 4px; background: var(--card); color: var(--ink); }
+select:focus-visible, input:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type=range] { accent-color: var(--accent); }
+.seg { display: flex; border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; width: fit-content; }
+.seg button { font: inherit; font-family: var(--mono); font-size: 13px; padding: 7px 14px; border: 0; background: var(--card); color: var(--ink); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.answer { border-top: 2px solid var(--ink); padding-top: 14px; display: grid; gap: 10px; }
+.answer b.big { font-family: var(--display); font-size: 64px; line-height: 1; font-weight: 600; font-variant-numeric: tabular-nums; }
+.answer .unit { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.verdict { font-size: 16px; }
+.note { font-size: 15px; color: var(--muted); }
+.pill { font-family: var(--mono); font-size: 11px; padding: 2px 7px; border-radius: 99px; border: 1px solid var(--rule); color: var(--muted); white-space: nowrap; }
+.pill.yes { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+.pill.no { background: transparent; }
+.method { font-size: 15px; display: grid; gap: 12px; }
+.method code { font-family: var(--mono); font-size: 13px; background: var(--accent-soft); padding: 1px 5px; border-radius: 3px; }
+a { color: var(--accent); }
+footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 16px; display: grid; gap: 6px; }
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .stat + .stat { padding-left: 0; border-left: 0; border-top: 1px solid var(--rule); }
+  .stat b { font-size: 44px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .line { transition: opacity .2s; }
+}
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">MLB regular seasons 2024–2026 · <span id="n-pitches"></span> pitches · Statcast</p>
+    <h1>Does a pitch <span class="tally">wear out</span>?</h1>
+    <p class="lede">In three seasons of data, yes, and it's specific to the pitch type. The more of a pitch a hitter has seen from this pitcher today, the less he misses it. Seeing more pitches of other types doesn't do the same. Changeups and splitters wear out fastest. Part of the effect carries to the next same-handed pitcher who throws the same pitch.</p>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <section class="stack">
+    <p class="eyebrow">Dose-response</p>
+    <h2>The more he's seen it, the less he misses it</h2>
+    <p class="col">Change in whiff rate per swing, compared with a hitter who hasn't seen this pitch type from this pitcher today. Total pitches seen, count, location, the pitch's own velocity and movement, pitcher fatigue and times through the order are all held fixed. These are associations in game data, not a controlled test.</p>
+    <div class="figure">
+      <div class="legend" id="dose-legend"></div>
+      <svg id="dose" viewBox="0 0 960 400" role="img" aria-label="Whiff rate change by number of same-type pitches seen earlier today"></svg>
+      <p class="cap">Bars are 95% intervals with standard errors clustered by pitcher. Fixed effects: pitcher × pitch type × season, and batter × pitch group × season.</p>
+    </div>
+  </section>
+
+  <section class="two">
+    <div class="stack">
+      <p class="eyebrow">By pitch type</p>
+      <h2>Splitters and changeups go first</h2>
+      <p>Whiff-rate change per earlier same-type pitch in earlier plate appearances today. League whiff rate for each pitch is on the right.</p>
+      <div class="figure"><svg id="types" viewBox="0 0 480 400" role="img" aria-label="Whiff change per earlier pitch by pitch type"></svg>
+      <p class="cap">95% intervals. Knuckle-curves come from <span id="kc-n"></span> pitchers.</p></div>
+    </div>
+    <div class="stack">
+      <p class="eyebrow">What changes</p>
+      <h2>Contact, not discipline</h2>
+      <p>Per earlier same-type pitch, against the same pitch type in the same count and spot.</p>
+      <div class="scroll"><table id="outcomes"></table></div>
+      <p class="note">Hitters chase familiar fastballs and breaking balls more, not less, and still miss less. They're making contact, not laying off. Each earlier changeup goes with 11.6 more points of xwOBA on contact on the next one.</p>
+    </div>
+  </section>
+
+  <section class="stack">
+    <p class="eyebrow">The exposure ledger · one real start</p>
+    <h2>Same lineup, same time through, different pitch</h2>
+    <p class="col">Tarik Skubal, September 3, 2026, 102 pitches. Each cell counts the pitches of that type a hitter saw from him in his first two plate appearances. Under each count is the league-rate whiff penalty for that pitch on his third look. Cells at −3 points or worse are shaded. Each penalty compares with having seen the same number of other pitches instead.</p>
+    <div class="figure scroll"><table class="ledger" id="ledger"></table></div>
+    <p class="note col">Penalties are linear: count × the pitch type's per-pitch effect. For four or more changeups, the direct estimate is −8.2 points. Fermín, the leadoff hitter, had seen 5 changeups. He got two more on his third trip and put the next pitch, a fastball, in play. Church had seen no changeups and struck out on one. He was the only left-handed hitter in the lineup, so part of that gap is platoon usage. The league estimate holds with platoon fixed effects.</p>
+  </section>
+
+  <section class="two">
+    <div class="stack">
+      <p class="eyebrow">Bullpen</p>
+      <h2>It follows the hitter to the next pitcher</h2>
+      <p>Whiff-rate change per pitch of the same type the hitter saw from a <em>different</em> pitcher earlier today.</p>
+      <div class="scroll"><table id="cross"></table></div>
+      <p class="note">A changeup reliever who follows a same-handed changeup starter starts with a partly used pitch. The other-hand carryover is smaller and not significant, and so is the gap between hands, so hand is a lean, not a rule. A splitter seen earlier goes with a weaker changeup almost as much.</p>
+    </div>
+    <div class="stack">
+      <p class="eyebrow">Times through the order</p>
+      <h2>Part of the third-time penalty is the pitch</h2>
+      <p>Whiff-rate decline at the third time through, against the first, with count, location and fatigue controlled. The parts come from a second model with exposure added, so they don't sum to the decline. Net of the general effect of seeing more pitches, exposure is smaller than what stays on times through for every group.</p>
+      <div class="scroll"><table id="tto"></table></div>
+    </div>
+  </section>
+
+  <section class="stack" id="calc-sec">
+    <p class="eyebrow">Usage calculator</p>
+    <h2>When does wear-out outweigh a better pitch?</h2>
+    <p class="col">Shift usage from pitch A to pitch B. This is how much better B's run value has to be, in runs per 100 pitches, before the extra wear-out eats the gain. It counts three measured windows: earlier plate appearances today, earlier in the same plate appearance, and earlier games this season. General scouting-report knowledge of a pitcher's tendencies isn't in it.</p>
+    <div class="figure calc">
+      <div class="ctrl">
+        <div class="row"><label id="role-l">Role</label><div class="seg" role="group" aria-labelledby="role-l" id="role"></div></div>
+        <div class="row"><label for="a-type">Moving usage off (A)</label><select id="a-type"></select></div>
+        <div class="row"><label for="a-use">A's usage: <span id="a-use-v"></span></label><input type="range" id="a-use" min="5" max="70" step="1"></div>
+        <div class="row"><label for="b-type">Moving usage onto (B)</label><select id="b-type"></select></div>
+        <div class="row"><label for="b-use">B's usage: <span id="b-use-v"></span></label><input type="range" id="b-use" min="5" max="70" step="1"></div>
+      </div>
+      <div class="answer" aria-live="polite">
+        <span class="unit">Break-even advantage for B</span>
+        <b class="big" id="be"></b>
+        <span class="unit">runs per 100 pitches</span>
+        <p class="verdict" id="be-text"></p>
+        <p class="note" id="be-parts"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="two">
+    <div class="stack">
+      <p class="eyebrow">What doesn't matter</p>
+      <h2>You can't grade a pitch on it</h2>
+      <ul class="plain">
+        <li><b>One season can't measure it pitch by pitch.</b> A single pitch's season slope carries 3–4 points of noise against effects of 1–2. The year-to-year correlation is borderline for fastballs (0.10, SE 0.04) and absent for secondaries.</li>
+        <li><b>Fastball stuff is the one trait that predicts it.</b> Better fastballs lose more per look.</li>
+        <li><b>No sign that release tells speed it up.</b> This matches the Edge Board's result that tells haven't cost whiffs.</li>
+        <li><b>No sign that usage, movement separation or a secondary's stuff changes it.</b> Firmer changeups looked like they held up better (p = 0.02), but that doesn't survive correction for 13 tests (q = 0.14).</li>
+      </ul>
+      <div class="scroll"><table id="mods"></table></div>
+    </div>
+    <div class="stack">
+      <p class="eyebrow">How sure</p>
+      <h2>It holds across specifications</h2>
+      <div class="scroll"><table id="robust"></table></div>
+      <p class="note">Cutters are the weak group. They're significant pooled (p = 0.03) and in 2024, but not in 2025 or 2026. The placebo is the same pitch type thrown in the hitter's later plate appearances, which can't affect the current pitch. Its estimate is large and positive (+2 to +3 points): pitchers go back to what's working. The same selection could push the main estimates toward zero. Holding future pitches fixed changes them very little, so read the main estimates as probably not overstated.</p>
+    </div>
+  </section>
+
+  <section class="method col">
+    <p class="eyebrow">Method</p>
+    <h3>How it was measured</h3>
+    <p><b>Grain:</b> one row per pitch. Exposure counts every pitch the same pitcher threw the same batter before the current pitch, in three windows: earlier plate appearances today, earlier in this plate appearance, and earlier games this season. Each window is split into same type versus other types. Writing each pair as <code>same</code> + <code>same + other</code> makes the coefficient on <code>same</code> the contrast: one earlier pitch having been this type instead of another.</p>
+    <p><b>Model:</b> associations from a linear probability model for whiffs and chases, linear for run value and xwOBA on contact. Two sets of fixed effects are absorbed by alternating projections: pitcher × pitch type × season, and batter × pitch group × season. Controls cover count, times through, pitch count and its square, handedness, the pitch's velocity, rise, run and spin, and location. Standard errors are clustered by pitcher.</p>
+    <p><b>Limits:</b> this is observational. Location and count are partly the pitcher's response, so the main estimate holds them fixed; letting them vary gives larger effects for every group except cutters. The data can't separate recognition from timing.</p>
+    <p>Code: <code>baseball/edge/familiarity.py</code>, run with <code>bb familiarity 2026</code>. The full write-up is <code>reports/2026-league-pitch-familiarity.md</code>.</p>
+  </section>
+
+  <footer>
+    <span>Data: Statcast via Baseball Savant, regular seasons 2024–2026, pulled October 2026. Player names: MLB Stats API.</span>
+    <span>Built by Dylan Fanelli · baseball operations workspace · <span id="built"></span></span>
+  </footer>
+</div>
+
+<script>
+const D = /*DATA*/null;
+const COL = { FF: "var(--ff)", SI: "var(--si)", FC: "var(--fc)", CH: "var(--ch)", FS: "var(--ch)", SL: "var(--sl)", ST: "var(--st)", CU: "var(--cu)", KC: "var(--kc)" };
+const NAME = { FF: "Four-seamer", SI: "Sinker", FC: "Cutter", SL: "Slider", ST: "Sweeper", CU: "Curveball", KC: "Knuckle-curve", CH: "Changeup", FS: "Splitter" };
+const GROUP_OF = { FF: "fastball", SI: "fastball", FC: "cutter", SL: "breaking", ST: "breaking", CU: "breaking", KC: "breaking", CH: "offspeed", FS: "offspeed" };
+const GNAME = { fastball: "Fastballs (FF, SI)", breaking: "Breaking balls", offspeed: "Changeups / splitters", cutter: "Cutters" };
+const GCOL = { fastball: "var(--ff)", breaking: "var(--sl)", offspeed: "var(--ch)", cutter: "var(--fc)" };
+const $ = (id) => document.getElementById(id);
+const f1 = (v) => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(1);
+const f2 = (v) => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(2);
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, parent, text) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text !== undefined) e.textContent = text; if (parent) parent.appendChild(e); return e; }
+const main = (g, o, t) => D.main.find((r) => r.group === g && r.outcome.startsWith(o) && r.term === t);
+
+// hero
+$("n-pitches").textContent = D.summary.pitches.toLocaleString("en-US");
+const ch = main("offspeed", "whiff", "prev: same - other");
+const four = D.dose.offspeed.find((d) => d.k === "4+");
+const crossCH = D.cross.find((r) => r.group === "offspeed" && r.term === "xp_same_samehand");
+[[f2(ch.coef), "whiff points per swing, for each earlier changeup or splitter he saw from this pitcher today"],
+ [f1(four.coef), "whiff points after 4+ of them, on a pitch that gets whiffs on " + Math.round(100 * ch.base) + "% of swings"],
+ [Math.round(100 * crossCH.coef / ch.coef) + "%", "of that effect carries to the next same-handed pitcher's changeup"]]
+  .forEach(([b, s]) => { const d = document.createElement("div"); d.className = "stat"; d.innerHTML = `<b>${b}</b><span>${s}</span>`; $("stats").appendChild(d); });
+
+// dose-response chart
+(function () {
+  const svg = $("dose"), W = 960, H = 400, m = { l: 64, r: 24, t: 16, b: 52 };
+  const groups = ["fastball", "breaking", "offspeed"], ks = ["0", "1", "2", "3", "4+"];
+  const yMin = -10, yMax = 0.5;
+  const x = (i) => m.l + (i * (W - m.l - m.r)) / (ks.length - 1);
+  const y = (v) => m.t + ((yMax - v) * (H - m.t - m.b)) / (yMax - yMin);
+  for (let v = 0; v >= yMin; v -= 2) {
+    el("line", { x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), stroke: "var(--rule)", "stroke-width": v === 0 ? 1.5 : 1 }, svg);
+    el("text", { x: m.l - 10, y: y(v) + 5, "text-anchor": "end", fill: "var(--muted)", "font-family": "var(--mono)", "font-size": 13 }, svg, v === 0 ? "0" : "−" + Math.abs(v));
+  }
+  ks.forEach((k, i) => el("text", { x: x(i), y: H - m.b + 24, "text-anchor": "middle", fill: "var(--muted)", "font-family": "var(--mono)", "font-size": 13 }, svg, k));
+  el("text", { x: (m.l + W - m.r) / 2, y: H - 6, "text-anchor": "middle", fill: "var(--muted)", "font-family": "var(--mono)", "font-size": 12 }, svg, "same-type pitches seen from this pitcher in earlier plate appearances today");
+  el("text", { x: 14, y: (m.t + H - m.b) / 2, transform: `rotate(-90 14 ${(m.t + H - m.b) / 2})`, "text-anchor": "middle", fill: "var(--muted)", "font-family": "var(--mono)", "font-size": 12 }, svg, "whiff% change (points)");
+  groups.forEach((g, gi) => {
+    const off = (gi - 1) * 9;
+    const pts = [{ k: "0", coef: 0, se: 0 }, ...D.dose[g]];
+    const d = pts.map((p, i) => `${i ? "L" : "M"}${x(i) + off},${y(p.coef)}`).join("");
+    el("path", { d, fill: "none", stroke: GCOL[g], "stroke-width": 3, "stroke-linejoin": "round", class: "line" }, svg);
+    pts.forEach((p, i) => {
+      if (p.se) el("line", { x1: x(i) + off, x2: x(i) + off, y1: y(p.coef - 1.96 * p.se), y2: y(p.coef + 1.96 * p.se), stroke: GCOL[g], "stroke-width": 2 }, svg);
+      el("circle", { cx: x(i) + off, cy: y(p.coef), r: 5, fill: GCOL[g], stroke: "var(--card)", "stroke-width": 2 }, svg);
+    });
+    const last = pts[pts.length - 1];
+    const ly = y(last.coef) + 5 + (g === "fastball" ? -10 : g === "breaking" ? 12 : 0);
+    el("text", { x: x(4) + off - 14, y: ly, "text-anchor": "end", fill: GCOL[g], "font-family": "var(--mono)", "font-size": 13, "font-weight": 600 }, svg, f1(last.coef));
+    const s = document.createElement("span"); s.innerHTML = `<i style="background:${GCOL[g]}"></i>${GNAME[g]}`; $("dose-legend").appendChild(s);
+  });
+})();
+
+// pitch types
+(function () {
+  const svg = $("types"), W = 480, rowH = 40, m = { l: 112, r: 54, t: 8, b: 30 };
+  const rows = [...D.types].sort((a, b) => b.coef - a.coef);
+  const H = m.t + rows.length * rowH + m.b; svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const xMin = -3.2, x = (v) => m.l + ((v - xMin) / (0 - xMin)) * (W - m.l - m.r);
+  [-3, -2, -1, 0].forEach((v) => {
+    el("line", { x1: x(v), x2: x(v), y1: m.t, y2: H - m.b, stroke: "var(--rule)" }, svg);
+    el("text", { x: x(v), y: H - 10, "text-anchor": "middle", fill: "var(--muted)", "font-family": "var(--mono)", "font-size": 12 }, svg, v === 0 ? "0" : "−" + Math.abs(v));
+  });
+  rows.forEach((r, i) => {
+    const yc = m.t + i * rowH + rowH / 2;
+    el("rect", { x: x(r.coef), y: yc - 12, width: x(0) - x(r.coef), height: 24, fill: COL[r.t], rx: 2 }, svg);
+    el("line", { x1: x(r.coef - 1.96 * r.se), x2: x(Math.min(r.coef + 1.96 * r.se, 0)), y1: yc, y2: yc, stroke: "var(--ink)", "stroke-width": 1.5 }, svg);
+    el("text", { x: m.l - 10, y: yc + 5, "text-anchor": "end", fill: "var(--ink)", "font-family": "var(--display)", "font-size": 17, "font-weight": 600 }, svg, NAME[r.t]);
+    el("text", { x: W - 4, y: yc + 5, "text-anchor": "end", fill: "var(--muted)", "font-family": "var(--mono)", "font-size": 12 }, svg, r.whiff.toFixed(0) + "%");
+  });
+  $("kc-n").textContent = D.types.find((t) => t.t === "KC").pitchers;
+})();
+
+// outcomes table
+(function () {
+  const outs = [["whiff", "Whiff / swing", 1, "pts"], ["chase", "Chase", 1, "pts"], ["xwOBA", "xwOBA con.", 1, ""], ["run value", "Runs /100", 1, ""]];
+  let h = "<thead><tr><th>Pitch</th>" + outs.map((o) => `<th class="num">${o[1]}</th>`).join("") + "</tr></thead><tbody>";
+  ["fastball", "breaking", "offspeed", "cutter"].forEach((g) => {
+    h += `<tr><td><span class="dot" style="background:${GCOL[g]}"></span>${GNAME[g]}</td>`;
+    outs.forEach((o) => { const r = main(g, o[0], "prev: same - other"); const v = o[0] === "xwOBA" ? f1(r.coef) : f2(r.coef); h += `<td class="num" title="SE ${r.se.toFixed(2)}, p = ${r.p.toExponential(1)}">${r.p < 0.05 ? v : `<span class="pen">${v}</span>`}</td>`; });
+    h += "</tr>";
+  });
+  $("outcomes").innerHTML = h + '</tbody><caption class="cap" style="caption-side:bottom;text-align:left;padding-top:8px">xwOBA on balls in play, in points of .001. Grey: not significant (p ≥ 0.05).</caption>';
+})();
+
+// ledger
+(function () {
+  const T = ["FF", "SI", "CH", "SL", "CU"];
+  let h = "<thead><tr><th>#</th><th>Hitter</th>" + T.map((t) => `<th><span class="dot" style="background:${COL[t]}"></span>${t}</th>`).join("") + "<th>Third PA, pitch by pitch</th><th>Result</th></tr></thead><tbody>";
+  D.ledger.forEach((r) => {
+    h += `<tr><td class="num">${r.slot}</td><td class="who">${r.name}<small>${r.stand}HH</small></td>`;
+    T.forEach((t) => { const n = r["seen_" + t], p = r["pen_" + t]; h += `<td class="${p <= -3 ? "hot" : ""}"><div class="cell"><span class="tal">${n ? tallyMarks(n) : "·"}</span><span class="pen">${n ? f1(p) : "0"}</span></div></td>`; });
+    const chips = r.pa3_pitches ? r.pa3_pitches.split(" ").map((t) => `<span class="chip" style="background:${COL[t] || "var(--muted)"}">${t}</span>`).join("") : '<span class="pen">no third PA</span>';
+    h += `<td><div class="chips">${chips}</div></td><td>${(r.pa3_result || "").replace(/_/g, " ")}</td></tr>`;
+  });
+  $("ledger").innerHTML = h + "</tbody>";
+  function tallyMarks(n) { let s = ""; for (let i = 0; i < Math.floor(n / 5); i++) s += "<s>||||</s> "; return s + "|".repeat(n % 5); }
+})();
+
+// cross-pitcher
+(function () {
+  const cols = [["xp_same_samehand", "Same type, same hand"], ["xp_same_otherhand", "Same type, other hand"], ["xp_group_other_type", "Same family, other type"]];
+  let h = "<thead><tr><th>Current pitch</th>" + cols.map((c) => `<th class="num">${c[1]}</th>`).join("") + '<th class="num">Same pitcher</th></tr></thead><tbody>';
+  ["fastball", "breaking", "offspeed"].forEach((g) => {
+    h += `<tr><td><span class="dot" style="background:${GCOL[g]}"></span>${GNAME[g]}</td>`;
+    cols.forEach((c) => { const r = D.cross.find((x) => x.group === g && x.term === c[0]); h += `<td class="num">${r.p < 0.05 ? f2(r.coef) : `<span class="pen">${f2(r.coef)}</span>`}</td>`; });
+    const s = main(g, "whiff", "prev: same - other"); h += `<td class="num">${f2(s.coef)}</td></tr>`;
+  });
+  $("cross").innerHTML = h + '</tbody><caption class="cap" style="caption-side:bottom;text-align:left;padding-top:8px">Whiff points per swing, per earlier pitch. Grey: not significant.</caption>';
+})();
+
+// TTO
+(function () {
+  let h = '<thead><tr><th>Pitch</th><th class="num">Decline</th><th class="num">Type exposure</th><th class="num">Pitches seen (general)</th><th class="num">Net exposure</th><th class="num">Left on TTO</th></tr></thead><tbody>';
+  ["offspeed", "breaking", "fastball", "cutter"].forEach((g) => {
+    const r = D.tto.find((x) => x.group === g && x.times_through === 3);
+    h += `<tr><td><span class="dot" style="background:${GCOL[g]}"></span>${GNAME[g]}</td><td class="num">${f1(r.raw_decline)}</td><td class="num">${f1(r.type_specific)}</td><td class="num">${f1(r.general_per_pitch_seen)}</td><td class="num"><b>${f1(r.type_specific + r.general_per_pitch_seen)}</b></td><td class="num">${f1(r.left_on_tto)}</td></tr>`;
+  });
+  $("tto").innerHTML = h + '</tbody><caption class="cap" style="caption-side:bottom;text-align:left;padding-top:8px">Whiff points per swing, third time through against first. Pitcher fatigue is controlled in every model.</caption>';
+})();
+
+// moderators
+(function () {
+  const TN = { tell_auc: "Release tell", x_whiff_pct: "Expected whiff (stuff)", d_velo: "Smaller speed gap", sep_in: "Movement separation", usage: "Usage", velo: "Velocity" };
+  let h = '<thead><tr><th>Pitch</th><th>Trait (+1 SD)</th><th class="num">Effect</th><th class="num">q</th></tr></thead><tbody>';
+  D.mods.forEach((r) => { h += `<tr><td>${GNAME[r.group].split(" (")[0]}</td><td>${TN[r.trait]}</td><td class="num">${f2(r.coef)}</td><td class="num"><span class="pill ${r.p_bh < 0.05 ? "yes" : "no"}">${r.p_bh < 0.001 ? "<0.001" : r.p_bh.toFixed(2)}</span></td></tr>`; });
+  $("mods").innerHTML = h + '</tbody><caption class="cap" style="caption-side:bottom;text-align:left;padding-top:8px">Change in the per-pitch whiff cost (points) per standard deviation of the trait. q: Benjamini–Hochberg across all 13 tests.</caption>';
+})();
+
+// robustness
+(function () {
+  const specs = [["main", "Main"], ["pitcher x type x month fixed effects", "Month-level fixed effects"], ["pitcher x type x season x batter side", "Platoon fixed effects"], ["starters only", "Starters only"], ["no location controls", "Location free to vary"], ["season 2024", "2024 only"], ["season 2025", "2025 only"], ["season 2026", "2026 only"]];
+  const G = ["fastball", "breaking", "offspeed"];
+  let h = "<thead><tr><th>Specification</th>" + G.map((g) => `<th class="num">${GNAME[g].split(" (")[0]}</th>`).join("") + "</tr></thead><tbody>";
+  specs.forEach(([k, lab]) => { h += `<tr><td>${lab}</td>` + G.map((g) => { const r = D.robust.find((x) => x.group === g && x.spec.startsWith(k) && x.term === "prev: same - other"); return `<td class="num">${f2(r.coef)}</td>`; }).join("") + "</tr>"; });
+  h += "<tr><td>Come-up-again sample</td>" + G.map((g) => { const r = D.robust.find((x) => x.group === g && x.spec.startsWith("same sample") && x.term === "prev: same - other"); return `<td class="num">${f2(r.coef)}</td>`; }).join("") + "</tr>";
+  h += "<tr><td>…holding later PAs fixed</td>" + G.map((g) => { const r = D.robust.find((x) => x.group === g && x.spec.startsWith("placebo") && x.term === "prev: same - other"); return `<td class="num">${f2(r.coef)}</td>`; }).join("") + "</tr>";
+  h += "<tr><td>Placebo: later PAs</td>" + G.map((g) => { const r = D.robust.find((x) => x.group === g && x.term === "next: same - other"); return `<td class="num">${f2(r.coef)}</td>`; }).join("") + "</tr>";
+  $("robust").innerHTML = h + '</tbody><caption class="cap" style="caption-side:bottom;text-align:left;padding-top:8px">Whiff points per swing, per earlier same-type pitch in earlier PAs today.</caption>';
+})();
+
+// calculator
+(function () {
+  const types = D.types.map((t) => t.t);
+  const cost = Object.fromEntries(D.types.map((t) => [t.t, -t.rv]));
+  const scost = D.season_cost, pcost = D.pa_cost;
+  const st = { role: "starter", a: "FF", b: "CH", au: 38, bu: 26 };
+  try { Object.assign(st, JSON.parse(localStorage.getItem("fam-calc") || "{}")); } catch (e) {}
+  ["starter", "reliever"].forEach((r) => { const b = document.createElement("button"); b.type = "button"; b.id = "role-" + r; b.textContent = r[0].toUpperCase() + r.slice(1); b.onclick = () => { st.role = r; draw(); }; $("role").appendChild(b); });
+  ["a-type", "b-type"].forEach((id) => types.forEach((t) => { const o = document.createElement("option"); o.value = t; o.textContent = NAME[t]; $(id).appendChild(o); }));
+  $("a-type").onchange = (e) => { st.a = e.target.value; draw(); };
+  $("b-type").onchange = (e) => { st.b = e.target.value; draw(); };
+  $("a-use").oninput = (e) => { st.au = +e.target.value; draw(); };
+  $("b-use").oninput = (e) => { st.bu = +e.target.value; draw(); };
+  function draw() {
+    if (st.au + st.bu > 100) st.bu = 100 - st.au;
+    $("a-type").value = st.a; $("b-type").value = st.b; $("a-use").value = st.au; $("b-use").value = st.bu;
+    $("a-use-v").textContent = st.au + "%"; $("b-use-v").textContent = st.bu + "%";
+    ["starter", "reliever"].forEach((r) => $("role-" + r).setAttribute("aria-pressed", r === st.role));
+    const base = D.base[st.role], ua = st.au / 100, ub = st.bu / 100;
+    const today = base.today * (cost[st.b] * ub - cost[st.a] * ua);
+    const season = base.season * (scost[GROUP_OF[st.b]] * ub - scost[GROUP_OF[st.a]] * ua);
+    const inpa = base.pa * (pcost[GROUP_OF[st.b]] * ub - pcost[GROUP_OF[st.a]] * ua);
+    const be = today + inpa + season;
+    $("be").textContent = f2(be);
+    $("be-text").innerHTML = st.a === st.b ? "Pick two different pitches." : be <= 0
+      ? `Shifting from the ${NAME[st.a].toLowerCase()} to the ${NAME[st.b].toLowerCase()} <b>reduces</b> total wear-out at these usages. Any run-value edge for B pays.`
+      : `The ${NAME[st.b].toLowerCase()} needs to beat the ${NAME[st.a].toLowerCase()} by more than <b>${be.toFixed(2)} runs per 100 pitches</b> before more of it pays, counting only the wear-out measured here.`;
+    $("be-parts").textContent = `Earlier PAs today: ${f2(today)} (a ${st.role}'s average pitch comes after ${base.today.toFixed(2)} of them). Earlier in the PA: ${f2(inpa)} (${base.pa.toFixed(2)}). Earlier games: ${f2(season)} (${base.season.toFixed(2)}). Point estimates; the within-PA cost for changeups and splitters isn't significant.`;
+    try { localStorage.setItem("fam-calc", JSON.stringify(st)); } catch (e) {}
+  }
+  draw();
+})();
+$("built").textContent = "updated " + (D.built || "");
+</script>

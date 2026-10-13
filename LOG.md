@@ -2,6 +2,37 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-10-12 (overnight): Does a pitch wear out? Pitch-type familiarity
+**Built**
+- **Sequence copy of the league data** (`bb seq`, `data/seq/`, about 3 MB parts): regular season with batter ids, plate location, run value and bat tracking. The slim engine copy has no batter ids.
+- **`baseball/edge/familiarity.py`** (`bb familiarity 2026`):
+  - per-pitch exposure counts: same type vs. other types; earlier PAs, this PA and earlier games; and from other pitchers
+  - the same-minus-other contrast, with two-way fixed effects and pitcher-clustered SEs
+  - placebo, robustness, dose-response, per pitch type, carryover between pitchers, TTO decomposition, a trait screen with BH correction, persistence, and a usage break-even formula
+  - the exposure ledger for a start
+  - page and figure builders
+- **`baseball.stats.absorb()`** for multi-way fixed effects. `clustered_wls` is now a one-pass sum, fast on a million rows.
+- **The Familiarity page** (`bb familiarity` writes it to `data/edge/familiarity/`).
+- **Report:** `reports/2026-league-pitch-familiarity.md`.
+- **Monthly update:** now writes the sequence copy and reruns the study.
+- **Tests:** 65 (up from 55).
+
+**Answered (independently reviewed twice)**
+- **A pitch type loses whiffs the more of it a hitter has seen from the pitcher.** Per earlier same-type pitch in earlier PAs today, relative to another type: −0.70 (fastballs), −0.91 (breaking balls), −1.87 (changeups/splitters) whiff points per swing, all p < 0.001 and in every season. After 4+ changeups/splitters: −8.2 points.
+- **It carries across games and across pitchers.**
+  - After 1–3 of this pitcher's changeups in earlier games this season: −3.5 points.
+  - Same-hand changeup carryover from another pitcher today: −0.79 per earlier changeup.
+- **Familiarity shows up as contact, not discipline.** Chase rises on familiar fastballs and breaking balls.
+- **Changeup exposure accounts for part of the third-time-through decline on changeups/splitters:** −3.5 gross, −2.3 net, against −4.6 total.
+- **Usage break-even with all three windows priced:** about −0.18 to +0.43 runs per 100 pitches for starters, about 0 for relievers. Repetition alone is a weak reason to hold back a better pitch.
+
+**Learned**
+- **Placebo before claims.** Pitchers throw more of what's working (future-exposure coefficient +2 to +3 points). A like-for-like comparison showed the placebo-adjusted numbers moved because of the smaller sample, not the control.
+- **A null persistence test can be a power problem.** Each pitch-season slope carries 3–4 points of noise, so per-pitch wear-out can't be graded from a season of data. Say "can't measure", not "doesn't exist".
+- **Compare like with like.** In carryover tables, say what the reference group is. A coefficient relative to another pitch isn't an absolute effect.
+- **Keep reviewed snapshots separate from automated output.** Monthly runs write their figure to `data/`, so they never touch a reviewed report.
+- **Moving data:** staging two ~3 MB parts per call works; parallel staging calls fail.
+
 ## 2026-10-12 (late): Tracking data pipeline (public loader, private repo)
 **Built**
 - `baseball/ingest/tracking.py`: the TrackMan / Rapsodo / Savant loader, with tests. It tests the horizontal sign on the data itself and flags QC problems.

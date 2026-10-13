@@ -1,5 +1,6 @@
 #!/bin/zsh -l
-# Monthly update: newest code, new Statcast pitches for the current season, slim copies, edge engine.
+# Monthly update: newest code, new Statcast pitches for the current season, slim and sequence copies, edge engine,
+# familiarity study.
 # Run by the LaunchAgent on the 1st of each month at 6:00 AM, or by hand: ~/Baseball/scripts/automation/update.sh
 set -u
 REPO="$HOME/Baseball"
@@ -21,10 +22,11 @@ git pull --ff-only || echo "git pull skipped (local changes?)"
 uv sync --quiet
 
 for S in $((SEASON - 2)) $((SEASON - 1)); do      # earlier seasons: only fill gaps
-  caffeinate -i uv run bb pull-league "$S" && uv run bb slim "$S"
+  caffeinate -i uv run bb pull-league "$S" && uv run bb slim "$S" && uv run bb seq "$S"
 done
-caffeinate -i uv run bb pull-league "$SEASON" --refresh-recent && uv run bb slim "$SEASON"
+caffeinate -i uv run bb pull-league "$SEASON" --refresh-recent && uv run bb slim "$SEASON" && uv run bb seq "$SEASON"
 caffeinate -i uv run bb edge "$SEASON" && uv run bb board "$SEASON"
+caffeinate -i uv run bb familiarity "$SEASON"      # pitch-type familiarity study + page (data/edge/familiarity/)
 
 PRIVATE="$HOME/Baseball-private"
 if [ -d "$PRIVATE/.git" ]; then

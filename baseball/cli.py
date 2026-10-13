@@ -136,6 +136,30 @@ def cmd_stuff_model(a: argparse.Namespace) -> None:
           f"log loss {d['log_loss']:.4f} vs {d['log_loss_baseline']:.4f} baseline -> {out / 'stuff_portable.joblib'}")
 
 
+def cmd_seq(a: argparse.Namespace) -> None:
+    from baseball.edge.familiarity import write_seq
+    from baseball.ingest.league import SEASON_MONTHS, month_path
+
+    files = [month_path(a.season, m) for m in SEASON_MONTHS if month_path(a.season, m).exists()]
+    paths = write_seq(a.season, files)
+    print(f"{a.season}: {len(paths)} sequence parts in data/seq/")
+
+
+def cmd_familiarity(a: argparse.Namespace) -> None:
+    from baseball.edge.familiarity import run
+
+    from baseball.edge.familiarity import build_page, figure
+
+    seasons = list(range(a.season - a.years + 1, a.season + 1))
+    res = run(seasons)
+    print(f"Page: {build_page()}\nFigure: {figure()}")
+    m = res["main"]
+    m = m[m["term"].eq("prev: same - other") & m["outcome"].str.startswith("whiff")]
+    print("\nWhiff per swing, per earlier same-type pitch in earlier PAs today (vs another type):")
+    for _, r in m.iterrows():
+        print(f"  {r['group']:<9} {r['coef']:+.2f} pts (SE {r['se']:.2f}, t {r['t']:.1f}; {int(r['n']):,} swings)")
+
+
 def cmd_db(a: argparse.Namespace) -> None:
     con = warehouse.connect()
     if a.action == "rebuild":
@@ -187,6 +211,15 @@ def main(argv: list[str] | None = None) -> None:
     sm = sub.add_parser("stuff-model", help="train the portable expected-whiff model used on TrackMan / Rapsodo data")
     sm.add_argument("season", type=int)
     sm.set_defaults(func=cmd_stuff_model)
+
+    sq = sub.add_parser("seq", help="write the sequence copy of a season (batter ids, location; data/seq/)")
+    sq.add_argument("season", type=int)
+    sq.set_defaults(func=cmd_seq)
+
+    fm = sub.add_parser("familiarity", help="does a pitch wear out? pitch-type familiarity across the league")
+    fm.add_argument("season", type=int)
+    fm.add_argument("--years", type=int, default=3, help="seasons to pool, ending at <season> (default 3)")
+    fm.set_defaults(func=cmd_familiarity)
 
     d = sub.add_parser("db", help="what is in the warehouse")
     d.add_argument("action", nargs="?", choices=["rebuild"])

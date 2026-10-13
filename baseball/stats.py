@@ -70,13 +70,11 @@ def clustered_wls(y, X, w, clusters):
     bread = np.linalg.pinv(X.T @ Xw)
     beta = bread @ (Xw.T @ y)
     e = y - X @ beta
-    meat = np.zeros((X.shape[1], X.shape[1]))
-    clusters = np.asarray(clusters)
-    groups = np.unique(clusters)
-    for g in groups:
-        m = clusters == g
-        s = (Xw[m] * e[m][:, None]).sum(axis=0)
-        meat += np.outer(s, s)
+    # Sum the score (x * w * e) within each cluster in one pass (fast on millions of rows)
+    groups, inv = np.unique(np.asarray(clusters), return_inverse=True)
+    S = np.zeros((len(groups), X.shape[1]))
+    np.add.at(S, inv, Xw * e[:, None])
+    meat = S.T @ S
     n, k, G = len(y), X.shape[1], len(groups)
     adj = (G / max(G - 1, 1)) * ((n - 1) / max(n - k, 1))
     cov = adj * bread @ meat @ bread
@@ -93,3 +91,31 @@ def wls_loo_rmse(y, X, w):
     beta = np.linalg.pinv(X.T @ (X * w[:, None])) @ (X.T @ (w * y))
     e = (y - X @ beta) / (1 - np.diag(H))
     return float(np.sqrt(np.average(e**2, weights=w)))
+
+
+def absorb(df, cols, fe, iters: int = 50, tol: float = 1e-9):
+    """Remove several sets of fixed effects at once (alternating projections, unweighted).
+
+    df: DataFrame; cols: columns to demean; fe: list of column names or lists of names, one per set of
+    fixed effects (e.g. ["pitch_key", "batter_key"]). Returns a float frame of the residualized columns.
+    Regressing residualized y on residualized X gives the same slopes as including every dummy
+    (Frisch-Waugh-Lovell), without building millions of dummy columns.
+    """
+    import numpy as np
+    import pandas as pd
+
+    codes = [pd.factorize(df[k] if isinstance(k, str) else df[list(k)].astype(str).agg("|".join, axis=1))[0] for k in fe]
+    counts = [np.bincount(c) for c in codes]
+    out = {}
+    for col in cols:
+        v = df[col].to_numpy(float).copy()
+        for _ in range(iters):
+            change = 0.0
+            for c, n in zip(codes, counts):
+                means = np.bincount(c, weights=v) / n
+                v -= means[c]
+                change = max(change, float(np.abs(means).max()))
+            if change < tol:
+                break
+        out[col] = v
+    return pd.DataFrame(out, index=df.index)
