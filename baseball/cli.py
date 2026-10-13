@@ -7,6 +7,7 @@
   uv run bb pull-league 2025                every pitch of a season, month by month (resumable)
   uv run bb edge 2026                       run the edge engine on 2026 (2024-25 for validation)
   uv run bb board 2026                      build the Edge Board page from the engine's outputs
+  uv run bb stuff-model 2026                train only the portable model (for TrackMan / Rapsodo data)
   uv run bb db                              what is in the warehouse
   uv run bb db rebuild                      rebuild the warehouse from the cached pulls in data/raw/
 """
@@ -121,6 +122,20 @@ def cmd_board(a: argparse.Namespace) -> None:
     print(f"Edge Board: {build(a.season)}")
 
 
+def cmd_stuff_model(a: argparse.Namespace) -> None:
+    from baseball.edge import stuff
+    from baseball.edge.run import COLUMNS, OUT_DIR
+    from baseball.ingest.league import load_season
+
+    out = OUT_DIR / str(a.season)
+    out.mkdir(parents=True, exist_ok=True)
+    bundle = stuff.build_portable(phase(load_season(a.season, COLUMNS)), a.season)
+    stuff.save_portable(bundle, out / "stuff_portable.joblib")
+    d = bundle["diagnostics"]
+    print(f"Portable model ({a.season}, {bundle['trained_swings']:,} swings): cross-fitted AUC {d['auc']:.3f}, "
+          f"log loss {d['log_loss']:.4f} vs {d['log_loss_baseline']:.4f} baseline -> {out / 'stuff_portable.joblib'}")
+
+
 def cmd_db(a: argparse.Namespace) -> None:
     con = warehouse.connect()
     if a.action == "rebuild":
@@ -168,6 +183,10 @@ def main(argv: list[str] | None = None) -> None:
     bd = sub.add_parser("board", help="build the Edge Board page (data/edge/<season>/edge-board.html)")
     bd.add_argument("season", type=int)
     bd.set_defaults(func=cmd_board)
+
+    sm = sub.add_parser("stuff-model", help="train the portable expected-whiff model used on TrackMan / Rapsodo data")
+    sm.add_argument("season", type=int)
+    sm.set_defaults(func=cmd_stuff_model)
 
     d = sub.add_parser("db", help="what is in the warehouse")
     d.add_argument("action", nargs="?", choices=["rebuild"])

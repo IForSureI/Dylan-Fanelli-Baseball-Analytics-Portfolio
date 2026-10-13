@@ -71,3 +71,18 @@ def test_two_year_validation_and_projection():
     one = validate(tabs[2025], tabs[2026])["blend"]
     p = project_two_year(tabs[2025], tabs[2026], v["weights"], one)
     assert (p["proj_basis"] == "two seasons").mean() > 0.9 and p["proj_whiff_pct"].notna().all()
+
+
+def test_portable_model_scores_device_data_without_arm_angle_or_ids(tmp_path):
+    from baseball.edge.stuff import build_portable, load_portable, mlb_percentile, save_portable, score_portable
+
+    bundle = build_portable(_league(), 2025)
+    assert "arm_angle" not in bundle["features"] and bundle["reference"]["CH"]
+    save_portable(bundle, tmp_path / "m.joblib")
+    b = load_portable(tmp_path / "m.joblib")
+    pen = _league(n_pitchers=2, seed=9).drop(columns=["arm_angle", "stand"]).assign(pitcher=float("nan"))
+    scored = score_portable(pen, b)
+    assert scored["x_whiff_same"].between(0, 1).all() and scored["x_whiff_opp"].between(0, 1).all()
+    assert set(scored["pitcher"]) == {"Pitcher 1", "Pitcher 2"}            # falls back to player_name
+    lo, hi = mlb_percentile(b, "CH", 0.0), mlb_percentile(b, "CH", 100.0)
+    assert lo == 0.0 and hi == 100.0 and mlb_percentile(b, "ZZ", 30.0) is None

@@ -47,3 +47,12 @@ def test_right_handers_are_flipped_to_arm_side():
 def test_no_fastball_reference_returns_empty():
     p = _pitcher()
     assert pitcher_tells(p[p["pitch_type"] != "FF"]).empty
+
+
+def test_portable_tells_on_device_sessions():
+    from baseball.edge.tells import PORTABLE_FEATURES
+
+    p = _pitcher(ch_shift_in=4.0).drop(columns=["arm_angle"])
+    p["game_id"] = "pen-" + p["game_pk"].astype(str)
+    t = pitcher_tells(p, features=PORTABLE_FEATURES, session="game_id", min_pitches=50, min_games=3).set_index("pitch_type")
+    assert t.loc["CH", "tell_auc"] > 0.9 and np.isnan(t.loc["CH", "arm_angle_diff_deg"])

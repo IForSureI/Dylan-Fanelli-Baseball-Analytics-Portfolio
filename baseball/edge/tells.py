@@ -42,9 +42,13 @@ MIN_PITCHES = 75   # of the secondary, and of fastballs
 MIN_GAMES = 5
 
 
-def _prepare(p: pd.DataFrame) -> pd.DataFrame:
+PORTABLE_FEATURES = ["rel_x_arm_in", "rel_z_in", "ext_in"]  # TrackMan / Rapsodo: no arm angle
+
+
+def _prepare(p: pd.DataFrame, features: list[str] = FEATURES) -> pd.DataFrame:
     """Release features in inches (degrees for arm angle), arm side positive."""
-    p = p.dropna(subset=["pitch_type", "release_pos_x", "release_pos_z", "release_extension", "arm_angle"]).copy()
+    need = ["pitch_type", "release_pos_x", "release_pos_z", "release_extension"] + (["arm_angle"] if "arm_angle" in features else [])
+    p = p.dropna(subset=need).copy()
     arm = np.where(p["p_throws"].eq("R"), -1.0, 1.0)  # Statcast x is catcher's view; flip so arm side is +
     p["rel_x_arm_in"] = p["release_pos_x"] * 12 * arm
     p["rel_z_in"] = p["release_pos_z"] * 12
@@ -52,14 +56,14 @@ def _prepare(p: pd.DataFrame) -> pd.DataFrame:
     return p
 
 
-def _demean_by_game(p: pd.DataFrame) -> pd.DataFrame:
-    """Subtract each game's fastball release mean. Drops games with too few fastballs."""
+def _demean_by_game(p: pd.DataFrame, features: list[str] = FEATURES, session: str = "game_pk") -> pd.DataFrame:
+    """Subtract each session's (game's) fastball release mean. Drops sessions with too few fastballs."""
     fb = p[p["pitch_type"].isin(FASTBALLS)]
-    counts = fb.groupby("game_pk").size()
+    counts = fb.groupby(session).size()
     good = counts[counts >= MIN_FASTBALLS_PER_GAME].index
-    ref = fb[fb["game_pk"].isin(good)].groupby("game_pk")[FEATURES].mean()
-    p = p[p["game_pk"].isin(good)].copy()
-    p[FEATURES] = p[FEATURES].to_numpy() - ref.loc[p["game_pk"], FEATURES].to_numpy()
+    ref = fb[fb[session].isin(good)].groupby(session)[features].mean()
+    p = p[p[session].isin(good)].copy()
+    p[features] = p[features].to_numpy() - ref.loc[p[session], features].to_numpy()
     return p
 
 
@@ -70,24 +74,27 @@ def _hanley_mcneil_se(auc: float, n_pos: int, n_neg: int) -> float:
     return math.sqrt(max(var, 0.0))
 
 
-def pitcher_tells(pitches: pd.DataFrame) -> pd.DataFrame:
-    """Release tells for one pitcher-season. Empty frame if he has no fastball reference."""
-    p = _demean_by_game(_prepare(pitches))
+def pitcher_tells(pitches: pd.DataFrame, features: list[str] = FEATURES, session: str = "game_pk",
+                  min_pitches: int = MIN_PITCHES, min_games: int = MIN_GAMES) -> pd.DataFrame:
+    """Release tells for one pitcher-season. Empty frame if he has no fastball reference.
+    For TrackMan / Rapsodo data pass features=PORTABLE_FEATURES and session="game_id"."""
+    FEATURES_ = features
+    p = _demean_by_game(_prepare(pitches, features), features, session)
     if p.empty:
         return pd.DataFrame()
     fb = p[p["pitch_type"].isin(FASTBALLS)]
-    if len(fb) < MIN_PITCHES:
+    if len(fb) < min_pitches:
         return pd.DataFrame()
 
     rows = []
     for pt in SECONDARIES:
         sec = p[p["pitch_type"].eq(pt)]
-        if len(sec) < MIN_PITCHES or sec["game_pk"].nunique() < MIN_GAMES:
+        if len(sec) < min_pitches or sec[session].nunique() < min_games:
             continue
         both = pd.concat([fb, sec])
         y = both["pitch_type"].eq(pt).to_numpy().astype(int)
-        X = both[FEATURES].to_numpy()
-        groups = both["game_pk"].to_numpy()
+        X = both[FEATURES_].to_numpy()
+        groups = both[session].to_numpy()
         n_splits = min(5, len(np.unique(groups)))
         oof = np.zeros(len(both))
         model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=500))
@@ -100,8 +107,8 @@ def pitcher_tells(pitches: pd.DataFrame) -> pd.DataFrame:
         auc = roc_auc_score(y, oof)
 
         # Plain-language separation: mean difference from the fastball, in units of his own scatter
-        diff = sec[FEATURES].mean() - fb[FEATURES].mean()
-        scatter = np.sqrt((sec[FEATURES].var() + fb[FEATURES].var()) / 2)
+        diff = sec[FEATURES_].mean() - fb[FEATURES_].mean()
+        scatter = np.sqrt((sec[FEATURES_].var() + fb[FEATURES_].var()) / 2)
         z = (diff / scatter).abs()
         top = z.idxmax()
         rows.append(
@@ -110,13 +117,13 @@ def pitcher_tells(pitches: pd.DataFrame) -> pd.DataFrame:
                 "pitch_name": sec["pitch_name"].iloc[0] if "pitch_name" in sec else pt,
                 "n_fastballs": len(fb),
                 "n_pitch": len(sec),
-                "games": sec["game_pk"].nunique(),
+                "games": sec[session].nunique(),
                 "tell_auc": auc,
                 "tell_auc_se": _hanley_mcneil_se(auc, int(y.sum()), int(len(y) - y.sum())),
                 "rel_x_arm_diff_in": diff["rel_x_arm_in"],
                 "rel_z_diff_in": diff["rel_z_in"],
                 "ext_diff_in": diff["ext_in"],
-                "arm_angle_diff_deg": diff["arm_angle"],
+                "arm_angle_diff_deg": diff.get("arm_angle", np.nan),
                 "top_tell": FEATURE_LABELS[top],
                 "top_tell_sd": z[top],
             }
@@ -125,10 +132,11 @@ def pitcher_tells(pitches: pd.DataFrame) -> pd.DataFrame:
     if out.empty:
         return out
     meta = pitches.iloc[0]
-    out.insert(0, "pitcher", int(meta["pitcher"]))
+    pid = meta.get("pitcher")
+    out.insert(0, "pitcher", int(pid) if pd.notna(pid) and str(pid).replace(".0", "").isdigit() else meta.get("player_name"))
     out.insert(1, "player_name", meta["player_name"])
     out.insert(2, "p_throws", meta["p_throws"])
-    out.insert(3, "season", int(meta["game_year"]))
+    out.insert(3, "season", int(meta["game_year"]) if "game_year" in meta and pd.notna(meta["game_year"]) else None)
     return out.sort_values("tell_auc", ascending=False).reset_index(drop=True)
 
 

@@ -32,13 +32,19 @@ FEATURES = [
     "velo", "ivb_in", "hb_arm_in", "spin", "ext_ft", "rel_z_ft", "rel_x_arm_ft", "arm_angle",
     "d_velo", "d_ivb", "d_hb", "same_hand",
 ]
+# Features every tracking device shares (TrackMan, Rapsodo, Hawk-Eye). No arm angle: only Statcast has it.
+PORTABLE_FEATURES = [f for f in FEATURES if f != "arm_angle"]
 MIN_SWINGS = 50
 
 
-def prepare(pitches: pd.DataFrame) -> pd.DataFrame:
-    """Swing rows with model features. Expects one season of regular-season pitches (any number of pitchers)."""
-    p = pitches.dropna(subset=["pitch_type", "release_speed", "pfx_x", "pfx_z", "release_spin_rate",
-                               "release_extension", "release_pos_z", "release_pos_x", "arm_angle"]).copy()
+def features(pitches: pd.DataFrame, require_arm_angle: bool = True) -> pd.DataFrame:
+    """Every pitch with model features (no swing filter). Works on Statcast and on TrackMan/Rapsodo data
+    normalized by baseball.ingest.tracking (pass require_arm_angle=False; those devices have none).
+    Pitchers are keyed by `pitcher`, falling back to `player_name` where the device has no id."""
+    need = ["pitch_type", "release_speed", "pfx_x", "pfx_z", "release_spin_rate", "release_extension", "release_pos_z", "release_pos_x"]
+    p = pitches.dropna(subset=need + (["arm_angle"] if require_arm_angle else [])).copy()
+    if "pitcher" not in p or p["pitcher"].isna().any():
+        p["pitcher"] = p["pitcher"].astype(object).where(p["pitcher"].notna(), p["player_name"]) if "pitcher" in p else p["player_name"]
     arm = np.where(p["p_throws"].eq("R"), -1.0, 1.0)
     p["velo"] = p["release_speed"]
     p["ivb_in"] = p["pfx_z"] * 12
@@ -47,7 +53,7 @@ def prepare(pitches: pd.DataFrame) -> pd.DataFrame:
     p["ext_ft"] = p["release_extension"]
     p["rel_z_ft"] = p["release_pos_z"]
     p["rel_x_arm_ft"] = p["release_pos_x"] * arm
-    p["same_hand"] = p["p_throws"].eq(p["stand"]).astype(int)
+    p["same_hand"] = p["p_throws"].eq(p["stand"]).astype(int) if "stand" in p else 0
 
     # Each pitcher's primary fastball: his most-thrown of FF/SI/FC (his most-thrown pitch if none)
     counts = p.groupby(["pitcher", "pitch_type"]).size().rename("n").reset_index()
@@ -60,21 +66,29 @@ def prepare(pitches: pd.DataFrame) -> pd.DataFrame:
     p["d_velo"] = p["velo"] - p["pitcher"].map(ref["velo"])
     p["d_ivb"] = p["ivb_in"] - p["pitcher"].map(ref["ivb_in"])
     p["d_hb"] = p["hb_arm_in"] - p["pitcher"].map(ref["hb_arm_in"])
+    return p
 
+
+def prepare(pitches: pd.DataFrame, require_arm_angle: bool = True) -> pd.DataFrame:
+    """Swing rows with model features. Expects one season of regular-season pitches (any number of pitchers)."""
+    p = features(pitches, require_arm_angle)
     swings = p[p["description"].isin(SWINGS)].copy()
     swings["whiff"] = swings["description"].isin(WHIFFS).astype(int)
     return swings
 
 
-def fit_crossfit(swings: pd.DataFrame, n_splits: int = 5, seed: int = 11) -> tuple[pd.Series, dict]:
+def _model(seed: int = 11) -> HistGradientBoostingClassifier:
+    return HistGradientBoostingClassifier(max_iter=300, learning_rate=0.06, max_leaf_nodes=31, min_samples_leaf=200,
+                                          l2_regularization=1.0, random_state=seed)
+
+
+def fit_crossfit(swings: pd.DataFrame, n_splits: int = 5, seed: int = 11, feature_list: list[str] | None = None) -> tuple[pd.Series, dict]:
     """Out-of-fold whiff probability for every swing, folds grouped by pitcher. Returns (x_whiff, diagnostics)."""
-    X, y, groups = swings[FEATURES].to_numpy(), swings["whiff"].to_numpy(), swings["pitcher"].to_numpy()
+    cols = feature_list or FEATURES
+    X, y, groups = swings[cols].to_numpy(), swings["whiff"].to_numpy(), swings["pitcher"].to_numpy()
     oof = np.zeros(len(swings))
     for train, test in GroupKFold(n_splits=n_splits).split(X, y, groups):
-        model = HistGradientBoostingClassifier(
-            max_iter=300, learning_rate=0.06, max_leaf_nodes=31, min_samples_leaf=200,
-            l2_regularization=1.0, random_state=seed,
-        )
+        model = _model(seed)
         model.fit(X[train], y[train])
         oof[test] = model.predict_proba(X[test])[:, 1]
     base = np.full_like(oof, y.mean())
@@ -234,3 +248,58 @@ def project_two_year(t_prior: pd.DataFrame, t_last: pd.DataFrame, weights: dict,
     out.loc[has, "proj_basis"] = "two seasons"
     out["proj_change"] = out["proj_whiff_pct"] - out["whiff_pct"]
     return out
+
+
+# ---------------------------------------------------------------------------------------------
+# Portable model: MLB-trained, applied to TrackMan / Rapsodo pitches
+# ---------------------------------------------------------------------------------------------
+
+def build_portable(pitches: pd.DataFrame, season: int, seed: int = 11) -> dict:
+    """Train the portable expected-whiff model on one MLB season and package it for scoring other devices.
+
+    Returns a bundle with the fitted model, its honest cross-fitted diagnostics on MLB data, and the MLB
+    reference distribution of expected whiff% by pitch type (pitcher-pitch level, 50+ swings), so a new
+    pitch can be placed as a percentile among big-league pitches of its type.
+    """
+    swings = prepare(pitches, require_arm_angle=False)
+    oof, diag = fit_crossfit(swings, seed=seed, feature_list=PORTABLE_FEATURES)
+    table = pitch_table(swings, oof)
+    reference = {pt: np.sort(g["x_whiff_pct"].to_numpy()).tolist() for pt, g in table.groupby("pitch_type") if len(g) >= 15}
+    model = _model(seed).fit(swings[PORTABLE_FEATURES].to_numpy(), swings["whiff"].to_numpy())
+    return {"model": model, "features": PORTABLE_FEATURES, "season": season, "diagnostics": diag, "reference": reference,
+            "trained_swings": int(len(swings))}
+
+
+def save_portable(bundle: dict, path) -> None:
+    import joblib
+
+    joblib.dump(bundle, path)
+
+
+def load_portable(path) -> dict:
+    import joblib
+
+    return joblib.load(path)
+
+
+def score_portable(pitches: pd.DataFrame, bundle: dict) -> pd.DataFrame:
+    """MLB-equivalent expected whiff% for every pitch in a TrackMan / Rapsodo / Statcast frame.
+
+    Each pitch is scored twice, against a same-handed and an opposite-handed hitter, because pen data has
+    no hitter and game data has too few swings per side. Adds x_whiff_same, x_whiff_opp (probabilities).
+    """
+    p = features(pitches, require_arm_angle=False)
+    X = p[bundle["features"]].copy()
+    X["same_hand"] = 1
+    p["x_whiff_same"] = bundle["model"].predict_proba(X.to_numpy())[:, 1]
+    X["same_hand"] = 0
+    p["x_whiff_opp"] = bundle["model"].predict_proba(X.to_numpy())[:, 1]
+    return p
+
+
+def mlb_percentile(bundle: dict, pitch_type: str, x_whiff_pct: float) -> float | None:
+    """Where an expected whiff% sits among MLB pitches of the same type (0-100)."""
+    ref = bundle["reference"].get(pitch_type)
+    if not ref or x_whiff_pct is None or np.isnan(x_whiff_pct):
+        return None
+    return float(100 * np.searchsorted(ref, x_whiff_pct, side="right") / len(ref))

@@ -197,6 +197,10 @@ def run(season: int, log=print) -> dict:
         proj = stuff.project(stuff_tables[season], blend).assign(proj_basis="one season")
     proj.to_parquet(out_dir / "projection.parquet")
 
+    step(f"{season}: portable stuff model for TrackMan / Rapsodo data")
+    portable = stuff.build_portable(data[season], season)
+    stuff.save_portable(portable, out_dir / "stuff_portable.joblib")
+
     step("League baselines")
     bl = baselines.changes(data[season - 1], data[season])
     bl.to_parquet(out_dir / "baselines.parquet")
@@ -218,6 +222,7 @@ def run(season: int, log=print) -> dict:
         "tell_cost_pooled": cost_pooled,
         "gap_persistence": gap_persistence,
         "gap_persistence_controlled": gap_ctrl,
+        "portable_model": {k: v for k, v in portable["diagnostics"].items() if k != "calibration"},
         "counts": {"tells": int(len(tell_tables[season])), "shifts": int(len(sh)), "stuff_pitches": int(len(stuff_tables[season]))},
     }
     (out_dir / "summary.json").write_text(json.dumps(summary, indent=2, default=float))
