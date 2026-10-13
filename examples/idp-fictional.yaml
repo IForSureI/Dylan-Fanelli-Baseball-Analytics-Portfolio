@@ -1,0 +1,60 @@
+# FICTIONAL. A made-up pitcher and a made-up plan, run on made-up pitches (baseball.development.idp.fictional_pitches).
+# It shows the plan format and the progress engine; none of it describes a real player or club.
+player: "Pitcher Fictional"
+pitcher: 990001
+label: "FICTIONAL example plan on fictional data (not a real player, not real pitches)"
+level: "Triple-A"
+role_now: "SP, #5 type"
+role_target: "SP, #3-4 type"
+period_start: 2027-03-30
+period_end: 2027-09-26
+authors: ["PD coordinator (fictional)", "Pitching coach (fictional)"]
+data_source: fictional
+player_voice: "Wants the four-seamer to play up top; worried a bigger sweeper costs him strikes."
+priorities:
+  - skill: "Four-seam ride"
+    metric: {stat: ivb_in, pitch_type: FF}
+    baseline: {value: 15.6, n: 1400, period: "2026 season", source: "TrackMan, fictional"}
+    target: 17.0
+    target_date: 2027-05-15
+    pace: step                       # an offseason grip/axis change: expected in full from the first start
+    floor: 300
+    mechanism: "Grip and wrist set that move the spin axis toward 12:30 and raise spin efficiency"
+    process_goal: "Two design bullpens a week, 25 four-seamers each, axis and IVB read after every pitch"
+    owner: "Pitching coach"
+    checkpoints: [2027-05-15, 2027-07-01, 2027-09-26]
+    risk: "Velocity drops while chasing ride"
+    guard:
+      metric: {stat: velo, pitch_type: FF}
+      limit: 93.0
+      keep: above
+      floor: 300
+  - skill: "Sweeper width"
+    metric: {stat: hb_glove_in, pitch_type: ST}
+    baseline: {value: 12.6, n: 800, period: "2026 season", source: "TrackMan, fictional"}
+    target: 15.0
+    target_date: 2027-09-26
+    pace: linear
+    floor: 200
+    mechanism: "Supinated release with the seam orientation that adds seam-shifted wake toward the glove side"
+    process_goal: "One sweeper-only pen a week, 20 pitches, Edgertronic review the same day"
+    owner: "Pitching coach"
+    checkpoints: [2027-05-15, 2027-07-01, 2027-09-26]
+    risk: "Command of the sweeper slips"
+    guard:
+      metric: {stat: zone_pct, pitch_type: ST}
+      limit: 40.0
+      keep: above
+      floor: 200
+  - skill: "Changeup separation by speed"
+    metric: {stat: speed_gap, pitch_type: CH, ref_pitch_type: FF}
+    baseline: {value: 8.0, n: 500, period: "2026 season", source: "TrackMan, fictional"}
+    target: 9.5
+    target_date: 2027-07-01
+    pace: step
+    floor: 150
+    mechanism: "Deeper grip (circle change set further back in the hand) to take 1.5 mph off without slowing the arm"
+    process_goal: "Changeups in every catch play; 15 in each pen with velocity read live"
+    owner: "Pitching coach"
+    checkpoints: [2027-05-15, 2027-07-01, 2027-09-26]
+    risk: "Arm speed slows on the changeup and tips it"

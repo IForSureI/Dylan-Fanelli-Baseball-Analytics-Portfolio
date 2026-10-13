@@ -1,0 +1,74 @@
+# Dylan Fanelli's HYPOTHETICAL retrospective plan for a real MLB pitcher. It is not the club's plan and makes no
+# claim about what the club or the pitcher actually worked on. Written as if in the 2025-26 offseason: every
+# baseline is his public 2025 Statcast data, and every payoff number used to set a target comes from the
+# 2024->25 season pairs only (baseball.development.levers.plan_target), so nothing in the plan uses 2026.
+# He was chosen AFTER the fact, because the levers study flags his 2025->26 four-seam velocity gain and
+# slider depth change; that selection is hindsight and the report says so.
+# Run: progress on his actual 2026 regular-season pitches (Statcast via Baseball Savant).
+player: "Logan Gilbert"
+pitcher: 669302
+season: 2026
+label: "Dylan Fanelli's HYPOTHETICAL retrospective plan from public data; not the club's plan"
+level: "MLB"
+role_now: "SP"
+role_target: "SP, front of the rotation"
+period_start: 2026-03-25
+period_end: 2026-09-27
+authors: ["Dylan Fanelli (hypothetical PD analyst)"]
+data_source: statcast
+player_voice: "Not known: a public-data plan has no player conversation. A real plan records it here."
+notes:
+  - "2025 baselines: 25 regular-season games; the data alone don't say why he made fewer starts."
+  - "Planning-time payoff estimates (2024->25 pairs only): four-seam whiff +1.38 pts per +1 mph (SE 0.33); slider whiff +0.52 pts per inch of added depth (SE 0.33, not significant on that pair alone)."
+priorities:
+  - skill: "Four-seam velocity"
+    metric: {stat: velo, pitch_type: FF}
+    baseline: {value: 95.41, se: 0.09, n: 795, period: "2025 regular season", source: "Statcast"}
+    target: 96.4
+    target_date: 2026-05-15
+    pace: step                       # an offseason strength and intent block: expected from the first start
+    floor: 300
+    mechanism: "Offseason lower-half strength and intent block; +1 mph is about the deliberate-change threshold for four-seamers (0.96 mph)"
+    process_goal: "Three lifts a week in the offseason block; in season, velocity logged every start with a 94.5 mph alert"
+    owner: "Strength coach with the pitching coach"
+    checkpoints: [2026-05-15, 2026-07-01, 2026-09-27]
+    risk: "Chasing velocity costs strikes"
+    guard:
+      metric: {stat: zone_pct, pitch_type: FF}
+      limit: 60.0
+      keep: above
+      floor: 300
+  - skill: "Slider depth"
+    metric: {stat: ivb_in, pitch_type: SL}
+    baseline: {value: 0.77, se: 0.28, n: 760, period: "2025 regular season", source: "Statcast"}
+    target: -1.2
+    target_date: 2026-05-15
+    pace: step
+    floor: 200
+    mechanism: "Grip and seam orientation that take about 2 in of lift off the slider (more drop), about the deliberate-change threshold for sliders (2.1 in)"
+    process_goal: "Two design pens a week in the offseason, 20 sliders each with live IVB and spin-axis feedback"
+    owner: "Pitching coach"
+    checkpoints: [2026-05-15, 2026-07-01, 2026-09-27]
+    risk: "Depth costs slider strikes"
+    guard:
+      metric: {stat: zone_pct, pitch_type: SL}
+      limit: 45.0
+      keep: above
+      floor: 200
+  - skill: "Slider whiffs (the payoff check)"
+    metric: {stat: whiff_pct, pitch_type: SL}
+    baseline: {value: 34.52, se: 3.08, n: 365, period: "2025 regular season", source: "Statcast"}
+    target: 37.2                     # 34.5 + 1.7 expected drift (regression to the mean; his expected whiff was 38.4) + 1.0 for 2 in of depth
+    target_date: 2026-09-27
+    pace: step
+    floor: 250
+    mechanism: "Follows from priority 2: the payoff the study prices for added slider depth"
+    process_goal: "Slider usage held near its 2025 level so the whiff rate isn't bought by throwing it less"
+    owner: "Pitching coach and the PD analyst"
+    checkpoints: [2026-05-15, 2026-07-01, 2026-09-27]
+    risk: "A whiff gain that comes from lower usage, not the new shape"
+    guard:
+      metric: {stat: usage_pct, pitch_type: SL}
+      limit: 28.0
+      keep: above
+      floor: 1000
