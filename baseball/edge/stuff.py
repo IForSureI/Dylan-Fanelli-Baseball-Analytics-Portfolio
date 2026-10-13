@@ -53,7 +53,7 @@ def features(pitches: pd.DataFrame, require_arm_angle: bool = True) -> pd.DataFr
     p["ext_ft"] = p["release_extension"]
     p["rel_z_ft"] = p["release_pos_z"]
     p["rel_x_arm_ft"] = p["release_pos_x"] * arm
-    p["same_hand"] = p["p_throws"].eq(p["stand"]).astype(int) if "stand" in p else 0
+    p["same_hand"] = p["p_throws"].eq(p["stand"]).fillna(False).astype(int) if "stand" in p else 0
 
     # Each pitcher's primary fastball: his most-thrown of FF/SI/FC (his most-thrown pitch if none)
     counts = p.groupby(["pitcher", "pitch_type"]).size().rename("n").reset_index()

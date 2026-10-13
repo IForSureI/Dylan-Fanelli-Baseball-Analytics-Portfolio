@@ -2,6 +2,18 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-10-12 (late): Tracking data pipeline (public loader, private repo)
+**Built**
+- `baseball/ingest/tracking.py`: the TrackMan / Rapsodo / Savant loader, with tests. It tests the horizontal sign on the data itself and flags QC problems.
+- Portable stuff model (`bb stuff-model`). It uses only features TrackMan and Rapsodo also measure, so there's no arm angle. Cross-fitted AUC is 0.631, against 0.633 for the full model, so device data gets essentially the same model. It's saved with MLB percentile references by pitch type.
+- Release tells now take any feature set and session column, so they work on pen and game files.
+- Private repo `bbp` commands: `ingest` (inbox, QC, deduplicated store), `report` (shape per device, MLB-equivalent expected whiff% with percentile, game results, release consistency, velocity by session), and `demo` on fictional files.
+- The monthly update now pulls the private repo, processes its inbox, and commits and pushes.
+
+**Decided**
+- The loader code is public. Team files, stores and reports stay private.
+- Pen files never produce whiff%, CSW% or chase%.
+
 ## 2026-10-12 (night): The edge engine, automation, the Edge Board
 **Built**
 - League-wide data for 2024, 2025 and 2026 (2.14 million regular-season pitches): `bb pull-league`, slim copies, `bb slim`.

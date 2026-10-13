@@ -26,4 +26,12 @@ done
 caffeinate -i uv run bb pull-league "$SEASON" --refresh-recent && uv run bb slim "$SEASON"
 caffeinate -i uv run bb edge "$SEASON" && uv run bb board "$SEASON"
 
+PRIVATE="$HOME/Baseball-private"
+if [ -d "$PRIVATE/.git" ]; then
+  echo "--- Private repo: pull, process inbox, commit ---"
+  cd "$PRIVATE" && git pull --ff-only && uv sync --quiet && uv run bbp ingest
+  git add -A && (git diff --cached --quiet || git commit -qm "Monthly update: inbox processed $(date +%Y-%m-%d)") && git push -q
+  cd "$REPO"
+fi
+
 echo "=== Done $(date) ==="
