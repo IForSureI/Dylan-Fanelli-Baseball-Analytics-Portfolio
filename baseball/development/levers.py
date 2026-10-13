@@ -382,9 +382,10 @@ def _design(d: pd.DataFrame, terms: list[str], controls: list[str] = CONTROLS) -
 
 
 def ols_clustered(d: pd.DataFrame, y: str, terms: list[str], controls: list[str] = CONTROLS, weight: str = "w") -> pd.DataFrame:
-    """Weighted least squares of y on terms + controls + season-pair intercepts; SEs clustered by pitcher.
-    Returns one row per term in `terms`: coef, se, t, p, n, pitchers."""
-    from scipy.stats import norm
+    """Weighted least squares of y on terms + controls + season-pair intercepts; SEs clustered by pitcher (CR1).
+    Returns one row per term in `terms`: coef, se, t, p, n, pitchers. p uses a t distribution with G - 1
+    degrees of freedom (G = pitchers), as Cameron and Miller recommend when clusters are few (splitters: 44)."""
+    from scipy.stats import t as tdist
 
     need = [y, *terms, weight, "pitcher"]
     d = d.dropna(subset=need)
@@ -396,10 +397,11 @@ def ols_clustered(d: pd.DataFrame, y: str, terms: list[str], controls: list[str]
     beta, se = clustered_wls(d[y].to_numpy(), X, d[weight].to_numpy(), d["pitcher"].to_numpy())
     out = pd.DataFrame({"term": names, "coef": beta, "se": se})
     out = out[out["term"].isin(terms)].copy()
+    G = d["pitcher"].nunique()
     out["t"] = out["coef"] / out["se"]
-    out["p"] = 2 * norm.sf(out["t"].abs())
+    out["p"] = 2 * tdist.sf(out["t"].abs(), df=max(G - 1, 1))
     out["n"] = len(d)
-    out["pitchers"] = d["pitcher"].nunique()
+    out["pitchers"] = G
     return out.reset_index(drop=True)
 
 
@@ -445,7 +447,14 @@ def lever_effects(pr: pd.DataFrame, types: list[str] = TYPES, joint: bool = Fals
 def by_sign(pr: pd.DataFrame, types: list[str] = TYPES, outcome: str = "d_whiff") -> pd.DataFrame:
     """Are gains and losses symmetric? One model per pitch type x lever with the net change split into its
     positive part (increases) and negative part (decreases). gain = effect of a one-unit increase;
-    loss = effect of a one-unit decrease (so a symmetric linear lever has loss = -gain)."""
+    loss = effect of a one-unit decrease (so a symmetric linear lever has loss = -gain).
+
+    The test of symmetry: up = (net + |net|) / 2 and down = (net - |net|) / 2, so the same model is
+    ((c_up + c_down) / 2) * net + ((c_up - c_down) / 2) * |net|. The |net| coefficient ("any_change") is the
+    asymmetry, with its own clustered SE (the covariance of the two slopes is inside it). A positive any_change
+    means a change in EITHER direction goes with better results: the signature of "pitchers who change
+    anything after a bad year improve", i.e. selection the controls missed, not a shape effect.
+    """
     rows = []
     for pt in types:
         d = pr[pr["pitch_type"].eq(pt)].copy()
@@ -453,12 +462,18 @@ def by_sign(pr: pd.DataFrame, types: list[str] = TYPES, outcome: str = "d_whiff"
             unit = LEVERS[lv][1]
             d["up"] = d[f"net_{lv}"].clip(lower=0)
             d["down"] = d[f"net_{lv}"].clip(upper=0)
-            tab = ols_clustered(d.dropna(subset=[f"net_{lv}"]), outcome, ["up", "down"]).set_index("term")
-            if len(tab) < 2:
+            d["abs_net"] = d[f"net_{lv}"].abs()
+            dd = d.dropna(subset=[f"net_{lv}"])
+            tab = ols_clustered(dd, outcome, ["up", "down"]).set_index("term")
+            sym = ols_clustered(dd, outcome, [f"net_{lv}", "abs_net"]).set_index("term")
+            if len(tab) < 2 or len(sym) < 2:
                 continue
             rows.append({"pitch_type": pt, "lever": lv, "outcome": outcome,
                          "gain": tab.loc["up", "coef"] * unit, "gain_se": tab.loc["up", "se"] * unit, "gain_p": tab.loc["up", "p"],
                          "loss": -tab.loc["down", "coef"] * unit, "loss_se": tab.loc["down", "se"] * unit, "loss_p": tab.loc["down", "p"],
+                         "symmetric": sym.loc[f"net_{lv}", "coef"] * unit, "symmetric_se": sym.loc[f"net_{lv}", "se"] * unit,
+                         "any_change": sym.loc["abs_net", "coef"] * unit, "any_change_se": sym.loc["abs_net", "se"] * unit,
+                         "any_change_p": sym.loc["abs_net", "p"],
                          "n_up": int((d[f"net_{lv}"] > 0).sum()), "n_down": int((d[f"net_{lv}"] < 0).sum())})
     return pd.DataFrame(rows)
 
@@ -539,7 +554,9 @@ def matched_effects(pr: pd.DataFrame, types: list[str] = TYPES, min_treated: int
     the lever within noise (chg = 0). Strata: season pair, prior role, role change, terciles of prior actual
     whiff% and prior expected whiff% (within pitch type). Then a weighted regression of the outcome change on
     the treatment with the continuous controls (doubly robust to residual imbalance), SEs clustered by pitcher.
-    Balance: SMD of prior whiff before and after matching.
+    Balance: SMD of prior whiff, prior expected whiff, prior run value, age, log swings and starter share,
+    before and after matching. q: Benjamini-Hochberg across all whiff and run-value p-values together
+    (two per comparison).
     """
     rows = []
     for pt in types:
@@ -566,6 +583,13 @@ def matched_effects(pr: pd.DataFrame, types: list[str] = TYPES, min_treated: int
                        "smd_prior_whiff_before": smd(d0.loc[d0[f"chg_{lever}"].eq(direction), "whiff_pct_0"],
                                                      d0.loc[d0[f"chg_{lever}"].eq(0), "whiff_pct_0"]),
                        "smd_prior_whiff_after": smd(t_rows["whiff_pct_0"], c_rows["whiff_pct_0"], c_rows["cw"])}
+                # balance on what was NOT a matching stratum (prior whiff% was): after matching, controls weighted
+                t0, c0 = d0.loc[d0[f"chg_{lever}"].eq(direction)], d0.loc[d0[f"chg_{lever}"].eq(0)]
+                for name, col in (("xwhiff", "x_whiff_pct_0"), ("rv100", "rv100_0"), ("age", "age_0"), ("swings", "log_swings")):
+                    rec[f"smd_{name}_before"] = smd(t0[col], c0[col])
+                    rec[f"smd_{name}_after"] = smd(t_rows[col], c_rows[col], c_rows["cw"])
+                sp_t, sp_c = t_rows["role_0"].eq("SP").astype(float), c_rows["role_0"].eq("SP").astype(float)
+                rec["smd_starter_after"] = smd(sp_t, sp_c, c_rows["cw"])
                 for oname, ycol in OUTCOMES.items():
                     if ycol not in d:
                         continue
@@ -609,14 +633,20 @@ def _wrmse(y, yhat, w) -> float:
 
 def validate(pr_train: pd.DataFrame, pr_test: pd.DataFrame, types: list[str] = TYPES, outcome: str = "d_whiff",
              boot: int = 1000, seed: int = 7) -> pd.DataFrame:
-    """Out-of-sample: fit on one season pair, predict the next pair's results change.
+    """Out-of-sample prediction GIVEN the realized shape: fit on one season pair, predict the next pair's
+    results change from that pair's actual shape change. Not a forecast: the test pair's shape change is known,
+    the expected-whiff model behind d_xwhiff and the prior-xwhiff control was trained on all seasons (other
+    pitchers' test-season outcomes included, never the pitcher's own), and the league adjustment uses the
+    test season's league median.
 
     Models (each fitted by weighted least squares on the training pair only):
     - baseline: controls only (regression to the mean, role, age, sample)
     - levers: baseline + every league-net lever change
     - physics: baseline + the expected-whiff change (the stuff model's summary of the same shape change)
-    Score: weighted RMSE on the test pair and the share of the baseline's squared error removed, with a 95%
-    interval from resampling the test pair's pitchers (a pitcher's pitches move together).
+    Score: weighted RMSE on the test pair; the share of the baseline's squared error removed; the baseline's
+    own gain over predicting no change; and physics minus levers. Intervals resample the test pair's pitchers
+    (a pitcher's pitches move together) with the fitted models held fixed, so they leave out the training
+    pair's estimation noise and are too narrow.
     """
     rows = []
     for pt in [*types, "all"]:
@@ -637,17 +667,23 @@ def validate(pr_train: pd.DataFrame, pr_test: pd.DataFrame, types: list[str] = T
             beta, *_ = np.linalg.lstsq(Xtr * sw[:, None], tr[outcome].to_numpy() * sw, rcond=None)
             se2[name] = w * (y - Xte @ beta) ** 2
             rec[f"rmse_{name}"] = float(np.sqrt(se2[name].sum() / w.sum()))
-        rec["rmse_no_change"] = _wrmse(y, np.zeros(len(te)), w)
-        # Uncertainty of the out-of-sample gain: resample test-pair pitchers (clusters) with replacement
+        se2["no_change"] = w * y ** 2
+        rec["rmse_no_change"] = float(np.sqrt(se2["no_change"].sum() / w.sum()))
+        # Uncertainty: resample test-pair pitchers (clusters) with replacement; paired, so differences are exact
         codes, inv = np.unique(te["pitcher"].to_numpy(), return_inverse=True)
         sums = {k: np.bincount(inv, weights=v) for k, v in se2.items()}
         rng = np.random.default_rng(seed)
         draws = rng.integers(0, len(codes), size=(boot, len(codes)))
         counts = np.stack([np.bincount(dr, minlength=len(codes)) for dr in draws])
-        for name in ("levers", "physics"):
-            rec[f"gain_{name}_pct"] = 100 * (1 - se2[name].sum() / se2["baseline"].sum())
-            g = 100 * (1 - (counts @ sums[name]) / (counts @ sums["baseline"]))
-            rec[f"gain_{name}_lo"], rec[f"gain_{name}_hi"] = (float(x) for x in np.percentile(g, [2.5, 97.5]))
+        g = {}
+        for name, ref in (("levers", "baseline"), ("physics", "baseline"), ("baseline", "no_change")):
+            key = f"gain_{name}_pct" if ref == "baseline" else "gain_baseline_vs_no_change_pct"
+            rec[key] = 100 * (1 - se2[name].sum() / se2[ref].sum())
+            g[key] = 100 * (1 - (counts @ sums[name]) / (counts @ sums[ref]))
+            rec[key.replace("_pct", "_lo")], rec[key.replace("_pct", "_hi")] = (float(x) for x in np.percentile(g[key], [2.5, 97.5]))
+        diff = g["gain_physics_pct"] - g["gain_levers_pct"]
+        rec["physics_minus_levers"] = rec["gain_physics_pct"] - rec["gain_levers_pct"]
+        rec["physics_minus_levers_lo"], rec["physics_minus_levers_hi"] = (float(x) for x in np.percentile(diff, [2.5, 97.5]))
         rows.append(rec)
     return pd.DataFrame(rows)
 
@@ -744,6 +780,22 @@ def persistence(ps: pd.DataFrame, rl: pd.DataFrame, th: pd.DataFrame, seasons: t
         r = realization(b, treat="dx01").assign(horizon=h)
         res.append(r.rename(columns={"slope": "coef"}).assign(lever="expected-whiff change", outcome="whiff",
                                                               per="+1 pt of expected whiff")[["pitch_type", "lever", "outcome", "per", "coef", "se", "p", "n", "horizon"]])
+    # A fade can be the shape reverting or the results fading on a shape that held. Hold the s1->s2 shape change
+    # fixed (net change of the same lever; for the physics row, the s1->s2 expected-whiff change) to see the second.
+    p12 = pairs(ps, rl, s1, s2, min_pitches, min_swings)
+    fade = horizons[f"{s1}->{s2} (fade)"].merge(
+        p12[k + [f"net_{lv}" for lv in LEVERS]].rename(columns={f"net_{lv}": f"net12_{lv}" for lv in LEVERS}), on=k)
+    h = f"{s1}->{s2} (fade, shape held)"
+    e = lever_effects(fade, extra=["net12_{lv}"])
+    res.append(e.drop(columns=["q"]).assign(horizon=h))
+    rows = []
+    for pt in [*TYPES, "all"]:
+        d = fade if pt == "all" else fade[fade["pitch_type"].eq(pt)]
+        t = ols_clustered(d, "d_whiff", ["dx01"], CONTROLS + ["d_xwhiff"])
+        if len(t):
+            rows.append({"pitch_type": pt, "lever": "expected-whiff change", "outcome": "whiff", "per": "+1 pt of expected whiff",
+                         "coef": t["coef"].iloc[0], "se": t["se"].iloc[0], "p": t["p"].iloc[0], "n": int(t["n"].iloc[0]), "horizon": h})
+    res.append(pd.DataFrame(rows))
     results = pd.concat(res, ignore_index=True)
     return {"shape": shape, "results": results, "pairs01": p01}
 
@@ -766,6 +818,7 @@ def run(seasons: tuple[int, int, int] = (2024, 2025, 2026), out_dir: Path | None
         xw.to_parquet(cache)
     ps = pitch_seasons(p, xw)
     rl = roles(p)
+    model = model_diagnostics(p, xw)
     del p
     ps.to_parquet(out / "pitch_seasons.parquet")
     rl.to_parquet(out / "roles.parquet")
@@ -803,9 +856,21 @@ def run(seasons: tuple[int, int, int] = (2024, 2025, 2026), out_dir: Path | None
         t.to_parquet(out / f"{name}.parquet")
     summary = {"seasons": list(seasons), "pairs": int(len(pr)), "pairs_by_season_pair": pr["pair"].value_counts().to_dict(),
                "pitchers": int(pr["pitcher"].nunique()), "pitch_seasons": int(len(ps)),
-               "pitches_per_season_floor": MIN_PITCHES, "swings_per_season_floor": MIN_SWINGS, "noise_quantile": NOISE_QUANTILE}
+               "pitches_per_season_floor": MIN_PITCHES, "swings_per_season_floor": MIN_SWINGS, "noise_quantile": NOISE_QUANTILE,
+               "expected_whiff_model": model, "whiff_margin": WHIFF_MARGIN, "rv_margin": RV_MARGIN}
     (out / "summary.json").write_text(__import__("json").dumps(summary, indent=2))
     return res
+
+
+def model_diagnostics(p: pd.DataFrame, xw: pd.DataFrame) -> dict:
+    """Cross-fitted AUC of the pooled expected-whiff model on every scored swing (the actual batter hand)."""
+    from sklearn.metrics import roc_auc_score
+
+    q = p[["description", "p_throws", "stand"]].join(xw, how="inner")
+    q = q[q["description"].isin(SWINGS)]
+    x = np.where(q["p_throws"].eq(q["stand"]), q["x_same"], q["x_opp"])
+    return {"auc": float(roc_auc_score(q["description"].isin(WHIFFS).astype(int), x)), "swings": int(len(q)),
+            "pitches_scored": int(len(xw)), "pitches": int(len(p))}
 
 
 # ---------------------------------------------------------------- the answer table and the figure
@@ -826,47 +891,80 @@ def display(pitch_type: str, lever: str) -> tuple[str, float]:
     return LEVERS[lever][2], 1.0
 
 
-def answer_table(res: dict) -> pd.DataFrame:
-    """One row per pitch type x lever: whiff and run-value payoff per unit (one lever at a time), the physics
-    model's payoff, the joint-model whiff payoff, gains and losses separately, the placebo, the out-of-sample
-    status of the pitch type, and a wording that follows the evidence:
-      confirmed      whiff or run-value q < 0.05
-      lean           q < 0.10
-      not confirmed  p < 0.05 on its own, but it doesn't survive the multiple-testing correction
-      no sign        none of the above, and the 95% interval for whiffs excludes effects larger than 2 points per unit
-      can't tell     none of the above, and the interval is too wide to rule out a 2-point effect
-    """
-    from scipy.stats import norm
+# Equivalence margins for "no sign", per reporting unit (each unit is close to that lever's deliberate-change
+# threshold): below the smallest confirmed whiff effect (+1.06) and half the smallest confirmed run-value effect (0.31)
+WHIFF_MARGIN = 1.0
+RV_MARGIN = 0.15
 
-    lv = res["levers"].pivot_table(index=["pitch_type", "lever"], columns="outcome", values=["coef", "se", "q", "n"])
+
+def evidence_label(q: float, raw_p: float, whiff_ci: tuple[float, float], rv_ci: tuple[float, float]) -> str:
+    """The wording that follows the evidence (q = smallest BH q of the whiff and run-value tests, raw_p = smallest p):
+      confirmed      q < 0.05
+      lean           q < 0.10
+      not confirmed  p < 0.05 on its own, but not after the multiple-testing correction
+      no sign        none of the above, and both 95% intervals sit inside the margins (+-1 whiff point and
+                     +-0.15 runs per 100 pitches per unit): an effect as large as the smallest confirmed one is ruled out
+      not detected   none of the above, and an interval reaches past a margin: no detectable effect, but one as
+                     large as a confirmed lever can't be ruled out (the table gives how large)
+    """
+    if q < 0.05:
+        return "confirmed"
+    if q < 0.10:
+        return "lean"
+    if raw_p < 0.05:
+        return "not confirmed"
+    inside = max(abs(whiff_ci[0]), abs(whiff_ci[1])) < WHIFF_MARGIN and max(abs(rv_ci[0]), abs(rv_ci[1])) < RV_MARGIN
+    return "no sign" if inside else "not detected"
+
+
+def answer_table(res: dict) -> pd.DataFrame:
+    """One row per pitch type x lever: whiff and run-value payoff per unit (one lever at a time) with 95%
+    intervals (t with pitchers - 1 df), the physics model's payoff, the joint-model whiff payoff, gains and
+    losses separately with the any-change (asymmetry) term, the placebo on both outcomes, the evidence label
+    (`evidence_label`) and a caveat when the placebo fails (p < 0.05 on whiffs or run value): the association
+    is confirmed, but selection or recovery isn't ruled out.
+    """
+    from scipy.stats import t as tdist
+
+    lv = res["levers"].pivot_table(index=["pitch_type", "lever"], columns="outcome", values=["coef", "se", "q", "p", "n", "pitchers"])
     lv.columns = [f"{o}_{s}" for s, o in lv.columns]
     j = res["levers_joint"].query("outcome == 'whiff'").set_index(["pitch_type", "lever"])[["coef", "se", "p"]].add_prefix("joint_")
-    bs = res["by_sign"].set_index(["pitch_type", "lever"])[["gain", "gain_se", "loss", "loss_se"]]
-    pl = res["placebo"].query("outcome == 'whiff'").set_index(["pitch_type", "lever"])[["coef", "p"]].add_prefix("placebo_")
+    bs = res["by_sign"].set_index(["pitch_type", "lever"])[["gain", "gain_se", "loss", "loss_se", "any_change", "any_change_se", "any_change_p"]]
+    pl = res["placebo"].pivot_table(index=["pitch_type", "lever"], columns="outcome", values=["coef", "se", "p"])
+    pl.columns = [f"placebo_{o}_{s}" for s, o in pl.columns]
     t = lv.join(j).join(bs).join(pl).reset_index()
     rows = []
     for _, r in t.iterrows():
         label, sign = display(r["pitch_type"], r["lever"])
+        crit = tdist.ppf(0.975, max(int(r["whiff_pitchers"]) - 1, 1))
+        w_lo, w_hi = sorted([sign * (r["whiff_coef"] - crit * r["whiff_se"]), sign * (r["whiff_coef"] + crit * r["whiff_se"])])
+        v_lo, v_hi = sorted([sign * (r["rv100_coef"] - crit * r["rv100_se"]), sign * (r["rv100_coef"] + crit * r["rv100_se"])])
         q = np.nanmin([r["whiff_q"], r["rv100_q"]])
-        hi = abs(r["whiff_coef"]) + 1.96 * r["whiff_se"]
-        raw_p = min(2 * norm.sf(abs(r["whiff_coef"] / r["whiff_se"])), 2 * norm.sf(abs(r["rv100_coef"] / r["rv100_se"])))
-        verdict = ("confirmed" if q < 0.05 else "lean" if q < 0.10 else "not confirmed" if raw_p < 0.05
-                   else "no sign" if hi < 2.0 else "can't tell")
+        verdict = evidence_label(q, np.nanmin([r["whiff_p"], r["rv100_p"]]), (w_lo, w_hi), (v_lo, v_hi))
+        placebo_fails = min(r["placebo_whiff_p"], r["placebo_rv100_p"]) < 0.05
         rows.append({"pitch_type": r["pitch_type"], "lever": r["lever"], "change": label,
-                     "whiff": sign * r["whiff_coef"], "whiff_se": r["whiff_se"], "whiff_q": r["whiff_q"],
-                     "rv100": sign * r["rv100_coef"], "rv100_se": r["rv100_se"], "rv100_q": r["rv100_q"],
+                     "whiff": sign * r["whiff_coef"], "whiff_se": r["whiff_se"], "whiff_p": r["whiff_p"], "whiff_q": r["whiff_q"],
+                     "whiff_lo": w_lo, "whiff_hi": w_hi,
+                     "rv100": sign * r["rv100_coef"], "rv100_se": r["rv100_se"], "rv100_p": r["rv100_p"], "rv100_q": r["rv100_q"],
+                     "rv100_lo": v_lo, "rv100_hi": v_hi,
                      "xwhiff": sign * r["xwhiff_coef"], "xwhiff_se": r["xwhiff_se"],
                      "joint_whiff": sign * r["joint_coef"], "joint_se": r["joint_se"],
                      # for a flipped lever, "gain" (an increase in the raw metric) is a loss of the displayed quantity
                      "gain": r["gain"] if sign > 0 else r["loss"], "gain_se": r["gain_se"] if sign > 0 else r["loss_se"],
                      "loss": r["loss"] if sign > 0 else r["gain"], "loss_se": r["loss_se"] if sign > 0 else r["gain_se"],
-                     "placebo_whiff": sign * r["placebo_coef"], "placebo_p": r["placebo_p"],
-                     "n": int(r["whiff_n"]), "verdict": verdict,
+                     # |change| term: unaffected by the display flip
+                     "any_change": r["any_change"], "any_change_se": r["any_change_se"], "any_change_p": r["any_change_p"],
+                     "placebo_whiff": sign * r["placebo_whiff_coef"], "placebo_whiff_se": r["placebo_whiff_se"],
+                     "placebo_p": r["placebo_whiff_p"],
+                     "placebo_rv100": sign * r["placebo_rv100_coef"], "placebo_rv100_se": r["placebo_rv100_se"],
+                     "placebo_rv100_p": r["placebo_rv100_p"],
+                     "n": int(r["whiff_n"]), "pitchers": int(r["whiff_pitchers"]), "verdict": verdict,
+                     "caveat": "placebo fails: selection or recovery not ruled out" if placebo_fails and verdict in ("confirmed", "lean") else "",
                      # which outcome carries the label: whiffs, run value, or both (q < 0.10)
                      "basis": ("both" if max(r["whiff_q"], r["rv100_q"]) < 0.10 else "whiff" if r["whiff_q"] < 0.10
                                else "run value" if r["rv100_q"] < 0.10 else "")})
     out = pd.DataFrame(rows)
-    order = {v: i for i, v in enumerate(["confirmed", "lean", "not confirmed", "no sign", "can't tell"])}
+    order = {v: i for i, v in enumerate(["confirmed", "lean", "not confirmed", "no sign", "not detected"])}
     return out.sort_values(["verdict", "pitch_type"], key=lambda s: s.map(order) if s.name == "verdict" else s.map(TYPES.index)).reset_index(drop=True)
 
 
@@ -891,11 +989,20 @@ def figure(out_path: Path | None = None, tables_dir: Path | None = None,
     y = np.arange(len(keep))
     for yi, (_, r) in zip(y, keep.iterrows()):
         c = PITCH_COLORS.get(r["pitch_type"], "#888")
-        a.errorbar(r["whiff"], yi, xerr=1.96 * r["whiff_se"], fmt="o", color=c, ms=7, capsize=3, lw=1.6, zorder=3)
+        a.errorbar(r["whiff"], yi, xerr=[[r["whiff"] - r["whiff_lo"]], [r["whiff_hi"] - r["whiff"]]], fmt="o", color=c, ms=7,
+                   capsize=3, lw=1.6, zorder=3)
         a.plot(r["xwhiff"], yi, marker="D", ms=7, mfc="white", mec=INK, mew=1.2, ls="none", zorder=4)
     a.set_yticks(y)
-    tag = {"run value": ", on run value"}
-    a.set_yticklabels([f"{TYPE_NAMES[r['pitch_type']].split(' (')[0]}: {r['change']}  [{r['verdict']}{tag.get(r['basis'], '')}]"
+
+    def tag(r):
+        t = r["verdict"]
+        if r["basis"] == "run value":
+            t += " on run value"
+        if r["caveat"]:
+            t += "; placebo fails"
+        return t
+
+    a.set_yticklabels([f"{TYPE_NAMES[r['pitch_type']].split(' (')[0]}: {r['change']}  [{tag(r)}]"
                        for _, r in keep.iterrows()], fontsize=8.5, color=INK)
     a.axvline(0, color=MUTED, lw=0.8)
     a.plot([], [], "o", color=MUTED, label="Actual whiff change (95% interval)")
@@ -906,7 +1013,7 @@ def figure(out_path: Path | None = None, tables_dir: Path | None = None,
     _style(a)
 
     pr = pd.read_parquet(D / "persistence_results.parquet")
-    show = [("FF", "velo"), ("FF", "ivb"), ("FF", "spin"), ("SL", "ivb"), ("all", "expected-whiff change")]
+    show = [("FF", "ivb"), ("FF", "spin"), ("FF", "velo"), ("SL", "ivb"), ("all", "expected-whiff change")]
     hz = sorted(pr["horizon"].unique())
     one, two = [h for h in hz if "fade" not in h][:2]
     yy = np.arange(len(show))
@@ -918,7 +1025,7 @@ def figure(out_path: Path | None = None, tables_dir: Path | None = None,
             b.errorbar(sign * r["coef"], k + off, xerr=1.96 * r["se"], fmt=mk, color=c, ms=7, capsize=3, lw=1.6,
                        mfc=c if h == one else "white", mew=1.5)
     b.set_yticks(yy)
-    b.set_yticklabels(["Four-seamer: +1 mph", "Four-seamer: +2 in ride", "Four-seamer: +100 rpm", "Slider: +2 in drop",
+    b.set_yticklabels(["Four-seamer: +2 in ride", "Four-seamer: +100 rpm", "Four-seamer: +1 mph", "Slider: +2 in drop",
                        "Any pitch: +1 pt expected whiff"], fontsize=8.5, color=INK)
     b.invert_yaxis()
     b.axvline(0, color=MUTED, lw=0.8)
@@ -931,9 +1038,10 @@ def figure(out_path: Path | None = None, tables_dir: Path | None = None,
     n_tests = int(pd.read_parquet(D / "levers.parquet")["outcome"].isin(["whiff", "rv100"]).sum())
     fig.text(0.01, 0.005, "MLB regular seasons 2024-26, Statcast via Baseball Savant. Observational: pitchers chose these changes. Each change is "
              "net of the league's median change for the pitch type; prior-season actual and expected whiff%,\nrun value, swings, age and "
-             f"role held fixed; 95% intervals clustered by pitcher. Bracket: evidence label (q = Benjamini-Hochberg across all {n_tests} lever tests). "
-             "Right panel: 2024->25 changes on pitches thrown in all three seasons.", fontsize=7.3, color=MUTED)
-    fig.tight_layout(rect=(0, 0.06, 1, 1))
+             f"role held fixed; 95% intervals clustered by pitcher. Bracket: evidence label (q = Benjamini-Hochberg across all {n_tests} lever tests);\n"
+             "rows labeled 'on run value' are confirmed on run value, not on the whiffs plotted. Right panel: 2024->25 changes on pitches thrown "
+             "in all three seasons; year-two intervals are wide.", fontsize=7.3, color=MUTED)
+    fig.tight_layout(rect=(0, 0.08, 1, 1))
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_path, dpi=160)
     plt.close(fig)

@@ -15,10 +15,15 @@ mound), compares it with the baseline and the target, and returns a verdict:
                 (pace: linear from start to target date, or "step" for offseason changes expected in full
                 from day one)
   behind        a real move toward the target, but the interval sits short of the on-pace value
-  flat          no move distinguishable from the baseline (|z| < 1.96), even if the point estimate has
-                passed the target: a results number on a few hundred swings often can't be told from
-                where it started, and the notes say so
+  inconclusive  no move distinguishable from the baseline, AND the sample couldn't have detected a move of
+                the planned size (|target - baseline| < 1.96 x the combined SE): underpowered, not flat. A
+                results number on a few hundred swings often lands here; the notes say so
+  flat          no move distinguishable from the baseline, though a move of the planned size would have been
   wrong_way     a real move away from the target
+
+Before anything runs, `power_check()` warns when a priority's planned change is smaller than the minimum
+detectable change at its floor (the baseline's SE plus the expected SE at the floor sample), and says what
+floor would detect it, or that none would given the baseline's own uncertainty.
 
 Guards (the risk's own measure) read: ok / watch (point estimate past the limit, interval includes it) /
 breached (the interval clears the limit on the wrong side) / insufficient.
@@ -60,8 +65,9 @@ STATS = {
     "usage_pct": ("usage", "%", "pitches (all types)", "rate"),
     "rv100": ("run value per 100 pitches (pitcher's view, + is good)", "runs", "pitches", "mean"),
 }
-VERDICTS = ("on_track", "behind", "flat", "wrong_way", "insufficient")
+VERDICTS = ("on_track", "behind", "inconclusive", "flat", "wrong_way", "insufficient")
 CALL = {"on_track": "keep", "behind": "keep, add volume or time", "flat": "adjust the method",
+        "inconclusive": "hold: the sample can't detect a change of the planned size",
         "wrong_way": "stop and reassess", "insufficient": "hold: sample under the floor"}
 Z = 1.96
 
@@ -132,6 +138,7 @@ class Plan:
     player_voice: str = ""
     season: int | None = None
     notes: list[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)     # power_check() output
 
 
 REQUIRED_PLAN = ["player", "pitcher", "label", "level", "role_now", "role_target", "period_start", "period_end",
@@ -204,6 +211,43 @@ def validate_plan(d: dict) -> list[str]:
     return err
 
 
+RATE_STATS = ("whiff_pct", "csw_pct", "zone_pct", "chase_pct", "usage_pct")
+
+
+def power_check(d: dict) -> list[str]:
+    """Warnings (not errors) for priorities whose planned change is smaller than the minimum detectable change
+    at the floor: MDC = 1.96 x sqrt(SE_baseline^2 + SE_at_floor^2).
+
+    SE_at_floor scales the baseline's SE by sqrt(n_baseline / floor). Without a baseline SE, rate stats use the
+    binomial SE at the baseline rate; other stats can't be checked and get a warning saying so. When even an
+    unlimited sample can't detect the change (the baseline's own SE is too large), the warning says that;
+    otherwise it gives the floor that would."""
+    out = []
+    for i, p in enumerate(d.get("priorities", []), 1):
+        b, stat = p["baseline"], p["metric"]["stat"]
+        gap = abs(float(p["target"]) - float(b["value"]))
+        n_b, floor = int(b["n"]), int(p["floor"])
+        if b.get("se") is not None:
+            se_b = float(b["se"])
+        elif stat in RATE_STATS and 0 < float(b["value"]) < 100:
+            q = float(b["value"]) / 100
+            se_b = 100 * math.sqrt(q * (1 - q) / n_b)
+        else:
+            out.append(f"priority {i}: no baseline SE, so the minimum detectable change can't be checked")
+            continue
+        se_floor = se_b * math.sqrt(n_b / floor)
+        mdc = Z * math.sqrt(se_b**2 + se_floor**2)
+        if gap >= mdc:
+            continue
+        room = (gap / Z) ** 2 - se_b**2
+        need = (f"a floor of about {math.ceil(se_b**2 * n_b / room):,} would" if room > 0 else
+                "no floor would, because the baseline's own SE is too large; set a bigger target, a better-measured "
+                "baseline, or treat it as a monitoring metric")
+        out.append(f"priority {i}: the planned change ({gap:.2f}) is smaller than the minimum detectable change at the "
+                   f"floor of {floor:,} ({mdc:.2f}); {need}")
+    return out
+
+
 def plan_from_dict(d: dict) -> Plan:
     errors = validate_plan(d)
     if errors:
@@ -228,7 +272,8 @@ def plan_from_dict(d: dict) -> Plan:
     return Plan(player=d["player"], pitcher=d["pitcher"], label=d["label"], level=d["level"], role_now=d["role_now"],
                 role_target=d["role_target"], period_start=_date(d["period_start"]), period_end=_date(d["period_end"]),
                 authors=list(d["authors"]), data_source=d["data_source"], priorities=pri,
-                player_voice=d.get("player_voice", ""), season=d.get("season"), notes=list(d.get("notes", [])))
+                player_voice=d.get("player_voice", ""), season=d.get("season"), notes=list(d.get("notes", [])),
+                warnings=power_check(d))
 
 
 def load_plan(path: str | Path) -> Plan:
@@ -343,11 +388,13 @@ def verdict(baseline: float, target: float, est: float, se: float, n: int, floor
         v = "behind" if short and not reached else "on_track"
     elif np.isfinite(toward) and toward <= -Z:
         v = "wrong_way"
+    elif np.isfinite(sd) and abs(expected_fraction * gap) < Z * sd:
+        v = "inconclusive"    # the move the calendar expects by now is smaller than this sample can detect
     else:
-        v = "flat"            # includes a point estimate past the target that isn't distinguishable from the baseline
+        v = "flat"            # a move of the planned size would have shown; none did
     return {"change": change, "z": z, "fraction_closed": frac, "expected_fraction": expected_fraction,
             "pace_value": pace_value, "reached": bool(reached), "clear_of_baseline": bool(np.isfinite(z) and abs(z) >= Z),
-            "verdict": v}
+            "detectable_change": Z * sd if np.isfinite(sd) else float("nan"), "verdict": v}
 
 
 def expected_fraction(start: date, target_date: date, as_of: date, pace: str = "linear") -> float:
@@ -378,7 +425,8 @@ def progress(plan: Plan, pitches: pd.DataFrame, as_of: date | str) -> pd.DataFra
         ef = expected_fraction(plan.period_start, pr.target_date, as_of, pr.pace)
         v = verdict(pr.baseline.value, pr.target, e["value"], e["se"], e["n"], pr.floor, ef, pr.baseline.se) \
             if e["n"] else {"change": np.nan, "z": np.nan, "fraction_closed": np.nan, "expected_fraction": ef,
-                            "pace_value": np.nan, "reached": False, "clear_of_baseline": False, "verdict": "insufficient"}
+                            "pace_value": np.nan, "reached": False, "clear_of_baseline": False,
+                            "detectable_change": np.nan, "verdict": "insufficient"}
         row = {"priority": pr.id, "skill": pr.skill, "metric": pr.metric.label(), "baseline": pr.baseline.value,
                "baseline_period": pr.baseline.period, "value": e["value"], "se": e["se"], "lo": e["lo"], "hi": e["hi"],
                "n": e["n"], "n_unit": STATS[pr.metric.stat][2], "games": e["games"], "floor": pr.floor,
@@ -405,11 +453,13 @@ def _f(x: float, unit: str = "") -> str:
 def coach_note(plan: Plan, rows: pd.DataFrame) -> str:
     """Plain language for the pitching coach: the number, the direction, what to keep doing."""
     say = {"on_track": "On track.", "behind": "Moving the right way, slower than planned.",
-           "flat": "Not moving yet, or not enough to tell from where it started.",
+           "flat": "Not moving: a change this size would have shown by now.",
+           "inconclusive": "Can't tell yet: the number bounces around more than the change we're after.",
            "wrong_way": "Going the wrong way.",
            "insufficient": "Not enough pitches yet to tell."}
     do = {"on_track": "Keep doing", "behind": "Keep doing, with more reps", "flat": "Time to try a different cue or grip; so far",
-          "wrong_way": "Stop and talk it through before the next session; so far", "insufficient": "Keep doing"}
+          "inconclusive": "Keep doing", "wrong_way": "Stop and talk it through before the next session; so far",
+          "insufficient": "Keep doing"}
     out = [f"*{plan.label}*", f"**{plan.player}: where the plan stands on {rows['as_of'].iloc[0]}**", ""]
     for _, r in rows.iterrows():
         unit = STATS[plan.priorities[r["priority"] - 1].metric.stat][1]
@@ -440,6 +490,8 @@ def front_office_note(plan: Plan, rows: pd.DataFrame) -> str:
                 f"{100 * r['expected_fraction']:.0f}% expected by now"
                 + (" (the point estimate is at or past the target, but not yet distinguishable from the baseline)"
                    if r["reached"] and not r["clear_of_baseline"] and r["verdict"] != "insufficient" else "")
+                + (f"; at this sample only a change of {_f(r['detectable_change'], unit)} or more is detectable"
+                   if r["verdict"] == "inconclusive" else "")
                 + f". **Verdict: {r['verdict'].replace('_', ' ')}. {r['call'].capitalize()}.**")
         if isinstance(r.get("guard"), str):
             gunit = STATS[pr.guard.metric.stat][1]
@@ -461,8 +513,12 @@ def front_office_note(plan: Plan, rows: pd.DataFrame) -> str:
         k = rows.loc[rows["verdict"].isin(["flat", "behind"]), "priority"].tolist()
         rec = (f"continue the plan, adjusting the method on priority {', '.join(map(str, k))}; would change to a stop if it is "
                "still flat at the next checkpoint with the sample over the floor")
-    elif all(x == "insufficient" for x in v):
-        rec = "no call yet; every priority is under its sample floor"
+    elif all(x in ("insufficient", "inconclusive") for x in v):
+        rec = "no call yet; every priority is under its sample floor or can't detect a change of the planned size"
+    elif "inconclusive" in v:
+        k = rows.loc[rows["verdict"].eq("inconclusive"), "priority"].tolist()
+        rec = (f"continue the plan; priority {', '.join(map(str, k))} can't be graded at this sample, so judge it on its "
+               "process goal and the shape behind it; would change if a priority falls back inside its baseline's interval")
     else:
         rec = "continue the plan as written; would change if any priority falls back inside its baseline's interval at the next checkpoint"
     out.append(f"**Recommendation:** {rec}.")
@@ -583,9 +639,12 @@ def progress_figure(plan: Plan, pitches: pd.DataFrame, out_path: str | Path) -> 
         ax.set_ylabel(pr.metric.label(), fontsize=8.5, color=MUTED)
         ax.tick_params(axis="x", labelrotation=30, labelsize=8)
         _style(ax)
-    fig.text(0.01, 0.01, f"{plan.label}. Metric to date after each game with a 95% interval (jackknife by game); faint before the "
-             "sample floor. Dotted: checkpoints.", fontsize=7.5, color=MUTED)
-    fig.tight_layout(rect=(0, 0.05, 1, 1))
+    source = ("Fictional pitches (not real data)" if plan.data_source == "fictional" else
+              f"Statcast via Baseball Savant, {plan.season or plan.period_start.year} regular season")
+    fig.text(0.01, 0.01, f"{plan.label}.\n{source}, {plan.period_start.isoformat()} to {plan.period_end.isoformat()}. "
+             "Metric to date after each game with a 95% interval (jackknife by game); faint before the sample floor. "
+             "Dotted: checkpoints.", fontsize=7.5, color=MUTED)
+    fig.tight_layout(rect=(0, 0.08, 1, 1))
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_path, dpi=160)
@@ -602,7 +661,10 @@ def review(path: str | Path, as_of: date | str | None = None, pitches: pd.DataFr
     cps = sorted({c for pr in plan.priorities for c in pr.checkpoints if c <= as_of} | {as_of})
     ct = checkpoint_table(plan, p, cps)
     grid = ct.pivot(index="priority", columns="as_of", values="verdict")
-    L = [f"# IDP review: {plan.player}", f"*{plan.label}*", "", "## Verdict at each checkpoint",
+    L = [f"# IDP review: {plan.player}", f"*{plan.label}*", ""]
+    if plan.warnings:
+        L += ["## Power warnings (from the plan, before any data)", *[f"- {w}" for w in plan.warnings], ""]
+    L += ["## Verdict at each checkpoint",
          "| # | " + " | ".join(grid.columns) + " |", "|---|" + "---|" * len(grid.columns)]
     for k, r in grid.iterrows():
         L.append(f"| {k} | " + " | ".join(v.replace("_", " ") for v in r) + " |")
