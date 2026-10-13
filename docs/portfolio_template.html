@@ -1,0 +1,225 @@
+<title>Dylan Fanelli: Baseball Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+/* Layout: a research program read like a scouting packet: one reading column, study cards that break wider, figures in white frames because they were drawn for paper. */
+:root {
+  --paper: #f4f6f3; --card: #ffffff; --ink: #16201b; --muted: #59665f; --rule: #d6ddd7;
+  --accent: #0d6a5a; --accent-soft: #dceee8; --frame: #ffffff;
+  --display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #101613; --card: #17201b; --ink: #e6ece8; --muted: #9caaa3; --rule: #2a352f;
+  --accent: #56c4a8; --accent-soft: #173a31; --frame: #f4f6f3; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #101613; --card: #17201b; --ink: #e6ece8; --muted: #9caaa3; --rule: #2a352f;
+  --accent: #56c4a8; --accent-soft: #173a31; --frame: #f4f6f3; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-inline: 20px; padding-block: 44px 80px; display: grid; gap: 64px; }
+.col { max-width: 690px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 700; line-height: 1.02; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(46px, 8.5vw, 92px); text-transform: uppercase; letter-spacing: 0.005em; }
+h1 span { color: var(--accent); }
+h2 { font-size: clamp(30px, 4.4vw, 42px); text-transform: uppercase; }
+h3 { font-size: clamp(24px, 3vw, 30px); text-transform: uppercase; letter-spacing: 0.01em; }
+p { margin: 0; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.lede { font-size: 21px; line-height: 1.5; max-width: 700px; }
+.stack { display: grid; gap: 14px; }
+.hero { display: grid; gap: 22px; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); }
+.stat { padding: 16px 16px 18px 0; display: grid; gap: 4px; align-content: start; }
+.stat + .stat { padding-left: 16px; border-left: 1px solid var(--rule); }
+.stat b { font-family: var(--display); font-size: 48px; line-height: 1; font-weight: 600; font-variant-numeric: tabular-nums; }
+.stat span { font-size: 15px; color: var(--muted); line-height: 1.4; }
+.capstone { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: 26px; display: grid; gap: 18px; }
+.capstone .memohead { font-family: var(--mono); font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 18px; border-bottom: 1px solid var(--rule); padding-bottom: 12px; }
+.calls { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+.call { border-top: 3px solid var(--rule); padding-top: 10px; display: grid; gap: 4px; align-content: start; }
+.call.a { border-top-color: var(--accent); }
+.call .tier { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.call b { font-family: var(--display); font-size: 24px; font-weight: 600; }
+.call p { font-size: 15px; color: var(--ink); }
+.studies { display: grid; gap: 40px; }
+.study { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 28px; align-items: start; padding-top: 26px; border-top: 1px solid var(--rule); }
+.study > * { min-width: 0; }
+.study .text { display: grid; gap: 12px; }
+.answer { font-size: 17px; }
+.nums { display: flex; flex-wrap: wrap; gap: 8px; }
+.num { font-family: var(--mono); font-size: 12px; padding: 4px 8px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); }
+.num.null { background: transparent; border: 1px solid var(--rule); color: var(--muted); }
+.fig { background: var(--frame); border: 1px solid var(--rule); border-radius: 4px; padding: 8px; }
+.fig img { display: block; width: 100%; height: auto; }
+.read { font-family: var(--mono); font-size: 13px; }
+.standards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px; align-items: start; }
+.standards > * { min-width: 0; }
+ul.plain { margin: 0; padding-left: 20px; display: grid; gap: 10px; }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { padding: 9px 10px; text-align: left; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+td code, .tools code { font-family: var(--mono); font-size: 13px; background: var(--accent-soft); color: var(--accent); padding: 1px 5px; border-radius: 3px; white-space: nowrap; }
+.tools td:first-child { font-family: var(--display); font-size: 19px; font-weight: 600; white-space: nowrap; }
+footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 16px; display: grid; gap: 6px; }
+@media (max-width: 760px) {
+  .study { grid-template-columns: 1fr; }
+  body { font-size: 16px; }
+  .stat + .stat { padding-left: 0; border-left: 0; border-top: 1px solid var(--rule); }
+}
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">Dylan Fanelli · Baseball operations · M.S. Sport Management, UMass Amherst (Isenberg / McCormack)</p>
+    <h1>Baseball research <span>a club can use</span></h1>
+    <p class="lede">These are original questions a front office pays to answer, built on every public pitch of 2024–2026. Each one is validated out of sample, reviewed by someone who didn't build it, and shipped as code a club could run tomorrow. When the answer is no, the report says no.</p>
+    <div class="stats">
+      <div class="stat"><b>2.14M</b><span>regular-season pitches, 2024–26, with batter, location, base-out state and bat tracking</span></div>
+      <div class="stat"><b>7</b><span>finished studies and decision memos, each with its code and figures</span></div>
+      <div class="stat"><b>228</b><span>tests with hand-checked numbers, run before every commit</span></div>
+      <div class="stat"><b>100%</b><span>of finished reports independently reviewed; the reviews changed real conclusions</span></div>
+    </div>
+  </header>
+
+  <section class="stack">
+    <p class="eyebrow">Start here · the capstone</p>
+    <h2>One real decision, made the way a front office makes it</h2>
+    <div class="capstone">
+      <div class="memohead"><span>To: General manager, Texas Rangers</span><span>Re: Bullpen, 2026-27 offseason</span><span>Data-informed; not a live look</span></div>
+      <p class="col"><b>The need is late-inning run prevention.</b> Texas relievers fell from 4th in run value per 100 pitches in 2025 to 24th in 2026, and from 6th to 26th in late, close spots. Relievers now free agents or on a mutual option threw 35% of those late, close plate appearances. The memo ranks three free-agent relievers using every tool on this page: regressed results with intervals, stuff vs. results, velocity against the league, pitch-design levers, data-informed 20-80 grades, and prices from the reliever market's own line.</p>
+      <div class="calls">
+        <div class="call a"><span class="tier">Tier A · pursue</span><b>Adrián Morejón</b><p>Open at 4 years, $60M. Walk away above $72M, his value at the market's price of a win. That lands him about half the time, and the memo prices each step above it.</p></div>
+        <div class="call"><span class="tier">Tier B · if he signs elsewhere</span><b>Bryan Abreu</b><p>Open at 2 years, $18M; walk away above $25M. His walk rate fell from 19.7% to 11.3% in the second half of 2026, but that drop is borderline (p = 0.058), so it's priced as a lean.</p></div>
+        <div class="call"><span class="tier">Tier C · not for 2027</span><b>Pete Fairbanks</b><p>Thoracic outlet surgery, announced Sept. 19, 2026. At most a two-year rehab deal.</p></div>
+      </div>
+      <div class="fig"><img alt="Pitch grades, the reliever market's price per projected win, and fastball velocity by month" src="{{IMG:2026-bullpen-acquisition-memo.png}}"></div>
+      <p class="read"><a href="{{REPO}}/reports/2026-bullpen-acquisition-memo.md">Read the memo →</a></p>
+    </div>
+  </section>
+
+  <section class="stack">
+    <p class="eyebrow">The research</p>
+    <h2>Questions, answers, and the evidence for each</h2>
+    <div class="studies">
+
+      <article class="study">
+        <div class="text">
+          <p class="eyebrow">Evaluation · original study</p>
+          <h3>Does a pitch wear out on a hitter?</h3>
+          <p class="answer"><b>Yes, and it's specific to the pitch type.</b> Each earlier changeup or splitter a hitter saw from the pitcher in earlier plate appearances today goes with 1.87 fewer whiff points on the next one. Seeing more pitches of other types doesn't hurt the pitch. The effect carries across games this season and partly to the next same-handed pitcher's changeup. It holds in each of the three seasons, and with platoon and month-level fixed effects.</p>
+          <div class="nums"><span class="num">−1.87 whiff pts per earlier changeup/splitter</span><span class="num">−8.2 after 4+</span><span class="num">42% carries to the next same-handed pitcher</span></div>
+          <p class="read"><a href="{{REPO}}/reports/2026-league-pitch-familiarity.md">Read the report →</a></p>
+        </div>
+        <div class="fig"><img alt="Whiff rate falls as a hitter sees more of a pitch type" src="{{IMG:2026-league-pitch-familiarity.png}}"></div>
+      </article>
+
+      <article class="study">
+        <div class="text">
+          <p class="eyebrow">In-game strategy · a reported null</p>
+          <h3>Should that change when the starter comes out?</h3>
+          <p class="answer"><b>No.</b> Costs were fit on 2024–25 and tested on 2026. The per-pitch cost replicates, but it doesn't reach plate-appearance run value, and managers show no detectable response to it. The report also shows something managers do act on: run value allowed so far, which has no detectable association with the next plate appearance among the starters they leave in.</p>
+          <div class="nums"><span class="num null">2026 calibration slope −0.28 (SE 0.37)</span><span class="num null">removal response −0.15 (SE 0.27)</span></div>
+          <p class="read"><a href="{{REPO}}/reports/2026-exposure-aware-hook.md">Read the report →</a></p>
+        </div>
+        <div class="fig"><img alt="Calibration of the exposure index, and what managers act on" src="{{IMG:2026-exposure-aware-hook.png}}"></div>
+      </article>
+
+      <article class="study">
+        <div class="text">
+          <p class="eyebrow">Evaluation · the analyst's reference</p>
+          <h3>Which numbers can you trust, and when?</h3>
+          <p class="answer"><b>The Reliability Atlas covers 29 metrics in 157 groups.</b> For each, it measures how fast the metric becomes signal, how much carries into next season, how much true talent moves within a season, and how far to regress it, with a regress() function that returns intervals. Regressing beat raw numbers out of sample for 135 of 147 groups, and a clean 2024 → 2025 replication agrees. Pitch physics are regressed by games, not pitches: one 100-pitch outing is one look.</p>
+          <div class="nums"><span class="num">bat speed: r = 0.5 after ~3 swings</span><span class="num">wOBA: 500+ PA for r = 0.5</span><span class="num">135 / 147 better than raw</span></div>
+          <p class="read"><a href="{{REPO}}/reports/2026-reliability-atlas.md">Read the atlas →</a></p>
+        </div>
+        <div class="fig"><img alt="How fast each metric becomes signal against how much it carries over" src="{{IMG:2026-reliability-atlas.png}}"></div>
+      </article>
+
+      <article class="study">
+        <div class="text">
+          <p class="eyebrow">Player development</p>
+          <h3>Which pitch-design changes stick and pay?</h3>
+          <p class="answer"><b>Four-seam ride is the best-supported lever.</b> It's worth +1.62 whiff points per 2 inches, and the gain's point estimate held into year two. Velocity's payoff fails a placebo, so recovery from a down year isn't ruled out. Slider levers pay but aren't shown to last. Out of sample, the single change in expected whiff predicts better than any list of levers. Also built: an individual development plan engine that issues on-track, behind, flat and inconclusive verdicts and checks power when the plan is written.</p>
+          <div class="nums"><span class="num">FF ride +1.62 per 2 in (q = 0.02)</span><span class="num null">velocity: placebo fails</span><span class="num">1,822 season-to-season pitch pairs</span></div>
+          <p class="read"><a href="{{REPO}}/reports/2026-pitch-design-levers.md">Read the report →</a></p>
+        </div>
+        <div class="fig"><img alt="What a shape change is worth, and whether it lasted" src="{{IMG:2026-pitch-design-levers.png}}"></div>
+      </article>
+
+      <article class="study">
+        <div class="text">
+          <p class="eyebrow">Roster and the CBA</p>
+          <h3>Extend Paul Skenes before December 1?</h3>
+          <p class="answer"><b>Open at about $200M in present value; walk away above about $215M.</b> The price depends on the next Basic Agreement, so the memo prices both rule sets and a major-arm-injury scenario. Underneath is the CBA as code: service time, Super Two, options, Rule 5, outright and 10-and-5 rights, qualifying offers and the luxury tax. The tax engine reproduces the published 2025 bills within $1 for eight of the nine clubs that paid.</p>
+          <div class="nums"><span class="num">8 of 9 tax bills within $1</span><span class="num">open ~$200M PV · walk ~$215M PV</span></div>
+          <p class="read"><a href="{{REPO}}/reports/2026-roster-cba-engine.md">Read the memo →</a></p>
+        </div>
+        <div class="fig"><img alt="Skenes extension price band under each rule set" src="{{IMG:2026-skenes-extension-band.png}}"></div>
+      </article>
+
+      <article class="study">
+        <div class="text">
+          <p class="eyebrow">Pitcher evaluation</p>
+          <h3>Was Tarik Skubal's 2025 change real?</h3>
+          <p class="answer"><b>Yes. It was him, not the cameras.</b> He ranked at the 80th–98th percentile on the changes while the league didn't move, and he raised his arm slot on everything but the changeup. His changeup's whiff rate is his true level: 46.6% on 997 swings across two seasons.</p>
+          <div class="nums"><span class="num">changeup 46.6% whiff, 997 swings</span></div>
+          <p class="read"><a href="{{REPO}}/reports/2025-skubal-arsenal.md">Read the report →</a></p>
+        </div>
+        <div class="fig"><img alt="Skubal 2025 pitch movement" src="{{IMG:2025-skubal-movement.png}}"></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="standards">
+    <div class="stack">
+      <p class="eyebrow">How the work is held up</p>
+      <h2>The standard</h2>
+      <ul class="plain">
+        <li><b>Out of sample by default.</b> Forecasts are tested on seasons their parameters never saw, against a regressed baseline.</li>
+        <li><b>One evidence standard.</b> Confirmed means p &lt; 0.05 with enough sample. Benjamini–Hochberg is applied when many tests run at once. "No sign of an effect" is claimed only when the interval rules out effects that matter.</li>
+        <li><b>Pooling and regression rules.</b> Seasons are pooled only with standard errors clustered by pitcher, and small samples are regressed before they're compared.</li>
+        <li><b>Placebos and matched controls</b> guard against regression to the mean and selection.</li>
+        <li><b>Public data only.</b> Statcast via Baseball Savant, plus cited, dated public reporting for contracts and transactions.</li>
+      </ul>
+    </div>
+    <div class="stack">
+      <p class="eyebrow">Independent review</p>
+      <h2>What review changed</h2>
+      <div class="scroll"><table>
+        <thead><tr><th>Study</th><th>Caught</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td>Skenes memo</td><td>The club's ceiling was defined one way and computed another.</td><td>The recommendation moved from a $216M offer to opening at $200M.</td></tr>
+          <tr><td>Pitch design</td><td>A lever that fails its placebo was ranked first.</td><td>Ride now leads; velocity carries a caveat.</td></tr>
+          <tr><td>Reliability</td><td>The noise model held for outcomes but broke for pitch physics.</td><td>Physics now use a two-level model (day and pitch) and are regressed by games.</td></tr>
+          <tr><td>Bullpen memo</td><td>The health history check was uneven across candidates.</td><td>A free agent's surgery took him out of 2027.</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <section class="stack">
+    <p class="eyebrow">The toolkit</p>
+    <h2>Everything above runs from one command</h2>
+    <div class="scroll"><table class="tools">
+      <tbody>
+        <tr><td>Data</td><td>Every pitch of a season with batter, location, base-out state and bat tracking (<code>bb pull-league</code>, <code>bb seq</code>); names and ids (<code>bb people</code>); a DuckDB warehouse</td></tr>
+        <tr><td>Evaluation</td><td>Arsenals in pandas and SQL, season-vs-season comparisons with significance, <code>bb regress</code> (any number, with an interval), <code>bb compare-relievers</code> (regressed results, stuff, velocity against the league, workload, platoon, 20-80 grades)</td></tr>
+        <tr><td>Edge</td><td>A monthly league scan for release tells, hidden in-season pitch changes, results beyond stuff and validated projections (<code>bb edge</code>, <code>bb board</code>); familiarity, the hook study, and a hook card for any start</td></tr>
+        <tr><td>Development</td><td>Pitch-design levers (<code>bb levers</code>) and individual development plans written as YAML, with a progress engine (<code>bb idp</code>)</td></tr>
+        <tr><td>Roster</td><td>The luxury tax checked against the real 2025 bills (<code>bb cbt</code>), control and arbitration timing (<code>bb service</code>), surplus value, extension bands, qualifying offers, reliever pricing</td></tr>
+        <tr><td>Tracking</td><td>A TrackMan / Rapsodo loader with sign checks and QC, a TrackMan session-PDF reader, and an expected-whiff model that runs on device data</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <footer>
+    <span>Dylan Fanelli · <a href="https://www.linkedin.com/in/dylanfanelli/">LinkedIn</a> · Code and reports: <a href="{{REPO}}">github.com/IForSureI/Baseball</a></span>
+    <span>Data: Statcast via Baseball Savant, regular seasons 2024–2026; player names from the Chadwick Bureau register. Updated {{DATE}}.</span>
+  </footer>
+</div>
