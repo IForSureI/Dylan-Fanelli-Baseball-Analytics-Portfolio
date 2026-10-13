@@ -252,7 +252,7 @@ Plans are YAML (`examples/`), validated before anything runs, and checked for po
 - **Fictional example:** `examples/idp-fictional.yaml` runs the whole flow on fictional pitches.
 
 ### Worked example: Logan Gilbert, 2026 (a hypothetical, retrospective plan)
-**This is Dylan Fanelli's hypothetical plan written from public data. It is not his club's plan, and nothing here says what the club or the pitcher actually worked on.**
+**This is my hypothetical plan written from public data. It is not my club's plan, and nothing here says what the club or the pitcher actually worked on.**
 
 **How the plan was built.** It is written as if in the 2025–26 offseason:
 - **Baselines:** his 2025 Statcast data.
