@@ -155,8 +155,8 @@ def pulled(angle, stand) -> np.ndarray:
 def competitive_swings(d: pd.DataFrame, col: str = "bat_speed") -> np.ndarray:
     """Statcast's competitive swings: the fastest 90% of a batter's tracked swings in the season, plus any
     swing of 60+ mph with a 90+ mph exit velocity. Bunts are never competitive. Needs a tracked value
-    in `col`. (The 90% cut uses the batter's whole season, so it is shared by both halves of a split;
-    reports quote a check with a fixed 50 mph floor instead.)"""
+    in `col`. (The 90% cut uses the batter's whole season, so it is shared by both halves of a split and
+    by both halves of the within-season validation; add_prior_cut() builds the leak-free version.)"""
     tracked = d["bat_speed"].notna() & d[col].notna() & d["swing"] & ~d["description"].isin(BUNTS)
     q10 = d["bat_speed"].where(tracked).groupby([d["batter"], d["season"]]).transform(lambda s: s.quantile(0.10))
     fast_enough = d["bat_speed"] >= q10
@@ -176,8 +176,9 @@ KEEP = [
     "description", "swing", "whiff", "called", "csw", "has_zone", "in_zone", "out_zone", "contact", "zone_swing", "bip",
     "xwoba", "ls", "la", "lsa", "hard", "barrel", "gb", "has_bbt", "pulled", "rv", "woba_value", "woba_pa", "velo", "spin",
     "ivb", "hb", "arm", "ext", "bat_speed", "swing_length", "attack_angle", "attack_dir_pull", "swing_path_tilt", "fast",
-    "comp_bs", "comp_sl", "comp_aa", "comp_ad", "comp_tilt",
+    "comp_bs", "comp_sl", "comp_aa", "comp_ad", "comp_tilt", "tracked_swing", "hard_contact_swing",
 ]
+PHYSICS = ("velo", "spin", "ivb", "hb", "arm_angle", "extension")   # two-level noise model (see day_components)
 
 
 def prepare(p: pd.DataFrame) -> pd.DataFrame:
@@ -220,6 +221,8 @@ def prepare(p: pd.DataFrame) -> pd.DataFrame:
     d["comp_ad"] = d["comp_bs"] & d["attack_direction"].notna()
     d["comp_tilt"] = d["comp_bs"] & d["swing_path_tilt"].notna()
     d["fast"] = (d["bat_speed"] >= 75).astype(float)
+    d["tracked_swing"] = d["bat_speed"].notna() & d["swing"] & ~d["description"].isin(BUNTS)
+    d["hard_contact_swing"] = (d["bat_speed"] >= 60) & (d["launch_speed"] >= 90)
     # Statcast's attack direction is batter-relative with pull negative for both sides (checked on 2025:
     # it correlates with spray angle +0.32 for righties and -0.29 for lefties), so flip it: pull +.
     d["attack_dir_pull"] = -d["attack_direction"]
@@ -241,6 +244,24 @@ def load(seasons: list[int]) -> pd.DataFrame:
             raise FileNotFoundError(f"No sequence data for {s} in data/seq/ (bb seq {s} writes it on the Mac).")
         frames.append(prepare(pd.concat([pd.read_parquet(x, columns=SOURCE_COLUMNS) for x in parts], ignore_index=True)))
     return pd.concat(frames, ignore_index=True)
+
+
+def add_prior_cut(d: pd.DataFrame) -> pd.DataFrame:
+    """comp_bs_prior: competitive swings with the fastest-90% cut taken from the batter's PREVIOUS season, so
+    nothing in a season's own swings decides which of them count (no leak between halves). Batters without a
+    previous season in d get no competitive swings under this rule. Also comp_bs_known: Statcast's rule,
+    restricted to the same batter-seasons, for a like-for-like comparison."""
+    d = d.copy()
+    q10 = d.loc[d["tracked_swing"]].groupby(["batter", "season"])["bat_speed"].quantile(0.10)
+    prev = q10.rename("q10_prior").reset_index()
+    prev["season"] += 1
+    cut = d[["batter", "season"]].merge(prev, on=["batter", "season"], how="left")["q10_prior"].to_numpy()
+    has = np.isfinite(cut)
+    bs = d["bat_speed"].to_numpy(float)
+    with np.errstate(invalid="ignore"):
+        d["comp_bs_prior"] = d["tracked_swing"].to_numpy() & has & ((bs >= cut) | d["hard_contact_swing"].to_numpy())
+    d["comp_bs_known"] = d["comp_bs"].to_numpy() & has
+    return d
 
 
 # ---------------------------------------------------------------- families: who is split, and how
@@ -322,6 +343,7 @@ class Arrays:
     s: np.ndarray
     off: np.ndarray
     cs: np.ndarray
+    ss: np.ndarray | None = None      # sum of squared values per row (within-game spread, two-level model)
 
 
 def metric_arrays(fam: Family, m: Metric) -> Arrays:
@@ -331,7 +353,8 @@ def metric_arrays(fam: Family, m: Metric) -> Arrays:
     v, r = val[den], fam.event_row[den]
     c = np.bincount(r, minlength=fam.n_row).astype(np.int64)
     s = np.bincount(r, weights=v, minlength=fam.n_row)
-    return Arrays(c=c, s=s, off=np.cumsum(c) - c, cs=np.r_[0.0, np.cumsum(v)])
+    ss = np.bincount(r, weights=v * v, minlength=fam.n_row)
+    return Arrays(c=c, s=s, off=np.cumsum(c) - c, cs=np.r_[0.0, np.cumsum(v)], ss=ss)
 
 
 @dataclass
@@ -797,9 +820,87 @@ def drift_table(job: Job, seasons: list[int], reps: int = 40, seed: int = 0) -> 
 
 
 def with_drift(params: pd.DataFrame, drift_tab: pd.DataFrame) -> pd.DataFrame:
-    p = params.drop(columns=[c for c in drift_tab.columns if c != "metric" and c in params], errors="ignore")
+    """Merge drift into the parameters. Drift is used (drift_sd_use) only when its 95% interval excludes 0,
+    the report's own evidence standard; otherwise rest-of-season intervals aren't widened. drift_over_tau
+    uses the talent spread measured directly by the half covariances (tau_cov)."""
+    p = params.drop(columns=[c for c in drift_tab.columns if c != "metric" and c in params]
+                    + [c for c in ("drift_sig", "drift_sd_use", "drift_var_use", "drift_over_tau") if c in params], errors="ignore")
     p = p.merge(drift_tab, on="metric", how="left")
-    p["drift_over_tau"] = p["drift_sd"] / p["tau"]
+    p["drift_sig"] = p["drift_sd_lo"].fillna(0) > 0
+    p["drift_sd_use"] = np.where(p["drift_sig"], p["drift_sd"], 0.0)
+    p["drift_var_use"] = p["drift_sd_use"] ** 2
+    p["drift_over_tau"] = p["drift_sd"] / p["tau_cov"]
+    return p
+
+
+# ---------------------------------------------------------------- pitch physics: a two-level noise model
+
+def day_components(fam: Family, a: Arrays, seasons: list[int] | None = None, min_games: int = 3) -> pd.DataFrame:
+    """For pitch physics, noise has two levels: pitch to pitch within a game (sigma_pitch^2) and game to game
+    around the player's season level (gamma^2, the day effect, which also absorbs in-season trend). A
+    sample of n pitches over g games then has noise gamma^2 / g + sigma_pitch^2 / n, so pitches are not
+    the unit of information: games are.
+
+    sigma_pitch^2: pooled within-game variance, sum over games of (ss - s^2/c) / sum of (c - 1).
+    gamma^2      : per player-season with min_games+ games, the variance of his game means minus the part
+                   pitch noise explains (sigma_pitch^2 x mean(1/c)), pooled with weights games - 1.
+    Also k_median, the median events per game (what regress() assumes when told only a pitch count).
+    """
+    use = a.c > 0
+    if seasons is not None:
+        use &= np.isin(fam.entity_season[fam.row_entity], seasons)
+    rows = []
+    rg_all = fam.entity_group[fam.row_entity]
+    for g in sorted(set(fam.entity_group)):
+        r = np.flatnonzero(use & (rg_all == g))
+        if len(r) == 0:
+            continue
+        c, sm, sq = a.c[r].astype(float), a.s[r], a.ss[r]
+        dev = sq - sm * sm / c
+        two = c >= 2
+        sig2 = float(dev[two].sum() / (c[two] - 1).sum()) if two.any() else np.nan
+        t = pd.DataFrame({"e": fam.row_entity[r], "m": sm / c, "inv": 1 / c})
+        agg = t.groupby("e").agg(G=("m", "size"), v=("m", "var"), inv=("inv", "mean"))
+        agg = agg[agg["G"] >= min_games]
+        gam = agg["v"] - sig2 * agg["inv"]
+        gamma2 = float(np.average(gam, weights=agg["G"] - 1)) if len(agg) else np.nan
+        game_sd = float(np.sqrt(np.average(agg["v"], weights=agg["G"] - 1))) if len(agg) else np.nan
+        rows.append({"group": g, "sigma_pitch2": sig2, "gamma2": gamma2, "game_mean_sd": game_sd,
+                     "k_median": float(np.median(c)), "day_players": int(len(agg))})
+    return pd.DataFrame(rows)
+
+
+def day_table(job: Job, seasons: list[int]) -> pd.DataFrame:
+    out = []
+    for m in job.metrics:
+        if m.key not in PHYSICS:
+            continue
+        t = day_components(job.fam, job.arrays[m.key], seasons)
+        if len(t):
+            t.insert(0, "metric", [metric_id(m.role, m.key, g) for g in t["group"]])
+            out.append(t.drop(columns="group"))
+    return pd.concat(out, ignore_index=True) if out else pd.DataFrame(columns=["metric"])
+
+
+def with_day(params: pd.DataFrame, day: pd.DataFrame, curve: pd.DataFrame | None = None) -> pd.DataFrame:
+    """Physics rows switch to the two-level model: tau = the talent SD measured by the half covariances,
+    sigma2 = pitch-to-pitch noise, gamma2 = day-to-day noise. Adds the model's reliability for one pitch,
+    one game of k_median pitches and five such games, and games needed for r = 0.5 and 0.7."""
+    p = params.drop(columns=[c for c in day.columns if c != "metric" and c in params], errors="ignore")
+    p = p.merge(day, on="metric", how="left")
+    two = p["key"].isin(PHYSICS) & p["gamma2"].notna()
+    p["model"] = np.where(two, "two-level", "one-level")
+    p.loc[two, "tau"] = p.loc[two, "tau_cov"]
+    p.loc[two, "sigma2"] = p.loc[two, "sigma_pitch2"]
+    t2, g2, s2, k = p["tau_cov"] ** 2, p["gamma2"].clip(lower=0), p["sigma_pitch2"], p["k_median"]
+    p["r_one_pitch"] = np.where(two, t2 / (t2 + g2 + s2), np.nan)
+    p["r_one_game"] = np.where(two, t2 / (t2 + g2 + s2 / k), np.nan)
+    p["r_five_games"] = np.where(two, t2 / (t2 + g2 / 5 + s2 / (5 * k)), np.nan)
+    p["games_r50"] = np.where(two, (g2 + s2 / k) / t2, np.nan)
+    p["games_r70"] = 7 / 3 * p["games_r50"]
+    if curve is not None:
+        r1 = curve[curve["n"].eq(1)].set_index("metric")["r"]
+        p["r_one_pitch_measured"] = p["metric"].map(r1)
     return p
 
 
@@ -818,29 +919,36 @@ def load_params(path: Path | None = None) -> pd.DataFrame:
 
 def regress(metric: str, observed, n, league_mean: float, horizon: str = "season", params: pd.DataFrame | None = None,
             level: float = 0.95, M: float | None = None, tau: float | None = None, rho: float | None = None,
-            drift_sd: float | None = None) -> pd.DataFrame:
+            drift_sd: float | None = None, games=None) -> pd.DataFrame:
     """Shrink an observed value toward the league mean, with an interval for the player's true level.
 
     metric       : an id like 'pitcher/whiff', 'pitcher/FF/velo', 'hitter/bat_speed' (see load_params()).
                    Rates are proportions (0.31, not 31); run value is runs per 100 pitches.
     observed, n  : the player's value and its sample in the metric's own denominator (scalars or arrays).
+    games        : pitch physics only (velocity, spin, IVB, HB, arm angle, extension): the number of games the
+                   n pitches came from. For these the day-to-day swing dominates, so the weight is
+                   tau^2 / (tau^2 + gamma^2 / games + sigma^2 / n), not n / (n + M). Without games it assumes
+                   n / k_median games and warns: one 100-pitch outing is one game, not ten.
     league_mean  : the mean to regress toward (the league, or a better prior if you have one).
     horizon      : "season": his true level over the period the sample covers (weight w = n / (n + M)).
                    "rest_of_season": his level over the rest of this season. Same estimate as "season"
                    (in-season change behaves like drift, not a pull back to the mean: tested), with the
-                   interval widened by the measured drift (sd drift_sd from first half to second).
+                   interval widened by the measured drift (sd drift_sd from first half to second) when
+                   that drift is distinguishable from 0.
                    "next_season": his level next season (weight rho * w; rho is year-to-year persistence).
     M, tau, rho  : override the shipped constants (rho: year-to-year persistence; drift_sd: in-season drift).
 
     Returns estimate, sd, lo, hi and the weight put on the observation. The sd is the posterior
     standard deviation of true talent under a normal model: tau * sqrt(1 - w) for the sample's own
-    period, sqrt(tau^2 (1 - w) + drift_sd^2) for the rest of the season, tau * sqrt(1 - rho^2 w) next season. It describes his level, not the noise of a future
-    sample: to bracket a future observed value of n2 events, add M tau^2 / n2 to the variance.
+    period, sqrt(tau^2 (1 - w) + drift_sd^2) for the rest of the season, tau * sqrt(1 - rho^2 w) next season.
+    It describes his level, not the noise of a future sample: to bracket a future observed value of n2 events,
+    add M tau^2 / n2 to the variance (that predictive interval is what the validation checked).
     Rates are clipped to [0, 1].
     """
     if params is None and (M is None or tau is None):
         params = load_params()
     row = params.loc[metric] if params is not None else {}
+    two_level = M is None and params is not None and row.get("model") == "two-level"
     M = float(row["M"]) if M is None else float(M)
     tau = float(row["tau"]) if tau is None else float(tau)
     if horizon == "next_season":
@@ -848,15 +956,26 @@ def regress(metric: str, observed, n, league_mean: float, horizon: str = "season
         if not np.isfinite(rho):
             raise ValueError(f"{metric}: no precise year-to-year estimate; use horizon='season'")
     elif horizon == "rest_of_season":
-        drift_sd = float(row["drift_sd"]) if drift_sd is None else float(drift_sd)
+        drift_sd = float(row.get("drift_sd_use", row.get("drift_sd"))) if drift_sd is None else float(drift_sd)
         if not np.isfinite(drift_sd):
             raise ValueError(f"{metric}: no in-season drift estimate; use horizon='season'")
     elif horizon != "season":
         raise ValueError("horizon must be 'season', 'rest_of_season' or 'next_season'")
     obs, n = np.atleast_1d(np.asarray(observed, float)), np.atleast_1d(np.asarray(n, float))
-    w = n / (n + M)
+    if two_level:
+        if games is None:
+            import warnings
+
+            games = np.maximum(1.0, n / float(row["k_median"]))
+            warnings.warn(f"{metric} is a pitch-physics metric: its noise is mostly day to day. Assuming "
+                          f"{float(row['k_median']):g} pitches per game; pass games= for the real count.", stacklevel=2)
+        g = np.maximum(np.atleast_1d(np.asarray(games, float)), 1.0)
+        V = float(row["gamma2"]) / g + float(row["sigma2"]) / np.maximum(n, 1)
+        w = np.where(n > 0, tau ** 2 / (tau ** 2 + V), 0.0)
+    else:
+        w = n / (n + M)
     if horizon in ("season", "rest_of_season"):
-        est = shrink(obs, n, league_mean, M)
+        est = np.where(n > 0, league_mean + w * (np.nan_to_num(obs) - league_mean), league_mean)
         sd = tau * np.sqrt(1 - w) if horizon == "season" else np.sqrt(tau ** 2 * (1 - w) + drift_sd ** 2)
         weight = w
     else:
@@ -883,8 +1002,16 @@ def period_sums(fam: Family, a: Arrays, period: np.ndarray, n_period: int) -> tu
     return cnt, tot
 
 
-VALIDATION_COLUMNS = ("rmse_raw", "rmse_shrunk", "rmse_mean", "cut_pct", "cut_lo", "cut_hi")
-BUCKETS = ((0, 0.25), (0.25, 1), (1, 3), (3, np.inf))       # first-sample n, in units of M
+def period_games(fam: Family, a: Arrays, period: np.ndarray, n_period: int) -> np.ndarray:
+    """Games with at least one event, per entity and period."""
+    use = (period >= 0) & (a.c > 0)
+    idx = fam.row_entity[use] * n_period + period[use]
+    return np.bincount(idx, minlength=fam.n_entity * n_period).reshape(-1, n_period).astype(float)
+
+
+VALIDATION_COLUMNS = ("rmse_raw", "rmse_shrunk", "rmse_mean", "cut_pct", "cut_lo", "cut_hi", "p_cut")
+# Buckets by the weight on the first sample, w = n / (n + M): the same as n under M/4, M/4 to M, M to 3M, 3M +
+BUCKETS = ((0, 0.2), (0.2, 0.5), (0.5, 0.75), (0.75, 1.01))
 BUCKET_LABELS = ("< M/4", "M/4 to M", "M to 3M", "3M +")
 
 
@@ -904,30 +1031,41 @@ def _golden(f, lo: float, hi: float, iters: int = 80) -> float:
 
 
 def score_forecast(obs1, n1, obs2, n2, prior, M, tau, rho=1.0, min_target: float | None = None, shift: float = 0.0,
-                   extra_var: float = 0.0, boot: int = 400, seed: int = 0) -> tuple[pd.DataFrame, dict]:
+                   extra_var: float = 0.0, boot: int = 400, seed: int = 0, V1=None, V2=None) -> tuple[pd.DataFrame, dict]:
     """Compare raw, regressed and league-mean forecasts of a later sample (out of sample).
 
-    obs1/n1: the earlier sample (any n1 >= 1); obs2/n2: the later sample, kept when n2 >= min_target
-    (default M / 5). Forecasts: raw = obs1; shrunk = prior + rho w (obs1 - prior), w = n1 / (n1 + M);
-    mean = prior. Errors are against obs2 - shift, every player counting once. shift is the league's own
-    change between the periods (later league mean - prior), so scores are relative to league and a
-    league-wide move (summer exit velocity, a new season's run environment) doesn't count as anyone's error. Returns a table by bucket of
-    n1 / M (RMSE for each forecast, the % RMSE cut from raw with a bootstrap 95% interval) and a dict
-    with the overall result, the M that would have minimized the error on this test set (a calibration
-    check, in-sample by construction), and predictive-interval coverage for obs2.
+    obs1/n1: the earlier sample (n1 >= 1); obs2/n2: the later one. V1, V2: the samples' noise variances
+    (default M tau^2 / n, the one-level model; pitch physics pass the two-level values). Forecasts: raw = obs1;
+    shrunk = prior + rho w (obs1 - prior) with w = tau^2 / (tau^2 + V1), which is n1 / (n1 + M) by default;
+    mean = prior. Targets are kept when their own reliability tau^2 / (tau^2 + V2) is at least 1/6 (n2 >= M/5).
+    Errors are against obs2 - shift, every player counting once. shift is the league's own change between
+    the periods (the later period's ACTUAL league mean - prior, so it uses information a forecaster wouldn't
+    have yet), so scores are relative to league: a league-wide move isn't anyone's error.
+
+    Returns a table by bucket of w (equivalently n1 / M: under 1/4, 1/4-1, 1-3, 3+) with each forecast's RMSE,
+    the % RMSE cut from raw, its bootstrap 95% interval and two-sided bootstrap p, and a dict with the overall
+    result, the noise multiplier that would have minimized the error on this test set (best_over_M; with the
+    default noise it is the best M over ours: a calibration check, in-sample by construction), and the coverage
+    of 80% and 95% predictive intervals for obs2 (talent uncertainty + drift + obs2's own noise).
     """
     obs1, n1, obs2, n2 = (np.asarray(x, float) for x in (obs1, n1, obs2, n2))
-    min_target = max(M / 5, 1.0) if min_target is None else min_target
-    ok = (n1 >= 1) & (n2 >= min_target) & np.isfinite(obs1) & np.isfinite(obs2)
-    obs1, n1, obs2, n2 = obs1[ok], n1[ok], obs2[ok] - shift, n2[ok]
-    w = n1 / (n1 + M)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        V1 = M * tau ** 2 / n1 if V1 is None else np.asarray(V1, float)
+        V2 = M * tau ** 2 / n2 if V2 is None else np.asarray(V2, float)
+    if min_target is not None:
+        keep_t = n2 >= min_target
+    else:
+        keep_t = (n2 >= 1) & (V2 <= 5 * tau ** 2)
+    ok = (n1 >= 1) & keep_t & np.isfinite(obs1) & np.isfinite(obs2) & np.isfinite(V1) & np.isfinite(V2)
+    obs1, n1, obs2, n2, V1, V2 = obs1[ok], n1[ok], obs2[ok] - shift, n2[ok], V1[ok], V2[ok]
+    wk = lambda k: tau ** 2 / (tau ** 2 + k * V1)  # noqa: E731
+    w = wk(1.0)
     f_shr = prior + rho * w * (obs1 - prior)
     e_raw, e_shr, e_mean = obs1 - obs2, f_shr - obs2, prior - obs2
     rng = np.random.default_rng(seed)
     rows = []
-    ratio = n1 / M
-    for (lo, hi), lab in zip(BUCKETS + ((0, np.inf),), BUCKET_LABELS + ("all",)):
-        b = (ratio >= lo) & (ratio < hi)
+    for (lo, hi), lab in zip(BUCKETS + ((0, 1.01),), BUCKET_LABELS + ("all",)):
+        b = (w >= lo) & (w < hi)
         k = int(b.sum())
         row = {"bucket": lab, "players": k}
         if k >= 10:
@@ -935,16 +1073,17 @@ def score_forecast(obs1, n1, obs2, n2, prior, M, tau, rho=1.0, min_target: float
             idx = np.flatnonzero(b)
             draws = rng.integers(0, k, (boot, k))
             cut = 1 - np.sqrt((e_shr[idx][draws] ** 2).mean(1)) / np.sqrt((e_raw[idx][draws] ** 2).mean(1))
+            p_cut = min(1.0, 2 * min((np.sum(cut <= 0) + 1) / (boot + 1), (np.sum(cut >= 0) + 1) / (boot + 1)))
             row |= {"n1_median": float(np.median(n1[b])), "rmse_raw": r_raw, "rmse_shrunk": r_shr, "rmse_mean": r_mean,
-                    "cut_pct": 100 * (1 - r_shr / r_raw), "cut_lo": 100 * _q(cut, 0.025), "cut_hi": 100 * _q(cut, 0.975)}
+                    "cut_pct": 100 * (1 - r_shr / r_raw), "cut_lo": 100 * _q(cut, 0.025), "cut_hi": 100 * _q(cut, 0.975),
+                    "p_cut": p_cut}
         rows.append(row)
     table = pd.DataFrame(rows)
-    sse = lambda m: float(np.mean((prior + rho * n1 / (n1 + m) * (obs1 - prior) - obs2) ** 2))  # noqa: E731
-    best = _golden(sse, max(M / 1000, 1e-3), M * 1000 + 10) if len(obs1) >= 20 else np.nan
-    # Predictive interval for the later sample: talent uncertainty (+ drift) + the later sample's own noise
-    sd = np.sqrt(tau ** 2 * (1 - rho ** 2 * w + M / n2) + extra_var)
+    sse = lambda k: float(np.mean((prior + rho * wk(k) * (obs1 - prior) - obs2) ** 2))  # noqa: E731
+    best = _golden(sse, 1e-3, 1e3) if len(obs1) >= 20 else np.nan
+    sd = np.sqrt(tau ** 2 * (1 - rho ** 2 * w) + V2 + extra_var)
     zc = np.abs(e_shr) / sd
-    info = {"players": int(len(obs1)), "best_M": best, "M": M, "best_over_M": best / M if M else np.nan,
+    info = {"players": int(len(obs1)), "best_M": best * M if np.isfinite(best) else np.nan, "M": M, "best_over_M": best,
             "rmse_at_best_M": float(np.sqrt(sse(best))) if np.isfinite(best) else np.nan,
             "cover80": float(np.mean(zc <= 1.2816)) if len(zc) else np.nan,
             "cover95": float(np.mean(zc <= 1.96)) if len(zc) else np.nan}
@@ -983,20 +1122,30 @@ def validate(jobs: list[Job], train_params: pd.DataFrame, test_season: int, prev
             a = j.arrays[m.key]
             cnt_h, tot_h = period_sums(fam, a, half, 2)
             cnt_w, tot_w = period_sums(fam, a, whole, 2)
+            gam_h, gam_w = period_games(fam, a, half, 2), period_games(fam, a, whole, 2)
             for g in j.groups:
                 mid = metric_id(m.role, m.key, g)
                 if mid not in P:
                     continue
                 p = P[mid]
                 M, tau, rho = p["M"], p["tau"], p.get("rho_use", np.nan)
-                drift_var = max(float(p.get("drift_var", 0.0)), 0.0) if np.isfinite(p.get("drift_var", np.nan)) else 0.0
+                dv = p.get("drift_var_use", np.nan)
+                drift_var = float(dv) if dv is not None and np.isfinite(dv) else 0.0
+                two = p.get("model") == "two-level"
+
+                def noise(n_, g_):
+                    if not two:
+                        return None
+                    with np.errstate(invalid="ignore", divide="ignore"):
+                        return p["gamma2"] / np.maximum(g_, 1) + p["sigma2"] / n_
                 ent = np.flatnonzero((key["group"].to_numpy() == g) & (key["season"].to_numpy() == test_season))
                 n1, s1, n2, s2 = cnt_h[ent, 0], tot_h[ent, 0], cnt_h[ent, 1], tot_h[ent, 1]
                 with np.errstate(invalid="ignore", divide="ignore"):
                     prior = s1.sum() / n1.sum()
                     shift = s2.sum() / n2.sum() - prior
                     for label, xv in (("within", drift_var), ("within, no drift", 0.0)):
-                        tab, info = score_forecast(s1 / n1, n1, s2 / n2, n2, prior, M, tau, shift=shift, extra_var=xv)
+                        tab, info = score_forecast(s1 / n1, n1, s2 / n2, n2, prior, M, tau, shift=shift, extra_var=xv,
+                                                   V1=noise(n1, gam_h[ent, 0]), V2=noise(n2, gam_h[ent, 1]))
                         tab.insert(0, "test", label); tab.insert(0, "metric", mid)
                         by_bucket.append(tab)
                         overall.append({"metric": mid, "test": label, "drift_var_used": xv, "league_shift": shift, **info,
@@ -1016,7 +1165,8 @@ def validate(jobs: list[Job], train_params: pd.DataFrame, test_season: int, prev
                     o1, k1 = tot_w[e1, 0] / cnt_w[e1, 0], cnt_w[e1, 0]
                     o2, k2 = tot_w[e2, 1] / cnt_w[e2, 1], cnt_w[e2, 1]
                 for label, r_use in (("next", rho), ("next, season weight only", 1.0)):
-                    tab, info = score_forecast(o1, k1, o2, k2, prior, M, tau, rho=r_use, shift=shift)
+                    tab, info = score_forecast(o1, k1, o2, k2, prior, M, tau, rho=r_use, shift=shift,
+                                               V1=noise(k1, gam_w[e1, 0]), V2=noise(k2, gam_w[e2, 1]))
                     tab.insert(0, "test", label); tab.insert(0, "metric", mid)
                     by_bucket.append(tab)
                     overall.append({"metric": mid, "test": label, "rho_used": r_use, "league_shift": shift, **info,
@@ -1063,6 +1213,155 @@ def bat_speed_floor_check(d: pd.DataFrame, seasons: list[int], reps: int = 40, s
     job = _job(fam, [m], seasons, boot=40, y2y=False)
     run_splits([job], reps, seed=seed, log=None)
     return summarize(job)[1]
+
+
+def bat_speed_cut_check(d: pd.DataFrame, seasons: list[int], reps: int = 60, boot: int = 40, seed: int = 13) -> pd.DataFrame:
+    """Does Statcast's season-based competitive-swing cut leak information between halves? Compare, on the
+    same batter-seasons (those with a previous season in the data), bat speed under Statcast's rule against
+    bat speed with the fastest-90% cut taken from the previous season. Reliability (pooled seasons) and the
+    within-season validation on the last season, with parameters fit on the seasons before it."""
+    d = add_prior_cut(d)
+    metrics = [Metric("bat_speed_known", "Bat speed (Statcast's cut, same batters)", "hitter", "mean", "competitive swings",
+                      _f("bat_speed"), _b("comp_bs_known"), fmt="mph"),
+               Metric("bat_speed_prior", "Bat speed (previous season's cut)", "hitter", "mean", "competitive swings",
+                      _f("bat_speed"), _b("comp_bs_prior"), fmt="mph")]
+    job = _job(build_family(d, "hitter"), metrics, seasons, boot=boot, y2y=False)
+    run_splits([job], reps, seed=seed, log=None)
+    params = summarize(job, seasons=seasons[1:])[1]
+    train = summarize(job, seasons=seasons[1:-1], pairs=[])[1]
+    train = with_drift(train, drift_table(job, seasons[1:-1]))
+    _, val = validate([job], train, test_season=seasons[-1], prev_season=seasons[-2])
+    val = val[val["test"].eq("within")].set_index("metric")
+    out = params[["metric", "label", "M", "M_lo", "M_hi", "tau_cov", "sigma2"]].copy()
+    for c in ("players", "cut_pct", "cut_lo", "cut_hi", "cover80", "cover95"):
+        out[f"within_{c}"] = out["metric"].map(val[c])
+    return out
+
+
+COHORTS = [("hitter", "woba", "ALL", 256), ("hitter", "whiff", "ALL", 256), ("hitter", "hard_hit", "ALL", 90),
+           ("pitcher", "whiff", "ALL", 256), ("pitcher", "csw", "ALL", 512), ("pitcher", "chase", "ALL", 362),
+           ("pitcher", "hard_hit", "ALL", 90), ("pitcher", "hard_hit", "CH", 45), ("pitcher", "hard_hit", "CU", 23),
+           ("pitcher", "hard_hit", "SI", 64), ("pitcher", "xwoba_con", "SI", 64)]
+
+
+def cohort_curves(jobs: list[Job], specs=COHORTS, reps: int = 60, boot: int = 40, seed: int = 5, log=print):
+    """The reliability curve on a FIXED cohort: only player-seasons with at least 2 x n_cohort events, at
+    every n up to n_cohort. With the open population, who is measured changes with n (only regulars reach
+    large n); here it doesn't, so a curve whose M stays flat and sits near the open population's large-n
+    value says the open curve's drift with n came from who was measured. Returns (curve, summary)."""
+    rng = np.random.default_rng(seed)
+    curves, summ = [], []
+    for role, key, group, n_c in specs:
+        job = next(j for j in jobs if j.fam.role == role and key in j.arrays and group in j.groups
+                   and (group == "ALL") == (j.fam.name == role))
+        fam, a = job.fam, job.arrays[key]
+        tot = np.bincount(fam.row_entity, weights=a.c, minlength=fam.n_entity)
+        mask = (fam.entity_group == group) & (tot >= 2 * n_c)
+        players = np.unique(fam.entity_player[mask])
+        draws = rng.multinomial(len(players), np.full(len(players), 1 / len(players)), size=boot).astype(float)
+        Wp = np.vstack([np.ones(len(players)), draws])
+        idx = np.searchsorted(players, fam.entity_player)
+        idx = np.clip(idx, 0, len(players) - 1)
+        W = Wp[:, idx] * mask[None, :]
+        grid = [n for n in GRID if n <= n_c]
+        n_cell = len(job.groups) * len(job.seasons)
+        acc = np.zeros((boot + 1, len(grid), n_cell, 4))
+        for _ in range(reps):
+            acc += within_sums(half_means(a, random_split(fam, rng), fam.n_entity, grid), job.cell, n_cell, W)
+        gi = job.groups.index(group)
+        cells = [gi * len(job.seasons) + k for k in range(len(job.seasons))]
+        nn, cc, vv = (x.sum(-1) for x in centered(acc[:, :, cells, :]))
+        r = _ratio(cc, vv)
+        g = np.array(grid, float)
+        per_game = job.per_unit[key].get(group, 1.0)
+        fit = g >= max(per_game, 1.0)
+        if fit.sum() < 3:
+            fit = np.ones(len(g), bool)
+        Mc = fit_reliability_constant(g[fit], r[0, fit], nn[0, fit])
+        Mb = np.array([fit_reliability_constant(g[fit], r[b, fit], nn[0, fit]) for b in range(1, boot + 1)])
+        se = _sd(np.log(Mb))
+        mid = metric_id(role, key, group)
+        with np.errstate(invalid="ignore", divide="ignore"):
+            Mn = g * (1 - r[0]) / r[0]
+            sig2 = _ratio(vv[0] - cc[0], nn[0]) * g
+            tau2 = _ratio(cc[0], nn[0])
+        for i, n in enumerate(grid):
+            curves.append({"metric": mid, "n_cohort": n_c, "n": n, "r": r[0, i], "r_lo": r[0, i] - 1.96 * _sd(r[1:, i]),
+                           "r_hi": r[0, i] + 1.96 * _sd(r[1:, i]), "M_n": Mn[i], "sigma2_event": sig2[i], "tau2": tau2[i]})
+        summ.append({"metric": mid, "n_cohort": n_c, "cohort": int(mask.sum()), "M_cohort": Mc,
+                     "M_cohort_lo": Mc * np.exp(-1.96 * se), "M_cohort_hi": Mc * np.exp(1.96 * se),
+                     "M_n_first_fit": float(Mn[fit][0]), "M_n_last": float(Mn[-1]),
+                     "tau_cohort": float(np.sqrt(max(np.average(tau2[fit], weights=nn[0, fit]), 0)))})
+        if log:
+            log(f"  cohort {mid} (n <= {n_c}, {int(mask.sum())} player-seasons): M = {Mc:.1f}")
+    return pd.DataFrame(curves), pd.DataFrame(summ)
+
+
+# ---------------------------------------------------------------- fictional leagues (simulation checks)
+
+def fictional_league(players=300, games=40, per_game=10, tau=1.0, sigma_g=0.0, sigma_e=1.0, seasons=(2026,), rho=1.0,
+                     rho_half=1.0, binary=False, p_mean=0.25, seed=0) -> pd.DataFrame:
+    """FICTIONAL players for checking the machinery against a known answer. Value = talent + game effect +
+    event noise (or a Bernoulli draw at p = p_mean + talent). Talent correlates rho across seasons and
+    rho_half between the first and second half of a season's games. Only the columns families need."""
+    import math
+
+    rng = np.random.default_rng(seed)
+    P, G, K = players, games, per_game
+    base = rng.normal(0, tau, P)
+    frames = []
+    for si, season in enumerate(seasons):
+        if si:
+            base = rho * base + math.sqrt(1 - rho ** 2) * rng.normal(0, tau, P)
+        later = rho_half * base + math.sqrt(1 - rho_half ** 2) * rng.normal(0, tau, P)
+        talent = np.where(np.arange(G)[None, :] < G // 2, base[:, None], later[:, None])
+        value = talent[:, :, None] + rng.normal(0, sigma_g, (P, G))[:, :, None] * (sigma_g > 0) \
+            + rng.normal(0, sigma_e, (P, G, K))
+        if binary:
+            value = (rng.random((P, G, K)) < np.clip(p_mean + talent, 0.01, 0.99)[:, :, None]).astype(float)
+        pl, gm, ev = (x.ravel() for x in np.meshgrid(np.arange(P), np.arange(G), np.arange(K), indexing="ij"))
+        dates = np.array([str(pd.Timestamp(f"{season}-04-01") + pd.Timedelta(days=int(g)))[:10] for g in range(G)])
+        frames.append(pd.DataFrame({"batter": pl, "season": season, "game_pk": season * 100_000 + pl * 100 + gm,
+                                    "game_date": dates[gm], "at_bat_number": ev // 4 + 1, "pitch_number": ev % 4 + 1,
+                                    "pitch_type": "FF", "x": value.ravel()}))
+    return pd.concat(frames, ignore_index=True)
+
+
+FICTIONAL_X = Metric("x", "Fictional metric", "hitter", "mean", "events", lambda d: d["x"].to_numpy(float),
+                     lambda d: np.ones(len(d), bool))
+
+
+def fictional_summary(d: pd.DataFrame, seasons, reps: int = 12, unit: str = "game", seed: int = 3, boot: int = 60) -> pd.Series:
+    """The atlas parameters of a fictional league (one metric, x)."""
+    fam = build_family(d, "hitter", unit=unit)
+    job = _job(fam, [FICTIONAL_X], list(seasons), boot)
+    run_splits([job], reps, seed=seed, log=None)
+    return summarize(job)[1].iloc[0]
+
+
+def simulation_checks(leagues: int = 30, log=print) -> dict:
+    """Saved evidence for two method claims, on FICTIONAL leagues with known truth.
+    1. Day effects: talent sd 1, a day effect sd 0.5 shared by a game's 10 events, event noise sd 1. By game,
+       M should be (1 + 10 x 0.25) / 1 = 3.5 for halves spanning many games; a pitch-level split shares days.
+    2. Calibration: `leagues` leagues of 300 players, two seasons, rho = 0.6, M = 4. Do the bootstrap
+       standard errors match the spread of the estimates across leagues, and do intervals cover the truth?"""
+    d = fictional_league(players=300, games=40, per_game=10, tau=1.0, sigma_g=0.5, sigma_e=1.0, seed=4)
+    by_game, by_event = fictional_summary(d, [2026], reps=10), fictional_summary(d, [2026], reps=10, unit="event")
+    out = {"day_effect": {"theory_M_by_game": 3.5, "M_by_game": float(by_game["M"]), "M_by_event": float(by_event["M"])}}
+    rows = []
+    for k in range(leagues):
+        d = fictional_league(players=300, games=30, per_game=6, tau=1.0, sigma_e=2.0, seasons=(2025, 2026), rho=0.6, seed=500 + k)
+        sm = fictional_summary(d, [2025, 2026], reps=8, seed=k)
+        rows.append((sm["rho"], sm["rho_se"], np.log(sm["M"]), np.log(sm["M_hi"] / sm["M"]) / 1.959964))
+        if log and (k + 1) % 10 == 0:
+            log(f"  calibration league {k + 1}/{leagues}")
+    r = np.array(rows)
+    out["calibration"] = {"leagues": leagues, "true_rho": 0.6, "true_M": 4.0,
+                          "rho_sd_across_leagues": float(r[:, 0].std(ddof=1)), "rho_mean_se": float(r[:, 1].mean()),
+                          "rho_cover95": float(np.mean(np.abs(r[:, 0] - 0.6) <= 1.959964 * r[:, 1])),
+                          "logM_sd_across_leagues": float(r[:, 2].std(ddof=1)), "logM_mean_se": float(r[:, 3].mean()),
+                          "logM_cover95": float(np.mean(np.abs(r[:, 2] - np.log(4)) <= 1.959964 * r[:, 3]))}
+    return out
 
 
 # ---------------------------------------------------------------- the whole study
@@ -1119,14 +1418,34 @@ def run(seasons: list[int] = (2024, 2025, 2026), reps: int = 200, out_dir: Path 
     train = pd.concat([summarize(j, seasons=seasons[:-1], pairs=[(seasons[-3], seasons[-2])] if len(seasons) >= 3 else [])[1] for j in jobs], ignore_index=True)
     params = with_drift(params, pd.concat([drift_table(j, seasons) for j in jobs], ignore_index=True))
     train = with_drift(train, pd.concat([drift_table(j, seasons[:-1]) for j in jobs], ignore_index=True))
-    log(f"  drift done ({time.time() - t0:.0f}s)")
+    params = with_day(params, pd.concat([day_table(j, seasons) for j in jobs], ignore_index=True), curve)
+    train = with_day(train, pd.concat([day_table(j, seasons[:-1]) for j in jobs], ignore_index=True))
+    log(f"  drift and day effects done ({time.time() - t0:.0f}s)")
     means = league_means(d)
     by_bucket, overall = validate(jobs, train, test_season=seasons[-1], prev_season=seasons[-2])
+    # A replication on data never looked at while choosing the design: fit on the first season alone, test the
+    # second season's halves (within-season only: there's no season pair before it to fit rho on).
+    first = [seasons[0]]
+    train1 = with_drift(pd.concat([summarize(j, seasons=first, pairs=[])[1] for j in jobs], ignore_index=True),
+                        pd.concat([drift_table(j, first) for j in jobs], ignore_index=True))
+    train1 = with_day(train1, pd.concat([day_table(j, first) for j in jobs], ignore_index=True))
+    rep_bucket, rep_overall = validate(jobs, train1, test_season=seasons[1], prev_season=seasons[0])
+    from baseball.stats import benjamini_hochberg
+
+    for t in (overall, by_bucket, rep_overall, rep_bucket):
+        t["q_cut"] = np.nan
+        for test, idx in t.groupby("test").groups.items():
+            t.loc[idx, "q_cut"] = benjamini_hochberg(t.loc[idx, "p_cut"].to_numpy())
     tables = {"curve": curve, "params": params, "params_train": train, "league_means": means,
-              "validation_buckets": by_bucket, "validation": overall}
+              "validation_buckets": by_bucket, "validation": overall,
+              "validation_replication": rep_overall, "validation_replication_buckets": rep_bucket}
     if checks and not (reuse_sums and (out_dir / "event_split.parquet").exists()):
         tables["event_split"] = event_split_check(d, seasons, reps=check_reps, log=log)
         tables["bat_speed_floor"] = bat_speed_floor_check(d, seasons, reps=check_reps)
+    if checks and not (reuse_sums and (out_dir / "cohort_summary.parquet").exists()):
+        tables["cohort_curve"], tables["cohort_summary"] = cohort_curves(jobs, log=log)
+        tables["bat_speed_cut"] = bat_speed_cut_check(d, seasons)
+        (out_dir / "simulation_checks.json").write_text(json.dumps(simulation_checks(log=log), indent=2))
     for name, t in tables.items():
         t.to_parquet(out_dir / f"{name}.parquet", index=False)
     summary = {"seasons": seasons, "reps": max(j.reps for j in jobs), "bootstrap_draws": boot, "pitches": int(len(d)), "games": int(d["game_pk"].nunique()),
@@ -1141,8 +1460,9 @@ def run(seasons: list[int] = (2024, 2025, 2026), reps: int = 200, out_dir: Path 
     return {"summary": summary, **tables}
 
 
-PARAM_FIELDS = ["metric", "label", "kind", "unit", "fmt", "M", "M_lo", "M_hi", "tau", "sigma2", "drift_sd",
-                "rho", "rho_lo", "rho_hi", "rho_use", "per_game", "r_at_max", "n_max"]
+PARAM_FIELDS = ["metric", "label", "kind", "unit", "fmt", "model", "M", "M_lo", "M_hi", "tau", "tau_cov", "sigma2", "gamma2",
+                "k_median", "drift_sd", "drift_sd_lo", "drift_sd_hi", "drift_sig", "drift_sd_use", "rho", "rho_lo", "rho_hi",
+                "rho_use", "per_game", "r_at_max", "n_max"]
 
 
 def write_param_file(params: pd.DataFrame, means: pd.DataFrame, summary: dict, path: Path | None = None) -> Path:
@@ -1158,7 +1478,10 @@ def write_param_file(params: pd.DataFrame, means: pd.DataFrame, summary: dict, p
     path.write_text(json.dumps({"built": summary["built"], "seasons": summary["seasons"], "reps": summary["reps"],
                                 "source": summary["source"],
                                 "note": "Rates are proportions; run value is runs per 100 pitches. league_mean_last is the "
-                                        "last season's event-weighted league mean.", "metrics": rec}, indent=1))
+                                        "last season's event-weighted league mean. model 'two-level' (pitch physics): "
+                                        "weight tau^2 / (tau^2 + gamma2 / games + sigma2 / n); pass games= to regress(). "
+                                        "drift_sd_use is drift_sd when its 95% interval excludes 0, else 0.",
+                                "metrics": rec}, indent=1))
     _PARAMS_CACHE.pop(path, None)
     return path
 
@@ -1171,17 +1494,18 @@ SHORT = {"whiff": "whiff", "csw": "CSW", "chase": "chase", "zone": "zone%", "cst
          "swing_length": "swing length", "fast_swing": "fast-swing", "attack_angle": "attack angle",
          "attack_direction": "attack dir.", "swing_path_tilt": "tilt"}
 FIGURE_CURVES = ["bat_speed", "swing_path_tilt", "attack_angle", "ev", "whiff", "chase", "barrel", "woba"]
+LABEL_INSIDE = {"attack_angle": 0.85}
 
 
 def _repel(ax, xs, ys, labels, dx: float = 6, step: float = 9.5, color: str = "#1f1f1f", size: float = 7.5) -> None:
-    """Direct labels beside points, nudged down (in points) until no two labels overlap."""
+    """Direct labels beside points, nudged up or down (in points, nearest first) until no two overlap."""
     fig = ax.figure
     fig.canvas.draw()
     placed = []
     order = np.argsort(-np.asarray(ys, float))
+    offsets = [2.0] + [2.0 + sgn * step * k for k in range(1, 20) for sgn in (-1, 1)]
     for i in order:
-        off = 2.0
-        for _ in range(40):
+        for off in offsets:
             t = ax.annotate(labels[i], (xs[i], ys[i]), xytext=(dx, off), textcoords="offset points", fontsize=size,
                             color=color, va="center")
             bb = t.get_window_extent(renderer=fig.canvas.get_renderer()).expanded(1.02, 1.1)
@@ -1189,7 +1513,6 @@ def _repel(ax, xs, ys, labels, dx: float = 6, step: float = 9.5, color: str = "#
                 placed.append(bb)
                 break
             t.remove()
-            off -= step
         else:
             placed.append(bb)
 
@@ -1219,8 +1542,10 @@ def figure(out_path: Path | None = None, tables_dir: Path | None = None) -> Path
     xlab = {"hitter": "Plate appearances to r = 0.5 (M, log scale)", "pitcher": "Batters faced to r = 0.5 (M, log scale)"}
     for ax, role in zip(axes[:2], ("hitter", "pitcher")):
         g = p[p["role"].eq(role)].reset_index(drop=True)
-        ax.errorbar(g["M_pa"], g["rho"], yerr=[(g["rho"] - g["rho_lo"]).clip(0), (g["rho_hi"] - g["rho"]).clip(0)], fmt="o",
-                    ms=7, color=colors[role], ecolor=colors[role], elinewidth=1, alpha=0.9, mec="white", mew=1.2)
+        for beyond, gg in g.groupby(g["M"] > g["n_max"]):    # hollow: M extrapolated beyond the largest sample
+            ax.errorbar(gg["M_pa"], gg["rho"], yerr=[(gg["rho"] - gg["rho_lo"]).clip(0), (gg["rho_hi"] - gg["rho"]).clip(0)],
+                        fmt="o", ms=7, color=colors[role], ecolor=colors[role], elinewidth=1, alpha=0.9,
+                        mec=colors[role] if beyond else "white", mfc="white" if beyond else colors[role], mew=1.2)
         ax.set_xscale("log")
         ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:g}"))
         ax.xaxis.set_minor_formatter(FuncFormatter(lambda v, _: f"{v:g}" if str(int(round(v)))[0] in "25" and v >= 2 else ""))
@@ -1242,9 +1567,17 @@ def figure(out_path: Path | None = None, tables_dir: Path | None = None) -> Path
         M = float(params.loc[params["metric"].eq(mid), "M"].iloc[0])
         x = (c["n"] / per_pa[mid]).to_numpy()
         b.plot(x, c["r"], marker="o", ms=3.5, lw=0, color=col)
-        xx = np.geomspace(x.min(), x.max(), 100)
-        b.plot(xx, xx * per_pa[mid] / (xx * per_pa[mid] + M), color=col, lw=1.6, alpha=0.85)
-        ends.append((x[-1], float(c["r"].iloc[-1]), SHORT[k]))
+        x_fit = float(x[c["in_fit"].to_numpy()].min()) if c["in_fit"].any() else x.min()
+        for lo, hi, ls in ((x.min(), x_fit, ":"), (x_fit, x.max(), "-")):   # solid where the curve was fit
+            if hi > lo:
+                xx = np.geomspace(lo, hi, 60)
+                b.plot(xx, xx * per_pa[mid] / (xx * per_pa[mid] + M), color=col, lw=1.6, alpha=0.85, ls=ls)
+        if k in LABEL_INSIDE:      # crowded at the top right: label it where the curve crosses this r instead
+            i = int(np.argmax(c["r"].to_numpy() >= LABEL_INSIDE[k]))
+            b.annotate(SHORT[k], (x[i], float(c["r"].iloc[i])), xytext=(8, -6), textcoords="offset points", fontsize=7.5,
+                       color=INK, ha="left", va="top")
+        else:
+            ends.append((x[-1], float(c["r"].iloc[-1]), SHORT[k]))
     b.axhline(0.5, color=MUTED, lw=0.8, ls="--")
     b.axhline(0.7, color=MUTED, lw=0.8, ls=":")
     b.set_xscale("log")
@@ -1260,11 +1593,11 @@ def figure(out_path: Path | None = None, tables_dir: Path | None = None) -> Path
     s = summary["seasons"]
     fig.text(0.01, 0.005,
              f"MLB regular seasons {s[0]}-{str(s[-1])[2:]}, Statcast via Baseball Savant. Reliability: each player's games split at random into halves of exactly n "
-             f"events ({summary['reps']} splits, seasons pooled); dots are measured, lines are r = n/(n+M) fit on halves of at least one game's worth.\n"
+             f"events ({summary['reps']} splits, seasons pooled); dots are measured; lines are r = n/(n+M), solid over the fitted range (halves of at least one game's worth), dotted below it.\n"
              "rho: between-season correlation at matched samples divided by within-season reliability at that sample (2024-25 and 2025-26 pooled); bars are 95% "
              f"intervals ({summary.get('bootstrap_draws', '')} bootstrap draws of players).\nPlate appearances convert each metric's own events (swings, balls in play, "
-             "pitches) at league rates per wOBA plate appearance. Metrics whose year-to-year correlation can't be estimated within +/-0.3 (wOBA, run value, "
-             "pitchers' xwOBA on contact and barrels) are left off the maps.",
+             "pitches) at league rates per wOBA plate appearance. Hollow points: M lies beyond the largest sample measured (extrapolated). Metrics whose "
+             "year-to-year correlation can't be estimated within +/-0.3 (wOBA, run value, pitchers' xwOBA on contact and barrels) are left off the maps.",
              fontsize=7.2, color="#555")
     fig.tight_layout(rect=(0, 0.08, 1, 1))
     out_path.parent.mkdir(parents=True, exist_ok=True)
