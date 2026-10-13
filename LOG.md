@@ -4,7 +4,7 @@ Newest first. One entry per working session: what was built, what was decided, w
 
 ## 2026-10-13 (late morning): Published for viewing
 **Decided**
-- The repository goes public so clubs can read it. All rights reserved: `LICENSE` permits viewing only; copying, modifying or reusing the code, reports or figures needs written permission.
+- The repository goes public so clubs can read it, as **IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio**: a fresh repository holding only the cleaned history (the original repository is kept private as an archive). All rights reserved: `LICENSE` permits viewing only; copying, modifying or reusing the code, reports or figures needs written permission.
 - `CITATION.cff` puts a "Cite this repository" button on the page. Every report and the README end with a copyright line.
 - `main` is protected by a ruleset: no force-pushes, no deletion.
 

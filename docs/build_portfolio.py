@@ -12,7 +12,7 @@ from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-REPO = "https://github.com/IForSureI/Baseball/blob/main"
+REPO = "https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main"
 
 
 def build(out: Path = ROOT / "docs" / "portfolio.html") -> Path:

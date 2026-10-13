@@ -1,4 +1,4 @@
-# Baseball research: Dylan Fanelli
+# Dylan Fanelli Baseball Analytics Portfolio
 
 Baseball-operations research and tools built on every public pitch of 2024–2026 (2.14 million regular-season pitches). Each piece:
 - **Answers a question a club pays to answer.**
@@ -62,7 +62,7 @@ A dated record of what was built, decided and learned is in [LOG.md](LOG.md). Th
 Requires [uv](https://docs.astral.sh/uv/).
 
 ```bash
-git clone https://github.com/IForSureI/Baseball.git ~/Baseball
+git clone https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio.git ~/Baseball
 cd ~/Baseball
 uv sync
 uv run pytest                                # 228 tests
