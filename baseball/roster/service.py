@@ -13,8 +13,9 @@ Sources (checked 2026-10-12):
   86+ days that season.
 - Super Two cutoffs: AP, Nov. 7, 2025 (2.140 for 2026; 2.132 for 2025; 2.118 for 2024);
   UB Law Sports Forum, Nov. 2, 2022 (2.128 for 2023; 2.116 for 2022).
-- MLBTR via SI (Brady Farkas, Nov. 19, 2024): a top-two Rookie of the Year finisher short of a full
-  year "earns himself a full year of service retroactively" (players on top-100 lists).
+- UB Law Sports Forum (Mike Perlo, Nov. 17, 2022): a player with under 60 days of prior service, on at
+  least two of the three preseason top-100 lists, "receives a full year of service time" for a top-two
+  Rookie of the Year finish; MLBTR (via SI, Brady Farkas, Nov. 19, 2024) applied it to Skenes.
 - MLB.com glossary, Minor League Options: 20+ days on optional assignment uses an option year;
   fourth option for players with fewer than five full seasons; at most five optional assignments a
   season; 10 days down for position players, 15 for pitchers.
@@ -93,9 +94,9 @@ class Service:
 def rookie_of_year_credit(days: int, roy_finish: int | None) -> int:
     """Days credited for a rookie season: a top-two Rookie of the Year finish lifts it to a full year.
 
-    Source: MLBTR via SI, Nov. 19, 2024 (Skenes: .142 on the field, credited 1.000). The rule is limited
-    to players on top-100 prospect lists; that condition is the caller's to check (not confirmed in the
-    CBA text here).
+    Source: UB Law Sports Forum, Nov. 17, 2022 (conditions: under 60 days of prior service, on two of
+    three preseason top-100 lists; the caller checks them); Skenes .142 -> 1.000 per MLBTR via SI,
+    Nov. 19, 2024. Not confirmed in the CBA text itself.
     """
     if roy_finish is not None and roy_finish <= 2:
         return max(days, DAYS_PER_YEAR)
