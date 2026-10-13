@@ -44,12 +44,15 @@ GROUP = {"FF": "fastball", "SI": "fastball", "FC": "cutter",
 GROUPS = ["fastball", "cutter", "breaking", "offspeed"]
 
 SEQ_COLUMNS = [
-    "game_pk", "game_date", "game_year", "game_type", "at_bat_number", "pitch_number", "pitcher", "batter",
-    "player_name", "p_throws", "stand", "pitch_type", "description", "type", "events", "release_speed",
-    "release_spin_rate", "release_extension", "release_pos_x", "release_pos_z", "arm_angle", "pfx_x", "pfx_z",
-    "plate_x", "plate_z", "sz_top", "sz_bot", "zone", "balls", "strikes", "inning", "outs_when_up",
-    "n_thruorder_pitcher", "delta_run_exp", "estimated_woba_using_speedangle", "launch_speed", "bat_speed",
-    "swing_length",
+    "game_pk", "game_date", "game_year", "game_type", "home_team", "away_team", "inning", "inning_topbot", "outs_when_up",
+    "at_bat_number", "pitch_number", "pitcher", "batter", "player_name", "p_throws", "stand", "pitch_type", "description",
+    "type", "events", "bb_type", "balls", "strikes", "on_1b", "on_2b", "on_3b", "bat_score", "fld_score", "post_bat_score",
+    "release_speed", "release_spin_rate", "spin_axis", "release_extension", "release_pos_x", "release_pos_z", "arm_angle",
+    "pfx_x", "pfx_z", "plate_x", "plate_z", "sz_top", "sz_bot", "zone", "n_thruorder_pitcher",
+    "n_priorpa_thisgame_player_at_bat", "pitcher_days_since_prev_game", "age_pit", "age_bat", "delta_run_exp",
+    "delta_home_win_exp", "woba_value", "woba_denom", "estimated_woba_using_speedangle", "estimated_ba_using_speedangle",
+    "launch_speed", "launch_angle", "launch_speed_angle", "hc_x", "hc_y", "bat_speed", "swing_length", "attack_angle",
+    "attack_direction", "swing_path_tilt",
 ]
 
 EXPOSURE = ["prev_same", "prev_other", "pa_same", "pa_other"]
@@ -69,10 +72,13 @@ def load_seq(season: int) -> pd.DataFrame:
     return pd.concat([pd.read_parquet(p) for p in parts], ignore_index=True)
 
 
-def write_seq(season: int, raw_files: list[Path], out_dir: Path = SEQ_DIR, rows_per_part: int = 72_000) -> list[Path]:
+def write_seq(season: int, raw_files: list[Path], out_dir: Path = SEQ_DIR, rows_per_part: int = 45_000) -> list[Path]:
     """Write the sequence copy from the monthly league files (regular season only, float32, zstd)."""
     d = pd.concat([pd.read_parquet(f) for f in raw_files], ignore_index=True)
-    d = d[d["game_type"].eq("R")][[c for c in SEQ_COLUMNS if c in d.columns]]
+    d = d[d["game_type"].eq("R")][[c for c in SEQ_COLUMNS if c in d.columns]].copy()
+    for c in ("on_1b", "on_2b", "on_3b"):          # runner ids -> occupied flags (smaller, and all we use)
+        if c in d:
+            d[c] = d[c].notna().astype("int8")
     d = d.drop_duplicates(["game_pk", "at_bat_number", "pitch_number"]).sort_values(["game_pk", "at_bat_number", "pitch_number"])
     for c in d.columns:
         if pd.api.types.is_extension_array_dtype(d[c]) and pd.api.types.is_numeric_dtype(d[c]):
@@ -84,7 +90,7 @@ def write_seq(season: int, raw_files: list[Path], out_dir: Path = SEQ_DIR, rows_
         old.unlink()
     paths = []
     for i, start in enumerate(range(0, len(d), rows_per_part)):
-        path = out_dir / f"seq_{season}_{i}.parquet"
+        path = out_dir / f"seq_{season}_{i:02d}.parquet"
         d.iloc[start:start + rows_per_part].to_parquet(path, index=False, compression="zstd")
         paths.append(path)
     return paths
