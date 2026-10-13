@@ -187,3 +187,41 @@ def test_out_of_sample_validation_credits_a_real_lever():
     v = L.validate(train, test, types=["FF"], boot=200).set_index("pitch_type").loc["FF"]
     assert v["gain_levers_pct"] > 0 and v["gain_physics_pct"] > 0
     assert v["gain_levers_lo"] <= v["gain_levers_pct"] <= v["gain_levers_hi"]
+    # the paired difference and the baseline's own gain over "no change" come with the same resampling
+    assert v["physics_minus_levers"] == pytest.approx(v["gain_physics_pct"] - v["gain_levers_pct"])
+    assert v["physics_minus_levers_lo"] <= v["physics_minus_levers"] <= v["physics_minus_levers_hi"]
+    assert v["gain_baseline_vs_no_change_pct"] > 0      # regression to the mean is predictable, so the baseline beats "no change"
+
+
+def test_any_change_term_catches_a_v_shape():
+    # FICTIONAL: results improve after ANY change, whichever direction (selection, not shape). The |change| term
+    # takes it; the symmetric slope stays near zero. And the increase-only slope looks like a payoff.
+    d = _pairs(effect=0.0, seed=4)
+    d["d_whiff"] = d["d_whiff"] + 1.0 * d["net_velo"].abs()
+    for k, lv in enumerate(L.levers_for("FF")):
+        if lv != "velo":
+            d[f"net_{lv}"] = np.random.default_rng(200 + k).normal(0, 1, len(d))
+    b = L.by_sign(d, types=["FF"]).set_index("lever").loc["velo"]
+    assert b["any_change"] == pytest.approx(1.0, abs=3 * b["any_change_se"])
+    assert abs(b["symmetric"]) < 3 * b["symmetric_se"]
+    assert b["gain"] > 0 and b["loss"] > 0          # a V: both directions "pay"
+    # the any-change coefficient is half the gap between the up and down slopes: (c_up - c_down) / 2
+    assert b["any_change"] == pytest.approx((b["gain"] - (-b["loss"])) / 2, abs=1e-6)
+
+
+def test_evidence_labels_and_margins():
+    assert L.evidence_label(0.01, 0.001, (1, 3), (0, 1)) == "confirmed"
+    assert L.evidence_label(0.08, 0.004, (1, 3), (0, 1)) == "lean"
+    assert L.evidence_label(0.30, 0.03, (0.1, 2), (0, 0.1)) == "not confirmed"
+    # inside +-1 whiff point and +-0.15 runs: an effect the size of the smallest confirmed one is ruled out
+    assert L.evidence_label(0.80, 0.40, (-0.5, 0.9), (-0.1, 0.12)) == "no sign"
+    # the whiff interval is fine but run value reaches 0.20: can't rule out a meaningful run-value effect
+    assert L.evidence_label(0.80, 0.40, (-0.5, 0.9), (-0.1, 0.20)) == "not detected"
+
+
+def test_p_values_use_t_with_clusters_minus_one():
+    from scipy.stats import t as tdist
+
+    d = _pairs(n=12, effect=1.5, seed=5)                 # 12 pitchers: t with 11 df is visibly wider than normal
+    r = L.ols_clustered(d, "d_whiff", ["net_velo"], controls=["prior_whiff"]).iloc[0]
+    assert r["p"] == pytest.approx(2 * tdist.sf(abs(r["t"]), df=11))

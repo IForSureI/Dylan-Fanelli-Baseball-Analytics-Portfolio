@@ -14,7 +14,7 @@ player_voice: "Wants the four-seamer to play up top; worried a bigger sweeper co
 priorities:
   - skill: "Four-seam ride"
     metric: {stat: ivb_in, pitch_type: FF}
-    baseline: {value: 15.6, n: 1400, period: "2026 season", source: "TrackMan, fictional"}
+    baseline: {value: 15.6, se: 0.10, n: 1400, period: "2026 season", source: "TrackMan, fictional"}
     target: 17.0
     target_date: 2027-05-15
     pace: step                       # an offseason grip/axis change: expected in full from the first start
@@ -31,7 +31,7 @@ priorities:
       floor: 300
   - skill: "Sweeper width"
     metric: {stat: hb_glove_in, pitch_type: ST}
-    baseline: {value: 12.6, n: 800, period: "2026 season", source: "TrackMan, fictional"}
+    baseline: {value: 12.6, se: 0.15, n: 800, period: "2026 season", source: "TrackMan, fictional"}
     target: 15.0
     target_date: 2027-09-26
     pace: linear
@@ -48,7 +48,7 @@ priorities:
       floor: 200
   - skill: "Changeup separation by speed"
     metric: {stat: speed_gap, pitch_type: CH, ref_pitch_type: FF}
-    baseline: {value: 8.0, n: 500, period: "2026 season", source: "TrackMan, fictional"}
+    baseline: {value: 8.0, se: 0.08, n: 500, period: "2026 season", source: "TrackMan, fictional"}
     target: 9.5
     target_date: 2027-07-01
     pace: step

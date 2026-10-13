@@ -89,7 +89,8 @@ def test_estimates_rates_and_relative_metrics():
     (10.85, 0.2, 500, "on_track"),   # z = 4.25; 10.85 + 0.39 = 11.24 reaches the pace value: not clearly behind
     (10.2, 0.2, 500, "flat"),        # z = 1: no move distinguishable from the baseline
     (9.5, 0.2, 500, "wrong_way"),    # z = -2.5
-    (12.5, 2.0, 500, "flat"),        # past the target, but z = 1.25: can't be told from where it started
+    # past the target but z = 1.25, and the move expected by now (0.5 x 2 = 1.0) is under 1.96 x 2.0 = 3.92: underpowered
+    (12.5, 2.0, 500, "inconclusive"),
     (11.5, 0.2, 50, "insufficient"), # under the floor of 100
 ])
 def test_verdict_rules(est, se, n, expected):
@@ -104,6 +105,27 @@ def test_verdict_when_lower_is_better_and_baseline_uncertainty_counts():
     # -0.5 / sqrt(0.04 + 0.09) = -1.39: flat
     v = idp.verdict(baseline=10.0, target=8.0, est=9.5, se=0.2, n=500, floor=100, expected_fraction=0.5, baseline_se=0.3)
     assert v["verdict"] == "flat" and v["z"] == pytest.approx(-0.5 / np.sqrt(0.13))
+
+
+def test_power_check_by_hand():
+    def plan(stat, value, n, floor, target, se=None):
+        b = {"value": value, "n": n, "period": "2026", "source": "fictional"}
+        if se is not None:
+            b["se"] = se
+        return {"priorities": [{"metric": {"stat": stat, "pitch_type": "SL"}, "baseline": b, "floor": floor, "target": target}]}
+    # Whiff% 30 on 400 swings, floor 400, target 33: SE = 100 * sqrt(0.3 * 0.7 / 400) = 2.291 at both ends;
+    # MDC = 1.96 * sqrt(2 * 2.291^2) = 6.35 > 3; (3 / 1.96)^2 = 2.34 < 2.291^2 = 5.25, so no floor would do
+    w = idp.power_check(plan("whiff_pct", 30.0, 400, 400, 33.0))
+    assert len(w) == 1 and "6.35" in w[0] and "no floor would" in w[0]
+    # SE 0.5 on 100, floor 100, gap 1.2: MDC = 1.96 * sqrt(0.25 + 0.25) = 1.386 > 1.2;
+    # room = (1.2 / 1.96)^2 - 0.25 = 0.1248 -> floor = 0.25 * 100 / 0.1248 = 200.3 -> 201
+    w = idp.power_check(plan("ivb_in", 1.0, 100, 100, 2.2, se=0.5))
+    assert "about 201 would" in w[0]
+    # Velocity: SE 0.09 on 795, floor 150: SE at floor 0.09 * sqrt(795 / 150) = 0.207; MDC 0.44 < 1.0 -> no warning
+    assert idp.power_check(plan("velo", 95.4, 795, 150, 96.4, se=0.09)) == []
+    real = yaml.safe_load((EXAMPLES / "idp-gilbert-2026.yaml").read_text())
+    w = idp.power_check(real)
+    assert len(w) == 1 and w[0].startswith("priority 3")          # the slider-whiff payoff check is underpowered
 
 
 def test_expected_fraction_and_guards():
@@ -126,6 +148,7 @@ def test_progress_and_notes_on_the_fictional_season():
     # The fictional ride arrives in five starts (+1.6 in against a +1.4 target) -> on track; the sweep builds
     # only ~2 in by the last start (season mean ~+1 against +2.4) -> behind; the changeup gap never moves
     assert v[1] == "on_track" and v[2] == "behind" and v[3] in ("flat", "wrong_way")
+    assert plan.warnings == []                               # every fictional priority can detect its planned change
     early = idp.progress(plan, p, "2027-04-05")             # two starts: every priority under its floor
     assert set(early["verdict"]) == {"insufficient"}
     fo = idp.front_office_note(plan, rows)
