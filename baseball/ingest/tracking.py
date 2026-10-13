@@ -1,7 +1,7 @@
 
 """Normalize TrackMan / Rapsodo / Savant pitch exports to one Savant-style schema, with QC.
 
-The output schema is the one the `baseball` evaluation tools reads:
+The output schema is the one the `baseball` evaluation tools read:
 release_speed, pfx_x, pfx_z (feet, catcher's view), release_spin_rate, spin_axis,
 release_extension, plate_x, plate_z, zone, sz_top, sz_bot, pitch_type (Savant codes),
 description, type, events, stand, p_throws, launch_speed, launch_angle, game_date,
