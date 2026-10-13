@@ -6,7 +6,7 @@ Baseball-operations research and tools built on every public pitch of 2024–202
 - **Is independently reviewed** against its own outputs before it's final.
 - **Ships as code a club can run.** Nulls are reported as nulls.
 
-## Start here (10 minutes)
+## Start here
 1. **[Bullpen acquisition memo, 2026-27](reports/2026-bullpen-acquisition-memo.md).** The capstone: one real offseason decision made the way a front office makes it, using every tool below.
 2. **[Does a pitch wear out?](reports/2026-league-pitch-familiarity.md)** An original question with a clear answer, and a [follow-up](reports/2026-exposure-aware-hook.md) that tested whether it should change the hook. It shouldn't.
 3. **[The Reliability Atlas](reports/2026-reliability-atlas.md).** Which numbers to trust, after how many pitches, swings or batted balls, and how far to regress them.
