@@ -1,7 +1,7 @@
 # Dylan Fanelli Baseball Analytics Portfolio
 
 Baseball-operations research and tools built on every public pitch of 2024–2026 (2.14 million regular-season pitches). Each piece:
-- **Answers a question a club pays to answer.**
+- **Answers a question a club would want to know.**
 - **Is validated out of sample.**
 - **Is independently reviewed** against its own outputs before it's final.
 - **Ships as code a club can run.** Nulls are reported as nulls.
