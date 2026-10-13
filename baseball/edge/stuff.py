@@ -267,7 +267,56 @@ def build_portable(pitches: pd.DataFrame, season: int, seed: int = 11) -> dict:
     reference = {pt: np.sort(g["x_whiff_pct"].to_numpy()).tolist() for pt, g in table.groupby("pitch_type") if len(g) >= 15}
     model = _model(seed).fit(swings[PORTABLE_FEATURES].to_numpy(), swings["whiff"].to_numpy())
     return {"model": model, "features": PORTABLE_FEATURES, "season": season, "diagnostics": diag, "reference": reference,
-            "trained_swings": int(len(swings))}
+            "trained_swings": int(len(swings)), "context": mlb_context(pitches)}
+
+
+SECONDARY_TYPES = ("CH", "FS", "SL", "ST", "CU", "KC", "FC", "SV")
+
+
+def mlb_context(pitches: pd.DataFrame, min_ff: int = 200, min_sec: int = 100) -> dict:
+    """MLB reference distributions (one value per pitcher) for placing a pitcher's shape:
+
+    - ff: four-seam lift acceleration, approach angle at 2.5 and 3.3 ft, release height, extension
+    - by secondary type: approach-angle gap to his four-seamer at 2.0 ft, speed gap, and release-slot
+      distance from his four-seamer (inches; season means, side and height)
+    Values are sorted lists, so a percentile is a binary search.
+    """
+    from baseball.evaluation.physics import approach_angle, lift_accel
+
+    p = pitches.dropna(subset=["pitch_type", "release_speed", "release_pos_z", "release_pos_x", "release_extension", "pfx_z"]).copy()
+    arm = np.where(p["p_throws"].eq("R"), -1.0, 1.0)
+    p["side_in"] = p["release_pos_x"] * 12 * arm
+    agg = (p.groupby(["pitcher", "pitch_type"])
+           .agg(n=("pitch_type", "size"), velo=("release_speed", "mean"), rel=("release_pos_z", "mean"), ext=("release_extension", "mean"),
+                ivb=("pfx_z", lambda x: x.mean() * 12), side=("side_in", "mean"))
+           .reset_index())
+    ff = agg[(agg["pitch_type"] == "FF") & (agg["n"] >= min_ff)].set_index("pitcher")
+    out = {"ff": {
+        "lift": sorted(lift_accel(r.velo, r.ext, r.ivb) for r in ff.itertuples()),
+        "vaa_2.5": sorted(approach_angle(r.velo, r.rel, r.ext, r.ivb, 2.5) for r in ff.itertuples()),
+        "vaa_3.3": sorted(approach_angle(r.velo, r.rel, r.ext, r.ivb, 3.3) for r in ff.itertuples()),
+        "release_height_ft": sorted(ff["rel"].tolist()),
+        "extension_ft": sorted(ff["ext"].tolist()),
+        "velo": sorted(ff["velo"].tolist()),
+    }, "secondary": {}}
+    for pt in SECONDARY_TYPES:
+        sec = agg[(agg["pitch_type"] == pt) & (agg["n"] >= min_sec)].set_index("pitcher").join(ff, rsuffix="_ff", how="inner")
+        if len(sec) < 15:
+            continue
+        out["secondary"][pt] = {
+            "vaa_gap_2.0": sorted(approach_angle(r.velo, r.rel, r.ext, r.ivb, 2.0) - approach_angle(r.velo_ff, r.rel_ff, r.ext_ff, r.ivb_ff, 2.0)
+                                  for r in sec.itertuples()),
+            "speed_gap": sorted((sec["velo_ff"] - sec["velo"]).tolist()),
+            "slot_dist_in": sorted(np.sqrt((sec["side"] - sec["side_ff"]) ** 2 + ((sec["rel"] - sec["rel_ff"]) * 12) ** 2).tolist()),
+        }
+    return out
+
+
+def pct(sorted_values, x) -> float | None:
+    """Percentile (0-100) of x within a sorted reference list."""
+    if not sorted_values or x is None or (isinstance(x, float) and np.isnan(x)):
+        return None
+    return float(100 * np.searchsorted(sorted_values, x, side="right") / len(sorted_values))
 
 
 def save_portable(bundle: dict, path) -> None:

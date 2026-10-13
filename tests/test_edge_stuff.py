@@ -86,3 +86,14 @@ def test_portable_model_scores_device_data_without_arm_angle_or_ids(tmp_path):
     assert set(scored["pitcher"]) == {"Pitcher 1", "Pitcher 2"}            # falls back to player_name
     lo, hi = mlb_percentile(b, "CH", 0.0), mlb_percentile(b, "CH", 100.0)
     assert lo == 0.0 and hi == 100.0 and mlb_percentile(b, "ZZ", 30.0) is None
+
+
+def test_mlb_context_shapes_and_percentiles():
+    from baseball.edge.stuff import mlb_context, pct
+
+    lg = _league(n_pitchers=40)
+    ctx = mlb_context(lg, min_ff=100, min_sec=50)
+    assert len(ctx["ff"]["lift"]) == 40 and ctx["ff"]["lift"] == sorted(ctx["ff"]["lift"])
+    ch = ctx["secondary"]["CH"]
+    assert all(g < 0 for g in ch["vaa_gap_2.0"])            # changeups arrive steeper than the four-seamer
+    assert pct(ctx["ff"]["velo"], 200) == 100.0 and pct(ctx["ff"]["velo"], 0) == 0.0 and pct([], 1) is None
