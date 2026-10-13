@@ -75,3 +75,28 @@ def test_tax_table_first_time_payor():
     assert t.loc[235.0, "added_tax"] == pytest.approx(0.6)            # 3 over x 20%
     assert t.loc[244.0, "added_tax"] == pytest.approx(2.4)            # 12 over x 20%
     assert t.loc[200.0, "added_tax"] == 0.0 and t.loc[200.0, "all_in_cost"] == 12.0
+
+
+def test_market_price_interval_adds_fit_and_residual_variance():
+    # FICTIONAL comps: x = 0, 1, 2, 3; y = 1, 3, 5, 9 -> least squares a = 0.6, b = 2.6; residuals 0.4, -0.2, -0.8, 0.6
+    comps = pd.DataFrame({"war_neutral": [0.0, 1.0, 2.0, 3.0], "aav": [1.0, 3.0, 5.0, 9.0]})
+    m = A.market_line(comps)
+    assert m["intercept"] == pytest.approx(0.6) and m["slope"] == pytest.approx(2.6)
+    # s^2 = (0.16 + 0.04 + 0.64 + 0.36) / 2 = 0.6; Sxx = 5, so var(slope) = 0.6 / 5 = 0.12
+    assert m["resid_sd"] ** 2 == pytest.approx(0.6) and m["slope_se"] ** 2 == pytest.approx(0.12)
+    # At x = 4 (beyond the comps): fit 11.0; var(fit) = 0.6 x (1/4 + (4 - 1.5)^2 / 5) = 0.6 x 1.5 = 0.9;
+    # predictive SD = sqrt(0.6 + 0.9) = 1.2247
+    pi = A.market_price_interval(4.0, m)
+    assert pi["aav"] == pytest.approx(11.0) and pi["se_fit"] ** 2 == pytest.approx(0.9)
+    assert pi["sd_pred"] == pytest.approx(1.5 ** 0.5) and pi["extrapolated"]
+    # Half the predictive mass sits below the fitted price
+    assert A.chance_price_at_or_below(11.0, 4.0, m) == pytest.approx(0.5)
+
+
+def test_contract_value_with_partial_availability():
+    # 2 years, $3M; 1.0 neutral and role win a full season; he pitches 35% of year 1 and all of year 2; age 28
+    v = A.contract_value(3.0, 2, 1.0, 1.0, 28, 2026, LINE, availability=[0.35, 1.0])
+    # Market: year 1 = 0.35 x (1 + 10 x 1.0) = 3.85; year 2 = 11 x 1.03 = 11.33, discounted 11.33 / 1.1 = 10.3 -> 14.15
+    assert v["pv_value_market"] == pytest.approx(3.85 + 10.3)
+    # Engine: 0.35 wins at the 0-1 tier ($6.74M) = 2.359; 1.0 win at the 1-2 tier x 1.03 / 1.1
+    assert v["pv_value_engine"] == pytest.approx(0.35 * 6.74 + 8.51 * 1.03 / 1.1)

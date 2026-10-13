@@ -205,3 +205,43 @@ def test_gap_history_swing_weighted():
     # Actual 140 / 400 = 35.0; expected (22 x 100 + 34 x 300) / 400 = 31.0; gap +4.0
     assert h["whiff_pct_2026"] == pytest.approx(35.0) and h["x_whiff_pct_2026"] == pytest.approx(31.0)
     assert h["gap_2026"] == pytest.approx(4.0)
+
+
+def test_intentional_walk_counts_as_pa_but_not_a_pitch():
+    # FICTIONAL: Statcast records an intentional walk as one row with description automatic_ball and no pitch
+    g = _fictional_game()
+    ibb = _p(at_bat_number=13, pitch_number=1, description="automatic_ball", type="B", zone=np.nan, pitch_type=None,
+             release_speed=np.nan, events="intent_walk", delta_run_exp=np.nan)
+    d = R.flag(pd.concat([g, pd.DataFrame([ibb])], ignore_index=True))
+    ln = R.season_line(d[d["pitcher"].eq(1)]).iloc[0]
+    # 4 PA (3 + the intentional walk), 2 walks, 1 unintentional; still 9 pitches thrown
+    assert ln["pa"] == 4 and ln["bb"] == 2 and ln["ubb"] == 1 and ln["pitches"] == 9
+    assert ln["bb_pct"] == pytest.approx(50.0) and ln["ubb_pct"] == pytest.approx(25.0)
+    # xwOBA per PA excludes intentional walks (no wOBA denominator): still (0 + 0.7 + 0.2) / 3
+    assert ln["xwoba"] == pytest.approx(0.3)
+
+
+def test_xwoba_diff_test_by_hand():
+    a = {"mean": 0.318, "se": 0.010}
+    b = {"mean": 0.306, "se": 0.002}
+    t = R.xwoba_diff_test(a, b)
+    # diff .012; SE sqrt(.010^2 + .002^2) = .0101980; z = 1.1767; two-sided p = 0.2393
+    assert t["diff"] == pytest.approx(0.012) and t["se"] == pytest.approx(0.0101980, abs=1e-6)
+    assert t["z"] == pytest.approx(1.1767, abs=1e-3) and t["p"] == pytest.approx(0.2393, abs=1e-3)
+
+
+def test_xwoba_stats_counts_only_woba_pas():
+    d = R.flag(_fictional_game())
+    s = R.xwoba_stats(d[d["pitcher"].eq(1)])
+    # Three wOBA PAs with values 0, 0.7, 0.2: mean 0.3, SD sqrt(((.3)^2 + (.4)^2 + (.1)^2) / 2) = sqrt(0.13) = 0.36056
+    assert s["n"] == 3 and s["mean"] == pytest.approx(0.3) and s["sd"] == pytest.approx(0.36056, abs=1e-5)
+    assert s["se"] == pytest.approx(0.36056 / np.sqrt(3), abs=1e-5)
+
+
+def test_lever_read_carries_the_persistence_label():
+    pairs = pd.DataFrame([{"pitcher": 1, "season_1": 2026, "pitch_type": "SL", "net_gap": 1.5, "chg_gap": True,
+                           "d_whiff": 5.0, "d_xwhiff": -1.0}])
+    answer = pd.DataFrame([{"pitch_type": "SL", "lever": "gap", "whiff": 1.06, "verdict": "confirmed", "caveat": ""}])
+    lv = R.lever_read(pairs, answer, [1], 2026).iloc[0]
+    assert lv["persistence"] == "not shown to last (borderline)"
+    assert lv["implied_whiff"] == pytest.approx(1.5 * 1.06)

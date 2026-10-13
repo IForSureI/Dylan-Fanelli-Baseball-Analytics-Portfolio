@@ -5,6 +5,8 @@ Public data only. Outside facts carry their source and date; derived numbers say
 """
 from __future__ import annotations
 
+import unicodedata
+
 import numpy as np
 import pandas as pd
 
@@ -15,19 +17,46 @@ from baseball.stats import two_proportion
 SEASON = 2026
 CLUB = "TEX"
 CANDIDATES = {670970: "Adrian Morejon", 650556: "Bryan Abreu", 664126: "Pete Fairbanks"}
-REFERENCE = {670280: "David Bednar"}     # the market's other closer name, set aside (see the report)
-AGE_2027 = {670970: 28, 650556: 30, 664126: 33, 670280: 32}   # 2027 seasonal ages, MLB.com (Oct. 8, 2026)
+REFERENCE = {670280: "David Bednar", 628452: "Raisel Iglesias"}   # set aside in the report, with reasons
+AGE_2027 = {670970: 28, 650556: 30, 664126: 33, 670280: 32, 628452: 37}   # 2027 seasonal ages, MLB.com (Oct. 8, 2026)
+ROLE = {670970: "B1", 650556: "B2", 664126: "depth", 670280: "B1", 628452: "B1"}   # the role each is priced in
+# Fairbanks: thoracic outlet syndrome surgery announced Sept. 19, 2026, date to be set; "the typical recovery period
+# for a pitcher is about nine or 10 months" (Christina De Nicola, MLB.com, Sept. 19, 2026). ASSUMPTION: he pitches
+# about a third of the 2027 season (back around July) and a full 2028.
+AVAILABILITY = {664126: [0.35, 1.0]}
 
-# The rest of the free-agent relief pool screened (MLB.com, "All of the 2026-2027 free agents," Oct. 8, 2026;
-# no option listed). Ids from the Chadwick register.
-POOL = {670970: "Adrian Morejon", 670280: "David Bednar", 650556: "Bryan Abreu", 664126: "Pete Fairbanks",
-        628452: "Raisel Iglesias", 595345: "Steven Okert", 656464: "Kevin Ginkel", 681911: "Alex Vesia",
-        657097: "Jacob Webb", 642397: "Gregory Soto", 660853: "Enyel De Los Santos", 641941: "Emilio Pagán",
-        621237: "José Alvarado", 623465: "Evan Phillips", 592773: "Ryne Stanek", 642528: "Jonathan Loáisiga",
-        641755: "Tyler Kinley", 573204: "Caleb Thielbar"}
+# MLB.com, "All of the 2026-2027 free agents, position by position" (Oct. 8, 2026): every relief pitcher and the
+# option shown. Only "None" are free agents now; club, player and mutual options and opt-outs are decided later.
+FA_RELIEVERS = [
+    ("Adrian Morejon", "None"), ("Garrett Whitlock", "Club"), ("David Bednar", "None"), ("Sean Newcomb", "None"),
+    ("Steven Okert", "None"), ("Andres Munoz", "Club"), ("Tyler Alexander", "None"), ("Raisel Iglesias", "None"),
+    ("Alex Vesia", "None"), ("Gregory Soto", "None"), ("Bryan Abreu", "None"), ("Emilio Pagan", "Opt-out"),
+    ("Shawn Armstrong", "Mutual"), ("Andrew Kittredge", "None"), ("Brooks Raley", "None"), ("Mark Leiter", "None"),
+    ("Jason Adam", "None"), ("Emmanuel Clase", "Club"), ("JoJo Romero", "None"), ("Jose Alvarado", "None"),
+    ("Brock Burke", "None"), ("Kevin Ginkel", "None"), ("Jakob Junis", "Mutual"), ("Paul Blackburn", "None"),
+    ("Taylor Clarke", "None"), ("Carlos Estevez", "Club"), ("Pete Fairbanks", "None"), ("Hoby Milner", "None"),
+    ("Wandy Peralta", "Player"), ("Dennis Santana", "None"), ("Antonio Senzatela", "Club"), ("Caleb Thielbar", "Mutual"),
+    ("Kenley Jansen", "Club"), ("Jose Suarez", "None"), ("Brent Suter", "None"), ("Ryan Yarbrough", "None"),
+    ("Drew Anderson", "Club"), ("Enyel De Los Santos", "None"), ("Caleb Ferguson", "None"), ("Kolby Allard", "None"),
+    ("Dietrich Enns", "Club"), ("Jonathan Loaisiga", "None"), ("Danny Coulombe", "None"), ("Luis Garcia", "None"),
+    ("Tyler Kinley", "None"), ("Evan Phillips", "None"), ("Ryan Thompson", "None"), ("Justin Topa", "None"),
+    ("Jacob Webb", "Club"), ("Andrew Chafin", "None"), ("Kyle Hart", "Club"), ("A.J. Minter", "None"),
+    ("Ryan Brasier", "None"), ("Hunter Harvey", "Mutual"), ("Chris Martin", "None"), ("Taylor Rogers", "None"),
+    ("Matt Strahm", "None"), ("Ryan Helsley", "Opt-out"), ("Pierce Johnson", "Mutual"), ("Sam Moll", "None"),
+    ("John Schreiber", "None"), ("Blake Treinen", "None"), ("Yimi Garcia", "None"), ("Yuki Matsui", "Opt-out"),
+    ("Rafael Montero", "None"), ("Jordan Romano", "None"), ("Ryne Stanek", "Club"), ("Robert Stephenson", "Club"),
+    ("Matt Bowman", "None"), ("Brusdar Graterol", "None"), ("Joe Jimenez", "None"), ("Drew Pomeranz", "None"),
+    ("A.J. Puk", "None"), ("Tanner Rainey", "None"), ("Drew Smith", "None"), ("Trevor Stephan", "Club"),
+    ("Hunter Strickland", "None"), ("Rowan Wick", "Club"), ("Jake Woodford", "None"), ("Jalen Beeks", "None"),
+    ("Ryan Borucki", "None"), ("Lou Trivino", "None"), ("Dan Altavilla", "None"), ("Chris Devenski", "None"),
+    ("Luke Jackson", "None"), ("Jose Leclerc", "None"), ("Tommy Kahnle", "None"), ("Joe Ross", "None"),
+    ("Keegan Akin", "None"), ("Jorge Alcala", "None"), ("Scott Barlow", "None"), ("Aaron Bummer", "None"),
+    ("Paul Sewald", "None"), ("Ryan Weiss", "Club"), ("Trent Thornton", "None"), ("Genesis Cabrera", "None"),
+    ("Tim Hill", "None"),
+]
 
 FACTS = {
-    "record_2026": "80-82; the third AL wild card (White Sox) finished 84-78 (final 2026 standings, SportRadar feed, read 2026-10-13)",
+    "record_2026": "80-82, 4.0 games behind the third AL wild card (White Sox, 84-78); MLB.com standings, last updated Oct. 7, 2026",
     "cbt_payroll_2026": 205.991666,     # Spotrac, Rangers 2026 tax page (read 2026-10-13; page shows no as-of date)
     "cbt_payroll_2026_si": 210.0,       # Spotrac via Matt Postins, Texas Rangers On SI, Oct. 2, 2026
     "cbt_payroll_2025": 241.380966,     # CBS Sports (Axisa), Dec. 20, 2025: third straight season over (AP)
@@ -43,10 +72,11 @@ FACTS = {
 OTHER_ROSTER_SPOTS = 14                 # ASSUMPTION: the rest of the 26/40-man at the 2026 minimum ($0.78M)
 RANGERS_SECOND_PICK = 55                # ESTIMATE: 2nd-round pick of a club with the ~15th-worst record (80-82)
 STRUCTURES = {                          # contract shapes priced in the report (AAV $M, years)
-    670970: [(15.0, 4), (17.5, 4), (20.0, 5)],     # opening, walk-away, the "nine-figure" case
-    650556: [(9.0, 2), (12.0, 2)],                  # opening, walk-away
-    664126: [(5.0, 1)],
+    670970: [(15.0, 4), (16.5, 4), (18.0, 4), (20.0, 4), (20.0, 5)],   # opening, walk-away with QO, walk-away, stretch, "nine figures"
+    650556: [(9.0, 2), (12.5, 2)],                           # opening, walk-away
+    664126: [(3.0, 2), (5.0, 2)],                            # a two-year rehab deal (2027 partial, 2028)
 }
+WALK_AWAYS = (16.4, 17.5, 18.0, 20.0, 22.0)
 
 
 def rangers_payroll_2027() -> dict:
@@ -61,8 +91,13 @@ def load() -> tuple[pd.DataFrame, pd.DataFrame]:
     return raw, R.flag(raw)
 
 
+def _fold(s: str) -> str:
+    return unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode().lower().replace(".", "").replace(" ", "")
+
+
 def need(d: pd.DataFrame) -> dict:
-    """The club's bullpen in 2025 and 2026 against the league, and who threw its late, close innings."""
+    """The club's bullpen in 2025 and 2026 against the league, who threw its late, close innings, and the
+    platoon gap with its test."""
     from baseball.ingest import people
 
     tb = {s: R.team_bullpens(d, s) for s in (SEASON - 1, SEASON)}
@@ -72,98 +107,131 @@ def need(d: pd.DataFrame) -> dict:
     lc = r[r["late_close"]].groupby("pitcher")["pa"].sum().rename("late_close_pa")
     ln = ln.join(lc, on="pitcher").sort_values("late_close_pa", ascending=False)
     ln["name"] = ln["pitcher"].map(people.names(ln["pitcher"]))
-    hand = {}
-    for who, rows in (("club", r), ("league", d[d["season"].eq(SEASON) & d["relief"]])):
-        g = rows.groupby("stand").agg(xw=("xwoba_pa", lambda s: np.nansum(s * rows.loc[s.index, "xwoba_den"])),
-                                      den=("xwoba_den", "sum"))
-        hand[who] = (g["xw"] / g["den"]).to_dict()
-    return {"teams": tb, "club_relievers": ln, "xwoba_by_hand": hand}
+    lg = d[d["season"].eq(SEASON) & d["relief"]]
+    stats = {(who, h): R.xwoba_stats(rows[rows["stand"].eq(h)]) for who, rows in (("club", r), ("league", lg)) for h in ("L", "R")}
+    tests = {"club_vs_league_RHH": R.xwoba_diff_test(stats[("club", "R")], stats[("league", "R")]),
+             "club_vs_league_LHH": R.xwoba_diff_test(stats[("club", "L")], stats[("league", "L")]),
+             "club_RHH_vs_LHH": R.xwoba_diff_test(stats[("club", "R")], stats[("club", "L")])}
+    return {"teams": tb, "club_relievers": ln, "xwoba": stats, "tests": tests,
+            "late_close_pa": int(r.loc[r["late_close"], "pa"].sum())}
 
 
-def pool(d: pd.DataFrame, rs: pd.DataFrame, lm: float, repl: float) -> pd.DataFrame:
-    """The free-agent relief pool screen: 2026 line, regressed run value, and the projection."""
-    line = R.season_line(d[d["season"].eq(SEASON) & d["pitcher"].isin(list(POOL))])
-    proj = pd.read_parquet(R.EDGE / str(SEASON) / "projection.parquet")
-    pr = proj[proj["pitcher"].isin(list(POOL))]
-    pr = pr.assign(pw=pr["proj_whiff_pct"] * pr["swings"]).groupby("pitcher").agg(pw=("pw", "sum"), sw=("swings", "sum"))
+def pool(d: pd.DataFrame, rs: pd.DataFrame, lm: float, repl: float, min_pa: int = 150) -> pd.DataFrame:
+    """Every MLB.com-listed free-agent reliever with no option pending and min_pa+ PA in the season, with the
+    2026 line and the projection (B1 role leverage for all, so the column ranks talent)."""
+    cur = d[d["season"].eq(SEASON)]
+    names = cur.groupby("pitcher")["player_name"].last()
+    key = {_fold(" ".join(reversed(n.split(", ")))): pid for pid, n in names.items() if isinstance(n, str)}
     rows = []
-    for _, l in line.iterrows():
-        p = A.project_relief_war(rs, int(l["pitcher"]), SEASON, lm, repl)
-        rows.append({"pitcher": int(l["pitcher"]), "name": POOL[int(l["pitcher"])], "games": l["games"], "pa": l["pa"],
-                     "k_bb_pct": l["k_bb_pct"], "rv100_2026": l["rv100"], "rv100_reg_3yr": p.rv100,
-                     "war_role": p.war_role, "proj_whiff_2027": pr["pw"].get(l["pitcher"], np.nan) / pr["sw"].get(l["pitcher"], np.nan)})
-    return pd.DataFrame(rows).sort_values("war_role", ascending=False)
+    proj = pd.read_parquet(R.EDGE / str(SEASON) / "projection.parquet")
+    for name, option in FA_RELIEVERS:
+        pid = key.get(_fold(name))
+        if pid is None or option != "None":
+            continue
+        line = R.season_line(cur[cur["pitcher"].eq(pid)]).iloc[0]
+        if line["pa"] < min_pa:
+            continue
+        p = A.project_relief_war(rs, int(pid), SEASON, lm, repl, li=A.ROLE_LIS["B1"])
+        pr = proj[proj["pitcher"].eq(pid)]
+        rows.append({"pitcher": int(pid), "name": name, "games": int(line["games"]), "pa": int(line["pa"]),
+                     "k_bb_pct": line["k_bb_pct"], "rv100_2026": line["rv100"], "rv100_reg_3yr": p.rv100,
+                     "war_b1": p.war_role, "proj_whiff_2027": (pr["proj_whiff_pct"] * pr["swings"]).sum() / pr["swings"].sum()})
+    out = pd.DataFrame(rows).sort_values("war_b1", ascending=False).reset_index(drop=True)
+    out["rank"] = np.arange(1, len(out) + 1)
+    return out
 
 
 def halves(d: pd.DataFrame, pid: int) -> dict:
-    """2026 first half (through June) vs second half for one pitcher: line, fastball velocity, walk-rate test."""
+    """2026 through June vs July on (a calendar split fixed before looking): line, fastball velocity, tests."""
     s = d[d["season"].eq(SEASON) & d["pitcher"].eq(pid)].copy()
     s["half"] = np.where(pd.to_datetime(s["game_date"]).dt.month <= 6, 1, 2)
     out = {}
     for h, g in s.groupby("half"):
         ln = R.season_line(g).iloc[0]
         fb = g[g["pitch_type"].eq("FF")]
-        out[h] = {"games": int(ln["games"]), "pa": int(ln["pa"]), "bb": int(ln["bb"]), "k": int(ln["k"]),
+        out[h] = {"games": int(ln["games"]), "pa": int(ln["pa"]), "bb": int(ln["bb"]), "ubb": int(ln["ubb"]), "k": int(ln["k"]),
                   "bb_pct": ln["bb_pct"], "k_pct": ln["k_pct"], "k_bb_pct": ln["k_bb_pct"], "whiff": ln["whiff"],
                   "xwoba": ln["xwoba"], "rv100": ln["rv100"], "ff_velo": fb["release_speed"].mean(),
                   "ff_spin": fb["release_spin_rate"].mean(), "ff_games": fb["game_pk"].nunique(), "ff_n": len(fb)}
-    z, p = two_proportion(out[1]["bb"], out[1]["pa"], out[2]["bb"], out[2]["pa"])
-    out["bb_test"] = {"z": z, "p": p}
-    zk, pk = two_proportion(out[1]["k"], out[1]["pa"], out[2]["k"], out[2]["pa"])
-    out["k_test"] = {"z": zk, "p": pk}
+    out["bb_test"] = dict(zip(("z", "p"), two_proportion(out[1]["bb"], out[1]["pa"], out[2]["bb"], out[2]["pa"])))
+    out["k_test"] = dict(zip(("z", "p"), two_proportion(out[1]["k"], out[1]["pa"], out[2]["k"], out[2]["pa"])))
+    return out
+
+
+def platoon_tests(d: pd.DataFrame) -> dict:
+    """Each candidate's xwOBA vs RHH minus vs LHH, with its test."""
+    out = {}
+    for pid in CANDIDATES:
+        rows = d[d["season"].eq(SEASON) & d["pitcher"].eq(pid)]
+        a, b = R.xwoba_stats(rows[rows["stand"].eq("R")]), R.xwoba_stats(rows[rows["stand"].eq("L")])
+        out[pid] = {"R": a, "L": b, "test": R.xwoba_diff_test(a, b)}
     return out
 
 
 def money(rs: pd.DataFrame) -> dict:
-    repl = A.replacement_level(rs)
+    """Projections, the market line (comps and candidates projected the same way), prices, values and walk-aways."""
+    repl = A.replacement_level(rs)                                            # 2024-26, for 2027 projections
+    repl_c = A.replacement_level(rs[rs["season"].isin([SEASON - 2, SEASON - 1])])   # 2024-25: no post-signing data
     lm3 = A.league_relief_mean(rs, [SEASON - 2, SEASON - 1, SEASON])
-    lm_comps = A.league_relief_mean(rs, [SEASON - 2, SEASON - 1])
-    comps = A.comps_table(rs, SEASON, lm_comps, repl)
+    lm2 = A.league_relief_mean(rs, [SEASON - 1, SEASON])
+    lm_c = A.league_relief_mean(rs, [SEASON - 2, SEASON - 1])
+    comps = A.comps_table(rs, SEASON, lm_c, repl_c)
     line = A.market_line(comps)
-    proj, values, breakeven = {}, [], {}
+    proj, proj2, price, values, breakeven = {}, {}, {}, [], {}
     for pid in list(CANDIDATES) + list(REFERENCE):
-        p = A.project_relief_war(rs, pid, SEASON, lm3, repl)
+        li = A.ROLE_LIS[ROLE[pid]]
+        p = A.project_relief_war(rs, pid, SEASON, lm3, repl, li=li)
         proj[pid] = p
+        # the comps' way: two seasons (5/4), comps' replacement level, so the line's price applies like for like
+        p2 = A.project_relief_war(rs, pid, SEASON, lm2, repl_c, n_seasons=2, li=li)
+        proj2[pid] = p2
+        price[pid] = {"comps_way": A.market_price_interval(p2.war_neutral, line),
+                      "three_season": A.market_price_interval(p.war_neutral, line)}
+        avail = AVAILABILITY.get(pid)
         for aav, yrs in STRUCTURES.get(pid, []):
-            v = A.contract_value(aav, yrs, p.war_role, p.war_neutral, AGE_2027[pid], SEASON + 1, line)
+            v = A.contract_value(aav, yrs, p.war_role, p.war_neutral, AGE_2027[pid], SEASON + 1, line,
+                                 availability=(avail or [1.0] * yrs)[:yrs] + [1.0] * max(0, yrs - len(avail or [])))
             values.append({"pitcher": pid, "aav": aav, "years": yrs, "total": aav * yrs, "pv_salary": v["pv_salary"],
                            "pv_value_market": v["pv_value_market"], "surplus_market": v["surplus_market"],
                            "pv_value_engine": v["pv_value_engine"], "surplus_engine": v["surplus_engine"]})
         for yrs in sorted({y for _, y in STRUCTURES.get(pid, [(0, 1)])}):
-            breakeven[(pid, yrs)] = {b: A.breakeven_aav(yrs, p.war_role, p.war_neutral, AGE_2027[pid], SEASON + 1, line, basis=b)
-                                     for b in ("market", "engine")}
+            av = (avail or [1.0] * yrs)[:yrs] + [1.0] * max(0, yrs - len(avail or []))
+            breakeven[(pid, yrs)] = {b: A.breakeven_aav(yrs, p.war_role, p.war_neutral, AGE_2027[pid], SEASON + 1, line,
+                                                        basis=b, availability=av) for b in ("market", "engine")}
+            breakeven[(pid, yrs)]["market_comps_way"] = A.breakeven_aav(yrs, p2.war_role, p2.war_neutral, AGE_2027[pid],
+                                                                        SEASON + 1, line, availability=av)
     payroll = rangers_payroll_2027()
     tax = pd.concat([A.tax_table([payroll["total"], 225.0, 235.0, 244.0], aav, threshold=244.0) for aav in (7.0, 12.0, 18.0)])
     qo = {pid: A.qo_cost(FACTS["qo_tier_2026_27"][CLUB], FACTS["qo_tier_2026_27"][team], 64.0 if pid == 670970 else 24.0,
                          RANGERS_SECOND_PICK) for pid, team in ((670970, "SD"), (650556, "HOU"))}
-    return {"replacement": repl, "league_relief_mean": lm3, "comps": comps, "line": line, "projections": proj,
-            "values": pd.DataFrame(values), "breakeven": breakeven, "payroll_2027": payroll, "tax": tax, "qo": qo}
+    landing = pd.DataFrame([{"walk_away_aav": w, "total_4y": 4 * w,
+                             "chance_price_at_or_below": A.chance_price_at_or_below(w, proj2[670970].war_neutral, line)}
+                            for w in WALK_AWAYS])
+    iglesias_one_year = A.war_path(proj[628452].war_role, AGE_2027[628452], 1)[0]
+    return {"replacement": repl, "replacement_comps": repl_c, "league_relief_mean": lm3, "comps": comps, "line": line,
+            "projections": proj, "projections_comps_way": proj2, "price": price, "values": pd.DataFrame(values),
+            "breakeven": breakeven, "payroll_2027": payroll, "tax": tax, "qo": qo, "landing": landing,
+            "iglesias_2027_role_wins": iglesias_one_year}
 
 
 def walk_away(m: dict) -> dict:
-    """The three routes to Morejon's walk-away and its qualifying-offer adjustment."""
-    from baseball.roster.money import pv
-
-    mo, ab = m["projections"][670970], m["projections"][650556]
-    be_m = m["breakeven"][(670970, 4)]["market"]
-    be_a = m["breakeven"][(650556, 2)]["market"]
+    """Morejon's walk-away (the club's value at the market line, three-season projection) and its QO adjustment."""
+    be = m["breakeven"][(670970, 4)]
     annuity4 = sum(1 / 1.1 ** t for t in range(4))
-    path = A.war_path(mo.war_role, AGE_2027[670970], 4)
-    engine_low_tier = pv([w * 8.51 * 1.03 ** (t + 1) for t, w in enumerate(path)]) / annuity4   # 1-2 WAR tier, 2027+ dollars
-    d_role = mo.war_role - ab.war_role
-    return {"morejon_market_breakeven_4y": be_m, "morejon_engine_2plus_tier_4y": m["breakeven"][(670970, 4)]["engine"],
-            "morejon_engine_1to2_tier_4y": engine_low_tier, "extra_role_wins_vs_abreu": d_role,
-            "indifference_vs_abreu_at_breakeven": be_a + d_role * 8.51 * 1.03,
-            "cost_per_extra_win_at_17.5_vs_12": (17.5 - 12.0) / d_role,
-            "qo_value": m["qo"][670970]["total_value"],
-            "morejon_walkaway_with_qo_aav": (be_m * annuity4 - m["qo"][670970]["total_value"]) / annuity4}
+    qo = m["qo"][670970]["total_value"]
+    with_qo = (be["market"] * annuity4 - qo) / annuity4
+    return {"value_breakeven_4y_three_season": be["market"], "value_breakeven_4y_comps_way": be["market_comps_way"],
+            "engine_breakeven_4y_not_same_scale": be["engine"], "expected_price_comps_way": m["price"][670970]["comps_way"]["aav"],
+            "qo_value_pv": qo, "walkaway_with_qo_aav": with_qo, "qo_cut_per_year": be["market"] - with_qo,
+            "qo_cut_nominal_4y": 4 * (be["market"] - with_qo)}
 
 
 # ------------------------------------------------------------------ figure
 
 def figure(res: dict, m: dict, d: pd.DataFrame, path: str = "reports/figures/2026-bullpen-acquisition-memo.png") -> str:
     """Three panels: (a) each pitch's present grade vs its stuff grade (pitch colors fixed), (b) the 2025-26
-    reliever market's price per projected win with the three candidates, (c) primary-fastball velocity by month."""
+    reliever market's price per projected win, with the candidates' 95% prediction intervals, (c) primary-fastball
+    velocity by month."""
     import matplotlib.pyplot as plt
 
     from baseball.viz import INK, MUTED, OTHER, PITCH_COLORS, _style
@@ -197,20 +265,23 @@ def figure(res: dict, m: dict, d: pd.DataFrame, path: str = "reports/figures/202
     ax = axes[1]
     _style(ax)
     c = m["comps"]
+    ln = m["line"]
     ax.scatter(c["war_neutral"], c["aav"], s=26, color=OTHER, alpha=0.8, linewidths=0, label="2025-26 relief signings")
     for r in c.itertuples():
         if r.name in ("Edwin Díaz", "Devin Williams", "Robert Suarez", "Pete Fairbanks", "Raisel Iglesias"):
             ax.annotate(r.name.split()[-1], (r.war_neutral, r.aav), xytext=(4, 2), textcoords="offset points", fontsize=7, color=MUTED)
-    xs = np.linspace(0.3, 2.1, 10)
-    ln = m["line"]
+    xs = np.linspace(ln["x_min"], ln["x_max"], 10)
     ax.plot(xs, ln["intercept"] + ln["slope"] * xs, color=MUTED, lw=1.5, label="market line (least squares)")
+    xe = np.linspace(ln["x_max"], 2.0, 5)
+    ax.plot(xe, ln["intercept"] + ln["slope"] * xe, color=MUTED, lw=1.5, ls="--", label="extrapolated past the comps")
     for pid in CANDIDATES:
-        p = m["projections"][pid]
-        y = A.market_aav(p.war_neutral, ln)
-        ax.errorbar([p.war_neutral], [y], yerr=[[ln["resid_sd"]], [ln["resid_sd"]]], fmt=marker[pid], color=INK, ms=7,
-                    capsize=3, lw=1, zorder=4)
-        ax.annotate(f"{short[pid]} (2027 proj.)", (p.war_neutral, y), xytext=(6, -10), textcoords="offset points", fontsize=7.5, color=INK)
-    ax.set_xlabel("Projected relief wins at signing (no leverage credit)", color=MUTED, fontsize=8.5)
+        p = m["projections_comps_way"][pid]
+        pi = m["price"][pid]["comps_way"]
+        lo = max(pi["lo"], 0.78)        # no contract pays less than the minimum salary
+        ax.errorbar([p.war_neutral], [pi["aav"]], yerr=[[pi["aav"] - lo], [pi["hi"] - pi["aav"]]], fmt=marker[pid],
+                    color=INK, ms=7, capsize=3, lw=1, zorder=4)
+        ax.annotate(short[pid], (p.war_neutral, pi["aav"]), xytext=(6, -10), textcoords="offset points", fontsize=7.5, color=INK)
+    ax.set_xlabel("Projected relief wins at signing (two seasons, no leverage credit)", color=MUTED, fontsize=8.5)
     ax.set_ylabel("Average annual value, $M", color=MUTED, fontsize=8.5)
     ax.set_title("(b) What the reliever market paid per projected win", loc="left", color=INK, fontsize=10.5, fontweight="bold")
     ax.legend(loc="upper left", fontsize=7.5, frameon=False, labelcolor=INK)
@@ -219,11 +290,12 @@ def figure(res: dict, m: dict, d: pd.DataFrame, path: str = "reports/figures/202
     ax = axes[2]
     _style(ax)
     styles = {670970: "-", 650556: "--", 664126: ":"}
+    prim = R.primary_fastball(d[d["season"].eq(SEASON)])
     for pid in CANDIDATES:
+        pt = prim.get((pid, SEASON))
         for season, alpha in ((SEASON - 1, 0.35), (SEASON, 1.0)):
-            s = d[d["season"].eq(season) & d["pitcher"].eq(pid)]
-            pt = R.primary_fastball(d[d["season"].eq(SEASON)]).get((pid, SEASON))
-            s = s[s["pitch_type"].eq(pt)].assign(month=lambda x: pd.to_datetime(x["game_date"]).dt.month)
+            s = d[d["season"].eq(season) & d["pitcher"].eq(pid) & d["pitch_type"].eq(pt)]
+            s = s.assign(month=pd.to_datetime(s["game_date"]).dt.month)
             s = s[s["month"].between(4, 9)]
             gm = s.groupby(["month", "game_pk"])["release_speed"].mean().groupby("month").mean()
             ax.plot(gm.index, gm.values, ls=styles[pid], marker=marker[pid], ms=5, lw=1.8, color=INK, alpha=alpha)
@@ -236,13 +308,17 @@ def figure(res: dict, m: dict, d: pd.DataFrame, path: str = "reports/figures/202
     ax.set_title("(c) Fastball velocity by month", loc="left", color=INK, fontsize=10.5, fontweight="bold")
     ax.text(0.02, 0.02, "faint = 2025, dark = 2026; Fairbanks's September is 2 outings, 10 fastballs", transform=ax.transAxes,
             fontsize=7.2, color=MUTED)
-    fig.text(0.01, 0.005, "Statcast via Baseball Savant, regular seasons 2025-26. Grades: 50 + 10z of the percentile among MLB pitches "
+    fig.text(0.01, 0.005, "Statcast via Baseball Savant, regular seasons 2024-26. Grades: 50 + 10z of the percentile among MLB pitches "
              "of the type (50+ swings). Market: NBC Sports/Yahoo free-agent tracker (Feb. 12, 2026); projections derived "
-             "(baseball/roster/acquisition.py); bars = the line's residual SD.", fontsize=7, color=MUTED)
+             "(baseball/roster/acquisition.py); bars = 95% prediction intervals for one signing (floored at the minimum salary).", fontsize=7, color=MUTED)
     fig.tight_layout(rect=(0, 0.03, 1, 1))
     fig.savefig(path)
     plt.close(fig)
     return path
+
+
+def _r(x):
+    return round(float(x), 3) if isinstance(x, (float, np.floating)) else x
 
 
 def main() -> None:
@@ -253,36 +329,40 @@ def main() -> None:
     for s, t in nd["teams"].items():
         print(f"\n== Bullpens {s} (rank 1 = best) ==")
         print(t[t["team"].eq(CLUB)].round(3).T.to_string())
-    print("\n== Rangers relievers 2026 by late, close PA ==")
+    print("\n== Rangers relievers 2026 by late, close PA (total late, close PA:", nd["late_close_pa"], ") ==")
     print(nd["club_relievers"][["name", "p_throws", "games", "pa", "k_bb_pct", "whiff", "xwoba", "rv100", "late_close_pa"]].head(10).round(3).to_string())
-    print("xwOBA by hand:", {k: {h: round(v, 3) for h, v in x.items()} for k, x in nd["xwoba_by_hand"].items()})
+    print("xwOBA by hand:", {k: {kk: _r(vv) for kk, vv in v.items()} for k, v in nd["xwoba"].items()})
+    print("tests:", {k: {kk: _r(vv) for kk, vv in v.items()} for k, v in nd["tests"].items()})
     print("Payroll 2027 before additions:", rangers_payroll_2027())
 
     rs = A.relief_seasons(d)
     mm = money(rs)
     print("\n== Pool ==")
     print(pool(d, rs, mm["league_relief_mean"], mm["replacement"]).round(3).to_string())
-    res = R.compare_relievers(list(CANDIDATES) + list(REFERENCE), SEASON, raw=raw[raw["game_year"] >= SEASON - 1])
+    res = R.compare_relievers(list(CANDIDATES) + [670280], SEASON, raw=raw[raw["game_year"] >= SEASON - 1])
     print("\n== Summary ==")
     print(res["summary"].T.to_string())
     for k in ("grades", "velocity", "workload", "platoon", "usage", "gaps", "levers", "familiarity"):
         print(f"\n== {k} ==")
         print(res[k].round(3).to_string())
-    print("\n== Abreu halves ==", halves(d, 650556))
+    print("\n== Abreu halves ==", {k: ({kk: _r(vv) for kk, vv in v.items()}) for k, v in halves(d, 650556).items()})
+    print("\n== Platoon tests ==", {pid: {k: {kk: _r(vv) for kk, vv in v.items()} for k, v in t.items()} for pid, t in platoon_tests(d).items()})
     print("\n== Money ==")
-    print("replacement", mm["replacement"], "league relief mean", mm["league_relief_mean"])
+    print("replacement (2024-26)", mm["replacement"], "replacement for comps (2024-25)", mm["replacement_comps"],
+          "league relief mean", mm["league_relief_mean"])
     print(mm["comps"].round(2).to_string())
-    print("market line", mm["line"])
-    for pid, p in mm["projections"].items():
-        print(pid, {k: (round(float(v), 3) if isinstance(v, (float, np.floating)) else v) for k, v in p.__dict__.items()},
-              "market AAV", round(A.market_aav(p.war_neutral, mm["line"]), 2))
+    print("market line", {k: v for k, v in mm["line"].items() if k != "cov"})
+    for pid in mm["projections"]:
+        print(pid, "3-season:", {k: _r(v) for k, v in mm["projections"][pid].__dict__.items()})
+        print(pid, "comps' way:", {k: _r(v) for k, v in mm["projections_comps_way"][pid].__dict__.items()})
+        print(pid, "price:", {b: {k: _r(v) for k, v in x.items()} for b, x in mm["price"][pid].items()})
     print(mm["values"].round(2).to_string())
-    print({k: {b: round(v, 2) for b, v in x.items()} for k, x in mm["breakeven"].items()})
+    print({k: {b: round(float(v), 2) for b, v in x.items()} for k, x in mm["breakeven"].items()})
     print(mm["tax"].round(3).to_string())
     print(mm["qo"])
-    print("\n== Walk-away arithmetic ==")
-    for k, v in walk_away(mm).items():
-        print(k, round(float(v), 3))
+    print(mm["landing"].round(3).to_string())
+    print("Iglesias 2027 role wins, one year aged:", round(mm["iglesias_2027_role_wins"], 3))
+    print("\n== Walk-away ==", {k: round(float(v), 3) for k, v in walk_away(mm).items()})
     from baseball.evaluation.reliability import regress
     h = halves(d, 650556)
     for half in (1, 2):

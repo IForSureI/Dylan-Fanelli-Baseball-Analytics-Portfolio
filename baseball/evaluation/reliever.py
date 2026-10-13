@@ -33,7 +33,8 @@ The 20-80 mapping (documented and tested; `grade_from_percentile`):
   Limits: whiff per swing is one job of a pitch. It misses called strikes, weak contact and location, so it
   undergrades sinkers and strike-throwing cutters (they're graded only against their own type, which
   helps but doesn't fix it). It is a data-informed grade, not a live look: no delivery, deception, command
-  within the zone or makeup. Control is graded separately from walk rate (`control_grade`).
+  within the zone or makeup. Control is graded separately from the unintentional walk rate (`control_grade`);
+  it stands in for command, which the scouting formula asks for and public data can't measure.
 
 Grain: input rows are pitches (the sequence copy, regular season). Output tables say their grain.
 Conventions: flags once, rates after aggregation, every rate with its n, regular season only.
@@ -119,10 +120,15 @@ def reliever_ofp(pitch_grades: dict[str, int], control: int) -> dict:
 # ------------------------------------------------------------------ flags and roles
 
 def flag(p: pd.DataFrame) -> pd.DataFrame:
-    """Flags once on every pitch (regular season only). Adds the pitching team and whether the pitcher was
-    in relief (not his team's first pitcher of the game)."""
+    """Flags once on every row (regular season only). Adds the pitching team and whether the pitcher was in
+    relief (not his team's first pitcher of the game; position players pitching count as relief, a negligible
+    share of relief pitches).
+
+    Rows with no pitch thrown (description automatic_ball / automatic_strike: intentional walks and pitch-clock
+    violations) are kept, because they end plate appearances (every intentional walk is one), but `pitch` is
+    False on them, so pitch counts, swings, zone and run value ignore them."""
     d = p[p["game_type"].eq("R")].copy() if "game_type" in p else p.copy()
-    d = d[~d["description"].isin(("automatic_ball", "automatic_strike"))]
+    d["pitch"] = ~d["description"].isin(("automatic_ball", "automatic_strike"))
     d["season"] = d["game_year"].astype(int)
     d["swing"] = d["description"].isin(SWINGS)
     d["whiff"] = d["description"].isin(WHIFFS)
@@ -141,6 +147,7 @@ def flag(p: pd.DataFrame) -> pd.DataFrame:
     d["pa"] = ev.ne("") & ~ev.str.startswith(NON_PA_PREFIXES)
     d["k"] = ev.isin(("strikeout", "strikeout_double_play"))
     d["bb"] = ev.isin(("walk", "intent_walk"))
+    d["ubb"] = ev.eq("walk")                          # unintentional walks: the control input
     d["outs"] = ev.map(OUTS).fillna(0) + ev.str.startswith(("caught_stealing", "pickoff_caught")).astype(int)
     # xwOBA per PA: the expected value on balls in play, the actual wOBA value otherwise (walks, strikeouts)
     d["xwoba_pa"] = np.where(d["bip"], d["estimated_woba_using_speedangle"], d["woba_value"]).astype(float)
@@ -167,7 +174,8 @@ def season_line(d: pd.DataFrame) -> pd.DataFrame:
     g = d.groupby(["pitcher", "season"])
     out = g.agg(player_name=("player_name", "last"), p_throws=("p_throws", "last"), games=("game_pk", "nunique"),
                 relief_games=("game_pk", lambda s: s[d.loc[s.index, "relief"]].nunique()),
-                pitches=("pitch_type", "size"), pa=("pa", "sum"), outs=("outs", "sum"), k=("k", "sum"), bb=("bb", "sum"),
+                pitches=("pitch", "sum"), pa=("pa", "sum"), outs=("outs", "sum"), k=("k", "sum"), bb=("bb", "sum"),
+                ubb=("ubb", "sum"),
                 swings=("swing", "sum"), whiffs=("whiff", "sum"), csw=("csw", "sum"), in_zone=("in_zone", "sum"),
                 zone_n=("zone", "count"), out_zone=("out_zone", "sum"), chases=("chase", "sum"), bip=("bip", "sum"),
                 xwoba_sum=("xwoba_bip", "sum"), xwoba_n=("xwoba_bip", "count"), hard=("hard", "sum"),
@@ -177,6 +185,7 @@ def season_line(d: pd.DataFrame) -> pd.DataFrame:
     out["ip"] = out["outs"] // 3 + (out["outs"] % 3) / 10          # baseball notation (approximate: event outs)
     out["k_pct"] = 100 * out["k"] / out["pa"]
     out["bb_pct"] = 100 * out["bb"] / out["pa"]
+    out["ubb_pct"] = 100 * out["ubb"] / out["pa"]
     out["k_bb_pct"] = out["k_pct"] - out["bb_pct"]
     out["whiff"] = out["whiffs"] / out["swings"]
     out["csw_rate"] = out["csw"] / out["pitches"]
@@ -367,7 +376,7 @@ def workload(d: pd.DataFrame, ids, season: int) -> pd.DataFrame:
         p = cur[cur["pitcher"].eq(pid)]
         if p.empty:
             continue
-        g = p.groupby("game_pk").agg(date=("game_date", "first"), pitches=("pitch_type", "size"), outs=("outs", "sum"),
+        g = p.groupby("game_pk").agg(date=("game_date", "first"), pitches=("pitch", "sum"), outs=("outs", "sum"),
                                      relief=("relief", "first"))
         g["date"] = pd.to_datetime(g["date"])
         g = g.sort_values("date")
@@ -412,7 +421,28 @@ def platoon(d: pd.DataFrame, ids, season: int, league_whiff: float, params: pd.D
     g["whiff_reg"] = 100 * regress("pitcher/whiff", g["whiffs"] / g["swings"], g["swings"], league_whiff, params=params)["estimate"].to_numpy()
     tot = g.groupby("pitcher")["pitches"].transform("sum")
     g["share_of_pitches"] = 100 * g["pitches"] / tot
+    sd = cur[cur["xwoba_den"] > 0].groupby(["pitcher", "stand"])["xwoba_pa"].std()
+    g["xwoba_se"] = [sd.get((r.pitcher, r.stand), np.nan) / np.sqrt(r.den) for r in g.itertuples()]
     return g.drop(columns=["xw", "den"])
+
+
+def xwoba_stats(rows: pd.DataFrame) -> dict:
+    """xwOBA per PA (expected value on balls in play, actual wOBA value otherwise; wOBA-denominator PAs only):
+    mean, per-PA SD, n and standard error. Rows: flagged pitches."""
+    r = rows[rows["xwoba_den"] > 0]
+    v = r["xwoba_pa"].to_numpy(float)
+    n = len(v)
+    sd = float(np.std(v, ddof=1)) if n > 1 else float("nan")
+    return {"mean": float(v.mean()) if n else float("nan"), "sd": sd, "n": n, "se": sd / np.sqrt(n) if n else float("nan")}
+
+
+def xwoba_diff_test(a: dict, b: dict) -> dict:
+    """Two-sample z-test on xwOBA per PA (a minus b), from xwoba_stats() outputs. PAs are treated as
+    independent, which slightly understates the SE (the same hitters and games recur)."""
+    diff = a["mean"] - b["mean"]
+    se = float(np.sqrt(a["se"] ** 2 + b["se"] ** 2))
+    z = diff / se
+    return {"diff": diff, "se": se, "z": z, "p": 2 * (1 - NormalDist().cdf(abs(z)))}
 
 
 def usage(d: pd.DataFrame, ids, season: int, min_n: int = 20) -> pd.DataFrame:
@@ -493,6 +523,19 @@ def familiarity_load(p: pd.DataFrame, ids) -> pd.DataFrame:
 
 # ------------------------------------------------------------------ pitch design
 
+# Year-two labels from the levers study's persistence table (reports/2026-pitch-design-levers.md, "Persistence";
+# 2024->25 changes followed into 2026) and its robustness note on slider spin. Levers without a row weren't followed.
+LEVER_PERSISTENCE = {
+    ("FF", "ivb"): "point estimate held; interval can't exclude a full fade",
+    ("FF", "spin"): "whiff gain held; run value not shown to last (borderline)",
+    ("FF", "velo"): "not shown to last (borderline); about half the fade is velocity reverting",
+    ("SL", "ivb"): "not shown in year one in this sample; not shown to last (borderline)",
+    ("SL", "gap"): "not shown to last (borderline)",
+    ("SL", "arm"): "year-two gain, borderline",
+    ("SL", "spin"): "unstable across season pairs (robustness)",
+    ("ST", "hb"): "run value not shown to last",
+}
+
 NET = {"velo": "net_velo", "ivb": "net_ivb", "hb": "net_hb", "spin": "net_spin", "gap": "net_gap", "sep": "net_sep",
        "rel_z": "net_rel_z", "rel_x": "net_rel_x", "ext": "net_ext", "arm": "net_arm"}
 
@@ -519,7 +562,8 @@ def lever_read(pairs: pd.DataFrame, answer: pd.DataFrame, ids, season: int) -> p
             if (pt, lv) in ans.index:
                 a = ans.loc[(pt, lv)]
                 row |= {"payoff_whiff_per_unit": a["whiff"], "verdict": a["verdict"], "caveat": a["caveat"],
-                        "implied_whiff": sign * net / unit * a["whiff"]}
+                        "implied_whiff": sign * net / unit * a["whiff"],
+                        "persistence": LEVER_PERSISTENCE.get((pt, lv), "not followed in the persistence study")}
             rows.append(row)
     return pd.DataFrame(rows)
 
@@ -552,7 +596,7 @@ def team_bullpens(d: pd.DataFrame, season: int, late_inning: int = 7, close: int
 
 VIEW = [  # (row label, formatter of a summary row)
     ("Throws / games / IP", lambda r: f"{r['throws']} / {r['games']} / {r['ip']:.1f}"),
-    ("K% / BB% / K-BB%", lambda r: f"{r['k_pct']:.1f} / {r['bb_pct']:.1f} / {r['k_bb_pct']:.1f}"),
+    ("K% / BB% (unintentional) / K-BB%", lambda r: f"{r['k_pct']:.1f} / {r['bb_pct']:.1f} ({r['ubb_pct']:.1f}) / {r['k_bb_pct']:.1f}"),
     ("Whiff%: observed, regressed (95%)", lambda r: f"{100 * r['whiff_obs']:.1f}, {100 * r['whiff_reg']:.1f} ({100 * r['whiff_lo']:.1f}-{100 * r['whiff_hi']:.1f})"),
     ("Chase%: observed, regressed", lambda r: f"{100 * r['chase_obs']:.1f}, {100 * r['chase_reg']:.1f}"),
     ("xwOBA on contact: observed, regressed", lambda r: f"{r['xwoba_con_obs']:.3f}, {r['xwoba_con_reg']:.3f}"),
@@ -621,14 +665,15 @@ def compare_relievers(ids, season: int, raw: pd.DataFrame | None = None, edge_di
         gr = grades[grades["pitcher"].eq(pid)]
         pres = {r.pitch_type: r.grade_present for r in gr.itertuples()}
         fut = {r.pitch_type: r.grade_2027 for r in gr.itertuples()}
-        ctl = control_grade(ln["bb_pct"])
+        ctl = control_grade(ln["ubb_pct"])
         o_now, o_next = reliever_ofp(pres, ctl), reliever_ofp(fut, ctl)
         v = velo[velo["pitcher"].eq(pid)]
         w = work[work["pitcher"].eq(pid)]
         gp = gaps[gaps["pitcher"].eq(pid)]
         row = {"pitcher": pid, "name": ln["player_name"], "throws": ln["p_throws"], "season": season,
                "games": int(ln["games"]), "ip": ln["ip"], "pa": int(ln["pa"]), "pitches": int(ln["pitches"]),
-               "k_pct": ln["k_pct"], "bb_pct": ln["bb_pct"], "k_bb_pct": ln["k_bb_pct"], "xwoba": ln["xwoba"]}
+               "k_pct": ln["k_pct"], "bb_pct": ln["bb_pct"], "ubb_pct": ln["ubb_pct"], "k_bb_pct": ln["k_bb_pct"],
+               "xwoba": ln["xwoba"]}
         for m in REGRESS:
             row[f"{m}_obs"] = rg.loc[m, "observed"]
             row[f"{m}_reg"] = rg.loc[m, "estimate"]

@@ -39,7 +39,8 @@ from baseball.roster.money import DISCOUNT, DPW_GROWTH, dollars_per_war, qualify
 RUNS_PER_WIN = 10.0          # ASSUMPTION (rule of thumb; FanGraphs' runs-per-win sits near 10 in this era)
 WEIGHTS = (5, 4, 3)          # ASSUMPTION: most recent season first
 RV100_M = 1932.2             # Reliability Atlas, pitcher run value per 100 pitches (reliability_params.json)
-ROLE_LI = 1.6                # ASSUMPTION: a late-inning high-leverage role
+ROLE_LI = 1.6                # ASSUMPTION: a late-inning high-leverage role (the B1/B2 job in front of a closer)
+ROLE_LIS = {"B1": 1.6, "B2": 1.4, "depth": 1.1}   # ASSUMPTION by role; checked against each pitcher's leverage proxy
 RELIEVER_DECLINE = 0.10      # ASSUMPTION: relief value falls 10% a year from age 31 (FanGraphs' -0.4 WAR a year
 DECLINE_FROM = 31            # is ~13% of a 3-WAR player; relievers are scaled proportionally, a little softer)
 
@@ -171,16 +172,45 @@ def comps_table(rs: pd.DataFrame, signing_season: int, league_mean: float, repla
 
 
 def market_line(comps: pd.DataFrame) -> dict:
-    """AAV = a + b x projected neutral wins, least squares over the comparable signings, with the residual SD
-    and the median AAV per projected win. A descriptive fit of one winter's prices, not a causal model."""
+    """AAV = a + b x projected neutral wins, least squares over the comparable signings, with the residual SD,
+    the coefficient covariance (for prediction intervals), the range of projections it was fit on, and the
+    median AAV per projected win. A descriptive fit of one winter's prices, not a causal model."""
     x, y = comps["war_neutral"].to_numpy(float), comps["aav"].to_numpy(float)
     A = np.column_stack([np.ones_like(x), x])
     (a, b), *_ = np.linalg.lstsq(A, y, rcond=None)
     resid = y - (a + b * x)
     r2 = 1 - resid.var() / y.var()
     pos = x > 0.2
-    return {"intercept": float(a), "slope": float(b), "resid_sd": float(np.sqrt(np.sum(resid ** 2) / max(len(x) - 2, 1))),
-            "r2": float(r2), "n": int(len(x)), "median_aav_per_war": float(np.median(y[pos] / x[pos]))}
+    s2 = float(np.sum(resid ** 2) / max(len(x) - 2, 1))
+    cov = s2 * np.linalg.inv(A.T @ A)
+    return {"intercept": float(a), "slope": float(b), "resid_sd": float(np.sqrt(s2)), "slope_se": float(np.sqrt(cov[1, 1])),
+            "cov": cov.tolist(), "r2": float(r2), "n": int(len(x)), "x_min": float(x.min()), "x_max": float(x.max()),
+            "x_mean": float(x.mean()), "median_aav_per_war": float(np.median(y[pos] / x[pos]))}
+
+
+def market_price_interval(war_neutral: float, line: dict, level: float = 0.95) -> dict:
+    """The line's expected AAV at a projection, the SE of that fitted mean, and a prediction interval for one
+    signing's AAV (residual variance + the fitted mean's variance, t with n - 2 df). Flags extrapolation beyond
+    the projections the line was fit on."""
+    from scipy.stats import t as tdist
+
+    c = np.asarray(line["cov"])
+    v = np.array([1.0, war_neutral])
+    se_fit = float(np.sqrt(v @ c @ v))
+    sd_pred = float(np.sqrt(line["resid_sd"] ** 2 + se_fit ** 2))
+    q = float(tdist.ppf(0.5 + level / 2, line["n"] - 2))
+    mid = market_aav(war_neutral, line)
+    return {"aav": mid, "se_fit": se_fit, "sd_pred": sd_pred, "lo": mid - q * sd_pred, "hi": mid + q * sd_pred,
+            "extrapolated": not (line["x_min"] <= war_neutral <= line["x_max"])}
+
+
+def chance_price_at_or_below(walk_away: float, war_neutral: float, line: dict) -> float:
+    """If one signing's AAV is distributed as the line's prediction (t, n - 2 df), the chance his price comes in
+    at or below `walk_away`: a rough guide to how often a walk-away lands the player, not a market model."""
+    from scipy.stats import t as tdist
+
+    pi = market_price_interval(war_neutral, line)
+    return float(tdist.cdf((walk_away - pi["aav"]) / pi["sd_pred"], line["n"] - 2))
 
 
 def market_aav(war_neutral: float, line: dict) -> float:
@@ -202,25 +232,34 @@ def war_path(war1: float, first_age: int, years: int, decline: float = RELIEVER_
 
 
 def contract_value(aav: float, years: int, war1_role: float, war1_neutral: float, first_age: int, first_season: int,
-                   line: dict, discount: float = DISCOUNT, growth: float = DPW_GROWTH) -> dict:
+                   line: dict, discount: float = DISCOUNT, growth: float = DPW_GROWTH,
+                   availability: list[float] | None = None) -> dict:
     """PV of a contract's salary, of the wins it buys at the engine's tiered $/WAR (role wins) and at the
     reliever market line (neutral wins, the basis the line was fit on), and the two surpluses. Salaries level,
-    paid from t = 0; the market line grows like the engine's price of a win (3%/yr, ASSUMPTION)."""
-    role = war_path(war1_role, first_age, years)
-    neut = war_path(war1_neutral, first_age, years)
+    paid from t = 0; the market line grows like the engine's price of a win (3%/yr, ASSUMPTION).
+    availability: share of a full season he pitches each contract year (default 1.0 every year), e.g. [0.35, 1.0]
+    for a pitcher returning from surgery at mid-season (ASSUMPTION, stated where used).
+    The engine column is NOT on the same win scale as FanGraphs' $/WAR (this module's replacement level isn't
+    calibrated to fWAR), so read it as an order of magnitude, not a price."""
+    avail = list(availability) if availability is not None else [1.0] * years
+    role = [w * a for w, a in zip(war_path(war1_role, first_age, years), avail)]
+    neut = [w * a for w, a in zip(war_path(war1_neutral, first_age, years), avail)]
     f = [(1 + discount) ** t for t in range(years)]
     pv_salary = sum(aav / x for x in f)
     pv_engine = sum(w * dollars_per_war(w, first_season + t) / x for t, (w, x) in enumerate(zip(role, f)))
-    pv_market = sum(max(market_aav(w, line), 0.0) * (1 + growth) ** t / x for t, (w, x) in enumerate(zip(neut, f)))
+    # a partial season is worth the line's price of his full-season projection times the share he pitches
+    pv_market = sum(max(market_aav(w / a if a else 0.0, line), 0.0) * a * (1 + growth) ** t / x
+                    for t, (w, a, x) in enumerate(zip(neut, avail, f)))
     return {"years": years, "aav": aav, "total": aav * years, "pv_salary": pv_salary, "war_role_path": role,
             "pv_value_engine": pv_engine, "surplus_engine": pv_engine - pv_salary,
             "pv_value_market": pv_market, "surplus_market": pv_market - pv_salary}
 
 
 def breakeven_aav(years: int, war1_role: float, war1_neutral: float, first_age: int, first_season: int, line: dict,
-                  basis: str = "market", discount: float = DISCOUNT) -> float:
+                  basis: str = "market", discount: float = DISCOUNT, availability: list[float] | None = None) -> float:
     """Level AAV at which the contract's PV surplus is zero on the chosen basis ('market' or 'engine')."""
-    v = contract_value(0.0, years, war1_role, war1_neutral, first_age, first_season, line, discount)
+    v = contract_value(0.0, years, war1_role, war1_neutral, first_age, first_season, line, discount,
+                       availability=availability)
     pv_value = v["pv_value_market"] if basis == "market" else v["pv_value_engine"]
     annuity = sum(1 / (1 + discount) ** t for t in range(years))
     return pv_value / annuity
