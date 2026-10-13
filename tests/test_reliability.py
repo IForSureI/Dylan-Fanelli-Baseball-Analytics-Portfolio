@@ -3,8 +3,6 @@
 Every frame built here is fictional: simulated players with a true talent we set, so the split-half
 machinery can be checked against the answer it should find.
 """
-import math
-
 import numpy as np
 import pandas as pd
 import pytest
@@ -15,40 +13,9 @@ from baseball.stats import fit_reliability_constant, shrink, spearman_brown
 
 # ---------------------------------------------------------------- fictional data
 
-def _fictional(players=300, games=40, per_game=10, tau=1.0, sigma_g=0.0, sigma_e=1.0, seasons=(2026,), rho=1.0,
-               rho_half=1.0, binary=False, p_mean=0.25, seed=0) -> pd.DataFrame:
-    """FICTIONAL players. Value = talent + game effect + event noise (or a Bernoulli draw at p = p_mean + talent).
-    Talent correlates rho across seasons, and rho_half between the first and second half of a season's games."""
-    rng = np.random.default_rng(seed)
-    P, G, K = players, games, per_game
-    base = rng.normal(0, tau, P)
-    frames = []
-    for si, season in enumerate(seasons):
-        if si:
-            base = rho * base + math.sqrt(1 - rho ** 2) * rng.normal(0, tau, P)
-        later = rho_half * base + math.sqrt(1 - rho_half ** 2) * rng.normal(0, tau, P)
-        talent = np.where(np.arange(G)[None, :] < G // 2, base[:, None], later[:, None])          # P x G
-        value = talent[:, :, None] + rng.normal(0, sigma_g, (P, G))[:, :, None] * (sigma_g > 0) \
-            + rng.normal(0, sigma_e, (P, G, K))
-        if binary:
-            value = (rng.random((P, G, K)) < np.clip(p_mean + talent, 0.01, 0.99)[:, :, None]).astype(float)
-        pl, gm, ev = (a.ravel() for a in np.meshgrid(np.arange(P), np.arange(G), np.arange(K), indexing="ij"))
-        dates = np.array([str(pd.Timestamp(f"{season}-04-01") + pd.Timedelta(days=int(g)))[:10] for g in range(G)])
-        frames.append(pd.DataFrame({"batter": pl, "season": season, "game_pk": season * 100_000 + pl * 100 + gm,
-                                    "game_date": dates[gm], "at_bat_number": ev // 4 + 1, "pitch_number": ev % 4 + 1,
-                                    "pitch_type": "FF", "x": value.ravel()}))
-    return pd.concat(frames, ignore_index=True)
-
-
-X = R.Metric("x", "Fictional metric", "hitter", "mean", "events", lambda d: d["x"].to_numpy(float),
-             lambda d: np.ones(len(d), bool))
-
-
-def _summary(d, seasons, reps=12, unit="game", seed=3, boot=60):
-    fam = R.build_family(d, "hitter", unit=unit)
-    job = R._job(fam, [X], list(seasons), boot)
-    R.run_splits([job], reps, seed=seed, log=None)
-    return R.summarize(job)[1].iloc[0]
+_fictional = R.fictional_league          # FICTIONAL leagues (the generator lives in the library)
+X = R.FICTIONAL_X
+_summary = R.fictional_summary
 
 
 # ---------------------------------------------------------------- shared statistics (hand-checked)
@@ -290,3 +257,58 @@ def test_shipped_constants_cover_the_atlas_and_regress_uses_them():
     w = 50 / (50 + row["M"])
     assert out["estimate"].iloc[0] == pytest.approx(0.25 + w * 0.15)
     assert 0 <= out["lo"].iloc[0] < out["estimate"].iloc[0] < out["hi"].iloc[0] <= 1
+
+
+# ---------------------------------------------------------------- review fixes: physics, drift gate, prior cut
+
+def test_two_level_components_are_recovered():
+    # FICTIONAL: pitch noise sd 1 (variance 1), day effect sd .5 (variance .25), 20 games of 10 pitches
+    d = _fictional(players=300, games=20, per_game=10, tau=1.0, sigma_g=0.5, sigma_e=1.0, seed=21)
+    fam = R.build_family(d, "hitter")
+    t = R.day_components(fam, R.metric_arrays(fam, X)).iloc[0]
+    assert t["sigma_pitch2"] == pytest.approx(1.0, rel=0.03)
+    assert t["gamma2"] == pytest.approx(0.25, rel=0.15)
+    assert t["k_median"] == 10
+
+
+def test_regress_two_level_hand_checked():
+    # tau 2, day variance .5, pitch variance 1: 100 pitches over 5 games -> noise .5/5 + 1/100 = .11,
+    # w = 4 / 4.11 = .973236; 97 against a mean of 95 -> 95 + 2 x .973236 = 96.946472;
+    # sd = 2 sqrt(1 - .973236) = .327195. The same 100 pitches in ONE game: noise .51, w = 4/4.51 = .886918.
+    P = pd.DataFrame({"metric": ["pitcher/FF/velo"], "model": ["two-level"], "M": [0.3], "tau": [2.0], "gamma2": [0.5],
+                      "sigma2": [1.0], "k_median": [20.0], "kind": ["mean"]}).set_index("metric")
+    r = R.regress("pitcher/FF/velo", 97.0, 100, 95.0, params=P, games=5).iloc[0]
+    assert r["weight"] == pytest.approx(0.973236, abs=1e-6) and r["estimate"] == pytest.approx(96.946472, abs=1e-5)
+    assert r["sd"] == pytest.approx(0.327195, abs=1e-5)
+    assert R.regress("pitcher/FF/velo", 97.0, 100, 95.0, params=P, games=1).iloc[0]["weight"] == pytest.approx(0.886918, abs=1e-6)
+    with pytest.warns(UserWarning):                       # a pitch count alone: assumes 100 / 20 = 5 games, and says so
+        w = R.regress("pitcher/FF/velo", 97.0, 100, 95.0, params=P).iloc[0]["weight"]
+    assert w == pytest.approx(0.973236, abs=1e-6)
+
+
+def test_drift_only_widens_intervals_when_distinguishable_from_zero():
+    p = pd.DataFrame({"metric": ["a", "b"], "tau_cov": [1.0, 1.0]})
+    t = pd.DataFrame({"metric": ["a", "b"], "drift_sd": [0.5, 0.3], "drift_sd_lo": [0.2, 0.0], "drift_sd_hi": [0.7, 0.5]})
+    out = R.with_drift(p, t).set_index("metric")
+    assert out.loc["a", "drift_sd_use"] == 0.5 and out.loc["b", "drift_sd_use"] == 0.0
+    assert out.loc["a", "drift_over_tau"] == pytest.approx(0.5)
+
+
+def test_prior_season_cut_uses_only_last_season():
+    # FICTIONAL batter: 2025 swings at 50, 55, ..., 95 (10th percentile 54.5); 2026 swings at 52 and 60.
+    bs = [50.0, 55, 60, 65, 70, 75, 80, 85, 90, 95, 52, 60]
+    d = pd.DataFrame({"batter": 1, "season": [2025] * 10 + [2026] * 2, "bat_speed": bs, "tracked_swing": True,
+                      "hard_contact_swing": False, "comp_bs": True})
+    out = R.add_prior_cut(d)
+    assert not out["comp_bs_prior"][:10].any()                        # 2025 has no 2024 cut
+    assert out["comp_bs_prior"][10:].tolist() == [False, True]          # 52 < 54.5 <= 60
+    assert out["comp_bs_known"][10:].all() and not out["comp_bs_known"][:10].any()
+
+
+def test_score_forecast_reports_a_bootstrap_p_value():
+    rng = np.random.default_rng(3)
+    p = 0.25 + rng.normal(0, 0.05, 2000)
+    n1 = rng.integers(5, 30, 2000)
+    o1, o2 = rng.binomial(n1, p) / n1, rng.binomial(300, p) / 300
+    tab, _ = R.score_forecast(o1, n1, o2, np.full(2000, 300), 0.25, 74.0, 0.05)
+    assert tab.loc[tab["bucket"].eq("all"), "p_cut"].iloc[0] < 0.01      # regressing tiny samples clearly helps
