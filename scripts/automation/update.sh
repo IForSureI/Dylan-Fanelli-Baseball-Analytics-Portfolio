@@ -18,6 +18,8 @@ MONTH=$(date +%m); MONTH=${MONTH#0}
 SEASON=$YEAR
 [ "$MONTH" -lt 3 ] && SEASON=$((YEAR - 1))       # Jan-Feb belong to last season
 
+NOREPLY="196597359+IForSureI@users.noreply.github.com"   # GitHub no-reply address: commits never carry the personal email
+git config user.name "Dylan Fanelli"; git config user.email "$NOREPLY"
 git pull --ff-only || echo "git pull skipped (local changes?)"
 uv sync --quiet
 uv run bb people || echo "people register refresh skipped"
@@ -34,7 +36,8 @@ caffeinate -i uv run bb hook "$SEASON"             # exposure-aware hook (data/e
 PRIVATE="$HOME/Baseball-private"
 if [ -d "$PRIVATE/.git" ]; then
   echo "--- Private repo: pull, process inbox, commit ---"
-  cd "$PRIVATE" && git pull --ff-only && uv sync --quiet && uv run bbp ingest
+  cd "$PRIVATE" && git config user.name "Dylan Fanelli" && git config user.email "$NOREPLY"
+  git pull --ff-only && uv sync --quiet && uv run bbp ingest
   git add -A && (git diff --cached --quiet || git commit -qm "Monthly update: inbox processed $(date +%Y-%m-%d)") && git push -q
   cd "$REPO"
 fi
