@@ -160,6 +160,144 @@ def cmd_familiarity(a: argparse.Namespace) -> None:
         print(f"  {r['group']:<9} {r['coef']:+.2f} pts (SE {r['se']:.2f}, t {r['t']:.1f}; {int(r['n']):,} swings)")
 
 
+def cmd_cbt(a: argparse.Namespace) -> None:
+    from baseball.roster.money import cbt_bill
+
+    b = cbt_bill(a.payroll, a.years_over, season=a.season, threshold=a.threshold)
+    if b.over <= 0:
+        print(f"${a.payroll:.3f}M is ${-b.over:.3f}M under the ${b.threshold:.0f}M threshold: no tax.")
+        return
+    print(f"CBT payroll ${b.payroll:.3f}M, threshold ${b.threshold:.0f}M, ${b.over:.3f}M over, "
+          f"season {b.consecutive_years} in a row")
+    print(f"  base {b.base:.3f} + 20-40 surcharge {b.surcharge_20_40:.3f} + 40-60 {b.surcharge_40_60:.3f} "
+          f"+ 60+ {b.surcharge_60_plus:.3f} = ${b.total:.3f}M")
+    print(f"  next $1 of salary costs ${b.cost_of_next_dollar:.2f}; "
+          f"top draft pick {'drops 10 places' if b.pick_drop else 'unaffected'}")
+
+
+def cmd_cbt_check(a: argparse.Namespace) -> None:
+    from baseball.roster.cases import cbt_2025_check
+
+    t = cbt_2025_check()
+    print(t[["club", "cbt_payroll", "consecutive_years", "actual", "computed", "difference"]]
+          .round(6).to_string(index=False))
+
+
+def cmd_service(a: argparse.Namespace) -> None:
+    from baseball.roster.service import SUPER_TWO_CUTOFFS, timeline
+
+    cutoff = a.cutoff or SUPER_TWO_CUTOFFS.get(a.season + 1)
+    days = [int(d) for d in a.days.split(",")] if a.days else 172
+    t = timeline(a.service, a.season, future_days=days, days_last_season=a.days_last, super_two_cutoff=cutoff)
+    print(f"Service after {a.season}: {t.service_now}"
+          + (f" (Super Two cutoff {cutoff})" if cutoff else " (no Super Two cutoff given)"))
+    print("  path: " + ", ".join(f"{s} {v}" for s, v in t.path))
+    print(f"  control: {t.control_seasons}; arbitration: {t.arb_seasons}"
+          + (" (Super Two)" if t.super_two else ""))
+    print(f"  free agent after: {t.free_agent_after or 'beyond the horizon'}")
+
+
+def cmd_roster_cases(a: argparse.Namespace) -> None:
+    from baseball.roster import cases
+
+    cases.main()
+    print(f"\nFigure: {cases.band_figure()}")
+
+def cmd_levers(a: argparse.Namespace) -> None:
+    from baseball.development import levers
+
+    res = levers.run((a.season - 2, a.season - 1, a.season))
+    print(f"Figure: {levers.figure()}")
+    ans = res["answer"]
+    print(f"\nPayoff per unit of league-net shape change ({len(res['pairs']):,} pitch pairs), confirmed (q < 0.05):")
+    for _, r in ans[ans["verdict"].eq("confirmed")].iterrows():
+        print(f"  {r['pitch_type']:<3} {r['change']:<52} whiff {r['whiff']:+.2f} pts (SE {r['whiff_se']:.2f}), "
+              f"run value {r['rv100']:+.2f}/100 (SE {r['rv100_se']:.2f})")
+    v = res["validation"].set_index("pitch_type").loc["all"]
+    print(f"\nOut of sample ({a.season - 1}->{a.season}): expected-whiff change removes {v['gain_physics_pct']:.1f}% of the "
+          f"baseline's error; every lever {v['gain_levers_pct']:.1f}%")
+
+
+def cmd_idp(a: argparse.Namespace) -> None:
+    from pathlib import Path
+
+    from baseball.development import idp
+
+    text = idp.review(a.plan, a.as_of)
+    print(text)
+    if a.out:
+        Path(a.out).write_text(text + "\n")
+        print(f"\nReview: {a.out}")
+    if a.figure:
+        plan = idp.load_plan(a.plan)
+        print(f"Figure: {idp.progress_figure(plan, idp.pitches_for(plan), a.figure)}")
+
+def cmd_hook(a: argparse.Namespace) -> None:
+    from baseball.edge.hook import figure, run
+
+    res = run(a.season)
+    s = res["summary"]
+    m = res["calibration"].query("season == @a.season and spec == 'main'").iloc[0]
+    print(f"Figure: {figure()}")
+    print(f"\nCalibration slope, {a.season} (costs from {s['cost_seasons'][0]}-{s['cost_seasons'][-1]} only; 1.0 = calibrated): "
+          f"{m['coef']:+.2f} (SE {m['se']:.2f}, p vs 1 = {m['p_vs_1']:.4f}; {int(m['n']):,} starter PAs)")
+    pc = s["pooled_calibration"]
+    print(f"Pooled {min(pc['seasons'])}-{max(pc['seasons'])}: {pc['slope']:+.2f} (SE {pc['se']:.2f})")
+    r = res["removal"].query("season == @a.season and spec == 'next hitter' and term == 'x0'").iloc[0]
+    print(f"Removal on the next hitter's index: {r['coef']:+.2f} points per run/100 PAs (SE {r['se']:.2f}; {int(r['n']):,} decisions)")
+
+
+def cmd_hook_card(a: argparse.Namespace) -> None:
+    from baseball.edge.hook import hook_card, load_context
+    from baseball.ingest import people
+
+    ctx = load_context(a.season)
+    g = ctx["pa"][ctx["pa"]["game_pk"].eq(a.game_pk)]
+    names = people.names([*g["batter"].unique(), a.pitcher])
+    card = hook_card(a.game_pk, a.pitcher, ctx, names=names)
+    if card.empty:
+        print(f"No decision points for pitcher {a.pitcher} in game {a.game_pk} (not that game's starter, or out before the second time through).")
+        return
+    print(f"{names.get(a.pitcher, a.pitcher)}, game {a.game_pk}: cost vs. the average reliever, runs per 100 PAs "
+          "(positive = the reliever is expected to be better); index at face value in brackets")
+    for _, r in card.iterrows():
+        nxt = "; ".join(f"{r[f'hitter_{j}']} ({r[f'times_{j}']}): {r[f'cost_base_{j}']:+.1f} [{r[f'cost_index_{j}']:+.1f}], idx {r[f'idx_{j}']:.1f}"
+                        for j in (1, 2, 3))
+        print(f"  after {r['after_bf']:>2} | inn {r['inning']} {r['outs']} out | {r['pitches']:>3} p | "
+              f"{'PULLED ' if r['removed'] else ''}{nxt}")
+
+def cmd_reliability(a: argparse.Namespace) -> None:
+    from baseball.evaluation import reliability as R
+
+    seasons = list(range(a.season - a.years + 1, a.season + 1))
+    res = R.run(seasons, reps=a.reps, boot=a.boot, reuse_sums=a.reuse, ship=a.ship)
+    print(f"Figure: {R.figure()}")
+    p = res["params"]
+    p = p[p["group"].eq("ALL")]
+    print("\nM = sample for r = 0.5 (regress halfway); rho = year-to-year true-talent correlation")
+    for _, r in p.iterrows():
+        rho = f"{r['rho']:.2f}" if r.get("rho_use") == r.get("rho_use") else "  - "
+        signal = "no signal" if r["r_at_max"] < 0.2 else f"M {r['M']:>8,.1f} {r['unit']}"
+        print(f"  {r['metric']:<26} {signal:<45} rho {rho}")
+    v = res["validation"]
+    for test in ("within", "next"):
+        t = v[v["test"].eq(test)]
+        print(f"\nOut of sample ({test}): regressing beat raw for {int((t['cut_pct'] > 0).sum())} of {int(t['cut_pct'].notna().sum())} metrics; "
+              f"median RMSE cut {t['cut_pct'].median():.1f}%; 95% interval coverage (median) {100 * t['cover95'].median():.0f}%")
+
+
+def cmd_regress(a: argparse.Namespace) -> None:
+    from baseball.evaluation.reliability import load_params, regress
+
+    params = load_params()
+    if a.metric not in params.index:
+        sys.exit(f"Unknown metric {a.metric}. Examples: {', '.join(params.index[:5])}, pitcher/FF/velo")
+    mean = a.mean if a.mean is not None else float(params.loc[a.metric, "league_mean_last"])
+    out = regress(a.metric, a.observed, a.n, mean, horizon=a.horizon)
+    print(f"{a.metric}: observed {a.observed} on n = {a.n:g}, league mean {mean:.4f}, horizon {a.horizon}")
+    print(out.round(4).to_string(index=False))
+
+
 def cmd_people(a: argparse.Namespace) -> None:
     from baseball.ingest import people
 
@@ -227,6 +365,65 @@ def main(argv: list[str] | None = None) -> None:
     fm.add_argument("season", type=int)
     fm.add_argument("--years", type=int, default=3, help="seasons to pool, ending at <season> (default 3)")
     fm.set_defaults(func=cmd_familiarity)
+
+    cb = sub.add_parser("cbt", help="Competitive Balance Tax bill for a CBT payroll ($M)")
+    cb.add_argument("payroll", type=float)
+    cb.add_argument("years_over", type=int, help="consecutive seasons over, counting this one")
+    cb.add_argument("--season", type=int, default=2026)
+    cb.add_argument("--threshold", type=float, help="required for 2027+ (no agreement yet)")
+    cb.set_defaults(func=cmd_cbt)
+
+    cc = sub.add_parser("cbt-check", help="the engine against the real 2025 luxury-tax bills")
+    cc.set_defaults(func=cmd_cbt_check)
+
+    sv = sub.add_parser("service", help="service time -> arbitration, free agency and control")
+    sv.add_argument("service", help="years.days, e.g. 2.142")
+    sv.add_argument("season", type=int, help="the season that service is through")
+    sv.add_argument("--days", help="service days in each future season, comma-separated (default 172 each)")
+    sv.add_argument("--days-last", type=int, default=172, help="days in <season> (Super Two needs 86+)")
+    sv.add_argument("--cutoff", help="Super Two cutoff (default: the published one for <season>+1, if any)")
+    sv.set_defaults(func=cmd_service)
+
+    rc = sub.add_parser("roster-cases", help="the 2025 tax check and the Skenes extension memo numbers")
+    rc.set_defaults(func=cmd_roster_cases)
+
+    lv = sub.add_parser("levers", help="which pitch-design changes stick and pay (pools the season and the two before)")
+    lv.add_argument("season", type=int)
+    lv.set_defaults(func=cmd_levers)
+
+    ip = sub.add_parser("idp", help="progress on an individual development plan (YAML) from pitch data")
+    ip.add_argument("plan", help="plan file, e.g. examples/idp-fictional.yaml")
+    ip.add_argument("--as-of", default=None, help="review date (default: the plan's end)")
+    ip.add_argument("--out", default=None, help="write the review markdown here")
+    ip.add_argument("--figure", default=None, help="write the progress figure (PNG) here")
+    ip.set_defaults(func=cmd_idp)
+
+    hk = sub.add_parser("hook", help="the exposure-aware hook: does what a hitter has seen predict the next PA, and do managers price it?")
+    hk.add_argument("season", type=int)
+    hk.set_defaults(func=cmd_hook)
+
+    hc = sub.add_parser("hook-card", help="the hook card for one start (run `bb hook <season>` first)")
+    hc.add_argument("game_pk", type=int)
+    hc.add_argument("pitcher", type=int, help="MLBAM id of the starter")
+    hc.add_argument("--season", type=int, default=2026)
+    hc.set_defaults(func=cmd_hook_card)
+
+    rl = sub.add_parser("reliability", help="the Reliability Atlas: which numbers to trust, and how far to regress them")
+    rl.add_argument("season", type=int)
+    rl.add_argument("--years", type=int, default=3, help="seasons to pool, ending at <season> (default 3)")
+    rl.add_argument("--reps", type=int, default=200, help="random game splits (default 200)")
+    rl.add_argument("--boot", type=int, default=100, help="bootstrap draws of players (default 100)")
+    rl.add_argument("--reuse", action="store_true", help="refit from the saved split sums instead of re-splitting")
+    rl.add_argument("--ship", action="store_true", help="also replace the constants shipped with the code (after review only)")
+    rl.set_defaults(func=cmd_reliability)
+
+    rg = sub.add_parser("regress", help="regress a player's number with the atlas constants")
+    rg.add_argument("metric", help="e.g. hitter/whiff, pitcher/CH/whiff, hitter/bat_speed")
+    rg.add_argument("observed", type=float, help="the player's value (rates as proportions: 0.31)")
+    rg.add_argument("n", type=float, help="his sample, in the metric's own events")
+    rg.add_argument("--mean", type=float, help="the mean to regress toward (default: last season's league mean)")
+    rg.add_argument("--horizon", default="season", choices=["season", "rest_of_season", "next_season"])
+    rg.set_defaults(func=cmd_regress)
 
     pe = sub.add_parser("people", help="player names and ids from the Chadwick register (data/people/)")
     pe.set_defaults(func=cmd_people)

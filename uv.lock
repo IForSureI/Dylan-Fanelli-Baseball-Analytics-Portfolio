@@ -158,6 +158,7 @@ dependencies = [
     { name = "pdfplumber" },
     { name = "pyarrow" },
     { name = "pybaseball" },
+    { name = "pyyaml" },
     { name = "scikit-learn" },
     { name = "seaborn" },
 ]
@@ -176,6 +177,7 @@ requires-dist = [
     { name = "pdfplumber", specifier = ">=0.11" },
     { name = "pyarrow", specifier = ">=17" },
     { name = "pybaseball", specifier = ">=2.2.7" },
+    { name = "pyyaml", specifier = ">=6" },
     { name = "scikit-learn", specifier = ">=1.5" },
     { name = "seaborn", specifier = ">=0.13" },
 ]
