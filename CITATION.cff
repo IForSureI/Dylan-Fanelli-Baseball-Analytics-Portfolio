@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you refer to this work, cite it as below. All rights reserved; see LICENSE."
+title: "Baseball research: Dylan Fanelli"
+abstract: "Baseball-operations research and tools built on every public pitch of 2024-2026: pitch familiarity, the exposure-aware hook, the Reliability Atlas, pitch-design levers, a roster and CBA engine, and a bullpen acquisition memo."
+type: software
+authors:
+  - given-names: Dylan
+    family-names: Fanelli
+repository-code: "https://github.com/IForSureI/Baseball"
+date-released: 2026-10-13
+keywords:
+  - baseball
+  - sabermetrics
+  - statcast
+  - baseball-operations

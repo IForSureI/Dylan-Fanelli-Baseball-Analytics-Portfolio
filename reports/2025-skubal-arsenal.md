@@ -122,3 +122,6 @@ League whiff rates below are approximate, from the sabermetrics reference: chang
   uv run bb arsenal skubal tarik 2025 --phase postseason
   uv run bb compare skubal tarik 2024 2025
   ```
+
+---
+© 2026 Dylan Fanelli. All rights reserved. See [LICENSE](../LICENSE).

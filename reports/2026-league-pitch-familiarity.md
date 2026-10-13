@@ -283,3 +283,6 @@ uv run bb familiarity 2026  # pools 2024-26; tables, page and figure -> data/edg
 - **Player names in the example:** MLB Stats API (statsapi.mlb.com).
 - **Background on the times-through-the-order penalty:** Tom Tango, Mitchel Lichtman and Andrew Dolphin, *The Book: Playing the Percentages in Baseball* (2007); Ryan Brill, Sameer Deshpande and Abraham Wyner, "A Bayesian analysis of the time through the order penalty in baseball," *Journal of Quantitative Analysis in Sports* (2023).
 - **Release tells and expected whiffs:** this repo's edge engine (`data/edge/2026/`; Edge Board).
+
+---
+© 2026 Dylan Fanelli. All rights reserved. See [LICENSE](../LICENSE).

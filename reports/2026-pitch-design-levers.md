@@ -336,3 +336,6 @@ uv run bb idp examples/idp-fictional.yaml                   # the fictional exam
 - **Matching:** Stefano Iacus, Gary King and Giuseppe Porro, "Causal Inference without Balance Checking: Coarsened Exact Matching," *Political Analysis* 20(1), 2012.
 - **Clustered standard errors and few-cluster t critical values:** A. Colin Cameron and Douglas Miller, "A Practitioner's Guide to Cluster-Robust Inference," *Journal of Human Resources* 50(2), 2015.
 - **Expected whiffs, league baselines and the familiarity results cited:** this repo's edge engine and `reports/2026-league-pitch-familiarity.md`.
+
+---
+© 2026 Dylan Fanelli. All rights reserved. See [LICENSE](../LICENSE).

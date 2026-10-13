@@ -345,3 +345,6 @@ uv run bb hook-card 823907 669373      # the card for Skubal's September 3, 2026
 - **The per-pitch familiarity costs:** this repo's [pitch-type familiarity study](2026-league-pitch-familiarity.md) (2026-10-12), re-estimated here on 2024–25.
 - **Times through the order and leverage:** Tom Tango, Mitchel Lichtman and Andrew Dolphin, *The Book: Playing the Percentages in Baseball* (2007).
 - **The continuous decline across batters faced:** Ryan Brill, Sameer Deshpande and Abraham Wyner, "A Bayesian analysis of the time through the order penalty in baseball," *Journal of Quantitative Analysis in Sports* (2023).
+
+---
+© 2026 Dylan Fanelli. All rights reserved. See [LICENSE](../LICENSE).

@@ -716,3 +716,6 @@ uv run pytest tests/test_reliever.py tests/test_acquisition.py
   - MLB's cap proposal: Dayn Perry, CBS Sports (May 28, 2026)
   - The rest of the labor background: [the roster and CBA memo](2026-roster-cba-engine.md)
 - **This repo's studies:** [Reliability Atlas](2026-reliability-atlas.md), [pitch familiarity](2026-league-pitch-familiarity.md), [pitch-design levers](2026-pitch-design-levers.md), the edge engine (LOG.md, 2026-10-12).
+
+---
+© 2026 Dylan Fanelli. All rights reserved. See [LICENSE](../LICENSE).

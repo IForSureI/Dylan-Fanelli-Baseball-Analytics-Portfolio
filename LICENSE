@@ -1,0 +1,23 @@
+Copyright (c) 2026 Dylan Fanelli. All rights reserved.
+
+This repository is published so that it can be read and evaluated. You may view
+its source code, reports and figures on GitHub. No other rights are granted.
+
+Without the prior written permission of Dylan Fanelli, you may not copy, modify,
+merge, publish, distribute, sublicense, sell or otherwise use this code, these
+reports or these figures, in whole or in part, and you may not present any of
+it as your own work.
+
+Forking this repository on GitHub is allowed only to the extent GitHub's Terms
+of Service require. A fork grants no license to use, modify or redistribute any
+of its contents.
+
+The pitch data this code works with comes from public sources (Statcast via
+Baseball Savant; player names from the Chadwick Bureau register, CC BY 4.0). That
+data is not included in this repository, and those sources keep their own terms.
+
+To ask for permission, contact Dylan Fanelli: https://www.linkedin.com/in/dylanfanelli/
+
+THE CONTENTS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY ARISING FROM THE USE OF THESE CONTENTS.

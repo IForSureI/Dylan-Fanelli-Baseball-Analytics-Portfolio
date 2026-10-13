@@ -520,3 +520,6 @@ uv run bb regress hitter/whiff 0.40 50 --horizon next_season
 - **Adam Salorio,** "Examining Swing Path Tilt," June 6, 2025 ([link](https://adamsalorio.substack.com/p/examining-swing-path-tilt)).
 - **Owen McGrattan,** "Stuff+, Location+, and Pitching+ Primer," *FanGraphs Library*, March 10, 2023 ([link](https://library.fangraphs.com/pitching/stuff-location-and-pitching-primer)).
 - **Prior-work quotes** were re-checked against the pages on 2026-10-13.
+
+---
+© 2026 Dylan Fanelli. All rights reserved. See [LICENSE](../LICENSE).

@@ -388,3 +388,6 @@ uv run pytest tests/test_roster_service.py tests/test_roster_money.py
   - Skubal: AP via WTOP, Feb. 2026
   - Guerrero: CBS Sports (Matt Snyder), Apr. 9, 2025
 - **2025-26 offseason dates:** Detroit Tigers On SI, offseason calendar (undated, fall 2025).
+
+---
+© 2026 Dylan Fanelli. All rights reserved. See [LICENSE](../LICENSE).

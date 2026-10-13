@@ -2,6 +2,12 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-10-13 (late morning): Published for viewing
+**Decided**
+- The repository goes public so clubs can read it. All rights reserved: `LICENSE` permits viewing only; copying, modifying or reusing the code, reports or figures needs written permission.
+- `CITATION.cff` puts a "Cite this repository" button on the page. Every report and the README end with a copyright line.
+- `main` is protected by a ruleset: no force-pushes, no deletion.
+
 ## 2026-10-13 (morning): A claims audit of the summaries
 **Checked**
 - Every summary number in the README, the portfolio page and this log was re-read against its full report. Four summaries said more than their reports do, and were tightened:
