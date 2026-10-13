@@ -6,6 +6,7 @@
   uv run bb compare skubal tarik 2024 2025  his arsenal in two seasons side by side, with significance
   uv run bb pull-league 2025                every pitch of a season, month by month (resumable)
   uv run bb edge 2026                       run the edge engine on 2026 (2024-25 for validation)
+  uv run bb board 2026                      build the Edge Board page from the engine's outputs
   uv run bb db                              what is in the warehouse
   uv run bb db rebuild                      rebuild the warehouse from the cached pulls in data/raw/
 """
@@ -114,6 +115,12 @@ def cmd_slim(a: argparse.Namespace) -> None:
     print(f"{a.season}: {len(paths)} slim parts in data/slim/")
 
 
+def cmd_board(a: argparse.Namespace) -> None:
+    from baseball.edge.board import build
+
+    print(f"Edge Board: {build(a.season)}")
+
+
 def cmd_db(a: argparse.Namespace) -> None:
     con = warehouse.connect()
     if a.action == "rebuild":
@@ -157,6 +164,10 @@ def main(argv: list[str] | None = None) -> None:
     sl = sub.add_parser("slim", help="write the compact engine copy of a season (data/slim/)")
     sl.add_argument("season", type=int)
     sl.set_defaults(func=cmd_slim)
+
+    bd = sub.add_parser("board", help="build the Edge Board page (data/edge/<season>/edge-board.html)")
+    bd.add_argument("season", type=int)
+    bd.set_defaults(func=cmd_board)
 
     d = sub.add_parser("db", help="what is in the warehouse")
     d.add_argument("action", nargs="?", choices=["rebuild"])

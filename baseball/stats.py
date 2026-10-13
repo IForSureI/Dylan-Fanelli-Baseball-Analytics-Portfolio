@@ -55,3 +55,41 @@ def benjamini_hochberg(p_values) -> list[float]:
     out[order] = np.minimum(ranked, 1.0)
     q[ok] = out
     return q.tolist()
+
+
+def clustered_wls(y, X, w, clusters):
+    """Weighted least squares with standard errors clustered by group (e.g. pitcher).
+
+    Use when rows aren't independent: the same pitcher's pitches, or the same pitch across seasons.
+    Returns (beta, se). Small-sample factor G/(G-1) * (n-1)/(n-k).
+    """
+    import numpy as np
+
+    y, X, w = np.asarray(y, float), np.asarray(X, float), np.asarray(w, float)
+    Xw = X * w[:, None]
+    bread = np.linalg.pinv(X.T @ Xw)
+    beta = bread @ (Xw.T @ y)
+    e = y - X @ beta
+    meat = np.zeros((X.shape[1], X.shape[1]))
+    clusters = np.asarray(clusters)
+    groups = np.unique(clusters)
+    for g in groups:
+        m = clusters == g
+        s = (Xw[m] * e[m][:, None]).sum(axis=0)
+        meat += np.outer(s, s)
+    n, k, G = len(y), X.shape[1], len(groups)
+    adj = (G / max(G - 1, 1)) * ((n - 1) / max(n - k, 1))
+    cov = adj * bread @ meat @ bread
+    return beta, np.sqrt(np.diag(cov))
+
+
+def wls_loo_rmse(y, X, w):
+    """Leave-one-out RMSE of a weighted least-squares fit (closed form via leverage), weighted by w."""
+    import numpy as np
+
+    y, X, w = np.asarray(y, float), np.asarray(X, float), np.asarray(w, float)
+    Xw = X * np.sqrt(w)[:, None]
+    H = Xw @ np.linalg.pinv(Xw.T @ Xw) @ Xw.T
+    beta = np.linalg.pinv(X.T @ (X * w[:, None])) @ (X.T @ (w * y))
+    e = (y - X @ beta) / (1 - np.diag(H))
+    return float(np.sqrt(np.average(e**2, weights=w)))

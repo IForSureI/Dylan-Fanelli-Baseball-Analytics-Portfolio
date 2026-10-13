@@ -180,11 +180,15 @@ def persistent_gaps(tables: dict[int, pd.DataFrame], min_swings: int = MIN_SWING
 
 
 def validate_two_year(t2: pd.DataFrame, t1: pd.DataFrame, t0: pd.DataFrame, min_swings: int = 60) -> dict:
-    """Fit next-season whiff% from the last two seasons' actual and last season's expected whiff%.
+    """How well do different inputs predict next season's whiff%? Every model is a fitted (regressed)
+    weighted regression on the same pitches, scored leave-one-out so the comparison is out of sample.
 
-    t2, t1, t0: pitch tables for seasons s-2, s-1 and s (the outcome). Returns weights and RMSE next to
-    the one-season blend on the same pitches, so the two-year version is used only if it is better.
+    t2, t1, t0: pitch tables for seasons s-2, s-1 and s (the outcome).
+    Models: last season only; last two seasons; last season + expected; last two seasons + expected.
+    The difference between the last two isolates what the physics adds beyond a second season of results.
     """
+    from baseball.stats import wls_loo_rmse
+
     k = ["pitcher", "pitch_type"]
     cols = k + ["whiff_pct", "x_whiff_pct", "swings"]
     m = (t2[t2["swings"] >= min_swings][cols].merge(t1[t1["swings"] >= min_swings][cols], on=k, suffixes=("_2", "_1"))
@@ -192,18 +196,27 @@ def validate_two_year(t2: pd.DataFrame, t1: pd.DataFrame, t0: pd.DataFrame, min_
     y = m["whiff_pct"].to_numpy()
     w = np.sqrt(np.minimum(m["swings_1"], m["swings"]).to_numpy())
 
-    def fit(names):
-        A = np.column_stack([np.ones(len(m))] + [m[c].to_numpy() for c in names])
-        c, *_ = np.linalg.lstsq(A * w[:, None], y * w, rcond=None)
-        return c, float(np.sqrt(np.average((y - A @ c) ** 2, weights=w)))
+    def design(names):
+        return np.column_stack([np.ones(len(m))] + [m[c].to_numpy() for c in names])
 
-    c1, r1 = fit(["whiff_pct_1", "x_whiff_pct_1"])
-    c2, r2 = fit(["whiff_pct_1", "whiff_pct_2", "x_whiff_pct_1"])
-    c0, r0 = fit(["whiff_pct_1"])
+    models = {
+        "last_season": ["whiff_pct_1"],
+        "two_seasons": ["whiff_pct_1", "whiff_pct_2"],
+        "last_plus_expected": ["whiff_pct_1", "x_whiff_pct_1"],
+        "two_seasons_plus_expected": ["whiff_pct_1", "whiff_pct_2", "x_whiff_pct_1"],
+    }
+    loo = {name: wls_loo_rmse(y, design(cols_), w) for name, cols_ in models.items()}
+    A = design(models["two_seasons_plus_expected"])
+    c, *_ = np.linalg.lstsq(A * np.sqrt(w)[:, None], y * np.sqrt(w), rcond=None)
+    raw_last = float(np.sqrt(np.average((y - m["whiff_pct_1"].to_numpy()) ** 2, weights=w)))
     return {
         "matched_pitches": int(len(m)),
-        "rmse_actual_only": r0, "rmse_one_year_blend": r1, "rmse_two_year_blend": r2,
-        "weights": {"intercept": float(c2[0]), "actual_last": float(c2[1]), "actual_prior": float(c2[2]), "x_whiff_last": float(c2[3])},
+        "rmse_raw_last_season": raw_last,
+        "loo_rmse": loo,
+        "gain_vs_last_season_pct": 100 * (1 - loo["two_seasons_plus_expected"] / loo["last_season"]),
+        "gain_from_expected_pct": 100 * (1 - loo["two_seasons_plus_expected"] / loo["two_seasons"]),
+        "weights": {"intercept": float(c[0]), "actual_last": float(c[1]), "actual_prior": float(c[2]), "x_whiff_last": float(c[3])},
+        "rmse_weighting": "weighted by sqrt(min swings in the last season and the outcome season)",
     }
 
 
@@ -211,7 +224,8 @@ def project_two_year(t_prior: pd.DataFrame, t_last: pd.DataFrame, weights: dict,
     """Next-season whiff% for every pitch in the last season. Two-year weights where the pitch has a
     prior season with enough swings, the one-year blend otherwise."""
     out = project(t_last, one_year_blend).assign(proj_basis="one season")
-    prior = t_prior[t_prior["swings"] >= MIN_SWINGS].set_index(["pitcher", "pitch_type"])["whiff_pct"].rename("whiff_pct_prior")
+    # same 60-swing floor the weights were fit on
+    prior = t_prior[t_prior["swings"] >= 60].set_index(["pitcher", "pitch_type"])["whiff_pct"].rename("whiff_pct_prior")
     out = out.join(prior, on=["pitcher", "pitch_type"])
     has = out["whiff_pct_prior"].notna()
     out.loc[has, "proj_whiff_pct"] = (weights["intercept"] + weights["actual_last"] * out.loc[has, "whiff_pct"]

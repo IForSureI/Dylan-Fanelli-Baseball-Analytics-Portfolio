@@ -24,6 +24,6 @@ for S in $((SEASON - 2)) $((SEASON - 1)); do      # earlier seasons: only fill g
   caffeinate -i uv run bb pull-league "$S" && uv run bb slim "$S"
 done
 caffeinate -i uv run bb pull-league "$SEASON" --refresh-recent && uv run bb slim "$SEASON"
-caffeinate -i uv run bb edge "$SEASON"
+caffeinate -i uv run bb edge "$SEASON" && uv run bb board "$SEASON"
 
 echo "=== Done $(date) ==="

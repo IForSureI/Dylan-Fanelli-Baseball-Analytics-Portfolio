@@ -67,6 +67,7 @@ def test_two_year_validation_and_projection():
         tabs[season] = pitch_table(s, fit_crossfit(s)[0])
     v = validate_two_year(tabs[2024], tabs[2025], tabs[2026])
     assert v["matched_pitches"] > 50 and set(v["weights"]) == {"intercept", "actual_last", "actual_prior", "x_whiff_last"}
+    assert set(v["loo_rmse"]) == {"last_season", "two_seasons", "last_plus_expected", "two_seasons_plus_expected"}
     one = validate(tabs[2025], tabs[2026])["blend"]
     p = project_two_year(tabs[2025], tabs[2026], v["weights"], one)
     assert (p["proj_basis"] == "two seasons").mean() > 0.9 and p["proj_whiff_pct"].notna().all()

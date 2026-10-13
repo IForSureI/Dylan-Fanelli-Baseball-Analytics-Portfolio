@@ -207,25 +207,35 @@ def score_shifts(shifts_df: pd.DataFrame, swings: pd.DataFrame) -> pd.DataFrame:
     """Add two judgments to each detected change.
 
     - x_whiff_before / _after / x_whiff_change: the stuff model's expected whiff% for the pitch on either
-      side of the split. Physics-based, so far less noisy than actual whiffs: it says whether the change
-      made the pitch better by its shape, before results have had time to show it.
+      side of the split, at a FIXED batter-hand mix (the pitch's full-season same-hand share). The model
+      knows whether the hitter is same-handed, so without fixing the mix, simply throwing a slider to
+      more opposite-handed hitters would read as the pitch getting worse.
     - whiff_q: false-discovery-rate q-value for the actual whiff change across all changes tested.
-    `swings` must carry pitcher, pitch_type, game_date and x_whiff (stuff.prepare + fit_crossfit).
+    `swings` must carry pitcher, pitch_type, game_date, same_hand and x_whiff (stuff.prepare + fit_crossfit).
     """
     from baseball.stats import benjamini_hochberg
 
     out = shifts_df.copy()
     if out.empty:
         return out
-    s = swings[["pitcher", "pitch_type", "game_date", "x_whiff"]].copy()
+    s = swings[["pitcher", "pitch_type", "game_date", "same_hand", "x_whiff"]].copy()
     s["game_date"] = pd.to_datetime(s["game_date"])
+    groups = {k: g for k, g in s.groupby(["pitcher", "pitch_type"])}
     before, after = [], []
     for row in out.itertuples():
-        g = s[(s["pitcher"] == row.pitcher) & (s["pitch_type"] == row.pitch_type)]
+        g = groups.get((row.pitcher, row.pitch_type))
+        if g is None:
+            before.append(np.nan); after.append(np.nan); continue
+        share = g["same_hand"].mean()
         split = pd.Timestamp(row.split_date)
-        b, a = g.loc[g["game_date"] < split, "x_whiff"], g.loc[g["game_date"] >= split, "x_whiff"]
-        before.append(100 * b.mean() if len(b) else np.nan)
-        after.append(100 * a.mean() if len(a) else np.nan)
+        vals = []
+        for side in (g[g["game_date"] < split], g[g["game_date"] >= split]):
+            by = side.groupby("same_hand")["x_whiff"].mean()
+            if len(by) == 2:
+                vals.append(100 * (share * by.get(1) + (1 - share) * by.get(0)))
+            else:
+                vals.append(100 * side["x_whiff"].mean() if len(side) else np.nan)
+        before.append(vals[0]); after.append(vals[1])
     out["x_whiff_before"] = before
     out["x_whiff_after"] = after
     out["x_whiff_change"] = out["x_whiff_after"] - out["x_whiff_before"]

@@ -4,6 +4,9 @@ Dylan Fanelli's baseball operations workspace: the data, tools and written work 
 
 It's organized around the jobs a front office does: getting data in, evaluating players, developing them, building a roster, and running the business. Each analysis is a tested library function first, so the toolkit grows and later work builds on earlier work.
 
+## The Edge Board
+The edge engine runs league-wide detectors on every pitch of the last three seasons: release tells, hidden in-season changes, stuff vs. results, and validated next-season projections. `uv run bb edge 2026 && uv run bb board 2026` builds the page. A monthly job keeps it current.
+
 ## Reports
 | Date | Report |
 |---|---|
@@ -14,6 +17,7 @@ It's organized around the jobs a front office does: getting data in, evaluating 
 |---|---|
 | **Data** | Statcast pulls cached locally; a DuckDB warehouse that skips duplicate pitches, adapts to new Statcast columns, and logs every load |
 | **Evaluation** | Arsenal tables in pandas and SQL (cross-checked by tests), outcome metrics, usage by batter handedness, season-vs-season comparison with significance tests, movement charts |
+| **Edge engine** | Release tells, hidden in-season changes, expected whiffs cross-fitted by pitcher, persistent gaps, two-season projections, league baselines, the Edge Board |
 | **Development** | Planned |
 | **Roster** | Planned |
 | **Business** | Planned |
@@ -27,7 +31,7 @@ Requires [uv](https://docs.astral.sh/uv/).
 git clone https://github.com/IForSureI/Baseball.git ~/Baseball
 cd ~/Baseball
 uv sync
-uv run pytest                          # 19 tests
+uv run pytest                          # 44 tests
 uv run bb pull skubal tarik 2025       # Statcast pitcher-season into the warehouse
 uv run bb arsenal skubal tarik 2025    # his arsenal, regular season
 uv run bb compare skubal tarik 2024 2025
