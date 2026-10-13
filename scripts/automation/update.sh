@@ -28,6 +28,8 @@ done
 caffeinate -i uv run bb pull-league "$SEASON" --refresh-recent && uv run bb slim "$SEASON" && uv run bb seq "$SEASON"
 caffeinate -i uv run bb edge "$SEASON" && uv run bb board "$SEASON"
 caffeinate -i uv run bb familiarity "$SEASON"      # pitch-type familiarity study + page (data/edge/familiarity/)
+caffeinate -i uv run bb levers "$SEASON"           # pitch-design levers (data/edge/levers/; reports keep reviewed snapshots)
+caffeinate -i uv run bb hook "$SEASON"             # exposure-aware hook (data/edge/hook/)
 
 PRIVATE="$HOME/Baseball-private"
 if [ -d "$PRIVATE/.git" ]; then

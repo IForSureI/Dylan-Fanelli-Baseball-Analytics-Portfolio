@@ -35,6 +35,7 @@
      - The No. 8 hitter had seen none. He was the lineup's only left-handed hitter against a lefty, so that gap is partly platoon usage.
      - The league estimate holds with platoon fixed effects (−1.87 for changeups and splitters).
    - **The tool:** `exposures()` produces this ledger for every hitter.
+   - **Scope, from the follow-up study:** use it for pitch selection, not for the hook. [The exposure-aware hook](2026-exposure-aware-hook.md) tested whether the ledger predicts the next plate appearance's run value out of sample (2026), and it doesn't: the per-pitch whiff and run costs replicate, but they don't add up to a detectable plate-appearance cost once the pitcher's choices respond.
 2. **Sequence the bullpen by pitch type and hand.**
    - **Same type, same hand:** after a hitter has seen a pitcher's changeups, a same-handed reliever's changeup loses 0.79 points per earlier changeup (p < 0.001).
    - **Other hand:** the carryover is smaller (−0.32) and not significant (p = 0.17). The gap between the two hands isn't significant either, so hand is a lean, not a rule.

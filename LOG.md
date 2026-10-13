@@ -2,6 +2,54 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-10-13 (overnight): Four studies, reviewed: reliability, the hook, pitch-design levers, the roster engine
+Each study was built and integrated, then independently reviewed against its own outputs, fixed and re-checked.
+
+**Built**
+- **Reliability Atlas** (`baseball/evaluation/reliability.py`, `bb reliability`, `bb regress`):
+  - 29 metrics in 157 groups (hitters including bat tracking and swing path; pitchers overall and by pitch type)
+  - split-half by game; year-to-year rho; in-season drift with intervals
+  - a two-level noise model for pitch physics (day and pitch)
+  - `regress()` with intervals for this season, the rest of it, and next season; constants ship in `reliability_params.json`
+- **The exposure-aware hook** (`baseball/edge/hook.py`, `bb hook`, `bb hook-card`): a per-hitter exposure index from the familiarity costs, 2026 calibration out of sample, the starter-removal model, and a hook card against a reliever baseline.
+- **Pitch-design levers and development plans** (`baseball/development/levers.py`, `idp.py`, `bb levers`, `bb idp`):
+  - **Levers:** league-net shape changes, noise thresholds, payoff per unit with regression to the mean handled, matching, placebo, persistence and validation.
+  - **Development plans:** written as YAML, with a progress engine that issues verdicts (including "inconclusive") and checks power when the plan is written.
+- **Roster and CBA engine** (`baseball/roster/`, `bb cbt`, `bb cbt-check`, `bb service`, `bb roster-cases`; closes #12):
+  - service time, Super Two, options, Rule 5, outright and 10-and-5 rights
+  - a luxury-tax engine validated on the real 2025 bills
+  - arbitration paths, surplus value, extension bands with labor-rule and injury scenarios, qualifying offers
+  - the Paul Skenes extension memo
+- **Data:** wider sequence copy (base/out state, score, launch angle, spray, woba values, swing path); `bb people` (Chadwick register names).
+- **Tests:** 187 (up from 66).
+
+**Answered**
+- **Regressing beats raw numbers out of sample.**
+  - **2026 halves:** 135 of 147 metrics better, median error cut 27%.
+  - **2025 → 2026:** 91 of 96 better.
+  - **Clean replication** (fit 2024, test 2025): 140 of 145 better.
+  - **Speed of stabilizing:** bat speed is reliable after about 3 competitive swings; wOBA needs about 500+ PA for r = 0.5.
+- **The familiarity cost doesn't carry to plate-appearance runs.** The 2026 calibration slope is −0.28 (SE 0.37). Managers show no response to it (MDE about 0.75 points). Keep exposure for pitch selection, not the hook.
+- **Pitch design:**
+  - **Four-seam ride:** +1.62 whiff points per 2 in, the best-supported lever.
+  - **Velocity:** pays in the data but fails the placebo (recovery not ruled out).
+  - **Slider levers:** pay but aren't shown to last.
+  - **Expected whiff:** the single change in expected whiff predicts better than any lever list.
+- **Skenes:** open at about $200M present value and walk away above about $215M, given illustrative odds of a major arm injury and of MLB's cap plan passing. His Rookie of the Year credit cost Pittsburgh a year of control.
+
+**Decided**
+- **Physics metrics are regressed by games, not pitches.**
+- **Exposure stays out of the hook.**
+
+**Learned**
+- **Independent review earned its keep on every study.**
+  - **Roster:** a ceiling defined one way and computed another changed the Skenes recommendation.
+  - **Reliability:** a noise model held for outcomes but broke for pitch physics.
+  - **Hook:** outcome noise was described as attenuation.
+  - **Levers:** a lever that fails its placebo was ranked first.
+- **A significant per-pitch effect isn't a plate-appearance forecast.** For small signals, use calibration slopes.
+- **"No sign" needs an interval narrower than the effects you care about.** Otherwise say "not detected", with the bound.
+
 ## 2026-10-12 (overnight): Does a pitch wear out? Pitch-type familiarity
 **Built**
 - **Sequence copy of the league data** (`bb seq`, `data/seq/`, about 3 MB parts): regular season with batter ids, plate location, run value and bat tracking. The slim engine copy has no batter ids.

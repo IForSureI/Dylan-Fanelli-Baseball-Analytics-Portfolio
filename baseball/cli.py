@@ -211,8 +211,9 @@ def cmd_levers(a: argparse.Namespace) -> None:
     ans = res["answer"]
     print(f"\nPayoff per unit of league-net shape change ({len(res['pairs']):,} pitch pairs), confirmed (q < 0.05):")
     for _, r in ans[ans["verdict"].eq("confirmed")].iterrows():
+        caveat = f"  [{r['caveat']}]" if isinstance(r.get("caveat"), str) and r["caveat"] else ""
         print(f"  {r['pitch_type']:<3} {r['change']:<52} whiff {r['whiff']:+.2f} pts (SE {r['whiff_se']:.2f}), "
-              f"run value {r['rv100']:+.2f}/100 (SE {r['rv100_se']:.2f})")
+              f"run value {r['rv100']:+.2f}/100 (SE {r['rv100_se']:.2f}){caveat}")
     v = res["validation"].set_index("pitch_type").loc["all"]
     print(f"\nOut of sample ({a.season - 1}->{a.season}): expected-whiff change removes {v['gain_physics_pct']:.1f}% of the "
           f"baseline's error; every lever {v['gain_levers_pct']:.1f}%")
@@ -293,7 +294,7 @@ def cmd_regress(a: argparse.Namespace) -> None:
     if a.metric not in params.index:
         sys.exit(f"Unknown metric {a.metric}. Examples: {', '.join(params.index[:5])}, pitcher/FF/velo")
     mean = a.mean if a.mean is not None else float(params.loc[a.metric, "league_mean_last"])
-    out = regress(a.metric, a.observed, a.n, mean, horizon=a.horizon)
+    out = regress(a.metric, a.observed, a.n, mean, horizon=a.horizon, games=a.games)
     print(f"{a.metric}: observed {a.observed} on n = {a.n:g}, league mean {mean:.4f}, horizon {a.horizon}")
     print(out.round(4).to_string(index=False))
 
@@ -423,6 +424,7 @@ def main(argv: list[str] | None = None) -> None:
     rg.add_argument("n", type=float, help="his sample, in the metric's own events")
     rg.add_argument("--mean", type=float, help="the mean to regress toward (default: last season's league mean)")
     rg.add_argument("--horizon", default="season", choices=["season", "rest_of_season", "next_season"])
+    rg.add_argument("--games", type=float, help="pitch physics only: games the n pitches came from (one outing = 1)")
     rg.set_defaults(func=cmd_regress)
 
     pe = sub.add_parser("people", help="player names and ids from the Chadwick register (data/people/)")
