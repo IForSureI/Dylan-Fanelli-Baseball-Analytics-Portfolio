@@ -299,6 +299,35 @@ def cmd_regress(a: argparse.Namespace) -> None:
     print(out.round(4).to_string(index=False))
 
 
+def cmd_compare_relievers(a: argparse.Namespace) -> None:
+    from pathlib import Path
+
+    from baseball.evaluation.reliever import compare_relievers, summary_view
+
+    res = compare_relievers(a.ids, a.season)
+    if res["summary"].empty:
+        sys.exit(f"None of {a.ids} pitched in {a.season} (check the ids with bb people / baseball.ingest.people.lookup).")
+    with pd.option_context("display.width", 250, "display.max_colwidth", 70):
+        print(f"Relievers, {a.season} regular season (data-informed, not a live look)\n")
+        print(summary_view(res["summary"]).to_string())
+        g = res["grades"].merge(res["summary"][["pitcher", "name"]], on="pitcher").sort_values(["name", "grade_present"], ascending=[True, False])
+        print("\nPitch grades (20-80 = 50 + 10z of the percentile among MLB pitches of the type, 50+ swings)")
+        print(g[["name", "pitch_type", "swings", "whiff_pct", "x_whiff_pct", "proj_whiff_pct", "grade_present",
+                 "grade_2027", "grade_stuff"]].round(1).to_string(index=False))
+    if a.out:
+        out = Path(a.out)
+        out.mkdir(parents=True, exist_ok=True)
+        for name, table in res.items():
+            table.to_csv(out / f"{name}.csv", index=False)
+        print(f"\nEvery table -> {out}/")
+
+
+def cmd_bullpen_case(a: argparse.Namespace) -> None:
+    from baseball.roster import bullpen_case
+
+    bullpen_case.main()
+
+
 def cmd_people(a: argparse.Namespace) -> None:
     from baseball.ingest import people
 
@@ -426,6 +455,15 @@ def main(argv: list[str] | None = None) -> None:
     rg.add_argument("--horizon", default="season", choices=["season", "rest_of_season", "next_season"])
     rg.add_argument("--games", type=float, help="pitch physics only: games the n pitches came from (one outing = 1)")
     rg.set_defaults(func=cmd_regress)
+
+    cr = sub.add_parser("compare-relievers", help="compare relievers: regressed results, stuff, velocity, workload, grades")
+    cr.add_argument("season", type=int)
+    cr.add_argument("ids", type=int, nargs="+", help="MLBAM pitcher ids (e.g. 670970 650556 664126)")
+    cr.add_argument("--out", help="also write every table as CSV to this folder")
+    cr.set_defaults(func=cmd_compare_relievers)
+
+    bc = sub.add_parser("bullpen-case", help="the 2026-27 bullpen acquisition memo's numbers and figure")
+    bc.set_defaults(func=cmd_bullpen_case)
 
     pe = sub.add_parser("people", help="player names and ids from the Chadwick register (data/people/)")
     pe.set_defaults(func=cmd_people)

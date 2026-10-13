@@ -2,6 +2,51 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-10-13: The capstone. A bullpen acquisition memo for the Rangers (closes #13 and #8)
+**Built**
+- **`baseball/evaluation/reliever.py`** (`bb compare-relievers <season> <id> ...`): one comparison table for any list of pitchers. It covers:
+  - regressed whiff, chase, CSW, zone, xwOBA on contact, hard-hit, ground-ball and run value
+  - stuff vs results by season, and the engine's 2027 whiff projection
+  - primary-fastball velocity against the league's change, and early vs late season against league relievers
+  - workload: back-to-backs, multi-inning outings, velocity on no rest, a leverage proxy
+  - platoon and usage by hand
+  - familiarity exposure, priced
+  - 2025 → 2026 lever changes with the study's evidence and year-two labels
+  - xwOBA difference tests (`xwoba_diff_test`)
+  - 20-80 grades per pitch (present, 2027, stuff), a control grade (unintentional walks, a stand-in for command) and a reliever OFP
+  - intentional walks and pitch-clock calls count as plate appearances, not pitches
+- **The 20-80 mapping** (`grade_from_percentile`): 50 + 10z of the percentile among MLB pitches of the type, documented and tested.
+- **`baseball/roster/acquisition.py`:** reliever pricing.
+  - **Projection:** relief run value weighted 5/4/3 and regressed, with replacement from fringe arms.
+  - **The 2025-26 reliever market line:** fit on 21 signings, with the comps and candidates projected the same way, a 95% prediction interval and the odds that a walk-away lands the player.
+  - **Contracts:** value at the market line (the engine's $/WAR is shown on a different, uncalibrated scale), partial-season availability, break-even AAV, qualifying-offer cost and a tax table.
+- **`baseball/roster/bullpen_case.py`** (`bb bullpen-case`): the memo's numbers and figure.
+- **Report:** `reports/2026-bullpen-acquisition-memo.md`, independently reviewed 2026-10-13 and revised.
+- **Tests:** 228 (up from 187).
+
+**Answered**
+- **Rangers need:** late-inning run prevention.
+  - **The fall:** the bullpen went from 4th in run value per 100 pitches (2025) to 24th (2026), and from 6th to 26th in late, close spots.
+  - **The departures:** Junis (mutual option) and Alexander (free agent) threw 27% of the late, close PAs; with Martin and Beeks, 35%.
+  - **Not a platoon need:** the xwOBA gap against right-handers (.318 vs .306) is not significant (p = 0.25).
+- **Recommendation:** bid on Adrián Morejón to his value.
+  - **Morejón:** four years, open at $60M, walk away above $72M (about $66M with a qualifying offer). Expect to land him about half the time; his expected price is $18.4M a year, with a 95% band of $7.4–29.3M, extrapolated past every comp.
+  - **Abreu:** the plan above that (two years, walk away above $25M).
+  - **Fairbanks:** not a 2027 option after thoracic outlet surgery (MLB.com, Sept. 19, 2026).
+- **Projected 2027 wins in the role each would fill** (rate-only intervals, which understate): Morejón 2.3 (B1), Abreu 1.5 (B2; 1.6 as B1), Fairbanks 0.24 (a third of a season).
+- **Where the tools disagree:**
+  - The engine's whiff projection ranks Abreu first (walks are invisible to it).
+  - The engine's $/WAR is on a different win scale than the memo's projection, so only the market line prices.
+  - The levers study likes Fairbanks's slider changes; the physics model doesn't.
+
+**Learned**
+- **The reliever market prices loosely on run value.** The 2025-26 line has R² 0.27 and a residual SD of $4.2M, so treat a reliever's "market price" as a band.
+- **The engine's $/WAR tiers aren't built for relievers** (FanGraphs' study excludes them), and a run-value win scale with a fringe-arm replacement level isn't fWAR. Price relievers on their own market line, with the comps and the player projected the same way.
+- **A walk-away at value is a coin flip on landing the player.** Say so, and price each step above it.
+- **Statcast intentional walks are "automatic_ball" rows with no pitch.** Dropping no-pitch rows silently loses every intentional walk (545 in 2026). Count them as plate appearances, not pitches.
+- **Health facts change a case.** Fairbanks's surgery (announced Sept. 19) wasn't in the first draft. Check public IL and surgery history for every candidate, with one rule for all.
+- **A source error:** Friars on Base (Sept. 9) lists Robert Suarez's Braves deal as four years and $60M, against three and $45M in the NBC/Yahoo tracker and amNY (Dec. 11, 2025). The tracker is used.
+
 ## 2026-10-13 (overnight): Four studies, reviewed: reliability, the hook, pitch-design levers, the roster engine
 Each study was built and integrated, then independently reviewed against its own outputs, fixed and re-checked.
 
