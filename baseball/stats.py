@@ -4,6 +4,9 @@
                       interval when the sample is small or the rate is near 0% or 100%.
 - two_proportion()  : is the change in a rate between two samples bigger than chance would give?
                       Two-sided z-test with a pooled proportion.
+- spearman_brown()  : reliability of a k-times-larger sample (steps a split-half r up to the whole).
+- fit_reliability_constant(): the M in r(n) = n / (n + M), the regression constant.
+- shrink()          : regress an observed average toward a prior with constant M.
 """
 from __future__ import annotations
 
@@ -91,6 +94,71 @@ def wls_loo_rmse(y, X, w):
     beta = np.linalg.pinv(X.T @ (X * w[:, None])) @ (X.T @ (w * y))
     e = (y - X @ beta) / (1 - np.diag(H))
     return float(np.sqrt(np.average(e**2, weights=w)))
+
+
+def spearman_brown(r, k):
+    """Reliability of a sample k times as large as the one with reliability r: k r / (1 + (k - 1) r).
+
+    Use it to step a split-half correlation up to the full sample: two halves of n/2 that correlate
+    at r give the reliability of n as 2r / (1 + r). It is exact under r(n) = n / (n + M), the model
+    the Reliability Atlas fits: spearman_brown(n / (n + M), k) == k n / (k n + M).
+    """
+    import numpy as np
+
+    r = np.asarray(r, dtype=float)
+    out = k * r / (1 + (k - 1) * r)
+    return float(out) if out.ndim == 0 else out
+
+
+def fit_reliability_constant(n, r, w=None, lo: float = 1e-3, hi: float = 1e7) -> float:
+    """The M in r(n) = n / (n + M) that best fits observed reliabilities (weighted least squares).
+
+    M is the sample at which reliability is 0.5: the regression constant, the number of league-average
+    observations to add before averaging (Tango's "regress halfway" point). The fit is a golden-section
+    search on log M, so it needs no extra dependency. Points with NaN are ignored.
+    """
+    import numpy as np
+
+    n, r = np.asarray(n, float), np.asarray(r, float)
+    w = np.ones_like(n) if w is None else np.asarray(w, float)
+    ok = np.isfinite(n) & np.isfinite(r) & np.isfinite(w) & (w > 0)
+    n, r, w = n[ok], r[ok], w[ok]
+    if len(n) == 0:
+        return float("nan")
+
+    def loss(log_m: float) -> float:
+        return float(np.sum(w * (r - n / (n + np.exp(log_m))) ** 2))
+
+    a, b = np.log(lo), np.log(hi)
+    g = (np.sqrt(5) - 1) / 2
+    c, d = b - g * (b - a), a + g * (b - a)
+    fc, fd = loss(c), loss(d)
+    for _ in range(200):
+        if fc < fd:
+            b, d, fd = d, c, fc
+            c = b - g * (b - a)
+            fc = loss(c)
+        else:
+            a, c, fc = c, d, fd
+            d = a + g * (b - a)
+            fd = loss(d)
+        if b - a < 1e-10:
+            break
+    return float(np.exp((a + b) / 2))
+
+
+def shrink(observed, n, prior_mean, m):
+    """Regress an observed average toward a prior mean: (n * observed + m * prior) / (n + m).
+
+    m is the regression constant (sample at which reliability is 0.5). The weight on the observation
+    is n / (n + m), which is also its reliability. Works on scalars or arrays; n = 0 returns the prior.
+    """
+    import numpy as np
+
+    observed, n = np.asarray(observed, float), np.asarray(n, float)
+    w = n / (n + m)
+    out = np.where(n > 0, w * np.nan_to_num(observed) + (1 - w) * prior_mean, prior_mean)
+    return float(out) if out.ndim == 0 else out
 
 
 def absorb(df, cols, fe, iters: int = 50, tol: float = 1e-9):
