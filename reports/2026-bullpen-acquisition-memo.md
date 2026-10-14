@@ -10,7 +10,7 @@
 
 ## Decision summary
 
-**To:** General manager · **From:** Dylan Fanelli, baseball operations · **Date:** 2026-10-13 · **Re:** Bid on Adrián Morejón to his value; expect Abreu about half the time
+**Compiled:** 2026-10-13 · **On:** Bid on Adrián Morejón to his value; expect Abreu about half the time
 
 **Recommendation.**
 - **Bid on Adrián Morejón.** Open at four years, $60M with a 2031 club option. Walk away above four years, $72M ($18M a year), which is his value to us at the reliever market's own price of a win.
