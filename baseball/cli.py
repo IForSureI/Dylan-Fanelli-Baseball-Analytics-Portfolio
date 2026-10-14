@@ -8,12 +8,15 @@
   uv run bb edge 2026                       run the edge engine on 2026 (2024-25 for validation)
   uv run bb board 2026                      build the Edge Board page from the engine's outputs
   uv run bb stuff-model 2026                train only the portable model (for TrackMan / Rapsodo data)
+  uv run bb trades                          the MLB trade graph: pull trades + WAR, build data/graph/, who trades with whom
+  uv run bb front-office                    front-office ties vs trade partners (Baseball-Reference pages, career histories)
   uv run bb db                              what is in the warehouse
   uv run bb db rebuild                      rebuild the warehouse from the cached pulls in data/raw/
 """
 from __future__ import annotations
 
 import argparse
+import itertools
 import sys
 
 import pandas as pd
@@ -335,6 +338,79 @@ def cmd_people(a: argparse.Namespace) -> None:
     print(f"{len(people.load(path)):,} people with MLBAM ids -> {path}")
 
 
+def cmd_trades(a: argparse.Namespace) -> None:
+    from baseball.roster import trades
+
+    if not a.no_pull:
+        trades.pull(refresh=a.refresh)
+    n = trades.build()
+    if a.report:
+        b = trades.breakdown()
+        with pd.option_context("display.width", 220, "display.max_columns", 20):
+            m = trades.rivalry_model()
+            print(f"\nModel (club effects, quasi-Poisson, dispersion {m['dispersion']}): same division {m['same_division']}, "
+                  f"same league {m['same_league']}; non-rival dispersion {m['dispersion_non_rival']}")
+            for k in ("by_type", "by_division", "by_window", "by_era", "by_subset"):
+                print(f"\n{k}\n" + b[k].drop(columns=["p_more"]).to_string(index=False))
+            w = b["by_window"].set_index(["window", "pairs_of"])
+            win = {k: w.loc[(k, "same division")] for k in ("deadline (Jul-Aug)", "offseason (Oct-Mar)", "rest of season (Apr-Jun, Sep)")}
+            for x, y in itertools.combinations(win, 2):
+                print(f"{x} vs {y} (rivals): ratio %.2f, p = %.3f" % trades.compare_rate_ratios(
+                    win[x].observed, win[x].rate_ratio, win[y].observed, win[y].rate_ratio, dispersion=m["dispersion"]))
+            print("\nlopsided\n" + b["lopsided"].to_string(index=False) + f"\nMann-Whitney p = {b['lopsided_p']:.2f}")
+            print("\nAngels-Braves across Minasian's tenure\n" + trades.pair_by_period("LAA", "ATL", ["2020-11-12", "2026-06-26"]).to_string(index=False))
+            print("\nBurst scan (most extreme window per pair)\n" + trades.burst_scan().head(6).to_string(index=False))
+            print(f"\nRandom 13-trade sets (Nov 2020 - June 2026) with a one-sided gap of 11.1+ WAR: {trades.side_gap_baseline():.1%}")
+            tran = trades.RAW / "tran.txt"
+            if tran.exists():
+                rc = trades.retrosheet_check(tran)
+                print("\nRetrosheet coverage (feed trades per Retrosheet trade)\n" + rc["coverage"].to_string(index=False))
+                print("\nRetrosheet last deals before Apr. 15, 2009 (C = conditional, T = trade)\n" + rc["last_before_2009"].to_string())
+                print("\nRetrosheet deals since Apr. 15, 2009\n" + rc["since_2009"].to_string())
+        print(f"\nFigure -> {trades.report_figure()}")
+    print("Trade graph -> data/graph/: " + ", ".join(f"{v:,} {k}" for k, v in n.items()))
+    pairs, rivals = trades.pair_excess()
+    print(f"\nDivision rivals: {rivals['observed']} trades vs {rivals['expected']} expected "
+          f"(rate ratio {rivals['rate_ratio']}, 95% CI {rivals['ci95'][0]}-{rivals['ci95'][1]}, "
+          f"{rivals['pairs_below']} of {rivals['pairs']} rival pairs below expected)")
+    cols = ["pair", "observed", "expected", "ratio", "q_more", "q_fewer"]
+    with pd.option_context("display.width", 200):
+        print("\nPairs that trade most beyond their activity:\n" + pairs.nsmallest(8, "p_more")[cols].round(3).to_string(index=False))
+        print("\nPairs that trade least:\n" + pairs.nsmallest(8, "p_fewer")[cols].round(3).to_string(index=False))
+    pairs.to_csv("data/graph/pair_excess.csv", index=False)
+    print(f"\nLoad into Neo4j: run {trades.CYPHER} (Neo4j's import folder is data/graph/).")
+
+
+def cmd_front_office(a: argparse.Namespace) -> None:
+    from baseball.roster import front_office as fo
+
+    if not a.no_pull:
+        print(f"{fo.pull():,} team pages fetched (cached in {fo.RAW}/)")
+    panel = fo.staff_panel()
+    print("Neo4j tables -> data/graph/: " + ", ".join(f"{v:,} {k}" for k, v in fo.export_graph_tables(panel=panel).items()))
+    for expanded in (False, True):
+        d = fo.build_panel(expanded=expanded)
+        print(f"\n=== {'Expanded with Baseball-Reference listings' if expanded else 'Researched decision-makers and careers'} ===")
+        with pd.option_context("display.width", 220):
+            for k, t in fo.report_tables(d).items():
+                print(f"\n{k}\n" + t.round(4).to_string(index=False))
+            if a.permute and not expanded:
+                for tie in ("tied", "protege"):
+                    print(f"\npermutation test, {tie}: {fo.permutation_p(d, tie, draws=a.permute)}")
+        if not expanded:
+            for label, kw in (("Only stints with stated years", {"certain_only": True}),
+                              ("September hires counted in that season", {"hire_cutoff": 10}),
+                              ("August hires counted from the next season", {"hire_cutoff": 8})):
+                c = fo.build_panel(**kw)
+                with pd.option_context("display.width", 220):
+                    print(f"\n=== {label} ===\n" + pd.concat([fo.fe_poisson(c, ["tied"]), fo.fe_poisson(c, ["protege"]),
+                                                            fo.fe_poisson(c, ["tied"], stricter=True).assign(term="tied, stricter SE"),
+                                                            fo.fe_poisson(c, ["protege"], stricter=True).assign(term="protege, stricter SE")]
+                                                           ).round(4).to_string(index=False))
+    print(f"\nFigure -> {fo.report_figure(fo.build_panel())}")
+    print(f"\nLoad into Neo4j: run {fo.Path(fo.__file__).with_name('front_office.cypher')} after trade_graph.cypher.")
+
+
 def cmd_db(a: argparse.Namespace) -> None:
     con = warehouse.connect()
     if a.action == "rebuild":
@@ -464,6 +540,17 @@ def main(argv: list[str] | None = None) -> None:
 
     bc = sub.add_parser("bullpen-case", help="the 2026-27 bullpen acquisition memo's numbers and figure")
     bc.set_defaults(func=cmd_bullpen_case)
+
+    tr = sub.add_parser("trades", help="the MLB trade graph (2009-): trades, WAR each club got, trade trees, who trades with whom")
+    tr.add_argument("--no-pull", action="store_true", help="rebuild from the files already in data/raw/trades/")
+    tr.add_argument("--refresh", action="store_true", help="re-pull every season's trades, not only the current one")
+    tr.add_argument("--report", action="store_true", help="also print the rivals report's tables and redraw its figure")
+    tr.set_defaults(func=cmd_trades)
+
+    fo_ = sub.add_parser("front-office", help="front-office ties vs trade partners: executives, careers, the tie models")
+    fo_.add_argument("--no-pull", action="store_true", help="use the cached team pages in data/raw/front_office/")
+    fo_.add_argument("--permute", type=int, default=0, help="also run the permutation test with this many draws (1,000 in the report; slow)")
+    fo_.set_defaults(func=cmd_front_office)
 
     pe = sub.add_parser("people", help="player names and ids from the Chadwick register (data/people/)")
     pe.set_defaults(func=cmd_people)

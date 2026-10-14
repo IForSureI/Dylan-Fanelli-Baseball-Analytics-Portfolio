@@ -1,0 +1,13 @@
+{
+  "_note": "Manual repairs for trades MLB's transaction feed records incompletely. Each entry adds player legs to an existing trade ID.",
+  "477603": {
+    "trade": "2021-01-07 Cleveland trades SS Francisco Lindor and RHP Carlos Carrasco to the Mets for SS Andres Gimenez, SS Amed Rosario, RHP Josh Wolf and OF Isaiah Greene",
+    "legs": [
+      {"player_id": 471911, "player_name": "Carlos Carrasco", "from_id": 114, "to_id": 121},
+      {"player_id": 665926, "player_name": "Andrés Giménez", "from_id": 121, "to_id": 114},
+      {"player_id": 642708, "player_name": "Amed Rosario", "from_id": 121, "to_id": 114},
+      {"player_id": 693309, "player_name": "Isaiah Greene", "from_id": 121, "to_id": 114}
+    ],
+    "unresolved": ["Josh Wolf (no MLB ID found; never reached MLB, 0 WAR either way)"]
+  }
+}

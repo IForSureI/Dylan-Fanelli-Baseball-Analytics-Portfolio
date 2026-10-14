@@ -2,6 +2,102 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-10-14: Front-office ties and trade partners, across all 30 clubs
+**Built**
+- **`baseball/roster/front_office.py`** (`bb front-office [--no-pull] [--permute N]`). It does six things:
+  - **Pulls the listings:** Baseball-Reference team pages, 1998–2026 (president, GM, farm and scouting directors). Pages are cached and merged into `data/raw/front_office/staff_panel.csv`.
+  - **Builds the decision-maker panel** from researched, dated roles.
+  - **Turns careers into seasons:** person-club-seasons, with business-side jobs dropped and consultants flagged.
+  - **Scores three ties per pair-season:** former employer, former colleagues and protégé.
+  - **Fits the models:** a Poisson model with pair and club-season fixed effects, standard errors clustered by pair (optionally with a stricter correction), and an event study.
+  - **Tests and outputs:** a rotation permutation test, the Neo4j tables and the figure.
+- **`baseball/roster/executive_careers.json`:** 115 decision-makers, 181 dated decision roles and 825 front-office stints. Each stint has a source URL; inferred years are flagged.
+- **`baseball/roster/front_office.cypher`:** loads the executives into Neo4j:
+  - `Executive` nodes
+  - `WORKED_FOR` relationships (club, seasons, role)
+  - `RAN` relationships (decision roles)
+- **Report:** `reports/2026-front-office-ties.md` and its figure, independently reviewed three times (Oct. 13–14), with every finding addressed. The rivals report's front-office lines were updated to match.
+- **Tests:** 14 in the new `tests/test_front_office.py`.
+
+**Answered**
+- **Front-office ties go with about 14–18% more trading within the same pair of clubs. Confirmed.**
+  - **The estimate:** 1.18 (1.04–1.34), p = 0.009; permutation p = 0.015 (1,000 rotations).
+  - **Robustness:** it holds without the Angels and Braves (1.16, p = 0.020), across pairs (1.15, p = 0.004), on stated-year stints only (p = 0.015) and under the earlier and an August dating rule (p = 0.023, 0.044).
+- **The protégé tie (a decision-maker facing his old boss) is borderline.**
+  - **The estimate:** 1.19, p = 0.054. The permutation test doesn't confirm it (p = 0.11).
+  - **Variants:** stronger with Baseball-Reference's listings (p = 0.013) and on stated-year stints (p = 0.029).
+  - **Without the Angels and Braves:** not significant (p = 0.15).
+- **No detected rise before a protégé tie forms** (leads 0.80–1.08). The kinds of tie can't be separated in a joint model.
+- **For scale:** division rivalry is −45%.
+
+**Decided**
+- **One season calendar:** October 1 starts the next season for trades and jobs alike.
+  - **Hires:** in September or later count from the next season, since 2.5% of trades fall in September.
+  - **Departures:** before April don't count that season.
+  - **Offseason-only roles** count for no season.
+- **Decision-makers** are researched, dated presidents of baseball operations and GMs. Baseball-Reference's listings are a sensitivity check, because they include business-side presidents and one owner.
+- **Protégé** means worked below the president/GM level in a season the other ran that front office. A GM under his own president doesn't count, and neither do successors, consultants or the same person at both clubs.
+- **Main test** is within-pair (pair and club-season fixed effects), backed by an event study and a rotation permutation test. Nested before/after windows were dropped.
+
+**Learned**
+- **Season alignment decides the answer.** Dating trades by calendar year scored a new decision-maker's first offseason deals with his old club as untied and hid the effect. The September-hire rule also moved results near 0.05, so three dating rules are reported (any tie 1.14–1.18, p = 0.009–0.044).
+- **Baseball-Reference team pages** list several people per role with notes in nested parentheses, and some names differ (Dave/David Dombrowski, Doug/Douglas Melvin, Mike/Michael Hill). They match the researched decision-makers in 532 of 540 club-seasons.
+- **Permutation runs** need single-threaded BLAS (`OMP_NUM_THREADS=1`). Two parallel jobs contending for threads ran several times slower.
+- **Stricter small-sample correction:** for this design, (N−1)/(N−K) widens standard errors by about 7%. It moves former employer in the main data (0.042 to 0.057) and three variant any-tie results across 0.05, but not the main any-tie result (0.014).
+
+## 2026-10-13: The MLB trade graph in Neo4j, and the report on who trades with whom
+**Built**
+- **Neo4j:** Neo4j Desktop with a local `baseball` instance (Neo4j 2026.09.0, APOC and Graph Data Science). Its import folder (`server.directories.import` in neo4j.conf) is `~/Baseball/data/graph`.
+- **`baseball/roster/trades.py`** (`bb trades [--no-pull] [--refresh] [--report]`): pulls every MLB trade from the MLB Stats API (the feed starts in 2009), Baseball-Reference WAR and, once, Retrosheet's transaction file. It writes the graph tables to `data/graph/`.
+  - **Size:** 3,290 trades, 6,163 player moves, 4,110 players, 6,597 club sides, 1,369 trade-tree links.
+  - **Value rule:** the WAR the acquiring club got from the player, from the trade through his continuous tenure there.
+  - **Tree value:** follows every flip of an acquired player. Each flip's return is shared by the number of players sent in it.
+  - **Pair analysis:**
+    - observed vs expected counts for all 435 pairs (configuration model, exact Poisson intervals, Benjamini-Hochberg q)
+    - a Poisson model with club effects and quasi-Poisson errors (`rivalry_model`)
+    - windows, eras and subsets (`breakdown`)
+    - pair periods (`pair_by_period`)
+    - a sliding-window burst scan (`burst_scan`)
+    - a random-trade baseline for WAR gaps (`side_gap_baseline`)
+    - the Retrosheet cross-check (`retrosheet_check`)
+- **`baseball/roster/trade_graph.cypher`:** loads `data/graph/` into Neo4j and is rerunnable.
+  - Nodes: `Team`, `Player`, `Trade`.
+  - Relationships: `MADE`, `MOVED`, `LED_TO`, `TRADED_WITH`.
+- **`baseball/roster/trade_patches.json`:** documented repairs for trades the MLB feed records incompletely.
+- **Report:** `reports/2026-trade-network-rivals.md` and its figure, independently reviewed twice on 2026-10-13, with every finding addressed.
+- **Monthly update:** `bb trades` added to `scripts/automation/update.sh`.
+- **Tests:** 12 new in `tests/test_trades.py`.
+
+**Answered**
+- **Division rivals trade with each other at 0.56 times the rate of other pairs.**
+  - **The model:** club effects, quasi-Poisson, 95% interval 0.49–0.65, p < 1e-10.
+  - **Raw counts:** 270 rival trades against 454.7 expected.
+  - **Breadth:** every division on its own, and 52 of 60 rival pairs below expectation, plus one tie.
+  - **It's the division, not the league:** same-league pairs are no different from interleague pairs (1.03, p = 0.53).
+  - **Never traded since 2009:** Dodgers-Giants, Guardians-Royals and Cubs-Cardinals. Retrosheet agrees through Dec. 2021.
+- **The deadline is the one window where rivals come closer to normal.** 0.73 vs 0.49 in the offseason (p = 0.010). The offseason and the rest of the season can't be told apart.
+- **Rival trades are no more lopsided than other trades.** The median realized-WAR gap is 0.28 for both (p = 0.79).
+- **Angels-Braves is the strongest burst of any pair in a scan of 435 pairs x 48 windows.**
+  - **The share:** Angels trades made with Atlanta rose from 7.2% to 22.0% (13 of 59) during Perry Minasian's tenure (Nov. 12, 2020 - June 26, 2026). Minasian had been Anthopoulos's assistant GM in Atlanta.
+  - **Not unique:** Dodgers-Phillies (2011-16) and Rangers-White Sox (2015-21) had bursts of similar size with no tie offered.
+  - **The WAR gap is ordinary:** in those 13 trades the Braves got 8.8 WAR and the Angels -2.4, almost all of it Iglesias. A gap that size turns up in 14% of random 13-trade sets.
+
+**Decided**
+- **Tracked files:** the graph tables live in `data/graph/` and are never committed. Neo4j reads them there.
+- **Coverage:** starts in 2009 because the MLB feed does. Retrosheet (deals through Dec. 2021, no longer maintained) is the route to earlier seasons.
+- **Headline estimate:** the club-effects model's rival contrast. The raw observed-to-expected ratio pushes non-rival pairs slightly above 1.0 because each club's total is fixed.
+
+**Learned**
+- **Feed quality:** the MLB feed leaves a club blank on some 2019-23 trade records and files 15 moves twice.
+  - **Duplicates:** the fuller record is kept.
+  - **Blanks:** filled from the player's last Baseball-Reference stint.
+  - **Missing players:** the Lindor trade's missing players are patched by hand, documented.
+- **Early coverage:** 2009-11 records far fewer minor-league deals than later seasons (1.15-1.34 feed trades per Retrosheet trade, vs 1.46-1.78).
+- **Exact intervals:** `poisson.interval` gives a distribution's quantiles, not a confidence interval for a rate. Use exact (Garwood) intervals.
+- **Overdispersion:** pair counts vary about 21% more than Poisson. State the dispersion and scale errors by it.
+- **Post hoc splits:** a split chosen after a scan finds a pair needs a scan-wide comparison, not a Bonferroni bar.
+- **Team codes:** Baseball-Reference uses OAK through 2024, ATH from 2025, and FLA through 2011.
+
 ## 2026-10-13 (late morning): Published for viewing
 **Decided**
 - The repository goes public so clubs can read it, as **IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio**: a fresh repository holding only the cleaned history (the original repository is kept private as an archive). All rights reserved: `LICENSE` permits viewing only; copying, modifying or reusing the code, reports or figures needs written permission.
