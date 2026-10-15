@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "If you refer to this work, cite it as below. All rights reserved; see LICENSE."
 title: "Dylan Fanelli Baseball Analytics Portfolio"
-abstract: "Baseball-operations research and tools built on every public pitch of 2024-2026 and every MLB trade since 2009: pitch familiarity, the exposure-aware hook, the Reliability Atlas, pitch-design levers, a roster and CBA engine, a bullpen acquisition memo, the MLB trade network and front-office ties."
+abstract: "Baseball-operations research and tools built on every public pitch of 2024-2026 and every MLB trade since 2009: pitch familiarity, the exposure-aware hook, the Reliability Atlas, pitch-design levers, a roster and CBA engine, a bullpen acquisition memo, a pro scouting report, the MLB trade network and front-office ties."
 type: software
 authors:
   - given-names: Dylan

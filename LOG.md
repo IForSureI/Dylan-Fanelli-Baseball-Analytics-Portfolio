@@ -2,6 +2,33 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-10-15: Pro scouting report on Adrián Morejón, and the delivery module
+**Built**
+- **`baseball/evaluation/delivery.py`** (`bb delivery <season> <pitcher> [--figure PATH --title TEXT]`): the tracking evidence behind a report's delivery notes. It does seven things:
+  - **Exact VAA** from Statcast's kinematics at the front of the plate.
+  - **A pitch profile:** velocity band and top, shape, extension, release point, arm angle, release scatter, VAA overall and upper third, zone and low rates, whiffs.
+  - **A slot check** against the primary pitch.
+  - **Release and arm-angle offsets** against each game's own fastballs.
+  - **League percentiles** for extension and arm angle (same hand), plus the median release scatter.
+  - **Primary-pitch velocity** by pitch number within the outing.
+  - **Usage by count state, and first-pitch strikes** against the league.
+- **Report:** `reports/2026-morejon-pro-scouting-report.md`, a one-page PDF and its figure. It has 20-80 present and future grades, OFP, a B1 role, risk, delivery, makeup (observed / reported / unknown), a preference statement against Abreu, and the look to take before the bid. Independently reviewed twice (Oct. 14–15), with every finding addressed.
+- **Tests:** 12 in the new `tests/test_delivery.py`.
+
+**Answered**
+- **Morejón grades out as an OFP 60 reliever.** Sinker, changeup and four-seamer are 70 / 70; the slider is 50 / 55; control is 60; command is NG.
+  - **The roll-up:** 64 as a starter, graded down to the reliever. He doesn't throw the changeup to left-handers, his longest outing was 40 pitches, and he has an elbow history.
+- **The 2026 changeup isn't new.** It matches the low-spin pitch Statcast labeled a knuckleball in 2024 (86.2 mph, 843 rpm, 51% whiffs on 35 swings). The bullpen memo's history line missed this.
+- **The slider's decline goes with a shape change, not its release.**
+  - **Shape:** 86.0 → 89.4 mph and −3.2 → −0.5 in IVB from 2024 to 2026.
+  - **Release:** it separated from the fastballs as much in 2024, his best slider year (tell AUC 0.990, 0.991, 0.997).
+- **Runners attempted 1.9 steals per nine innings against him**, against a league rate of 0.9. His FIP is 2.15, against a 2.83 ERA.
+
+**Decided**
+- **Fastball base grades** use the 2026-starter reading from `grades.py velo`, and every move off the base is stated.
+- **Command is NG without a look.** Location data isn't intent.
+- **Data-only reports name the look and when it happens.** Here that's before the money: the bid's deadline is the QO decision and the Dec. 1 expiration.
+
 ## 2026-10-14: Front-office ties and trade partners, across all 30 clubs
 **Built**
 - **`baseball/roster/front_office.py`** (`bb front-office [--no-pull] [--permute N]`). It does six things:

@@ -10,6 +10,7 @@
   uv run bb stuff-model 2026                train only the portable model (for TrackMan / Rapsodo data)
   uv run bb trades                          the MLB trade graph: pull trades + WAR, build data/graph/, who trades with whom
   uv run bb front-office                    front-office ties vs trade partners (Baseball-Reference pages, career histories)
+  uv run bb delivery 2026 670970            delivery and release profile from tracking data (scouting-report support)
   uv run bb db                              what is in the warehouse
   uv run bb db rebuild                      rebuild the warehouse from the cached pulls in data/raw/
 """
@@ -325,6 +326,46 @@ def cmd_compare_relievers(a: argparse.Namespace) -> None:
         print(f"\nEvery table -> {out}/")
 
 
+def cmd_delivery(a: argparse.Namespace) -> None:
+    from baseball.evaluation import delivery as dv
+    from baseball.ingest.league import load_season
+
+    cols = ["game_pk", "game_type", "pitch_name", "at_bat_number", "pitch_number", "pitcher", "p_throws", "stand", "pitch_type",
+            "description", "zone", "plate_z", "balls", "strikes", "release_speed", "release_spin_rate", "pfx_x", "pfx_z",
+            "release_extension", "release_pos_x", "release_pos_z", "arm_angle", "vy0", "vz0", "ay", "az"]
+    p = load_season(a.season, columns=cols)
+    prof = dv.pitch_profile(p, a.pitcher)
+    if prof.empty:
+        sys.exit(f"No regular-season pitches for {a.pitcher} in {a.season}.")
+    with pd.option_context("display.width", 250):
+        print(f"Delivery and release profile, pitcher {a.pitcher}, {a.season} regular season (tracking data, not a look)\n")
+        print(prof.round(2).to_string(index=False))
+        print("\nSlot check against the primary pitch, season means (degrees; inches)")
+        print(dv.slot_check(prof).round(2).to_string(index=False))
+        print("\nRelease against the same game's fastballs (FF and SI), mean per pitch type (inches; degrees)")
+        print(dv.release_offsets(p, a.pitcher).groupby("pitch_type")[["d_side_in", "d_height_in", "d_arm_deg"]].mean().round(2).to_string())
+        c = dv.league_context(p, a.pitcher)
+        print(f"\nLeague context ({c['pitchers']} {c['hand']}HP with 300+ pitches): extension {c['ext_ft']:.2f} ft "
+              f"({c['ext_pct']:.0f}th pct; mean {c['ext_league_mean']:.2f}), arm angle {c['arm_angle']:.1f} "
+              f"({c['arm_pct']:.0f}th pct; mean {c['arm_league_mean']:.1f})")
+        print(f"Median release scatter, pitcher-pitch rows with 200+ ({c['scatter_rows']}): "
+              f"height SD {c['median_sd_rel_z_ft']:.3f} ft, side SD {c['median_sd_rel_x_ft']:.3f} ft")
+        print("League VAA (all / upper third): " + ", ".join(
+            f"{k} {v:.2f} / {c['vaa_league_upper'].get(k, float('nan')):.2f}" for k, v in sorted(c["vaa_league"].items())
+            if k in set(prof["pitch_type"])))
+        fps = dv.first_pitch_strike(p, a.pitcher)
+        print(f"First-pitch strike: {fps['pct']:.1f}% ({fps['strikes']} of {fps['n']}); league {fps['league_pct']:.1f}%")
+        primary = prof["pitch_type"].iloc[0]
+        print(f"\n{primary} velocity by pitch number in the outing")
+        print(dv.velo_by_pitch_count(p, a.pitcher, primary).round(2).to_string(index=False))
+        lengths = dv.outing_lengths(p, a.pitcher)
+        print(f"Outings {len(lengths)}, mean {lengths.mean():.1f} pitches, max {lengths.max()}, 25+ pitches: {(lengths >= 25).sum()}")
+        print("\nUsage by count state and batter hand")
+        print(dv.usage_by_count(p, a.pitcher).round(1).to_string(index=False))
+    if a.figure:
+        print(f"\nFigure -> {dv.figure(p, a.pitcher, a.title or f'Pitcher {a.pitcher}, {a.season}', a.figure)}")
+
+
 def cmd_bullpen_case(a: argparse.Namespace) -> None:
     from baseball.roster import bullpen_case
 
@@ -537,6 +578,13 @@ def main(argv: list[str] | None = None) -> None:
     cr.add_argument("ids", type=int, nargs="+", help="MLBAM pitcher ids (e.g. 670970 650556 664126)")
     cr.add_argument("--out", help="also write every table as CSV to this folder")
     cr.set_defaults(func=cmd_compare_relievers)
+
+    dl = sub.add_parser("delivery", help="delivery and release profile from tracking data (slot, extension, VAA, release scatter, usage by count)")
+    dl.add_argument("season", type=int)
+    dl.add_argument("pitcher", type=int, help="MLBAM pitcher id (e.g. 670970)")
+    dl.add_argument("--figure", help="also draw the movement and release-point figure to this path")
+    dl.add_argument("--title", help="the figure's title (default: pitcher id and season)")
+    dl.set_defaults(func=cmd_delivery)
 
     bc = sub.add_parser("bullpen-case", help="the 2026-27 bullpen acquisition memo's numbers and figure")
     bc.set_defaults(func=cmd_bullpen_case)
