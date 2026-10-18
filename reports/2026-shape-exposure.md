@@ -1,7 +1,7 @@
 # Do hitters adapt to pitch shapes they've seen from other pitchers? A pre-registered test, MLB 2024–26
 
 **League study from public pitch data.** Every regular-season pitch of 2024–2026 (Statcast). The analysis plan was committed before any outcome was fit, the 2026 season was held out, and the planned test failed its own placebo. This report says so first, then shows the follow-up designs that were also written down before they were run.
-*Written 2026-10-18; Dylan Fanelli; Data: Statcast via Baseball Savant, 2,124,882 pitches with a complete shape; Code: `baseball/edge/shape_exposure.py` (`bb shape-exposure`); Plan: [the analysis plan](2026-shape-exposure-plan.md), [development results](2026-shape-exposure-dev-results.md), [2026 results as fit](2026-shape-exposure-2026-results.md), [follow-up plan](2026-shape-exposure-followup-plan.md), each committed before the step after it*
+*Written 2026-10-18 (the plan was committed Oct. 17 at 11:22 p.m. ET, before any fit); Dylan Fanelli; Data: Statcast via Baseball Savant, 2,124,882 pitches with a complete shape; Code: `baseball/edge/shape_exposure.py` (`bb shape-exposure`); Plan: [the analysis plan](2026-shape-exposure-plan.md), [development results](2026-shape-exposure-dev-results.md), [2026 results as fit](2026-shape-exposure-2026-results.md), [follow-up plan](2026-shape-exposure-followup-plan.md), each committed before the step after it; Reviewed in a separate pass 2026-10-18; findings addressed*
 
 ![The planned test, its placebo, and the two follow-up designs](figures/2026-shape-exposure.png)
 
@@ -14,21 +14,21 @@
   - **The placebo:** exposure from the *next* 30 days, which can't cause anything today, came in at −0.36 (−0.59 to −0.14) in 2026.
   - **What that means:** something stable links a hitter to the shapes he faces, before and after. Under the plan's own rule, the planned result is reported as confounded.
   - **The likeliest reason:** selection. A hitter who handles a shape keeps playing against it; one who doesn't gets platooned away from it.
-- **A design that removes the season-level selection finds a smaller recent effect.** It holds his whole-season diet of that shape fixed.
-  - **Recent exposure:** −0.27 whiff points per SD (−0.48 to −0.06), 2024–26 pooled.
+- **An exploratory follow-up that controls for season-level selection finds a smaller recent effect.** It holds his whole-season diet of that shape fixed. It was written down before it ran, but it wasn't in the original plan and has no held-out season.
+  - **Recent exposure:** −0.27 whiff points per SD (−0.48 to −0.06), 2024–26 pooled. It holds with errors clustered by both batter and pitcher (p = 0.010).
   - **Placebo:** +0.01 (−0.16 to +0.17).
   - **By season:** −0.27, −0.25 and −0.29, the same direction every year, but no single season is significant alone.
   - **The bigger association:** his whole-season diet, at −0.73 per SD. The public data can't say how much of that is adaptation and how much is selection.
-- **The schedule, a source of exposure no manager chooses, finds no adaptation.**
+- **The schedule, a source of exposure no manager chooses, doesn't detect adaptation.**
   - **The test:** the staff his team faced in the previous series against the staff it faces in the next one.
-  - **The result:** the two are the same (difference −0.02, −0.23 to +0.18).
+  - **The result:** the two match (difference −0.02, −0.23 to +0.18, per SD of the staff share).
 - **What it's worth:** about 2 runs per club-season (0.5 to 3.8) on the timing design's coefficient.
   - That assumes every relief pitch could be moved from the 75th to the 25th percentile of hitter exposure, which no manager can do. It's an upper bound.
 
 ## The decision
-1. **Don't reorder a bullpen on cross-pitcher shape exposure.** The recent effect is real in direction but small: a tiebreaker between two otherwise equal arms, not a reason to change a matchup. Same-game familiarity, from my earlier study, is the larger and better-supported effect.
-2. **Don't discount a pitcher's price because his shape is spreading through the league.** There's no evidence here that hitters quickly learn a shape from other pitchers.
-3. **Don't trust an exposure effect that hasn't faced a lead placebo.** The naive estimate here was 2.7 times the cleaner one. Any club or public model that adjusts whiff rates for exposure from other pitchers should run the same check.
+1. **Don't reorder a bullpen on cross-pitcher shape exposure.** The recent effect points the right way but is small: at most a tiebreaker between two otherwise equal arms. Same-game familiarity, from my earlier study, is the larger and better-supported effect.
+2. **Don't discount a pitcher's price because his shape is spreading through the league.** The evidence that hitters learn a shape from other pitchers is one small, exploratory estimate, worth about 2 runs a season at most.
+3. **Don't trust an exposure effect that hasn't faced a lead placebo.** The naive estimate here was about two and a half times the one that survived the placebo. Any club or public model that adjusts whiff rates for exposure from other pitchers should run the same check.
 4. **The open question is the season-long piece (−0.73 per SD).** Separating it takes data a club has and the public doesn't: lineup intent, or who was available to play. That's where a club's version of this study should start.
 
 ## Findings
@@ -57,7 +57,7 @@ Whiff points per swing, per 1 SD of the similar-shape share in the last 30 days.
 - **The pattern:** the wider the kernel, the stronger the association, the opposite of an exact-shape effect.
 - **Two readings, which this data can't separate:**
   - With six shape dimensions, few recent pitches sit within half an SD of any pitch, so the narrow share is noisy and its coefficient shrinks toward zero.
-  - What matters is the general look of the family, not the exact shape.
+  - What matters is the general look of the family more than the exact shape.
 
 **H4, how fast does it fade?** Three windows in one model:
 
@@ -82,15 +82,15 @@ Whiff points per swing, per 1 SD of the similar-shape share in the last 30 days.
 | Next 30 days (placebo) | +0.01 (−0.16 to +0.17) | −0.02 | +0.15 | −0.12 |
 | Whole season | −0.73 (−1.04 to −0.42) | −0.62 | −0.83 | −0.75 |
 
-- **Result:** passes pooled (707,467 swings, 797 batters). Each season points the same way, and none clears zero alone.
-- **Run value:** the same model on run value per pitch gives −0.10 runs per 100 pitches per SD for the last 30 days, but there the placebo is +0.08 (+0.02 to +0.14).
+- **Result:** passes pooled (707,467 swings, 797 batters; p = 0.010 with batter-clustered errors, 0.010 two-way by batter and pitcher). Each season points the same way, and none clears zero alone. With no held-out season, read it as exploratory.
+- **Run value (a check added after the follow-up plan, on all pitches):** the same model gives −0.10 runs per 100 pitches per SD for the last 30 days (−0.18 to −0.02), but its placebo is +0.08 (+0.02 to +0.14).
   - That version fails its own placebo.
-  - So the run estimate below is built from the whiff coefficient, not from the run-value model.
+  - So the run estimate below is built from the whiff coefficient instead.
 
 ### 3. Follow-up A: the schedule
 - **The variable:** the share of the previous-series opponent's season pitches (same family, pitcher hand and batter side) that look like this pitch, against the same share for the next-series opponent.
   - Both are computed whether or not the hitter played in those series.
-  - Today's lineup is chosen against today's starter, not against last week's staff.
+  - Today's lineup is chosen against today's starter; last week's staff plays no part in it.
 
 | Term (whiff points per SD) | 2024–26 pooled |
 |---|---|
@@ -98,33 +98,35 @@ Whiff points per swing, per 1 SD of the similar-shape share in the last 30 days.
 | Next series' staff (placebo) | −0.43 (−0.56 to −0.29) |
 | Previous minus next | **−0.02 (−0.23 to +0.18)** |
 
-- **Result:** no adaptation detected. Exposure from last week's staff predicts no more than exposure from next week's.
-  - The bound rules out a gap larger than about a quarter of a whiff point per SD.
+- **Result:** adaptation isn't detected. Exposure from last week's staff predicts no more than exposure from next week's.
+  - The bound rules out a gap larger than about a quarter of a whiff point per SD of the staff share. That share is a different variable from Finding 2's, so the two sizes aren't directly comparable.
 - **By season:** 2024 alone shows a gap (−0.46, −0.86 to −0.05); 2025 (+0.15) and 2026 (+0.17) point the other way. One season of three, with nothing correcting for the split, isn't evidence.
 - **What both staffs measure:** the opponents a team sees most (its division) stay the same all season. Both shares stand in for the hitter's season-long diet, which is why both carry the same association as Finding 2's season term.
 
 ### 4. What it's worth
-- **Relief pitches in 2026:** the gap between the 75th and 25th percentile of last-30-days exposure is 1.38 SD.
+- **Relief pitches in 2026:** among relief swings that meet the 25-pitch minimum, the gap between the 75th and 25th percentile of last-30-days exposure is 1.37 SD.
 - **The arithmetic:**
-  - 0.27 whiff points per SD × 1.38 SD × 0.47 swings per pitch × 0.12 runs.
+  - 0.27 whiff points per SD × 1.37 SD × 0.47 swings per pitch × 0.12 runs.
   - The 0.12 is the gap between a whiff (+0.115 runs for the pitcher) and any other swing (−0.005).
   - That's 0.021 runs per 100 relief pitches.
-- **Per club:** about 10,400 relief pitches a season, so **about 2 runs (0.5 to 3.8)**, and only if every relief pitch could be moved across that gap.
+- **Per club:** about 10,400 relief pitches a season, so **about 2 runs (0.5 to 3.8)**, and only if every relief pitch could be moved across that gap. `bb shape-exposure followup` writes this arithmetic to `translation.json`.
 
 ## Method
 - **Shape:** release speed, horizontal and vertical movement, release side and height, and extension. Each is standardized within pitch family × pitcher hand on 2024–25.
 - **Families:** fastball (FF, SI), cutter (FC), breaking (SL, ST, SV, CU, KC, CS), offspeed (CH, FS, FO, SC).
 - **A hitter's diet:** every pitch he saw with the same family, pitcher hand and batter side, from pitchers other than today's, in the window. The current game is never in it.
   - **Similar-shape share:** the kernel-weighted count (exp(−d²/2), d in standardized units) divided by the count. Standardized within family on the 2024–25 targets.
-- **Targets:** swings, bunts excluded, on pitches whose hitter saw at least 25 such pitches in the last 30 days.
-- **Whiff:** swinging strike, blocked, or foul tip.
+- **Targets:** swings on pitches whose hitter saw at least 25 such pitches in the last 30 days. Foul bunts and missed bunts are excluded; bunts put in play (including 1,694 sacrifice bunts among about a million swings) are not, because Statcast labels them like any ball in play.
+- **Whiff:** swinging strike, blocked, or foul tip. The repo's general definition also counts missed bunts; here they're out with the other bunt attempts.
 - **Model:** a linear probability model.
   - The share and the log of its count.
   - Fixed effects for batter × season × family, pitcher × pitch type × season, family × zone, family × count, and season × week, absorbed by alternating projections.
-  - Standard errors clustered by batter.
+  - Standard errors clustered by batter. For the follow-ups, errors clustered two ways (batter and pitcher) are reported too; they move no conclusion.
 - **Departures from the plan:**
   - Fixed-effect groups with a single row are dropped. They carry no within-group information, so the estimates don't change.
-  - The follow-up designs and the run-value check of Follow-up B weren't in the original plan. Their designs were committed before they were fit.
+  - The follow-up designs weren't in the original plan; their designs were committed before they were fit. The run-value check of Follow-up B and the two-way errors were added after that plan, as checks.
+  - The run-value model (H5) standardizes the share on its own targets, all pitches; the whiff models standardize it on swings.
+  - Follow-up A's staff pools use a random 800 of each staff's pitches per family, pitcher hand and batter side (seed 0), and pools under 50 pitches are left out.
   - The decision translation uses the whiff coefficient, because the run-value version of the passing design failed its placebo.
 
 ## What this doesn't show

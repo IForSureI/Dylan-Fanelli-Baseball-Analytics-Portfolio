@@ -4,8 +4,9 @@ The analysis plan was fixed before any outcome was fit (reports/2026-shape-expos
 it as written:
 
   uv run bb shape-exposure build      # exposures for every 2024-26 pitch -> data/edge/shape_exposure/exposures.parquet
-  uv run bb shape-exposure fit dev    # development fit, 2024-25
-  uv run bb shape-exposure fit 2026   # confirmation, 2026 (run once, after the development run is committed)
+  uv run bb shape-exposure fit-dev    # development fit, 2024-25
+  uv run bb shape-exposure fit-2026   # confirmation, 2026 (run once, after the development run is committed)
+  uv run bb shape-exposure followup   # the two follow-up designs, then the run translation
 
 Definitions (from the plan):
 - Family: fastball (FF, SI), cutter (FC), breaking (SL, ST, SV, CU, KC, CS), offspeed (CH, FS, FO, SC).
@@ -294,51 +295,106 @@ FOLLOWUP_SPECS = {
 }
 
 
-def fit_followup(seasons=SEASONS) -> pd.DataFrame:
-    """Both designs, pooled and by season, on whiff per swing. Standardizers: development targets, as in the plan."""
-    from scipy.stats import norm
-
-    from baseball.stats import absorb, clustered_wls
-
+def _followup_frame(outcome: str) -> pd.DataFrame:
     e = add_shares(pd.read_parquet(OUT / "exposures.parquet"))
     f = pd.read_parquet(OUT / "followup.parquet")
     e = e.merge(f, on=["game_pk", "at_bat_number", "pitch_number"], how="left")
     e["Sseason_h1.0"] = e["Kseason_h1.0"] / e["Nseason"].where(e["Nseason"] > 0)
-    fr = frame(e, "whiff")
-    dev = fr[fr["season"].isin(DEV)]
-    std = standardizer(dev, ["SS_prev", "SS_next", "S30_h1.0", "Slead30_h1.0", "Sseason_h1.0"])
+    return frame(e, outcome)
+
+
+def _fit_spec(fr: pd.DataFrame, ss: list[int], spec, std) -> tuple:
+    """One follow-up fit: (frame used, term names, beta, batter-clustered cov, two-way batter+pitcher cov)."""
+    from baseball.stats import absorb
+
+    d = fr[fr["season"].isin(ss)].copy()
+    names, controls = [], []
+    for share, count in spec:
+        d[f"s_{share}"] = (d[share] - d["family"].map(std[share]["mean"])) / d["family"].map(std[share]["std"])
+        names.append(f"s_{share}")
+        if count:
+            d[f"log{count}"] = np.log(d[count].clip(lower=1))
+            controls.append(f"log{count}")
+    d = d.dropna(subset=names + controls + ["y"])
+    for k in ("bfam", "pkey"):
+        d = d[d.groupby(k)[k].transform("size") > 1]
+    r = absorb(d, ["y", *names, *controls], ["bfam", "pkey", "fzone", "fcount", "week"])
+    X, y = r[names + controls].to_numpy(), r["y"].to_numpy()
+    beta = np.linalg.pinv(X.T @ X) @ (X.T @ y)
+    cb = _clustered_cov(y, X, d["batter"].to_numpy())
+    cp = _clustered_cov(y, X, d["pitcher"].to_numpy())
+    cbp = _clustered_cov(y, X, (d["batter"].astype(np.int64) * 10_000_000 + d["pitcher"].astype(np.int64)).to_numpy())
+    return d, names + controls, beta, cb, cb + cp - cbp
+
+
+def fit_followup(seasons=SEASONS) -> pd.DataFrame:
+    """Both designs, pooled and by season, on whiff per swing (the follow-up plan) and, added after it as a check,
+    on run value per pitch. Standard errors clustered by batter, as in the plan; two-way (batter and pitcher)
+    errors are reported beside them as a robustness check. Standardizers: development targets of each outcome."""
+    from scipy.stats import norm
+
     rows = []
-    for design, spec in FOLLOWUP_SPECS.items():
-        for label, ss in [("pooled", list(seasons))] + [(str(s), [s]) for s in seasons]:
-            d = fr[fr["season"].isin(ss)].copy()
-            names, controls = [], []
-            for share, count in spec:
-                d[f"s_{share}"] = (d[share] - d["family"].map(std[share]["mean"])) / d["family"].map(std[share]["std"])
-                names.append(f"s_{share}")
-                if count:
-                    d[f"log{count}"] = np.log(d[count].clip(lower=1))
-                    controls.append(f"log{count}")
-            d = d.dropna(subset=names + controls + ["y"])
-            for k in ("bfam", "pkey"):
-                d = d[d.groupby(k)[k].transform("size") > 1]
-            r = absorb(d, ["y", *names, *controls], ["bfam", "pkey", "fzone", "fcount", "week"])
-            X = r[names + controls].to_numpy()
-            beta, se = clustered_wls(r["y"], X, np.ones(len(r)), d["batter"].to_numpy())
-            res = pd.DataFrame({"design": design, "sample": label, "term": names + controls, "coef": beta, "se": se})
-            if design == "A_schedule":
-                # previous minus next, with the covariance from the same clustered fit
-                cov = _clustered_cov(r["y"].to_numpy(), X, d["batter"].to_numpy())
-                diff = beta[0] - beta[1]
-                sd = float(np.sqrt(cov[0, 0] + cov[1, 1] - 2 * cov[0, 1]))
-                res = pd.concat([res, pd.DataFrame([{"design": design, "sample": label, "term": "prev minus next",
-                                                     "coef": diff, "se": sd}])], ignore_index=True)
-            res["lo"], res["hi"] = res["coef"] - 1.96 * res["se"], res["coef"] + 1.96 * res["se"]
-            res["p"] = 2 * norm.sf(np.abs(res["coef"] / res["se"]))
-            res["n"], res["batters"] = len(d), d["batter"].nunique()
-            rows.append(res)
-            print(res.round(4).to_string(index=False), flush=True)
+    for outcome in ("whiff", "rv"):
+        fr = _followup_frame(outcome)
+        dev = fr[fr["season"].isin(DEV)]
+        std = standardizer(dev, ["SS_prev", "SS_next", "S30_h1.0", "Slead30_h1.0", "Sseason_h1.0"])
+        for design, spec in FOLLOWUP_SPECS.items():
+            samples = [("pooled", list(seasons))] + ([(str(s), [s]) for s in seasons] if outcome == "whiff" else [])
+            for label, ss in samples:
+                d, terms, beta, cb, c2 = _fit_spec(fr, ss, spec, std)
+                res = pd.DataFrame({"outcome": outcome, "design": design, "sample": label, "term": terms, "coef": beta,
+                                    "se": np.sqrt(np.diag(cb)), "se_twoway": np.sqrt(np.maximum(np.diag(c2), 0))})
+                if design == "A_schedule":
+                    v = np.array([1.0, -1.0])
+                    res = pd.concat([res, pd.DataFrame([{"outcome": outcome, "design": design, "sample": label,
+                                                         "term": "prev minus next", "coef": beta[0] - beta[1],
+                                                         "se": float(np.sqrt(v @ cb[:2, :2] @ v)),
+                                                         "se_twoway": float(np.sqrt(max(v @ c2[:2, :2] @ v, 0)))}])],
+                                    ignore_index=True)
+                res["lo"], res["hi"] = res["coef"] - 1.96 * res["se"], res["coef"] + 1.96 * res["se"]
+                res["p"] = 2 * norm.sf(np.abs(res["coef"] / res["se"]))
+                res["p_twoway"] = 2 * norm.sf(np.abs(res["coef"] / res["se_twoway"]))
+                res["n"], res["batters"] = len(d), d["batter"].nunique()
+                rows.append(res)
+                print(res.round(4).to_string(index=False), flush=True)
     out = pd.concat(rows, ignore_index=True)
     out.to_csv(OUT / "results_followup.csv", index=False)
+    return out
+
+
+def translate(season: int = 2026) -> dict:
+    """What Follow-up B's whiff coefficient is worth: runs per 100 relief pitches between the 75th and 25th percentile
+    of last-30-days exposure, and per club-season if every relief pitch could be moved across that gap (an upper
+    bound). Run value per whiff = the gap between a whiff and any other swing, from the season's relief pitches."""
+    import json
+
+    res = pd.read_csv(OUT / "results_followup.csv")
+    b = res[(res.outcome == "whiff") & (res.design == "B_timing") & (res["sample"] == "pooled") & (res.term == "s_S30_h1.0")].iloc[0]
+    seq = load_seq(season)[["game_pk", "at_bat_number", "pitch_number", "inning_topbot", "pitcher", "description", "delta_run_exp"]]
+    first = seq.sort_values(["game_pk", "at_bat_number", "pitch_number"]).groupby(["game_pk", "inning_topbot"])["pitcher"].first()
+    seq = seq.join(first.rename("starter"), on=["game_pk", "inning_topbot"])
+    rel = seq[seq["pitcher"] != seq["starter"]]
+    sw, wh = rel["description"].isin(SWINGS), rel["description"].isin(WHIFFS)
+    rv = -rel["delta_run_exp"]
+    per_whiff = float(rv[sw & wh].mean() - rv[sw & ~wh].mean())
+    swings_per_pitch = float(sw.mean())
+    # the exposure gap among relief swings that meet the plan's 25-pitch minimum, in the standardized units of the fit
+    fr = _followup_frame("whiff")
+    dev = fr[fr["season"].isin(DEV)]
+    st = standardizer(dev, ["S30_h1.0"])["S30_h1.0"]
+    tgt = fr[fr["season"].eq(season)].merge(rel[["game_pk", "at_bat_number", "pitch_number"]],
+                                             on=["game_pk", "at_bat_number", "pitch_number"])
+    z = ((tgt["S30_h1.0"] - tgt["family"].map(st["mean"])) / tgt["family"].map(st["std"])).dropna()
+    gap = float(z.quantile(0.75) - z.quantile(0.25))
+    per_club = len(rel) / 30
+    out = {"season": season, "relief_pitches_per_club": per_club, "swings_per_pitch": swings_per_pitch,
+           "runs_per_whiff_vs_other_swing": per_whiff, "exposure_gap_sd": gap}
+    for k, coef in (("point", b.coef), ("lo", b.lo), ("hi", b.hi)):
+        per100 = -coef / 100 * gap * swings_per_pitch * 100 * per_whiff
+        out[f"runs_per_100_relief_{k}"] = per100
+        out[f"runs_per_club_season_{k}"] = per100 * per_club / 100
+    (OUT / "translation.json").write_text(json.dumps(out, indent=1))
+    print(json.dumps(out, indent=1))
     return out
 
 
@@ -367,6 +423,7 @@ def figure(out_path: Path | None = None) -> Path:
     dev = pd.read_csv(OUT / "results_dev.csv")
     conf = pd.read_csv(OUT / "results_2026.csv")
     fu = pd.read_csv(OUT / "results_followup.csv")
+    fu = fu[fu["outcome"].eq("whiff")] if "outcome" in fu else fu
     out_path = Path(out_path or OUT / "shape_exposure.png")
     fig, axes = plt.subplots(1, 3, figsize=(14, 4.6), gridspec_kw={"width_ratios": [1, 1.1, 0.9]})
     BLUE, ORANGE, GREY = "#2f5d8a", "#c8692e", "#8a8a8a"

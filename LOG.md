@@ -6,7 +6,7 @@ Newest first. One entry per working session: what was built, what was decided, w
 **Built**
 - **`baseball/edge/shape_exposure.py`** (`bb shape-exposure`): does a hitter miss a pitch less when he has recently seen similar shapes from other pitchers?
   - The plan was committed before any fit; development results, then the 2026 results, were each committed before the next step.
-  - The planned test replicated on 2026 and failed its lead placebo. Two follow-up designs, also committed before they ran, separate recent exposure from season-level selection: [report](reports/2026-shape-exposure.md).
+  - The planned test replicated on 2026 and failed its lead placebo. Two exploratory follow-up designs, committed before they ran, separate recent exposure from season-level selection: [report](reports/2026-shape-exposure.md). A separate review pass then caught run-value numbers that no committed code produced; the run-value check, the translation and two-way errors are now in `fit_followup` and `translate`.
 - **`baseball/evaluation/grades.py`** (`bb grade velo`, `bb grade ofp`): the velocity grades and OFP roll-up the Morejón report uses, now in the repo with tests, so its grades reproduce from here.
 - **House pick value:** `acquisition.PICK_VALUE_OWN`, picks 45-60 from my 2000-2016 draft backtest less the 2026 slot. `qo_cost` uses it by default; Edwards (2019) stays available for comparison.
 
@@ -16,7 +16,7 @@ Newest first. One entry per working session: what was built, what was decided, w
 - **Wording:** "independently reviewed" became "a separate review pass", which is what the reviews were. The familiarity summary now says the 1.87 is against an earlier pitch of another type. The Atlas states that 147 of its 157 groups could be scored, and why its pitch count differs.
 
 **Learned**
-- **An exposure effect without a lead placebo overstates.** Here the raw estimate was 2.7 times the one that survived the placebo.
+- **An exposure effect without a lead placebo overstates.** Here the raw estimate was about two and a half times the one that survived the placebo.
 
 ## 2026-10-15: Pro scouting report on Adrián Morejón, and the delivery module
 **Built**

@@ -475,6 +475,7 @@ def cmd_shape_exposure(a: argparse.Namespace) -> None:
     elif a.step == "followup":
         S.build_followup()
         S.fit_followup()
+        S.translate()
     else:
         print(S.figure())
 

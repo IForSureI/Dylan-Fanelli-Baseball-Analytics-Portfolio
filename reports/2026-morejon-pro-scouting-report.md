@@ -93,7 +93,7 @@
   - **Strikeouts and walks:** 30.4% K, 8.0% BB, K-BB 22.4%.
   - **Contact:** 4 HR, a 1.67 groundout-to-airout ratio; opponents hit .205/.278/.271.
 - **Record against stuff:** a 2.15 FIP, below his 2.83 ERA.
-  - **How it's computed:** unintentional walks, with the FIP constant (3.13) from 2026 MLB team totals. Counting his 7 intentional walks, the published figure is 2.37 (MLB Stats API).
+  - **How it's computed:** unintentional walks, with the FIP constant (3.13) from 2026 MLB team totals. The published figure, which counts his 7 intentional walks and uses its own constant, is 2.37 (MLB Stats API).
   - **Run value:** +1.39 runs per 100 pitches; the Reliability Atlas regresses that to a true level of +0.56 (95% interval −0.21 to +1.33). Positive is good for the pitcher.
 - **Leverage:**
   - **Late leads:** 28 holds, 3 saves in 8 chances and 5 blown saves; 31 of 36 converted.

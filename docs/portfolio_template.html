@@ -82,21 +82,21 @@ footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-
     <div class="stats">
       <div class="stat"><b>2.14M</b><span>regular-season pitches, 2024–26, with batter, location, base-out state and bat tracking</span></div>
       <div class="stat"><b>11</b><span>finished studies, decision memos and scouting reports, each with its code and figures</span></div>
-      <div class="stat"><b>266</b><span>tests with hand-checked numbers, run on every push</span></div>
+      <div class="stat"><b>276</b><span>tests with hand-checked numbers, run on every push</span></div>
       <div class="stat"><b>100%</b><span>of finished reports put through a separate review pass; the reviews changed real conclusions</span></div>
     </div>
   </header>
 
   <section class="stack">
-    <p class="eyebrow">Start here · the capstone</p>
+    <p class="eyebrow">Start here, the capstone</p>
     <h2>One real decision, made the way a front office makes it</h2>
     <div class="capstone">
       <div class="memohead"><span>To: General manager, Texas Rangers</span><span>Re: Bullpen, 2026-27 offseason</span><span>Data-informed; not a live look</span></div>
       <p class="col"><b>The need is late-inning run prevention.</b> Texas relievers fell from 4th in run value per 100 pitches in 2025 to 24th in 2026, and from 6th to 26th in late, close spots. Relievers now free agents or on a mutual option threw 35% of those late, close plate appearances. The memo ranks three free-agent relievers using every tool on this page: regressed results with intervals, stuff vs. results, velocity against the league, pitch-design levers, data-informed 20-80 grades, and prices from the reliever market's own line.</p>
       <div class="calls">
-        <div class="call a"><span class="tier">Tier A · pursue</span><b>Adrián Morejón</b><p>Open at 4 years, $60M. Walk away above $72M, his value at the market's price of a win. That lands him about half the time, and the memo prices each step above it.</p></div>
-        <div class="call"><span class="tier">Tier B · if he signs elsewhere</span><b>Bryan Abreu</b><p>Open at 2 years, $18M; walk away above $25M. His walk rate fell from 19.7% to 11.3% in the second half of 2026, but that drop is borderline (p = 0.058), so it's priced as a lean.</p></div>
-        <div class="call"><span class="tier">Tier C · not for 2027</span><b>Pete Fairbanks</b><p>Thoracic outlet surgery, announced Sept. 19, 2026. At most a two-year rehab deal.</p></div>
+        <div class="call a"><span class="tier">Tier A, pursue</span><b>Adrián Morejón</b><p>Open at 4 years, $60M. Walk away above $72M, his value at the market's price of a win. That lands him about half the time, and the memo prices each step above it.</p></div>
+        <div class="call"><span class="tier">Tier B, if he signs elsewhere</span><b>Bryan Abreu</b><p>Open at 2 years, $18M; walk away above $25M. His walk rate fell from 19.7% to 11.3% in the second half of 2026, but that drop is borderline (p = 0.058), so it's priced as a lean.</p></div>
+        <div class="call"><span class="tier">Tier C, not for 2027</span><b>Pete Fairbanks</b><p>Thoracic outlet surgery, announced Sept. 19, 2026. At most a two-year rehab deal.</p></div>
       </div>
       <div class="fig"><img alt="Pitch grades, the reliever market's price per projected win, and fastball velocity by month" src="{{IMG:2026-bullpen-acquisition-memo.png}}"></div>
       <p class="read"><a href="{{REPO}}/reports/2026-bullpen-acquisition-memo.md">Read the memo →</a></p>
@@ -110,7 +110,7 @@ footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-
 
       <article class="study">
         <div class="text">
-          <p class="eyebrow">Evaluation · original study</p>
+          <p class="eyebrow">Evaluation, original study</p>
           <h3>Does a pitch wear out on a hitter?</h3>
           <p class="answer"><b>Yes, and it's specific to the pitch type.</b> An earlier changeup or splitter a hitter saw from the pitcher in earlier plate appearances today, in place of a pitch of another type, goes with 1.87 fewer whiff points on the next one. Pitches of other types in earlier plate appearances go with slightly more whiffs, not fewer. The effect carries across games this season and partly to the next same-handed pitcher's changeup. It holds in each of the three seasons, and with platoon and month-level fixed effects.</p>
           <div class="nums"><span class="num">−1.87 whiff pts per earlier changeup/splitter</span><span class="num">−8.2 after 4+</span><span class="num">42% carries to the next same-handed pitcher</span></div>
@@ -121,7 +121,7 @@ footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-
 
       <article class="study">
         <div class="text">
-          <p class="eyebrow">In-game strategy · a reported null</p>
+          <p class="eyebrow">In-game strategy, a reported null</p>
           <h3>Should that change when the starter comes out?</h3>
           <p class="answer"><b>No.</b> Costs were fit on 2024–25 and tested on 2026. The per-pitch cost replicates, but it doesn't reach plate-appearance run value, and managers show no detectable response to it. The report also shows something managers do act on: run value allowed so far, which has no detectable association with the next plate appearance among the starters they leave in.</p>
           <div class="nums"><span class="num null">2026 calibration slope −0.28 (SE 0.37)</span><span class="num null">removal response −0.15 (SE 0.27)</span></div>
@@ -132,9 +132,9 @@ footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-
 
       <article class="study">
         <div class="text">
-          <p class="eyebrow">Evaluation · pre-registered</p>
+          <p class="eyebrow">Evaluation, pre-registered</p>
           <h3>Do hitters adapt to shapes they've seen from other pitchers?</h3>
-          <p class="answer"><b>A little, and less than the raw numbers say.</b> The plan was committed before any fit and 2026 was held out. The raw association replicated, then failed its own placebo: shapes a hitter is about to see predict his whiffs too, which points to who plays against what. Holding his season-long diet fixed, recent exposure is worth about a quarter of a whiff point per SD, about 2 runs a season at most. Don't reorder a bullpen on it.</p>
+          <p class="answer"><b>The planned test can't say, and the report leads with that.</b> The plan was committed before any fit and 2026 was held out. The raw association replicated, then failed its own placebo: shapes a hitter is about to see predict his whiffs too, which points to who plays against what. An exploratory follow-up that holds his season-long diet fixed finds a small recent effect, about a quarter of a whiff point per SD, worth about 2 runs a season at most. Don't reorder a bullpen on it.</p>
           <div class="nums"><span class="num">−0.74 raw, 2026 holdout</span><span class="num null">placebo −0.36 (fails)</span><span class="num">−0.27 beyond his season's diet</span></div>
           <p class="read"><a href="{{REPO}}/reports/2026-shape-exposure.md">Read the report →</a></p>
         </div>
@@ -143,7 +143,7 @@ footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-
 
       <article class="study">
         <div class="text">
-          <p class="eyebrow">Evaluation · the analyst's reference</p>
+          <p class="eyebrow">Evaluation, the analyst's reference</p>
           <h3>Which numbers can you trust, and when?</h3>
           <p class="answer"><b>The Reliability Atlas covers 29 metrics in 157 groups.</b> For each, it measures how fast the metric becomes signal, how much carries into next season, how much true talent moves within a season, and how far to regress it, with a regress() function that returns intervals. Regressing beat raw numbers out of sample for 135 of 147 groups, and a clean 2024 → 2025 replication agrees. Pitch physics are regressed by games, not pitches: one 100-pitch outing is one look.</p>
           <div class="nums"><span class="num">bat speed: r = 0.5 after ~3 swings</span><span class="num">wOBA: ~500 PA for r = 0.5 (extrapolated)</span><span class="num">135 / 147 better than raw</span></div>
@@ -168,7 +168,7 @@ footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-
           <p class="eyebrow">Roster and the CBA</p>
           <h3>Extend Paul Skenes before December 1?</h3>
           <p class="answer"><b>Open at about $200M in present value; walk away above about $215M.</b> The price depends on the next Basic Agreement, so the memo prices both rule sets and a major-arm-injury scenario. Underneath is the CBA as code: service time, Super Two, options, Rule 5, outright and 10-and-5 rights, qualifying offers and the luxury tax. The tax engine reproduces the published 2025 bills within $1 for eight of the nine clubs that paid.</p>
-          <div class="nums"><span class="num">8 of 9 tax bills within $1</span><span class="num">open ~$200M PV · walk ~$215M PV</span></div>
+          <div class="nums"><span class="num">8 of 9 tax bills within $1</span><span class="num">open ~$200M PV, walk ~$215M PV</span></div>
           <p class="read"><a href="{{REPO}}/reports/2026-roster-cba-engine.md">Read the memo →</a></p>
         </div>
         <div class="fig"><img alt="Skenes extension price band under each rule set" src="{{IMG:2026-skenes-extension-band.png}}"></div>
@@ -176,7 +176,7 @@ footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-
 
       <article class="study">
         <div class="text">
-          <p class="eyebrow">Trades · a graph of every deal since 2009</p>
+          <p class="eyebrow">Trades, a graph of every deal since 2009</p>
           <h3>Who trades with whom?</h3>
           <p class="answer"><b>Division rivals trade at 0.56 times the rate of other pairs.</b> Every MLB trade since 2009 is loaded into a Neo4j graph with the WAR each club got and every flip that followed. Rivalry holds in every division and for 52 of 60 rival pairs; same-league pairs are no different from interleague ones. The deadline is the one window where rivals come closer to normal. Dodgers–Giants, Guardians–Royals and Cubs–Cardinals haven't made a trade since 2009.</p>
           <div class="nums"><span class="num">rivals 0.56× (0.49–0.65)</span><span class="num">52 of 60 rival pairs below expected</span><span class="num">3,290 trades</span></div>
@@ -187,7 +187,7 @@ footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-
 
       <article class="study">
         <div class="text">
-          <p class="eyebrow">Trades · front offices</p>
+          <p class="eyebrow">Trades, front offices</p>
           <h3>Do front-office ties predict trade partners?</h3>
           <p class="answer"><b>Yes, modestly.</b> Career histories of 115 club decision-makers, every president and GM since 2009 with each stint sourced, were matched to every pair of clubs and season. A pair trades about 14–18% more in seasons when its decision-makers share front-office history, compared with the same pair in other seasons, and the result survives a permutation test and dropping the Angels and Braves. The narrower protégé-meets-old-boss tie is borderline at best. For scale, division rivalry is −45%.</p>
           <div class="nums"><span class="num">any tie 1.18 (1.04–1.34)</span><span class="num">permutation p = 0.015</span><span class="num null">protégé tie: borderline</span></div>
@@ -201,8 +201,8 @@ footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-
           <p class="eyebrow">Pro scouting</p>
           <h3>What would a pro scout write on the top free-agent reliever?</h3>
           <p class="answer"><b>Adrián Morejón: OFP 60, a B1 reliever for 2027.</b> The sinker, changeup and four-seamer grade 70 on the 20-80 scale, each move off its measured base stated. Statcast labeled a version of his changeup a knuckleball in 2024. The slider's whiffs fell from 40% to 30% as it got harder and lost 2.7 inches of drop, while its release stayed as distinct as in its best year. Delivery items that need eyes are graded NG, and the video look comes before the bid.</p>
-          <div class="nums"><span class="num">OFP 60 · B1</span><span class="num">changeup 56% whiff, 182 swings</span><span class="num null">delivery: NG until a look</span></div>
-          <p class="read"><a href="{{REPO}}/reports/2026-morejon-pro-scouting-report.md">Read the report →</a> · <a href="{{REPO}}/reports/2026-morejon-pro-scouting-report.pdf">One page →</a></p>
+          <div class="nums"><span class="num">OFP 60, B1</span><span class="num">changeup 56% whiff, 182 swings</span><span class="num null">delivery: NG until a look</span></div>
+          <p class="read"><a href="{{REPO}}/reports/2026-morejon-pro-scouting-report.md">Read the report →</a>, <a href="{{REPO}}/reports/2026-morejon-pro-scouting-report.pdf">One page →</a></p>
         </div>
         <div class="fig"><img alt="Morejón's pitch movement and release point, 2026" src="{{IMG:2026-morejon-pro-scouting-report.png}}"></div>
       </article>
@@ -229,11 +229,12 @@ footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-
         <li><b>One evidence standard.</b> Confirmed means p &lt; 0.05 with enough sample. Benjamini–Hochberg is applied when many tests run at once. "No sign of an effect" is claimed only when the interval rules out effects that matter.</li>
         <li><b>Pooling and regression rules.</b> Seasons are pooled only with standard errors clustered by pitcher, and small samples are regressed before they're compared.</li>
         <li><b>Placebos and matched controls</b> guard against regression to the mean and selection.</li>
+        <li><b>Plans written down first.</b> The shape-exposure study committed its analysis plan before any fit and held out 2026; when the planned test failed its placebo, the report led with it.</li>
         <li><b>Public data only.</b> Statcast via Baseball Savant, MLB Stats API transactions, Baseball-Reference and Retrosheet, plus cited, dated public reporting for contracts, transactions and executive careers.</li>
       </ul>
     </div>
     <div class="stack">
-      <p class="eyebrow">Independent review</p>
+      <p class="eyebrow">Separate review passes</p>
       <h2>What review changed</h2>
       <div class="scroll"><table>
         <thead><tr><th>Study</th><th>Caught</th><th>Result</th></tr></thead>
@@ -264,7 +265,7 @@ footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-
   </section>
 
   <footer>
-    <span>Dylan Fanelli · <a href="https://www.linkedin.com/in/dylanfanelli/">LinkedIn</a> · Code and reports: <a href="{{REPO}}">github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio</a></span>
+    <span>Dylan Fanelli, <a href="https://www.linkedin.com/in/dylanfanelli/">LinkedIn</a>, Code and reports: <a href="{{REPO}}">github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio</a></span>
     <span>Data: Statcast via Baseball Savant, regular seasons 2024–2026; MLB Stats API transactions since 2009; Baseball-Reference; Retrosheet; player names from the Chadwick Bureau register. Updated {{DATE}}.</span>
     <span>© 2026 Dylan Fanelli. All rights reserved.</span>
   </footer>

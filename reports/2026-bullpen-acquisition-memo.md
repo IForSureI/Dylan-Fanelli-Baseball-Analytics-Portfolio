@@ -568,7 +568,7 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 - **Current rules run the window.** Qualifying-offer decisions come a few days after the World Series, and the agreement expires December 1 at 11:59 p.m. ET.
 - **A lockout ends free-agent negotiation and trades** (MLB's memo, as summarized by Bleacher Nation, Oct. 8, 2026). The window under known rules is about three to four weeks of November, shorter than the December window in which last winter's top relievers signed.
 - **What that means:**
-  - **Morejón:** if he isn't qualified, move early, before a bidder treating him as a starter sets the price. If he is qualified, the pick's $5.8M is a known cost. Waiting through a lockout to see whether the QO survives trades that for not knowing when, or whether, he can be signed.
+  - **Morejón:** if he isn't qualified, move early, before a bidder treating him as a starter sets the price. If he is qualified, the pick and pool's $10.6M (updated Oct. 18; first version $5.8M) is a known cost. Waiting through a lockout to see whether the QO survives trades that for not knowing when, or whether, he can be signed.
   - **Abreu:** his price should fall the longer the market waits, so he is the natural late option. Under a lockout, "late" may mean March.
   - **A signing bonus paid before December 1** survives a stoppage. Salaries are paid by games played and stop in a stoppage; a bonus doesn't (the Skenes memo's logic).
     - **For the player,** that certainty is worth something.
