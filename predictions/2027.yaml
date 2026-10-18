@@ -1,0 +1,283 @@
+# The 2027 prediction log. Fifteen calls made on 2026-10-18, scored after they resolve.
+# Facts in the claims were checked against public sources as of 2026-10-18 (dates in each basis).
+# Fields and scoring: baseball/predictions.py. Report: reports/2027-prediction-log.md.
+# Once a call resolves, set outcome to true, false or "void" and add a one-line note with the source.
+
+made: 2026-10-18
+by: Dylan Fanelli
+facts_as_of: 2026-10-18
+n_calls: 15
+
+calls:
+
+# ---------------------------------------------------------------- free-agent contracts (2026-27 class)
+# Each threshold is my own walk-away price. "True" means the market paid more than I would.
+# Guaranteed money: salaries, signing bonus and buyouts. Player options and opt-outs count at face value
+# (the player controls them, so their years and money are guaranteed); club and mutual options count only
+# their buyouts; incentives are excluded; deferred money counts at face value. AAV = guaranteed money divided
+# by guaranteed years.
+# Calls 1, 3 and 4 resolve on AAV on a deal of two or more guaranteed years, because each threshold is my
+# price per year at a set length; a one-year deal (an accepted qualifying offer included) resolves "no".
+# Calls 2 and 5 resolve on total guaranteed money: Skubal's because the survey that sets its probability is
+# in total dollars and every serious bid runs six years or more; Chisholm's because the question is whether a
+# club meets his ask for length, which total money captures and AAV doesn't.
+
+- id: morejon-aav-18m
+  category: free-agent contract
+  claim: >-
+    Adrián Morejón (LHP, Padres in 2026, a free agent this winter) signs a major league contract of two or more guaranteed years with an average annual value above $18.0 million.
+  probability: 0.55
+  basis: >-
+    The bullpen memo (Oct. 13, updated Oct. 18) puts my walk-away at four years and $72M, $18.0M a year, and reads
+    the reliever market line's prediction interval as his four-year price: a 47% chance it lands at or below $72M
+    ($18.0M a year), so 53% above, rounded to 0.55. Public guesses run from a rival executive's four years and
+    $60M ($15M a year; Pat Ragazzo, FanSided, Sept. 9) to Dennis Lin of The Athletic saying he "could attract
+    nine-figure offers," which I read secondhand (J.P. Hoornstra, Padres On SI, Oct. 10); my number sits between
+    them.
+  resolves_by: 2027-04-30
+  resolution: >-
+    AAV (guaranteed money over guaranteed years; player options and opt-outs at face value, club and mutual
+    options only their buyouts), from the signing club's official announcement, or MLB.com's report of the deal if
+    the club gives no figure. A one-year deal, an accepted qualifying offer included, resolves no. If he has not
+    signed a major league contract by April 30, 2027 (a lockout included), the call is void.
+  outcome: null
+
+- id: skubal-over-365m
+  category: free-agent contract
+  claim: >-
+    Tarik Skubal (LHP, Dodgers since his deadline trade from Detroit, a free agent this winter) signs a contract guaranteeing more than $365 million in total.
+  probability: 0.40
+  basis: >-
+    I value him at seven years and $365M, my walk-away. In Kiley McDaniel's survey of 27
+    industry insiders (ESPN, via TSN, Oct. 2, 2026), 11 of the 27 guesses were above $365M and the median was
+    $350M, so 11/27 = 0.41, rounded to 0.40. I value him a little above the industry's middle guess, with the
+    May 2026 elbow procedure (loose bodies removed) already priced in.
+  resolves_by: 2027-04-30
+  resolution: >-
+    Total guaranteed money in the signing club's official announcement, or in MLB.com's report if the club gives
+    no figure. An extension with the Dodgers counts. If he has not signed by April 30, 2027 (a lockout included),
+    the call is void.
+  outcome: null
+
+- id: rogers-aav-29m
+  category: free-agent contract
+  claim: >-
+    Trevor Rogers (LHP, Orioles in 2026, a free agent this winter) signs a contract of two or more guaranteed years with an average annual value above $29.5 million.
+  probability: 0.60
+  basis: >-
+    My walk-away is four years and $118M, $29.5M a year, after $10M off for the pick and pool money his expected
+    qualifying offer costs. I stop at four years because he has one 30-start season in three (25, 18 and 30 starts
+    in 2024-26, Statcast). Spotrac puts his market value near $32M a year (Baltimore Banner, Sept. 25, 2026), above
+    my price at any length. The way this comes out no is a one-year deal, his qualifying offer included, or a
+    longer deal that spreads the money thin. Judgment: a lean that someone pays more per year than I would.
+  resolves_by: 2027-04-30
+  resolution: >-
+    AAV (guaranteed money over guaranteed years; player options and opt-outs at face value, club and mutual
+    options only their buyouts), from the signing club's official announcement, or MLB.com's report if the club gives
+    no figure. A one-year deal, an accepted qualifying offer included, resolves no. Unsigned by April 30, 2027 (a
+    lockout included): void.
+  outcome: null
+
+- id: arozarena-aav-21m
+  category: free-agent contract
+  claim: >-
+    Randy Arozarena (OF, Mariners in 2026, a free agent this winter) signs a contract of two or more guaranteed years with an average annual value above $21.7 million.
+  probability: 0.65
+  basis: >-
+    I'd pay three years and $65M, $21.7M a year, after $10M off for the qualifying-offer pick: I project 2.6 WAR
+    in 2027, down from 5.5 in 2026, because his 2026 wOBA ran about 35 points over his xwOBA. Public estimates run
+    three to four years at $70-100M ($17.5-33M a year), and Bleacher Report (Oct. 7, 2026) cited a payday near
+    $100M, so I expect the market to pay for the 151 wRC+ that call 6 discounts. The low end of those estimates
+    (four years at $70M) and a one-year deal are the ways this comes out no. Judgment.
+  resolves_by: 2027-04-30
+  resolution: >-
+    AAV (guaranteed money over guaranteed years; player options and opt-outs at face value, club and mutual
+    options only their buyouts), from the signing club's official announcement, or MLB.com's report if the club gives
+    no figure. A one-year deal, an accepted qualifying offer included, resolves no. Unsigned by April 30, 2027 (a
+    lockout included): void.
+  outcome: null
+
+- id: chisholm-over-87m
+  category: free-agent contract
+  claim: >-
+    Jazz Chisholm Jr. (2B, Yankees in 2026, a free agent this winter) signs a contract guaranteeing more than $87 million in total.
+  probability: 0.30
+  basis: >-
+    I'd pay four years and $87M, which I think is at or above the market. In Mark Feinsand's Oct. 11, 2026 piece
+    on MLB.com, an executive gave three to four years near $20M a year ($60-80M) and questioned the qualifying
+    offer, and Feinsand raised a one-year deal; his reported ask is eight to 10 years at $35M. Judgment: a deal
+    near the ask is the only route above $87M.
+  resolves_by: 2027-04-30
+  resolution: >-
+    Total guaranteed money in the signing club's official announcement, or in MLB.com's report if the club gives
+    no figure. Accepting a qualifying offer counts as one year and $23.15M. Unsigned by April 30, 2027 (a lockout
+    included): void.
+  outcome: null
+
+# ---------------------------------------------------------------- performance (breakouts and regressions)
+# wOBA calls: projection = next-season wOBA line (baseball/predictions.py, NEXT_SEASON_WOBA) on 2025 and 2026
+# wOBA and xwOBA weighted 5/4 (2026 = 5) by PA. Hitters' projections are converted to wRC+ from the 2026 wRC+ at 0.68
+# wRC+ per point of wOBA (FanGraphs Guts! 2026). Spread: the line's residual sd, about 18 wRC+ (.029 of wOBA
+# for pitchers).
+
+- id: arozarena-wrc-130
+  category: performance
+  claim: >-
+    Randy Arozarena's 2027 wRC+ is 130 or lower (2026, Mariners: 151).
+  probability: 0.70
+  basis: >-
+    His 2026 wOBA (.384 in Statcast) ran 35 points over his xwOBA (.348), the 19th-largest gap of 205 hitters with
+    400+ PA, and 2025 sat well below it (.340 wOBA, .327 xwOBA; FanGraphs wRC+ 120). Weighting 2026 and 2025
+    5/4, the next-season line puts his 2027 wOBA at .341, about 122 wRC+ with an 18-point spread, so P(130
+    or lower) = 0.68, rounded to 0.70. This is the regression that sets my price in call 4.
+  resolves_by: 2027-10-15
+  resolution: >-
+    FanGraphs wRC+, 2027 regular season, all clubs combined. Fewer than 400 PA voids the call.
+  outcome: null
+
+- id: duran-wrc-90
+  category: performance
+  claim: >-
+    Jarren Duran's 2027 wRC+ is 90 or higher (2026, Red Sox: 69).
+  probability: 0.70
+  basis: >-
+    His 2026 wOBA (.278 in Statcast) sat 23 points under his xwOBA (.301), the 9th-largest shortfall of 205 hitters
+    with 400+ PA, with a .252 BABIP after .326 in 2025 (FanGraphs), when he had a .348 wOBA, a .326 xwOBA and a
+    113 wRC+. Weighting 2026 and 2025 5/4, the next-season line puts his 2027 wOBA at .323, about 100 wRC+ with an 18-point spread, so P(90 or
+    higher) = 0.71, rounded to 0.70. The 69 understates how he hit.
+  resolves_by: 2027-10-15
+  resolution: >-
+    FanGraphs wRC+, 2027 regular season, all clubs combined. Fewer than 400 PA voids the call.
+  outcome: null
+
+- id: peralta-woba-320
+  category: performance
+  claim: >-
+    Freddy Peralta's 2027 wOBA allowed is .320 or lower (2026, Mets and Rays: .328).
+  probability: 0.60
+  basis: >-
+    Hitters' wOBA against him in 2026 was .328 on an xwOBA of .302, the 12th-largest gap against a pitcher among
+    112 with 500+ batters faced (Statcast; 4.42 ERA, 4.32 SIERA on FanGraphs); in 2025 it was .277 on a .289
+    xwOBA. Weighting 2026 and 2025 5/4, the
+    pitchers' next-season line puts 2027 at .312 with a .029 spread, so P(.320 or lower) = 0.61, rounded to 0.60.
+  resolves_by: 2027-10-15
+  resolution: >-
+    Baseball Savant wOBA allowed, 2027 regular season, all clubs combined. Fewer than 400 batters faced voids the
+    call.
+  outcome: null
+
+- id: morejon-ch-whiff-50
+  category: performance
+  claim: >-
+    Adrián Morejón's changeup gets whiffs on 50% or more of swings in 2027 (2026: 56.0% on 182 swings).
+  probability: 0.40
+  basis: >-
+    The edge engine's next-season whiff projection (its 2026 projection table, data/edge/2026/projection.parquet;
+    leave-one-out RMSE 4.6 points) has the pitch at 48.9%: its results beat its physics by 15 points in 2026, and
+    about half of such a gap carries over. (The engine's row has 101 whiffs on 181 swings, one swing fewer than
+    the 182 above because that pitch has no complete physics.) P(50% or more) = 0.41, rounded to 0.40. My
+    scouting report on him (reports/2026-morejon-pro-scouting-report.md) calls the pitch's newness the biggest
+    question in his profile.
+  resolves_by: 2027-10-15
+  resolution: >-
+    Baseball Savant whiff% (whiffs per swing) on the pitch Statcast labels his changeup, 2027 regular season, all
+    clubs combined; if Statcast relabels it a split-finger, that pitch. Fewer than 75 swings voids the call.
+  outcome: null
+
+- id: abreu-bb-11
+  category: performance
+  claim: >-
+    Bryan Abreu's 2027 walk rate is 11.0% or lower (2026, Astros: 15.3%).
+  probability: 0.40
+  basis: >-
+    The bullpen memo moves him into a closer's role only if his walk rate stays at or below about 11%, resting on a
+    borderline second half (11.3%, p = 0.058). Weighting 2026/2025/2024 = 5/4/3 (15.3%, 10.5%, 9.8% unintentional
+    walks per batter faced, Statcast) and regressing toward the 2026 relief average (9.1%) at the usual
+    170-batter stabilization point gives 11.6%, with a 2.3-point spread over 260 batters, so P = 0.40
+    (abreu_walk_rate() in baseball/predictions.py prints every step).
+  resolves_by: 2027-10-15
+  resolution: >-
+    FanGraphs BB%, 2027 regular season, all clubs combined. Fewer than 40 innings voids the call.
+  outcome: null
+
+# ---------------------------------------------------------------- draft outcomes (2026 draftees)
+# Grades and reads are my own (20 internal reports on 2026 draftees, Oct. 17; not published here). Minor
+# league stats from FanGraphs, regular season. Rate calls are computed from FanGraphs' per-level lines summed
+# over every level he plays: K% = strikeouts / PA, ISO = (total bases - hits) / AB, BB% = walks / batters faced.
+
+- id: cholowsky-double-a
+  category: draft outcome
+  claim: >-
+    Roch Cholowsky (SS, White Sox, No. 1 pick in 2026) plays at least one regular-season game at Double-A or higher in 2027.
+  probability: 0.70
+  basis: >-
+    Top college bats usually reach Double-A in their first full season. I hold him a step under that: I grade the
+    hit tool 55, with its play against wood as the open question (.218 in 65 Cape PA, .167 in 46 High-A PA),
+    right wrist tendinitis ended his 2026 on Aug. 22, and the White Sox note he has never played a full season
+    (MLB.com, Sept. 10, 2026). Judgment.
+  resolves_by: 2027-10-15
+  resolution: >-
+    His MiLB.com or MLB.com game log for the 2027 regular season. Rehab games count.
+  outcome: null
+
+- id: flora-over-cholowsky
+  category: draft outcome
+  claim: >-
+    Jackson Flora (RHP, Giants, No. 4 pick in 2026) ranks ahead of Roch Cholowsky on the last MLB Pipeline Top 100 published on or before Oct. 15, 2027.
+  probability: 0.30
+  basis: >-
+    I rank Flora first of the 20 draftees I've graded (FV 55, OFP 60, the rarer asset) and Cholowsky second. MLB
+    Pipeline had Cholowsky No. 11 and Flora No. 30 in September 2026 (MLB.com, Sept. 10 and 18). Closing a 19-spot
+    gap takes a strong full season at Double-A, so this is a judgment on whether the industry comes around to my
+    order.
+  resolves_by: 2027-10-15
+  resolution: >-
+    MLB Pipeline's overall Top 100 on MLB.com, the last version published on or before Oct. 15, 2027. A player off
+    the list ranks behind any listed player. If neither is listed, or either has lost prospect eligibility, the
+    call is void.
+  outcome: null
+
+- id: burress-k-25
+  category: draft outcome
+  claim: >-
+    Drew Burress (OF, Athletics, No. 8 pick in 2026) strikes out in 25.0% or more of his 2027 plate appearances.
+  probability: 0.55
+  basis: >-
+    His pro debut at Single-A Stockton was loud (.291/.431/.591, 7 HR in 137 PA) but came with a 27.7% strikeout
+    rate, and his 2024 Cape line with wood had 28.2%; in college, with metal, he struck out under 14%. The open
+    question is whether the miss is chase or in-zone whiff, and I lean that the wood-bat strikeouts are real.
+    Judgment.
+  resolves_by: 2027-10-15
+  resolution: >-
+    FanGraphs K%, 2027 regular season, all minor and major league levels combined. Fewer than 250 PA voids the call.
+  outcome: null
+
+- id: emerson-iso-120
+  category: draft outcome
+  claim: >-
+    Grady Emerson (SS, Rays, No. 2 pick in 2026) posts an isolated power (SLG minus AVG) of .120 or higher in 2027.
+  probability: 0.40
+  basis: >-
+    I rank him fourth of the top four picks because of the power: a .039 ISO and a 61.5% ground-ball rate in 60 PA
+    at Single-A Charleston, where the league ISO was .135 (consensus had him No. 1 before the draft). I grade the
+    hit tool 55 and expect the power to lag at 19. Judgment.
+  resolves_by: 2027-10-15
+  resolution: >-
+    FanGraphs ISO, 2027 regular season, all minor and major league levels combined. Fewer than 300 PA voids the call.
+  outcome: null
+
+- id: edwards-bb-10
+  category: draft outcome
+  claim: >-
+    Mason Edwards (LHP, Athletics, No. 47 pick in 2026) walks 10.0% or fewer of the batters he faces in 2027.
+  probability: 0.40
+  basis: >-
+    He led Division I in strikeouts in 2026 (169 in 95 2/3 innings, MLB.com, July 21, 2026), a 42.7% strikeout
+    rate, and walked 11.9%: 13.0% in his first eight starts, 8.4% in the next six, then 17.5% in three postseason
+    starts. I grade him 45+ with the walks as the question. MLB.com (July 21) expected him not to pitch in 2026
+    after his college workload, and I found no pro appearance for him through Oct. 18 (RotoWire's player page lists
+    none). Judgment.
+  resolves_by: 2027-10-15
+  resolution: >-
+    FanGraphs BB%, 2027 regular season, all minor and major league levels combined. Fewer than 60 innings voids the call.
+  outcome: null
