@@ -242,7 +242,7 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 - 2026: 28.3% expected, +5.8 gap.
 - **The read:** his physics rose in 2026 and his results rose more. Before 2026 his results matched or trailed his physics.
 - **Where the 2026 gap sits:** the changeup (+15.1) and four-seamer (+13.6) beat their physics, and the slider (−12.0) trailed it.
-- **The changeup regressed:** 51.4% (45.2–57.6) for 2026 and 48.1% for next season. The engine projects 48.8%, still the 99th percentile of changeups.
+- **The changeup regressed:** 51.4% (45.2–57.6) for 2026 and 48.1% for next season. The engine projects 48.9%, still the 99th percentile of changeups.
 
 **Velocity (league baseline):**
 - **The gain:** sinker 97.4 (2024) → 97.7 (2025) → 99.5 (2026). The 2026 gain is +1.79, and the league's returning sinkers moved −0.05, so it's +1.85 net.
