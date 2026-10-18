@@ -201,3 +201,211 @@ def run(which: str, e: pd.DataFrame | None = None) -> pd.DataFrame:
     out = pd.concat(rows, ignore_index=True)
     out.to_csv(OUT / f"results_{which}.csv", index=False)
     return out
+
+
+# ---------------------------------------------------------------- follow-up designs (exploratory; see the follow-up plan)
+
+def _season_exposure(day, season, pitcher, Z, chunk: int = 400) -> tuple[np.ndarray, np.ndarray]:
+    """Design B: N and K (h = 1) over all of the hitter's other same-season dates, before and after."""
+    n = len(day)
+    N, K = np.zeros(n, np.float32), np.zeros(n, np.float32)
+    sq = (Z * Z).sum(1)
+    for a in range(0, n, chunk):
+        b = min(n, a + chunk)
+        lo = np.searchsorted(day, day[a] - 250, "left")
+        hi = np.searchsorted(day, day[b - 1] + 250, "right")
+        m = (season[a:b, None] == season[None, lo:hi]) & (day[a:b, None] != day[None, lo:hi]) \
+            & (pitcher[a:b, None] != pitcher[None, lo:hi])
+        d2 = np.maximum(sq[a:b, None] + sq[None, lo:hi] - 2 * Z[a:b] @ Z[lo:hi].T, 0)
+        N[a:b] = m.sum(1)
+        K[a:b] = (np.exp(-d2 / 2) * m).sum(1)
+    return N, K
+
+
+def series_opponents(g: pd.DataFrame) -> pd.DataFrame:
+    """For every (team, game): the opponent of the team's previous and next series (consecutive games against one
+    opponent form a series, off days included). g: one row per team-game with team, season, day, game_pk, opp."""
+    g = g.sort_values(["team", "season", "day", "game_pk"]).copy()
+    new = (g["opp"] != g.groupby(["team", "season"])["opp"].shift()).astype(int)
+    g["series"] = new.groupby([g["team"], g["season"]]).cumsum()
+    s = g.groupby(["team", "season", "series"])["opp"].first().reset_index()
+    s["prev_opp"] = s.groupby(["team", "season"])["opp"].shift(1)
+    s["next_opp"] = s.groupby(["team", "season"])["opp"].shift(-1)
+    return g.merge(s[["team", "season", "series", "prev_opp", "next_opp"]], on=["team", "season", "series"])
+
+
+def _staff_share(Zt, pool, chunk: int = 2000) -> np.ndarray:
+    """Mean kernel (h = 1) between each target shape and a staff's pitches."""
+    out = np.empty(len(Zt), np.float32)
+    sp = (pool * pool).sum(1)
+    for a in range(0, len(Zt), chunk):
+        z = Zt[a:a + chunk]
+        d2 = np.maximum((z * z).sum(1)[:, None] + sp[None, :] - 2 * z @ pool.T, 0)
+        out[a:a + chunk] = np.exp(-d2 / 2).mean(1)
+    return out
+
+
+def build_followup(pool_size: int = 800, seed: int = 0) -> pd.DataFrame:
+    """Both follow-up designs' variables for every pitch, merged onto exposures.parquet -> followup.parquet."""
+    cols_extra = ["home_team", "away_team", "inning_topbot"]
+    d = pd.concat([load_seq(s)[["game_pk", "at_bat_number", "pitch_number", *cols_extra]] for s in SEASONS], ignore_index=True)
+    base = standardize(load())
+    base = base.merge(d, on=["game_pk", "at_bat_number", "pitch_number"], how="left")
+    base["bat_team"] = np.where(base["inning_topbot"].eq("Top"), base["away_team"], base["home_team"])
+    base["fld_team"] = np.where(base["inning_topbot"].eq("Top"), base["home_team"], base["away_team"])
+    zc = [f"z_{c}" for c in SHAPE]
+    # Design B: season-long diet
+    NS = np.zeros(len(base), np.float32); KS = np.zeros(len(base), np.float32)
+    for _, idx in base.groupby(["batter", "family", "p_throws", "stand"], sort=False).groups.items():
+        g = base.loc[idx]
+        n_, k_ = _season_exposure(g["day"].to_numpy(), g["season"].to_numpy(), g["pitcher"].to_numpy(),
+                                  g[zc].to_numpy(np.float32))
+        pos = base.index.get_indexer(idx)
+        NS[pos], KS[pos] = n_, k_
+    base["Nseason"], base["Kseason_h1.0"] = NS, KS
+    # Design A: previous- and next-series opponent staffs
+    games = base.groupby(["game_pk", "bat_team"]).agg(season=("season", "first"), day=("day", "first"),
+                                                      opp=("fld_team", "first")).reset_index().rename(columns={"bat_team": "team"})
+    so = series_opponents(games)
+    base = base.merge(so[["game_pk", "team", "prev_opp", "next_opp"]].rename(columns={"team": "bat_team"}),
+                      on=["game_pk", "bat_team"], how="left")
+    rng = np.random.default_rng(seed)
+    pools = {}
+    for key, idx in base.groupby(["fld_team", "season", "family", "p_throws", "stand"]).groups.items():
+        z = base.loc[idx, zc].to_numpy(np.float32)
+        pools[key] = z if len(z) <= pool_size else z[rng.choice(len(z), pool_size, replace=False)]
+    for which in ("prev", "next"):
+        out = np.full(len(base), np.nan, np.float32)
+        for key, idx in base.groupby([f"{which}_opp", "season", "family", "p_throws", "stand"]).groups.items():
+            pool = pools.get(key)
+            if pool is None or len(pool) < 50:
+                continue
+            pos = base.index.get_indexer(idx)
+            out[pos] = _staff_share(base.loc[idx, zc].to_numpy(np.float32), pool)
+        base[f"SS_{which}"] = out
+    keep = ["game_pk", "at_bat_number", "pitch_number", "Nseason", "Kseason_h1.0", "prev_opp", "next_opp", "SS_prev", "SS_next"]
+    base[keep].to_parquet(OUT / "followup.parquet", index=False)
+    return base[keep]
+
+
+FOLLOWUP_SPECS = {
+    "A_schedule": [("SS_prev", None), ("SS_next", None)],
+    "B_timing": [("S30_h1.0", "N30"), ("Slead30_h1.0", "Nlead30"), ("Sseason_h1.0", "Nseason")],
+}
+
+
+def fit_followup(seasons=SEASONS) -> pd.DataFrame:
+    """Both designs, pooled and by season, on whiff per swing. Standardizers: development targets, as in the plan."""
+    from scipy.stats import norm
+
+    from baseball.stats import absorb, clustered_wls
+
+    e = add_shares(pd.read_parquet(OUT / "exposures.parquet"))
+    f = pd.read_parquet(OUT / "followup.parquet")
+    e = e.merge(f, on=["game_pk", "at_bat_number", "pitch_number"], how="left")
+    e["Sseason_h1.0"] = e["Kseason_h1.0"] / e["Nseason"].where(e["Nseason"] > 0)
+    fr = frame(e, "whiff")
+    dev = fr[fr["season"].isin(DEV)]
+    std = standardizer(dev, ["SS_prev", "SS_next", "S30_h1.0", "Slead30_h1.0", "Sseason_h1.0"])
+    rows = []
+    for design, spec in FOLLOWUP_SPECS.items():
+        for label, ss in [("pooled", list(seasons))] + [(str(s), [s]) for s in seasons]:
+            d = fr[fr["season"].isin(ss)].copy()
+            names, controls = [], []
+            for share, count in spec:
+                d[f"s_{share}"] = (d[share] - d["family"].map(std[share]["mean"])) / d["family"].map(std[share]["std"])
+                names.append(f"s_{share}")
+                if count:
+                    d[f"log{count}"] = np.log(d[count].clip(lower=1))
+                    controls.append(f"log{count}")
+            d = d.dropna(subset=names + controls + ["y"])
+            for k in ("bfam", "pkey"):
+                d = d[d.groupby(k)[k].transform("size") > 1]
+            r = absorb(d, ["y", *names, *controls], ["bfam", "pkey", "fzone", "fcount", "week"])
+            X = r[names + controls].to_numpy()
+            beta, se = clustered_wls(r["y"], X, np.ones(len(r)), d["batter"].to_numpy())
+            res = pd.DataFrame({"design": design, "sample": label, "term": names + controls, "coef": beta, "se": se})
+            if design == "A_schedule":
+                # previous minus next, with the covariance from the same clustered fit
+                cov = _clustered_cov(r["y"].to_numpy(), X, d["batter"].to_numpy())
+                diff = beta[0] - beta[1]
+                sd = float(np.sqrt(cov[0, 0] + cov[1, 1] - 2 * cov[0, 1]))
+                res = pd.concat([res, pd.DataFrame([{"design": design, "sample": label, "term": "prev minus next",
+                                                     "coef": diff, "se": sd}])], ignore_index=True)
+            res["lo"], res["hi"] = res["coef"] - 1.96 * res["se"], res["coef"] + 1.96 * res["se"]
+            res["p"] = 2 * norm.sf(np.abs(res["coef"] / res["se"]))
+            res["n"], res["batters"] = len(d), d["batter"].nunique()
+            rows.append(res)
+            print(res.round(4).to_string(index=False), flush=True)
+    out = pd.concat(rows, ignore_index=True)
+    out.to_csv(OUT / "results_followup.csv", index=False)
+    return out
+
+
+def _clustered_cov(y, X, clusters):
+    """The clustered covariance matrix (same small-sample factor as baseball.stats.clustered_wls)."""
+    bread = np.linalg.pinv(X.T @ X)
+    e = y - X @ (bread @ (X.T @ y))
+    groups, inv = np.unique(clusters, return_inverse=True)
+    S = np.zeros((len(groups), X.shape[1]))
+    np.add.at(S, inv, X * e[:, None])
+    n, k, G = len(y), X.shape[1], len(groups)
+    adj = (G / max(G - 1, 1)) * ((n - 1) / max(n - k, 1))
+    return adj * bread @ (S.T @ S) @ bread
+
+
+# ---------------------------------------------------------------- figure
+
+def figure(out_path: Path | None = None) -> Path:
+    """Three panels: the planned test and its placebo, the timing design, the schedule design."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    from baseball.viz import _style
+
+    dev = pd.read_csv(OUT / "results_dev.csv")
+    conf = pd.read_csv(OUT / "results_2026.csv")
+    fu = pd.read_csv(OUT / "results_followup.csv")
+    out_path = Path(out_path or OUT / "shape_exposure.png")
+    fig, axes = plt.subplots(1, 3, figsize=(14, 4.6), gridspec_kw={"width_ratios": [1, 1.1, 0.9]})
+    BLUE, ORANGE, GREY = "#2f5d8a", "#c8692e", "#8a8a8a"
+
+    def bars(ax, labels, rows, colors):
+        y = np.arange(len(rows))[::-1]
+        for yi, r, c in zip(y, rows, colors):
+            ax.errorbar(r["coef"], yi, xerr=1.96 * r["se"], fmt="o", color=c, capsize=3, lw=2)
+        ax.set_yticks(y); ax.set_yticklabels(labels); ax.axvline(0, color="#999", lw=0.8); _style(ax)
+
+    pick = lambda t, test, term: t[(t["test"] == test) & (t["term"] == term) & (t["outcome"] == "whiff")].iloc[0]  # noqa: E731
+    a = axes[0]
+    bars(a, ["Seen, 2024-25", "Seen, 2026", "About to see, 2024-25", "About to see, 2026"],
+         [pick(dev, "H3", "s_S30_h1.0"), pick(conf, "H3", "s_S30_h1.0"), pick(dev, "H3", "s_Slead30_h1.0"),
+          pick(conf, "H3", "s_Slead30_h1.0")], [BLUE, BLUE, ORANGE, ORANGE])
+    a.set_title("The planned test fails its placebo", loc="left", fontsize=12, fontweight="bold")
+    a.set_xlabel("Whiff points per SD of similar-shape share")
+
+    b = axes[1]
+    pf = fu[(fu["design"] == "B_timing") & (fu["sample"] == "pooled")].set_index("term")
+    bars(b, ["Last 30 days", "Next 30 days (placebo)", "His whole season"],
+         [pf.loc["s_S30_h1.0"], pf.loc["s_Slead30_h1.0"], pf.loc["s_Sseason_h1.0"]], [BLUE, ORANGE, GREY])
+    b.set_title("Recent exposure, beyond his season's diet", loc="left", fontsize=12, fontweight="bold")
+    b.set_xlabel("Whiff points per SD, all three in one model (2024-26)")
+
+    c = axes[2]
+    sf = fu[(fu["design"] == "A_schedule") & (fu["sample"] == "pooled")].set_index("term")
+    bars(c, ["Last series' staff", "Next series' staff (placebo)", "Last minus next"],
+         [sf.loc["s_SS_prev"], sf.loc["s_SS_next"], sf.loc["prev minus next"]], [BLUE, ORANGE, GREY])
+    c.set_title("The schedule shows none", loc="left", fontsize=12, fontweight="bold")
+    c.set_xlabel("Whiff points per SD (2024-26)")
+
+    fig.text(0.01, 0.005,
+             "MLB regular seasons 2024-26, Statcast via Baseball Savant. Swings on pitches whose hitter saw 25+ same-family pitches from other pitchers in the last 30 days. "
+             "Fixed effects: batter x season x family, pitcher x pitch type x season,\nfamily x zone, family x count, season x week. "
+             "95% intervals clustered by batter. Left panel: the plan's H3 model. Middle and right: follow-up designs specified after the placebo failed, before they were fit.",
+             fontsize=7.5, color="#555")
+    fig.tight_layout(rect=(0, 0.08, 1, 1))
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out_path, dpi=160)
+    plt.close(fig)
+    return out_path

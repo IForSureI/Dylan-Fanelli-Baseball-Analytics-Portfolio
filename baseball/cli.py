@@ -11,6 +11,9 @@
   uv run bb trades                          the MLB trade graph: pull trades + WAR, build data/graph/, who trades with whom
   uv run bb front-office                    front-office ties vs trade partners (Baseball-Reference pages, career histories)
   uv run bb delivery 2026 670970            delivery and release profile from tracking data (scouting-report support)
+  uv run bb shape-exposure build            shape exposure study: build | fit-dev | fit-2026 | followup | figure
+  uv run bb grade velo 99.5 --hand L        20-80 velocity grade (vs 2026 starters, and the traditional anchors)
+  uv run bb grade ofp SI=70 CH=70 FF=70 SL=55 command=60   pitcher OFP roll-up
   uv run bb db                              what is in the warehouse
   uv run bb db rebuild                      rebuild the warehouse from the cached pulls in data/raw/
 """
@@ -460,6 +463,37 @@ def cmd_db(a: argparse.Namespace) -> None:
     print("The warehouse is empty. Start with: uv run bb pull skubal tarik 2025" if s.empty else s.to_string(index=False))
 
 
+def cmd_shape_exposure(a: argparse.Namespace) -> None:
+    from baseball.edge import shape_exposure as S
+
+    if a.step == "build":
+        S.build()
+    elif a.step == "fit-dev":
+        S.run("dev")
+    elif a.step == "fit-2026":
+        S.run("2026")
+    elif a.step == "followup":
+        S.build_followup()
+        S.fit_followup()
+    else:
+        print(S.figure())
+
+
+def cmd_grade(a: argparse.Namespace) -> None:
+    from baseball.evaluation.grades import ofp_pitcher, parse_pitches, velo_grade
+
+    if a.what == "velo":
+        g = velo_grade(a.mph, a.hand)
+        print(f"{g['mph']} mph ({g['hand']}HP): {g['vs_2026_starters']} vs 2026 MLB starters (raw {g['vs_2026_starters_raw']}); "
+              f"traditional anchors {g['traditional']} (raw {g['traditional_raw']})")
+    else:
+        pitches, command = parse_pitches(a.grades)
+        r = ofp_pitcher(pitches, command)
+        print(f"Starter estimate {r['starter_raw']} -> {r['starter_ofp']}; reliever estimate {r['reliever_raw']} -> {r['reliever_ofp']}")
+        print(f"Starter-viable: {r['starter_viable']} (3+ pitches at 45+ and command 45+). Suggested OFP {r['suggested_ofp']}, {r['role']}.")
+        print("A starting point: override it with a stated reason.")
+
+
 def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser(prog="bb", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -602,6 +636,19 @@ def main(argv: list[str] | None = None) -> None:
 
     pe = sub.add_parser("people", help="player names and ids from the Chadwick register (data/people/)")
     pe.set_defaults(func=cmd_people)
+
+    se_ = sub.add_parser("shape-exposure", help="do hitters adapt to shapes they've seen from other pitchers? (plan: reports/2026-shape-exposure-plan.md)")
+    se_.add_argument("step", choices=["build", "fit-dev", "fit-2026", "followup", "figure"])
+    se_.set_defaults(func=cmd_shape_exposure)
+
+    gr = sub.add_parser("grade", help="20-80 grades from measurements: fastball velocity, pitcher OFP roll-up")
+    gsub = gr.add_subparsers(dest="what", required=True)
+    gv = gsub.add_parser("velo", help="sitting velocity -> grade vs 2026 starters (and the traditional anchors)")
+    gv.add_argument("mph", type=float)
+    gv.add_argument("--hand", default="R", choices=["R", "L", "r", "l"])
+    go = gsub.add_parser("ofp", help="pitcher OFP roll-up, e.g. SI=70 CH=70 FF=70 SL=55 command=60")
+    go.add_argument("grades", nargs="+")
+    gr.set_defaults(func=cmd_grade)
 
     d = sub.add_parser("db", help="what is in the warehouse")
     d.add_argument("action", nargs="?", choices=["rebuild"])
