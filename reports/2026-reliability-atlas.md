@@ -10,7 +10,7 @@
 - **2026 was also the development test set,** so it isn't a clean holdout: one design choice was dropped after it failed there.
 - **The clean holdout is a replication,** fit on 2024 and tested on 2025, run once after every choice was fixed. It agrees.
 
-*Written 2026-10-13; Dylan Fanelli; Data: Statcast via Baseball Savant, 2,134,079 pitches, 7,288 games, 1,310 pitchers, 905 batters; Code: `baseball/evaluation/reliability.py`; Reviewed in a separate pass 2026-10-13; findings addressed*
+*Written 2026-10-13; Dylan Fanelli; Data: Statcast via Baseball Savant, 2,134,079 pitches (the 2,141,219 rows in the other studies, less 7,140 automatic balls and strikes with no pitch thrown), 7,288 games, 1,310 pitchers, 905 batters; Code: `baseball/evaluation/reliability.py`; Reviewed in a separate pass 2026-10-13; findings addressed*
 
 ![The atlas: how fast each metric becomes signal against how much it carries over](figures/2026-reliability-atlas.png)
 
@@ -117,7 +117,7 @@ The shipped constants are in `baseball/evaluation/reliability_params.json`.
 ## Summary
 - **Regressing helps out of sample, and never made a metric significantly worse.**
   - **Within the season** (2026 first half → second half, parameters fit on 2024–25):
-    - regressing cut the error for 135 of 147 scored metrics
+    - regressing cut the error for 135 of the 147 metric groups that could be scored this way (of 157)
     - 103 are significant after a Benjamini–Hochberg correction (106 by bootstrap interval)
     - median RMSE cut 26.8%
   - **The next season** (2025 → 2026): better for 91 of 96 metrics, 68 significant after correction; median cut 15.6%.

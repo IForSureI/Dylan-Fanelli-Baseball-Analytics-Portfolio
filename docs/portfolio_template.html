@@ -76,14 +76,14 @@ footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-
 
 <div class="wrap">
   <header class="hero">
-    <p class="eyebrow">Dylan Fanelli · Baseball operations · M.S. Sport Management, UMass Amherst (Isenberg / McCormack)</p>
+    <p class="eyebrow">Dylan Fanelli, baseball operations. M.S. Sport Management, UMass Amherst (Isenberg / McCormack)</p>
     <h1>Baseball research <span>a club can use</span></h1>
-    <p class="lede">These are original questions a front office pays to answer, built on every public pitch of 2024–2026 and every MLB trade since 2009. Each one is validated out of sample, reviewed by someone who didn't build it, and shipped as code a club could run tomorrow. When the answer is no, the report says no.</p>
+    <p class="lede">These are original questions a front office pays to answer, built on every public pitch of 2024–2026 and every MLB trade since 2009. Each one is validated out of sample, checked number by number in a separate review pass, and shipped as code a club could run tomorrow. When the answer is no, the report says no.</p>
     <div class="stats">
       <div class="stat"><b>2.14M</b><span>regular-season pitches, 2024–26, with batter, location, base-out state and bat tracking</span></div>
-      <div class="stat"><b>10</b><span>finished studies, decision memos and scouting reports, each with its code and figures</span></div>
+      <div class="stat"><b>11</b><span>finished studies, decision memos and scouting reports, each with its code and figures</span></div>
       <div class="stat"><b>266</b><span>tests with hand-checked numbers, run on every push</span></div>
-      <div class="stat"><b>100%</b><span>of finished reports independently reviewed; the reviews changed real conclusions</span></div>
+      <div class="stat"><b>100%</b><span>of finished reports put through a separate review pass; the reviews changed real conclusions</span></div>
     </div>
   </header>
 
@@ -112,7 +112,7 @@ footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-
         <div class="text">
           <p class="eyebrow">Evaluation · original study</p>
           <h3>Does a pitch wear out on a hitter?</h3>
-          <p class="answer"><b>Yes, and it's specific to the pitch type.</b> Each earlier changeup or splitter a hitter saw from the pitcher in earlier plate appearances today goes with 1.87 fewer whiff points on the next one. Seeing more pitches of other types doesn't hurt the pitch. The effect carries across games this season and partly to the next same-handed pitcher's changeup. It holds in each of the three seasons, and with platoon and month-level fixed effects.</p>
+          <p class="answer"><b>Yes, and it's specific to the pitch type.</b> An earlier changeup or splitter a hitter saw from the pitcher in earlier plate appearances today, in place of a pitch of another type, goes with 1.87 fewer whiff points on the next one. Pitches of other types in earlier plate appearances go with slightly more whiffs, not fewer. The effect carries across games this season and partly to the next same-handed pitcher's changeup. It holds in each of the three seasons, and with platoon and month-level fixed effects.</p>
           <div class="nums"><span class="num">−1.87 whiff pts per earlier changeup/splitter</span><span class="num">−8.2 after 4+</span><span class="num">42% carries to the next same-handed pitcher</span></div>
           <p class="read"><a href="{{REPO}}/reports/2026-league-pitch-familiarity.md">Read the report →</a></p>
         </div>
@@ -128,6 +128,17 @@ footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-
           <p class="read"><a href="{{REPO}}/reports/2026-exposure-aware-hook.md">Read the report →</a></p>
         </div>
         <div class="fig"><img alt="Calibration of the exposure index, and what managers act on" src="{{IMG:2026-exposure-aware-hook.png}}"></div>
+      </article>
+
+      <article class="study">
+        <div class="text">
+          <p class="eyebrow">Evaluation · pre-registered</p>
+          <h3>Do hitters adapt to shapes they've seen from other pitchers?</h3>
+          <p class="answer"><b>A little, and less than the raw numbers say.</b> The plan was committed before any fit and 2026 was held out. The raw association replicated, then failed its own placebo: shapes a hitter is about to see predict his whiffs too, which points to who plays against what. Holding his season-long diet fixed, recent exposure is worth about a quarter of a whiff point per SD, about 2 runs a season at most. Don't reorder a bullpen on it.</p>
+          <div class="nums"><span class="num">−0.74 raw, 2026 holdout</span><span class="num null">placebo −0.36 (fails)</span><span class="num">−0.27 beyond his season's diet</span></div>
+          <p class="read"><a href="{{REPO}}/reports/2026-shape-exposure.md">Read the report →</a></p>
+        </div>
+        <div class="fig"><img alt="The planned test, its placebo, and two follow-up designs" src="{{IMG:2026-shape-exposure.png}}"></div>
       </article>
 
       <article class="study">

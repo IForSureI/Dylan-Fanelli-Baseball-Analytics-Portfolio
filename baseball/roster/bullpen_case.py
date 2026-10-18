@@ -67,7 +67,8 @@ FACTS = {
     "qo_tier_2026_27": {"TEX": "other", "SD": "payor", "HOU": "other", "MIA": "recipient", "NYY": "payor"},
     # MLB Trade Rumors, "Each Team's Penalty For Signing A Qualifying Offer-Rejecting Free Agent," republished by
     # NewsBeep Oct. 12, 2026 (mlbtraderumors.com blocks automated reading)
-    "qo_2026": 22.025,                  # MLB.com glossary; the 2027 amount is set in early November 2026
+    "qo_2026": 22.025,                  # MLB.com glossary
+    "qo_2027": 23.15,                   # reported Oct. 8, 2026 (Joel Sherman, New York Post)
 }
 OTHER_ROSTER_SPOTS = 14                 # ASSUMPTION: the rest of the 26/40-man at the 2026 minimum ($0.78M)
 RANGERS_SECOND_PICK = 55                # ESTIMATE: 2nd-round pick of a club with the ~15th-worst record (80-82)
@@ -220,10 +221,13 @@ def walk_away(m: dict) -> dict:
     annuity4 = sum(1 / 1.1 ** t for t in range(4))
     qo = m["qo"][670970]["total_value"]
     with_qo = (be["market"] * annuity4 - qo) / annuity4
+    qo_e = A.qo_cost(FACTS["qo_tier_2026_27"][CLUB], "payor", 64.0, RANGERS_SECOND_PICK, pick_values=A.PICK_VALUE_2019)["total_value"]
+    with_qo_e = (be["market"] * annuity4 - qo_e) / annuity4
     return {"value_breakeven_4y_three_season": be["market"], "value_breakeven_4y_comps_way": be["market_comps_way"],
             "engine_breakeven_4y_not_same_scale": be["engine"], "expected_price_comps_way": m["price"][670970]["comps_way"]["aav"],
             "qo_value_pv": qo, "walkaway_with_qo_aav": with_qo, "qo_cut_per_year": be["market"] - with_qo,
-            "qo_cut_nominal_4y": 4 * (be["market"] - with_qo)}
+            "qo_cut_nominal_4y": 4 * (be["market"] - with_qo),
+            "qo_value_pv_edwards_2019": qo_e, "walkaway_with_qo_aav_edwards_2019": with_qo_e}
 
 
 # ------------------------------------------------------------------ figure

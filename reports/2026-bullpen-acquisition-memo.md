@@ -2,19 +2,20 @@
 
 **Decision memo from public data.** One real offseason decision, made the way a front office makes it: the club's need, three relievers it could sign this winter, a data-informed scouting report on each, what each costs and is worth under the 2022-26 agreement and its December 1 expiration, and a ranked recommendation with a price.
 - **The scouting reports are data-informed, not a live look.** Grades come from Statcast shape and results. Health appears only as public injured-list and surgery reporting, cited, with no inference.
-- **Closes roadmap issues #13** (acquisition memo: compare three relievers) **and #8** (20-80 scouting report template and first full report).
 
-*Written 2026-10-13; Dylan Fanelli; Data: Statcast via Baseball Savant (regular seasons 2024-26); Outside facts: MLB.com, MiLB.com, CBS Sports, AP, MLB Trade Rumors (via NewsBeep and Yardbarker), Spotrac, Texas Rangers On SI, Padres On SI, FanSided, Just Baseball, Roundtable, NBC Sports, RotoWire, Yahoo Sports/NBC tracker, Bleacher Nation, FanGraphs (each dated below); Code: `baseball/evaluation/reliever.py`, `baseball/roster/acquisition.py`, `baseball/roster/bullpen_case.py`; Reviewed in a separate pass 2026-10-13; findings addressed*
+*Written 2026-10-13; Dylan Fanelli; Data: Statcast via Baseball Savant (regular seasons 2024-26); Outside facts: dated public reporting, listed under Sources; Code: `baseball/evaluation/reliever.py`, `baseball/roster/acquisition.py`, `baseball/roster/bullpen_case.py`; Reviewed in a separate pass 2026-10-13; findings addressed*
 
 ![Pitch grades, the reliever market's price per projected win, and fastball velocity by month](figures/2026-bullpen-acquisition-memo.png)
 
 ## Decision summary
 
+> **Update, Oct. 18, 2026: the qualifying-offer case.** The first version priced the pick a QO would cost the Rangers (a second-rounder near No. 55) at $5.3M, a 2019 public estimate. My own draft-pick backtest (the values are in `baseball/roster/acquisition.py`, `PICK_VALUE_OWN`) puts that pick at about $10.1M after its 2026 slot, from what picks 45-60 returned in the 2000-2016 drafts. On that value the pick and pool cost $10.6M in present value, and **the walk-away with a QO falls from about $66M to about $60M, the opening offer**: if the Padres attach a QO, open at $60M and don't go higher. The 2027 QO is $23.15M (reported Oct. 8, 2026). Everything else below is unchanged; the QO figures are updated in place and marked.
+
 **Compiled:** 2026-10-13; **On:** Bid on Adrián Morejón to his value; expect Abreu about half the time
 
 **Recommendation.**
 - **Bid on Adrián Morejón.** Open at four years, $60M with a 2031 club option. Walk away above four years, $72M ($18M a year), which is his value to us at the reliever market's own price of a win.
-  - **If the Padres make him a qualifying offer:** walk away above about $66M.
+  - **If the Padres make him a qualifying offer:** walk away above about $60M (updated Oct. 18; first version $66M).
   - **The odds:** at $72M, we land him a little less than half the time. Paying more is a call on what 2027 wins are worth to this club.
 - **If he goes elsewhere, sign Bryan Abreu.** Open at two years, $18M, and walk away above $25M.
 - **Pete Fairbanks is no longer a 2027 option.** He is having thoracic outlet surgery with a typical recovery of nine to ten months (MLB.com, Sept. 19, 2026).
@@ -46,7 +47,7 @@
 - **Health:** he had Tommy John surgery in 2021 and a 60-day elbow sprain in 2023 (MLB.com, Apr. 21, 2021; CBS Sports, Mar. 30, 2023).
 
 **What would change the recommendation.**
-- **His price above $72M (or $66M with a QO), a fifth guaranteed year, or an opt-out:** switch to Abreu.
+- **His price above $72M (or $60M with a QO), a fifth guaranteed year, or an opt-out:** switch to Abreu.
 - **A relief budget under about $15M a year:** Abreu, or Iglesias on one year.
 - **A club decision that 2027 wins near the wild-card line are worth more than the market rate:** raise the walk-away. At $80M we'd land him about 62% of the time, at a market-rate cost of about $6.6M in present value.
 - **A club medical review of any of them** (not public, not in this memo).
@@ -132,7 +133,7 @@
 | 2027 committed (tax) | $142.1M to eight players, including mutual options for Pederson, Higashioka and Junis | Postins (SI), Oct. 2, 2026 |
 | 2027 arbitration class | $38.2M for ten players (Gore $8.9M ... Latz $3.05M) | Zach Cioffi, Just Baseball, Oct. 7, 2026 (his own comparables) |
 | 2027 payroll before additions | about $191M (derived: the two lines above, plus 14 roster spots at the 2026 minimum of $0.78M) | This memo |
-| QO status for signing | "Other": a qualified signing costs the 2nd-highest 2027 pick and $500K of international pool | MLB Trade Rumors via NewsBeep, Oct. 12, 2026 |
+| QO status for signing | "Other": a qualified signing costs the 2nd-highest 2027 pick and $500K of international pool | MLB Trade Rumors, Oct. 12, 2026 |
 
 - **What the $191M leaves out:** player benefits, which count toward the CBT payroll, and 40-man minor-league salaries. Neither is estimated here.
   - **The conclusion survives a generous allowance:** $191M + $20M + an $18M signing = $229M, still under a $244M line.
@@ -293,7 +294,7 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 - **Measurements and transactions:** MiLB.com player page, read Oct. 13, 2026.
 - **Public context:** a 14.73 ERA and a walk rate four times his 2025 rate on April 18.
 - **His own explanation:** "a little bit of lack of confidence in my delivery" (Brian McTaggart, MLB.com, Apr. 18, 2026).
-- **Free agency:** "slated to become a free agent at the end of the 2026 season" (MLB Trade Rumors via Yardbarker, Mar. 14, 2026).
+- **Free agency:** "slated to become a free agent at the end of the 2026 season" (MLB Trade Rumors, Mar. 14, 2026).
 - **QO eligibility:** with Houston all season (game logs; MiLB.com shows no 2026 trade or assignment) and in his first free agency.
 
 **Health (public):**
@@ -504,13 +505,15 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 | Contract | PV of salary | Value at the market line | Surplus | Engine value (different scale) |
 |---|---|---|---|---|
 | Morejón 4 years, $60M (opening) | $52.3M | $63.1M | +$10.8M | $107M |
-| Morejón 4 years, $66M (walk-away with a QO) | $57.5M | $63.1M | +$5.6M (less the $5.8M pick and pool = about 0) | $107M |
+| Morejón 4 years, $66M (first version's walk-away with a QO) | $57.5M | $63.1M | +$5.6M (less the first version's $5.8M pick and pool = about 0) | $107M |
 | Morejón 4 years, $72M (walk-away) | $62.8M | $63.1M | +$0.4M | $107M |
 | Morejón 4 years, $80M (stretch) | $69.7M | $63.1M | −$6.6M | $107M |
 | Morejón 5 years, $100M ("nine figures") | $83.4M | $74.3M | −$9.1M | $119M |
 | Abreu 2 years, $18M (opening) | $17.2M | $24.1M | +$7.0M | $24.5M |
 | Abreu 2 years, $25M (walk-away) | $23.9M | $24.1M | +$0.3M | $24.5M |
 | Fairbanks 2 years, $6M (rehab: a third of 2027, then 2028) | $5.7M | $8.5M | +$2.8M | $5.6M |
+
+*Updated Oct. 18: with the house pick value ($10.6M of pick and pool), the opening row ($60M, surplus +$10.8M) is the one that nets to about zero with a QO.*
 
 **Break-even AAV** (value at the market line):
 
@@ -526,23 +529,25 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 
 | Walk-away (4 years) | Chance his price is at or below it |
 |---|---|
-| $66M ($16.4M a year: the QO case) | 36% |
+| $66M ($16.4M a year: the first version's QO case) | 36% |
 | $70M | 44% |
 | $72M | 47% |
 | $80M | 62% |
 | $88M | 75% |
 
+*Updated Oct. 18: the QO case is now $60M, below the lowest step in this table.*
+
 - **What the club gives up:** a walk-away at value lands him about half the time. The alternative, Abreu at his own value, carries about zero surplus, so losing Morejón costs his extra wins, not money.
 - **Raising the walk-away** is worth it only if 2027 wins are worth more to this club than the market rate. The Rangers missed the wild card by four games, and their win curve isn't modeled here, so it's the GM's call. The table gives the price of each step.
 
 **The qualifying offer.**
-- **The rules:** a qualifying offer is the 2022-26 agreement's ($22.025M in 2026; the 2027 figure is set in early November).
+- **The rules:** a qualifying offer is the 2022-26 agreement's ($22.025M in 2026; $23.15M for 2027, reported Oct. 8, 2026).
   - **Morejón:** eligible (see his report). The Padres paid tax in 2026, so losing him earns them only a pick after Round 4. Whether they make the offer is unknown. Padres On SI (Aug. 3) said he "could be a candidate."
   - **Abreu:** eligible on the same facts, though an offer after his 2026 is less likely.
 - **The Rangers' cost:** their 2nd-highest 2027 pick plus $0.5M of pool.
   - **The pick:** a 2nd-rounder near No. 55. That number is an estimate from their 80-82 finish.
-  - **Its value:** about $5.3M in 2019 dollars (Craig Edwards, FanGraphs, Apr. 5, 2019).
-  - **In total:** about $5.8M in present value. That lowers Morejón's walk-away by $1.66M a year, or $6.7M nominal over four years, to about $16.4M a year, or $66M.
+  - **Its value (updated Oct. 18):** about $10.1M, from my 2000-2016 draft table (picks 45-60 average what they returned, less the 2026 slot), in place of the first version's $5.3M in 2019 dollars (Craig Edwards, FanGraphs, Apr. 5, 2019).
+  - **In total:** about $10.6M in present value. That lowers Morejón's walk-away by $3.04M a year, or $12.2M nominal over four years, to about $15.1M a year, or $60M. On the 2019 figure it was $5.8M, $1.66M a year and $66M.
 - **The QO may not outlive this agreement.** The union proposed eliminating it (CBS Sports, Dayn Perry, May 28, 2026), and MLB said it would agree (AP, June 25, 2026).
   - **Before December 1:** a signing falls under current rules.
   - **After a lockout:** a signing might fall under rules without the QO. That isn't known.
@@ -574,7 +579,7 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 
 1. **Bid on Morejón, to his value.**
    - **Open:** four years, $60M (2027-30), with a 2031 club option. Use part of it as a signing bonus paid before December 1 to win a close bid.
-   - **Walk away:** above four years and $72M, and above about $66M if he carries a qualifying offer. No fifth guaranteed year, no opt-out.
+   - **Walk away:** above four years and $72M, and above about $60M if he carries a qualifying offer (updated Oct. 18; first version $66M). No fifth guaranteed year, no opt-out.
    - **The odds:** expect to land him about half the time.
 2. **If his price passes the walk-away, sign Abreu.**
    - **Open:** two years, $18M, with a 2029 club option.
@@ -586,12 +591,12 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 **What changes the call.**
 - **Morejón's market:** any bid at starter money (five years, nine figures) puts him above his value by about $9M in present value.
 - **The budget:** under about $15M a year for relief means Abreu (or Iglesias) first.
-- **A qualifying offer:** it lowers Morejón's walk-away by about $6.7M nominal.
+- **A qualifying offer:** it lowers Morejón's walk-away by about $12M nominal (updated Oct. 18; first version $6.7M).
 - **The club's view of 2027 wins:** valuing them above the market raises the walk-away. Each step's price and odds are in section 4.
 - **New information:** a club medical review of any of the three, or a winter look at Abreu's delivery (team data, outside this public memo).
 - **The labor outcome:** if a lockout starts December 2 with Morejón unsigned, the decision moves to whenever free agency reopens, under rules nobody has yet.
 
-**What changed after the independent review.**
+**What changed after the review pass.**
 - **Ranking:** unchanged.
 - **Prices:**
   - Morejón's walk-away rose from $70M to $72M, after the market line was refit with consistent projections and a leak-free replacement level. With a QO it rose from $63M to $66M.

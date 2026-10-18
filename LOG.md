@@ -2,6 +2,22 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-10-18: Shape exposure study (pre-registered), one pick value, and consistency fixes
+**Built**
+- **`baseball/edge/shape_exposure.py`** (`bb shape-exposure`): does a hitter miss a pitch less when he has recently seen similar shapes from other pitchers?
+  - The plan was committed before any fit; development results, then the 2026 results, were each committed before the next step.
+  - The planned test replicated on 2026 and failed its lead placebo. Two follow-up designs, also committed before they ran, separate recent exposure from season-level selection: [report](reports/2026-shape-exposure.md).
+- **`baseball/evaluation/grades.py`** (`bb grade velo`, `bb grade ofp`): the velocity grades and OFP roll-up the Morejón report uses, now in the repo with tests, so its grades reproduce from here.
+- **House pick value:** `acquisition.PICK_VALUE_OWN`, picks 45-60 from my 2000-2016 draft backtest less the 2026 slot. `qo_cost` uses it by default; Edwards (2019) stays available for comparison.
+
+**Changed**
+- **Bullpen memo:** the qualifying-offer walk-away is about $60M, not $66M, on the house pick value; the 2027 QO amount is $23.15M (reported Oct. 8). Marked as an update in the memo.
+- **Morejón report:** the changeup grade's reason no longer docks the pitch for its usage against left-handers (that's a role question); FIP is shown both ways; the one-page PDF is rebuilt.
+- **Wording:** "independently reviewed" became "a separate review pass", which is what the reviews were. The familiarity summary now says the 1.87 is against an earlier pitch of another type. The Atlas states that 147 of its 157 groups could be scored, and why its pitch count differs.
+
+**Learned**
+- **An exposure effect without a lead placebo overstates.** Here the raw estimate was 2.7 times the one that survived the placebo.
+
 ## 2026-10-15: Pro scouting report on Adrián Morejón, and the delivery module
 **Built**
 - **`baseball/evaluation/delivery.py`** (`bb delivery <season> <pitcher> [--figure PATH --title TEXT]`): the tracking evidence behind a report's delivery notes. It does seven things:
@@ -25,7 +41,7 @@ Newest first. One entry per working session: what was built, what was decided, w
 - **Runners attempted 1.9 steals per nine innings against him**, against a league rate of 0.9. His FIP is 2.15, against a 2.83 ERA.
 
 **Decided**
-- **Fastball base grades** use the 2026-starter reading from `grades.py velo`, and every move off the base is stated.
+- **Fastball base grades** use the 2026-starter reading from `bb grade velo`, and every move off the base is stated.
 - **Command is NG without a look.** Location data isn't intent.
 - **Data-only reports name the look and when it happens.** Here that's before the money: the bid's deadline is the QO decision and the Dec. 1 expiration.
 
@@ -43,7 +59,7 @@ Newest first. One entry per working session: what was built, what was decided, w
   - `Executive` nodes
   - `WORKED_FOR` relationships (club, seasons, role)
   - `RAN` relationships (decision roles)
-- **Report:** `reports/2026-front-office-ties.md` and its figure, independently reviewed three times (Oct. 13–14), with every finding addressed. The rivals report's front-office lines were updated to match.
+- **Report:** `reports/2026-front-office-ties.md` and its figure, put through three separate review passes (Oct. 13–14), with every finding addressed. The rivals report's front-office lines were updated to match.
 - **Tests:** 14 in the new `tests/test_front_office.py`.
 
 **Answered**
@@ -91,7 +107,7 @@ Newest first. One entry per working session: what was built, what was decided, w
   - Nodes: `Team`, `Player`, `Trade`.
   - Relationships: `MADE`, `MOVED`, `LED_TO`, `TRADED_WITH`.
 - **`baseball/roster/trade_patches.json`:** documented repairs for trades the MLB feed records incompletely.
-- **Report:** `reports/2026-trade-network-rivals.md` and its figure, independently reviewed twice on 2026-10-13, with every finding addressed.
+- **Report:** `reports/2026-trade-network-rivals.md` and its figure, put through two separate review passes on 2026-10-13, with every finding addressed.
 - **Monthly update:** `bb trades` added to `scripts/automation/update.sh`.
 - **Tests:** 12 new in `tests/test_trades.py`.
 
@@ -164,7 +180,7 @@ Newest first. One entry per working session: what was built, what was decided, w
   - **The 2025-26 reliever market line:** fit on 21 signings, with the comps and candidates projected the same way, a 95% prediction interval and the odds that a walk-away lands the player.
   - **Contracts:** value at the market line (the engine's $/WAR is shown on a different, uncalibrated scale), partial-season availability, break-even AAV, qualifying-offer cost and a tax table.
 - **`baseball/roster/bullpen_case.py`** (`bb bullpen-case`): the memo's numbers and figure.
-- **Report:** `reports/2026-bullpen-acquisition-memo.md`, independently reviewed 2026-10-13 and revised.
+- **Report:** `reports/2026-bullpen-acquisition-memo.md`, put through a separate review pass on 2026-10-13 and revised.
 - **Tests:** 228 (up from 187).
 
 **Answered**
@@ -191,7 +207,7 @@ Newest first. One entry per working session: what was built, what was decided, w
 - **A source error:** Friars on Base (Sept. 9) lists Robert Suarez's Braves deal as four years and $60M, against three and $45M in the NBC/Yahoo tracker and amNY (Dec. 11, 2025). The tracker is used.
 
 ## 2026-10-13 (overnight): Four studies, reviewed: reliability, the hook, pitch-design levers, the roster engine
-Each study was built and integrated, then independently reviewed against its own outputs, fixed and re-checked.
+Each study was built and integrated, then put through a separate review pass against its own outputs, fixed and re-checked.
 
 **Built**
 - **Reliability Atlas** (`baseball/evaluation/reliability.py`, `bb reliability`, `bb regress`):
@@ -253,7 +269,7 @@ Each study was built and integrated, then independently reviewed against its own
 - **Monthly update:** now writes the sequence copy and reruns the study.
 - **Tests:** 65 (up from 55).
 
-**Answered (independently reviewed twice)**
+**Answered (two separate review passes)**
 - **A pitch type loses whiffs the more of it a hitter has seen from the pitcher.** Per earlier same-type pitch in earlier PAs today, relative to another type: −0.70 (fastballs), −0.91 (breaking balls), −1.87 (changeups/splitters) whiff points per swing, all p < 0.001 and in every season. After 4+ changeups/splitters: −8.2 points.
 - **It carries across games and across pitchers.**
   - After 1–3 of this pitcher's changeups in earlier games this season: −3.5 points.
@@ -297,7 +313,7 @@ Each study was built and integrated, then independently reviewed against its own
 **Answered**
 - **Skubal 2024 → 2025: it was him, not the cameras.** The league didn't move (median spin change +21 rpm on four-seamers, extension about 0). Skubal sat at the 80th–98th percentile on velocity, spin, extension and arm angle. He raised his arm slot on everything except the changeup, which is why his changeup's release tell jumped (0.81 → 0.95).
 
-**Findings (after an independent review)**
+**Findings (after a separate review pass)**
 - **Results beyond stuff persist.** The gap between actual and expected whiffs carries over year to year: r = 0.56 and 0.53. With location, count, role and pitch type removed, it's still about 0.45.
 - **No sign that release tells cost whiffs.** Pooled 2024–26 with SEs clustered by pitcher: +0.44 per 0.1 AUC (CI +0.08 to +0.80). That falls to about +0.2, not significant, once usage is controlled. Changeups show nothing either way.
 - **Projection.** Two seasons of results plus expected whiffs cut next-year error about 8% out of sample against a regressed last-season baseline. Most of that comes from the second season; physics adds about 2.5%.
@@ -324,7 +340,7 @@ Each study was built and integrated, then independently reviewed against its own
 - A change counts as confirmed at p < 0.05 with at least 30 swings in each sample. Anything near 0.05 is called borderline, because many tests run at once.
 
 **Learned**
-- An independent review of the report caught three wrong claims and several sentences that went stale once the 2024 data arrived. Examples: "a full mph harder from the first month" was really +0.7 for the season, and "fewest misses" was wrong because the sinker has fewer.
+- A separate review pass caught three wrong claims and several sentences that went stale once the 2024 data arrived. Examples: "a full mph harder from the first month" was really +0.7 for the season, and "fewest misses" was wrong because the sinker has fewer.
   - Lesson: when new data comes in, re-check every earlier claim, not just the new section.
 - Use one evidence standard throughout. I had called a non-significant rise in four-seamer damage noise, then presented an equally non-significant changeup improvement as a gain.
 - Velocity, spin, extension and arm angle all rose on every pitch in 2025. The same rise on every pitch in one year can be a change in how Statcast measured him, so season-to-season comparisons need league-wide changes as a baseline (issue #3).

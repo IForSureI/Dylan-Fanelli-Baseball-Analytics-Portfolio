@@ -75,7 +75,7 @@ def percentile(reference, x: float) -> float:
 
 
 def to_scale(raw: float) -> int:
-    """Round to the nearest 5 and clamp to 20-80 (scouting-report grades.py convention)."""
+    """Round to the nearest 5 and clamp to 20-80 (same rule as baseball/evaluation/grades.py)."""
     return int(max(20, min(80, 5 * np.floor(raw / 5 + 0.5))))
 
 

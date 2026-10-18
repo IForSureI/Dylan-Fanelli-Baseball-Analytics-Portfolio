@@ -8,7 +8,7 @@
 ![Morejón's movement and release point, 2026](figures/2026-morejon-pro-scouting-report.png)
 
 ## Summary
-- **OFP 60 · Role: B1 now and in 2027 (high-leverage late-inning reliever, closer-capable, four to six outs when needed) · Risk: moderate · ETA: established major leaguer.**
+- **OFP 60. Role: B1 now and in 2027 (high-leverage late-inning reliever, closer-capable, four to six outs when needed). Risk: moderate. ETA: established major leaguer.**
 - **What he is:** a power sinker/changeup left-hander.
   - **Against right-handers:** a tumbling 92 mph changeup.
   - **Against left-handers:** a 98.5–100.5 mph sinker in on the hands, plus a hard slider.
@@ -29,12 +29,12 @@
 ## Arsenal and grades
 - **Scale:** 20-80, graded against the major leagues. Present means 2026; future means his peak at ages 28–30.
 - **Velocity:** the 10th–90th percentile range of 2026 pitches, with T for his top speed. League averages are the 2026 pitch-weighted means for the pitch type.
-- **Fastball base grades:** the 2026-starter reading from `grades.py velo` (75 for the sinker, 70 for the four-seamer). The Baseball America anchors read 80 for both. Every move off the base is stated in the table.
+- **Fastball base grades:** the 2026-starter reading from `bb grade velo` (75 for the sinker at 99.5 mph, 70 for the four-seamer at 99.3). The Baseball America anchors read 80 for both. Every move off the base is stated in the table.
 
 | Pitch | Velo | Shape (2026) | Usage (vs LHH / RHH) | Pres | Fut | Notes |
 |---|---|---|---|---|---|---|
 | **Sinker** | 98.5–100.5, T101.7 | 9.2 in IVB, 16.0 in arm-side run, 2,404 rpm; VAA −5.3° (league −5.8°) | 48% (55 / 43) | 70 | 70 | **Grade:** base 75, −5 because it rides more than a heavy sinker (league IVB 7.6). The run is above average (league 15.1 in). **Results:** 58% ground balls overall, and 19.3% whiffs on 311 swings (league sinkers 13.6%). **Use:** in on left-handers' hands; 69% of his 0-0 pitches to them |
-| **Changeup** | 91.1–93.0, T93.9 | −1.1 in IVB, 10.7 in arm-side, 1,041 rpm | 23% (2 / 36) | 70 | 70 | **Shape:** splitter-like tumble. The spin is below the league changeup (1,754) and splitter (1,369). It drops 10.4 in more than the sinker and runs 5.3 in less. **Speed:** 7.4 mph off the sinker, under the 8–12 ideal; the separation is vertical. **Results:** 56.0% whiffs on 182 swings (league changeups 31%); 72% thrown below 2 ft. Against right-handers it's 47% of his two-strike pitches. **History:** see below. **Why 70, not higher:** 2% usage against left-handers |
+| **Changeup** | 91.1–93.0, T93.9 | −1.1 in IVB, 10.7 in arm-side, 1,041 rpm | 23% (2 / 36) | 70 | 70 | **Shape:** splitter-like tumble. The spin is below the league changeup (1,754) and splitter (1,369). It drops 10.4 in more than the sinker and runs 5.3 in less. **Speed:** 7.4 mph off the sinker, under the 8–12 ideal; the separation is vertical. **Results:** 56.0% whiffs on 182 swings (league changeups 31%); 72% thrown below 2 ft. Against right-handers it's 47% of his two-strike pitches. **History:** see below. **Why 70, not 80:** 7.4 mph of separation, under the 8–12 ideal, and the 92 mph version is one season old (see History). His near-absence of changeups to left-handers is a role question, handled in the OFP and role, not in the pitch grade |
 | **Four-seamer** | 98.3–100.3, T101.2 | 15.2 in IVB, 6.0 in arm-side; VAA up in the zone −3.8° (league −3.8°) | 14% (16 / 13) | 70 | 70 | **Grade:** base 70, −5 for league-average shape (15.6 / 7.9 in, the "dead zone"), +5 for results. **Results:** 42.3% whiffs on 123 swings (league four-seamers 21.6%), thrown up in the zone off the sinker. 60% come with two strikes. The swing sample is small, so the results bump is the least certain move in the table |
 | **Slider** | 87.6–91.0, T92.3 | −0.5 in IVB, 5.7 in glove-side, 2,892 rpm | 15% (27 / 8) | 50 | 55 | **Shape:** a hard, high-spin slider, short and gyro-leaning (league slider spin 2,435). **Results by year:** 40.0% whiffs on 160 swings (2024), 38.3% on 115 (2025), 29.9% on 77 (2026; small sample; league 33%). **Shape by year:** 86.0 → 87.5 → 89.4 mph, IVB −3.2 → −1.2 → −0.5 in, spin 2,752 → 2,892 rpm. It's harder, with 2.7 in less drop, moving toward a cutter. Usage fell from 30% to 25% to 15% over the same span. **Why 55 future:** two years of above-average results and a 70 stuff grade from the physics. The decline lines up with the shape change, so the question is which version he throws in 2027 |
 | **Control** | | uBB 6.0% (21 of 352 batters); BB 8.0% with 7 intentional | | 60 | 60 | **Anchor:** a 60 is about 5–6.5%. **First-pitch strikes:** 65.4%, against 61.3% for the league.¹ **History:** 7.0% in 2024, 4.9% in 2025. The second half of 2026 ran 7.3%, so 60 is the three-year level |
@@ -93,7 +93,7 @@
   - **Strikeouts and walks:** 30.4% K, 8.0% BB, K-BB 22.4%.
   - **Contact:** 4 HR, a 1.67 groundout-to-airout ratio; opponents hit .205/.278/.271.
 - **Record against stuff:** a 2.15 FIP, below his 2.83 ERA.
-  - **How it's computed:** unintentional walks, with the FIP constant (3.13) from 2026 MLB team totals.
+  - **How it's computed:** unintentional walks, with the FIP constant (3.13) from 2026 MLB team totals. Counting his 7 intentional walks, the published figure is 2.37 (MLB Stats API).
   - **Run value:** +1.39 runs per 100 pitches; the Reliability Atlas regresses that to a true level of +0.56 (95% interval −0.21 to +1.33). Positive is good for the pitcher.
 - **Leverage:**
   - **Late leads:** 28 holds, 3 saves in 8 chances and 5 blown saves; 31 of 36 converted.
@@ -137,7 +137,7 @@
 
 ## OFP, role, risk
 **OFP 60; Role: B1 now and in 2027 (B1 = closer or high-leverage reliever, OFP band 55–60); Risk: moderate; ETA: established**
-- **The roll-up:** `grades.py ofp --pitcher SI=70 CH=70 FF=70 SL=55` gives a 60 reliever estimate. The starter estimate is 64 with command entered at 50 and 67 at control's 60. Command is NG, so it's run both ways.
+- **The roll-up:** `bb grade ofp SI=70 CH=70 FF=70 SL=55 command=50` gives a 60 reliever estimate. The starter estimate is 64 with command entered at 50 and 67 at control's 60. Command is NG, so it's run both ways.
 - **Why I grade the reliever:**
   - **No changeup to left-handers:** against them his third pitch would be a 50-now slider.
   - **No starter workload:** his longest 2026 outing was 40 pitches, and 86 innings was a career high.
@@ -155,7 +155,7 @@
 
 **Preference statement:**
 - **The ranking:** I prefer Morejón to Bryan Abreu (#2, Tier B) for that job. He projects for more wins (2.3 vs. 1.6 at the same leverage) and has the higher floor (1.3 vs. 0.7 at the low end of the rate interval). Abreu misses bats as well; his 2026 walk rate is the question.
-- **The condition:** a contract at or under his value, which is four years and $72M. If the Padres make him a qualifying offer, the pick and pool cost lowers that to about $66M.
+- **The condition:** a contract at or under his value, which is four years and $72M. If the Padres make him a qualifying offer, the pick and pool cost lowers that to about $60M (the bullpen memo's Oct. 18 update; $66M on the 2019 pick value it first used).
 - **The alternative objective:** if the club wants the most wins per dollar with no commitment past 2028, Abreu at $25M or less ranks first instead (the memo's statement).
 - **What moves him below Abreu:**
   - a price above that line
@@ -201,9 +201,9 @@ The memo's changeup history line ("7% of pitches in 2025, 23% in 2026") leaves o
 - **FIP and league rates:** MLB Stats API, 2026 team pitching totals.
   - **FIP:** 13 HR + 3 (uBB + HBP) − 2 K, divided by innings pitched, plus the league constant.
   - **The constant:** league ERA minus the same terms on league totals.
-- **Grades:** the scouting-report grading scale (20-80 against the major leagues).
-  - **Velocity bases:** from `grades.py velo`.
-  - **OFP:** from `grades.py ofp`.
+- **Grades:** the 20-80 scale, graded against the major leagues.
+  - **Velocity bases:** from `bb grade velo` (`baseball/evaluation/grades.py`).
+  - **OFP:** from `bb grade ofp`.
   - **Adjustments:** every move off a measured base is stated in the table.
 
 ## What this doesn't show
@@ -247,7 +247,7 @@ print(f"Morejon FIP {(13 * 4 + 3 * (28 - 7 + 5) - 2 * 107) / 86 + c:.2f}")'
   - Daniel Guerrero, MLB.com (Apr. 21, 2021)
   - CBS Sports (Mar. 30, 2023)
   - MiLB.com transactions (read Oct. 13, 2026)
-- **Grading scale and 2026 pitch-type norms:** the scouting-report grading references (Baseball America and FanGraphs anchors; Baseball Savant 2026 leaderboards, pulled Sept. 30, 2026).
+- **Grading scale and 2026 pitch-type norms:** the traditional velocity anchors Baseball America publishes, and Baseball Savant 2026 leaderboards (pulled Sept. 30, 2026) for the starter distribution and pitch-type norms. Both are coded in `baseball/evaluation/grades.py`.
 - **This repo:**
   - [bullpen acquisition memo](2026-bullpen-acquisition-memo.md)
   - [Reliability Atlas](2026-reliability-atlas.md)

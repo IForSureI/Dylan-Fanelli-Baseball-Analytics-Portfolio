@@ -79,6 +79,14 @@ COMPS_SOURCE = "NBC Sports / Yahoo Sports MLB free agent tracker 2025-26 (D.J. S
 PICK_VALUE_2019 = {45: 6.7, 46: 6.6, 47: 6.4, 48: 6.3, 49: 6.1, 50: 5.9, 51: 5.8, 52: 5.7, 53: 5.5, 54: 5.4, 55: 5.3,
                    56: 5.2, 57: 5.0, 58: 4.9, 59: 4.8, 60: 4.7}
 
+# Draft-pick value, my own: what picks 45-60 returned in the 2000-2016 drafts (first six MLB seasons priced at
+# $11.23M per win, less salaries, discounted 7% to draft day, 2026 dollars; recent drafts weighted more), less the
+# pick's 2026 slot value. Source: the Dylan-Fanelli-Draft-Analytics repo, backtest/results/pick_table_2000_2016.csv
+# (column market_all), and MLB's 2026 slot values. About twice Edwards' 2019 figures: the 2000-2016 drafts returned
+# more in rounds 2-4 than the curves behind those figures assumed. This is the house value.
+PICK_VALUE_OWN = {45: 11.06, 46: 10.92, 47: 10.80, 48: 10.69, 49: 10.58, 50: 10.49, 51: 10.40, 52: 10.31, 53: 10.23,
+                  54: 10.16, 55: 10.09, 56: 10.02, 57: 9.95, 58: 9.89, 59: 9.82, 60: 9.76}
+
 
 # ------------------------------------------------------------------ relief seasons and replacement
 
@@ -268,13 +276,14 @@ def breakeven_aav(years: int, war1_role: float, war1_neutral: float, first_age: 
 # ------------------------------------------------------------------ the qualifying offer and the tax
 
 def qo_cost(signing_status: str, losing_status: str, contract_total: float, pick_number: int | None,
-            pick_values: dict = PICK_VALUE_2019) -> dict:
+            pick_values: dict = PICK_VALUE_OWN) -> dict:
     """What signing a qualified free agent costs the signing club: the picks and pool money it forfeits
-    (`money.qualifying_offer`), and the value of the first forfeited pick from Edwards (2019) when its number is
-    known. Rules of the 2022-26 agreement; both sides proposed ending the QO in the 2026 talks."""
+    (`money.qualifying_offer`), and the value of the first forfeited pick when its number is known (house values by
+    default; pass PICK_VALUE_2019 for Edwards' 2019 figures). Rules of the 2022-26 agreement; both sides proposed
+    ending the QO in the 2026 talks."""
     q = qualifying_offer(losing_status, signing_status, contract_total)
     pick_value = pick_values.get(pick_number) if pick_number else None
-    return q | {"pick_number": pick_number, "pick_value_2019_dollars": pick_value,
+    return q | {"pick_number": pick_number, "pick_value": pick_value,
                 "total_value": (pick_value or 0.0) + q["signing_club_forfeits_pool"] if pick_value else None}
 
 

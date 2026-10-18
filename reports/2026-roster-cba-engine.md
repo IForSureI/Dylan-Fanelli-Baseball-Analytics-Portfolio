@@ -134,7 +134,7 @@
 | Item | Value | Source |
 |---|---|---|
 | Born | May 29, 2002 (age 25 in 2027) | Baseball-Reference (read Oct. 12, 2026) |
-| Service after 2026 | 3.000 | MLBTR 2027 arbitration projections (Darragh McDonald, Oct. 2, 2026), read in Yardbarker's authorized syndication of the full article (mlbtraderumors.com blocks automated reading) |
+| Service after 2026 | 3.000 | MLB Trade Rumors, 2027 arbitration projections (Darragh McDonald, Oct. 2, 2026) |
 | 2027 arbitration projection | $7.2M ("Paul Skenes (3.000): $7.2MM") | Same |
 | 2024 service | .142 on the field, credited 1.000 for winning Rookie of the Year | Bucs on Deck (undated; written before his May 2024 debut); rule: UB Law Sports Forum (Mike Perlo, Nov. 17, 2022); applied to Skenes: MLBTR via SI (Brady Farkas, Nov. 19, 2024) |
 | PPI draft pick | None: he was held down into May 2024 | MLBTR via SI (Nov. 19, 2024) |

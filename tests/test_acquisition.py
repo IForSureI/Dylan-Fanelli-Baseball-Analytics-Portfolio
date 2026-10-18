@@ -67,7 +67,9 @@ def test_qo_cost_for_a_club_neither_payor_nor_recipient():
     # Signing club "other": its 2nd-highest pick and $0.5M of pool; the payor losing him gets a pick after Round 4
     assert q["signing_club_forfeits_picks"] == ["2nd-highest"] and q["signing_club_forfeits_pool"] == 0.5
     assert q["losing_club_gets"] == "pick after Round 4"
-    assert q["pick_value_2019_dollars"] == 5.3 and q["total_value"] == pytest.approx(5.8)   # Edwards (2019), pick 55
+    assert q["pick_value"] == 10.09 and q["total_value"] == pytest.approx(10.59)   # house value at pick 55 + $0.5M pool
+    e = A.qo_cost("other", "payor", 64.0, 55, pick_values=A.PICK_VALUE_2019)
+    assert e["pick_value"] == 5.3 and e["total_value"] == pytest.approx(5.8)      # Edwards (2019), pick 55
 
 
 def test_tax_table_first_time_payor():
@@ -100,3 +102,19 @@ def test_contract_value_with_partial_availability():
     assert v["pv_value_market"] == pytest.approx(3.85 + 10.3)
     # Engine: 0.35 wins at the 0-1 tier ($6.74M) = 2.359; 1.0 win at the 1-2 tier x 1.03 / 1.1
     assert v["pv_value_engine"] == pytest.approx(0.35 * 6.74 + 8.51 * 1.03 / 1.1)
+
+
+def test_walk_away_with_a_qo_uses_the_house_pick_value():
+    from baseball.roster import bullpen_case as B
+
+    m = {"breakeven": {(670970, 4): {"market": 18.1, "market_comps_way": 18.7, "engine": 30.7}},
+         "price": {670970: {"comps_way": {"aav": 18.4}}},
+         "qo": {670970: A.qo_cost("other", "payor", 64.0, 55)}}
+    w = B.walk_away(m)
+    annuity4 = 1 + 1 / 1.1 + 1 / 1.1 ** 2 + 1 / 1.1 ** 3          # 3.4869
+    # house: $10.09M pick + $0.5M pool = $10.59M of present value -> $3.04M a year off $18.1M
+    assert w["qo_value_pv"] == pytest.approx(10.59)
+    assert w["walkaway_with_qo_aav"] == pytest.approx(18.1 - 10.59 / annuity4)
+    assert 4 * w["walkaway_with_qo_aav"] == pytest.approx(60.25, abs=0.01)
+    # Edwards (2019): $5.3M + $0.5M -> about $66M, the memo's first figure
+    assert 4 * w["walkaway_with_qo_aav_edwards_2019"] == pytest.approx(65.75, abs=0.01)
