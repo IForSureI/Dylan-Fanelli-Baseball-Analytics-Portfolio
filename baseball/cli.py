@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import itertools
+from pathlib import Path
 import sys
 
 import pandas as pd
@@ -455,6 +456,81 @@ def cmd_front_office(a: argparse.Namespace) -> None:
     print(f"\nLoad into Neo4j: run {fo.Path(fo.__file__).with_name('front_office.cypher')} after trade_graph.cypher.")
 
 
+def cmd_predictions(a: argparse.Namespace) -> None:
+    from baseball import predictions as pr
+
+    path = Path(a.file)
+    calls = pr.load(path)
+    if a.action == "check":
+        try:
+            pr.check_file(path)
+        except ValueError as e:
+            raise SystemExit(str(e))
+        print(f"{len(calls)} calls in {path}; no problems")
+    elif a.action == "score":
+        done = pr.resolved(calls)
+        if not done:
+            print(f"{len(calls)} calls, none resolved yet")
+            return
+        print(f"{len(done)} of {len(calls)} resolved; Brier {pr.brier(calls):.3f}; skill vs 50% {pr.skill(calls):+.3f}")
+        print(pr.calibration(calls).to_string(index=False))
+    else:
+        pr.update_report(a.report, calls)
+        print(f"rewrote the calls section of {a.report}")
+
+
+def cmd_sql(a: argparse.Namespace) -> None:
+    from baseball import sqlkit
+
+    if a.action == "list":
+        for n in sqlkit.queries():
+            print(f"{n:34s} {sqlkit.describe(n)['question'][:90]}")
+        return
+    if not a.name:
+        raise SystemExit("name a query: bb sql list")
+    if a.action == "show":
+        print(sqlkit._path(a.name).read_text())
+        return
+    params = {}
+    for kv in a.param:
+        k, _, v = kv.partition("=")
+        try:
+            params[k] = int(v)
+        except ValueError:
+            try:
+                params[k] = float(v)
+            except ValueError:
+                params[k] = v
+    con = sqlkit.connect(a.data_dir, seasons=a.seasons)
+    try:
+        df = sqlkit.run(a.name, con, **params)
+    except TypeError as e:
+        raise SystemExit(f"{e} (pass it with -p name=value; `bb sql show {a.name}` lists the inputs)")
+    finally:
+        con.close()
+    print(df.head(a.limit).to_string(index=False))
+    if len(df) > a.limit:
+        print(f"... {len(df)} rows")
+
+
+def cmd_arb_case(a: argparse.Namespace) -> None:
+    from baseball.roster import arbitration
+
+    arbitration.main()
+
+
+def cmd_advance(a: argparse.Namespace) -> None:
+    from baseball.advance import packet
+
+    packet.main(a.args)
+
+
+def cmd_swing_decisions(a: argparse.Namespace) -> None:
+    from baseball.evaluation import swing_decisions
+
+    swing_decisions.main(a.args)
+
+
 def cmd_db(a: argparse.Namespace) -> None:
     con = warehouse.connect()
     if a.action == "rebuild":
@@ -651,10 +727,44 @@ def main(argv: list[str] | None = None) -> None:
     go.add_argument("grades", nargs="+")
     gr.set_defaults(func=cmd_grade)
 
+    pd_ = sub.add_parser("predictions", help="the dated, scored prediction log: check the file, score resolved calls, rewrite the report")
+    pd_.add_argument("action", choices=["check", "score", "render"])
+    pd_.add_argument("--file", default="predictions/2027.yaml")
+    pd_.add_argument("--report", default="reports/2027-prediction-log.md")
+    pd_.set_defaults(func=cmd_predictions)
+
+    sq_ = sub.add_parser("sql", help="the SQL module (sql/*.sql) over the slim parquet seasons in DuckDB")
+    sq_.add_argument("action", choices=["list", "show", "run"])
+    sq_.add_argument("name", nargs="?")
+    sq_.add_argument("--param", "-p", action="append", default=[], help="query parameter, e.g. -p season=2026")
+    sq_.add_argument("--seasons", type=int, nargs="*", default=None)
+    sq_.add_argument("--data-dir", default=None)
+    sq_.add_argument("--limit", type=int, default=30)
+    sq_.set_defaults(func=cmd_sql)
+
+    ac = sub.add_parser("arb-case", help="the Cade Smith arbitration case: comp line, filing, win odds, walk point, figure")
+    ac.set_defaults(func=cmd_arb_case)
+
+    av = sub.add_parser("advance", help="advance-scouting packet on a club's hitters, e.g. bb advance TB 2026 --name Rays",
+                        add_help=False)
+    av.add_argument("args", nargs=argparse.REMAINDER)
+    av.set_defaults(func=cmd_advance)
+
+    sd = sub.add_parser("swing-decisions", help="swing-decision value study and one hitter's card (default Torres)",
+                        add_help=False)
+    sd.add_argument("args", nargs=argparse.REMAINDER)
+    sd.set_defaults(func=cmd_swing_decisions)
+
     d = sub.add_parser("db", help="what is in the warehouse")
     d.add_argument("action", nargs="?", choices=["rebuild"])
     d.set_defaults(func=cmd_db)
 
+    raw = sys.argv[1:] if argv is None else list(argv)
+    if raw and raw[0] in ("advance", "swing-decisions"):
+        # these two pass every flag (including --help) straight to the module's own parser
+        ns = argparse.Namespace(args=raw[1:])
+        (cmd_advance if raw[0] == "advance" else cmd_swing_decisions)(ns)
+        return
     a = ap.parse_args(argv)
     a.func(a)
 

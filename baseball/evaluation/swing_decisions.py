@@ -1047,7 +1047,7 @@ def run(seasons=(2024, 2025, 2026), base=(2024, 2025), batter: int = 650402, nam
     return summary
 
 
-if __name__ == "__main__":
+def main(argv: list[str] | None = None) -> None:
     import argparse
 
     ap = argparse.ArgumentParser(description="Swing-decision value study and one hitter's card.")
@@ -1057,7 +1057,7 @@ if __name__ == "__main__":
     ap.add_argument("--reps", type=int, default=20)
     ap.add_argument("--price-only", action="store_true",
                     help="recompute Torres's projection and price from an existing summary.json (seconds, not minutes)")
-    a = ap.parse_args()
+    a = ap.parse_args(argv)
     if a.price_only:
         import json
 
@@ -1069,3 +1069,7 @@ if __name__ == "__main__":
                               "value_2y": round(v["value_2y"]["pv"], 2)} for k, v in summ["price"]["scenarios"].items()}))
     else:
         run(batter=a.batter, name=a.name, figure_path=Path(a.figure) if a.figure else None, reps=a.reps)
+
+
+if __name__ == "__main__":
+    main()

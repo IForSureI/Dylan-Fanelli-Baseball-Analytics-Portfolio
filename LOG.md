@@ -2,6 +2,25 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-10-18 (later): Four pieces of everyday department work, a prediction log, and five commands
+**Built**
+- **Advance packet** (`baseball/advance/packet.py`, `bb advance TB 2026 --name Rays`): hitter cards for an opponent's lineup from Statcast. Swing decisions, whiff and damage by zone and pitch group, first-pitch and two-strike tendencies, bat tracking, platoon split and a plan line, every rate with its n and regressed to the league rate for the same zone or pitch group. Switch-hitters are drawn from the side they bat on most. Reports: the [analyst packet](reports/2026-advance-packet-tb.md), a [one-page coach version](reports/2026-advance-packet-tb-coach.md) and the [same page in Spanish](reports/2026-advance-packet-tb-coach-es.md).
+- **Arbitration case** (`baseball/roster/arbitration.py`, `bb arb-case`): Cade Smith's first arbitration year, worked from the club side. A comp pool built by a stated rule (`POOL_RULE`, 19 fit rows, exclusions listed with reasons in `SCREENED_OUT`), a comp line restated to 2027 dollars, the club's filing, the player's likely number, hearing odds at the midpoint, the walk point, the cost of losing, and a second-year exhibit. The brief cites the 2022-26 agreement's Article VI(E)(10) criteria, including what a panel can't hear. [Brief](reports/2027-arbitration-brief-smith.md).
+- **Swing-decision study and hitter evaluation** (`baseball/evaluation/swing_decisions.py`, `bb swing-decisions`): decision value for every regular from 2024-26, tested for year-to-year repeatability (r 0.80) and for predicting next season, then a card and a price for Gleyber Torres. [Evaluation](reports/2026-hitter-evaluation-torres.md).
+- **SQL module** (`sql/*.sql`, `baseball/sqlkit.py`, `bb sql list|show|run`): twelve named DuckDB queries over the pitch files, each with a header stating the question, inputs, output columns and definitions. [README](sql/README.md), with eight interview-style questions answered.
+- **Prediction log** (`predictions/2027.yaml`, `baseball/predictions.py`, `bb predictions check|score|render`): fifteen calls for 2027 with probabilities, dated Oct. 18, 2026, scored with the Brier score after the season. [Log](reports/2027-prediction-log.md).
+- **Tests:** new test files for all five, with the arithmetic in comments.
+
+**Changed**
+- **Torres:** the first draft priced him on FanGraphs' WAR tiers, which put a cliff at 2.0 WAR (1.98 WAR was worth $30.3M over two years; 2.00 would have been $39.6M). He is now priced at one rate per win. Adding baserunning (8th-percentile sprint speed) took the base case from 1.98 to 1.54 WAR.
+- **Arbitration:** the review pass rebuilt the comp pool from a rule instead of a hand list, added the second-year closers his side would cite, removed evidence a panel can't hear (Statcast, pre-arbitration bonus-pool pay), and retitled the brief as an independent exercise. The filing stayed at $4.8M; the walk point moved from $5.25M to $5.20M.
+- **Advance packet:** the review pass fixed the changeup exception (it's left-handers' changeups away from right-handed hitters), replaced "avoid" lines the data didn't support with "nothing stands out", and corrected the Spanish.
+- **Wording:** the Skubal summary no longer uses a "him, not the cameras" construction.
+
+**Learned**
+- **Statcast's 2026 strike zone is the challenge-system zone.** From 2026, `sz_top` and `sz_bot` sit at 53.5% and 27% of the batter's height (MLB, Sept. 23, 2025), so 2026 zones don't compare with 2024-25 stance zones. A model that ignores this concludes the whole league got worse at swing decisions. The swing-decision study gives every batter one fixed zone in all three seasons.
+- **Tiered prices manufacture precision.** A quarter of a run moved Torres's value by $9M on the tiers; one rate removes the cliff.
+
 ## 2026-10-18: Shape exposure study (pre-registered), one pick value, and consistency fixes
 **Built**
 - **`baseball/edge/shape_exposure.py`** (`bb shape-exposure`): does a hitter miss a pitch less when he has recently seen similar shapes from other pitchers?
