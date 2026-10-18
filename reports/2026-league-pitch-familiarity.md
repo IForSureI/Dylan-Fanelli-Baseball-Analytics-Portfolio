@@ -1,7 +1,7 @@
 # Does a pitch wear out? Pitch-type familiarity, MLB 2024–26
 
 **League study from public pitch data.** Every regular-season pitch of 2024, 2025 and 2026 (Statcast), not a scouting look. It is observational: every effect below is an association with fixed effects and controls, not a randomized test.
-*Written 2026-10-12 · Dylan Fanelli · Data: Statcast via Baseball Savant, 2,141,219 pitches, 7,288 games, 1,310 pitchers, 905 batters · Code: `baseball/edge/familiarity.py` (`bb familiarity 2026`) · Independently reviewed 2026-10-12*
+*Written 2026-10-12; Dylan Fanelli; Data: Statcast via Baseball Savant, 2,141,219 pitches, 7,288 games, 1,310 pitchers, 905 batters; Code: `baseball/edge/familiarity.py` (`bb familiarity 2026`); Reviewed in a separate pass 2026-10-12*
 
 ![Whiff% falls as a hitter sees more of a pitch type](figures/2026-league-pitch-familiarity.png)
 

@@ -1,7 +1,7 @@
 # Who trades with whom: division rivals and front-office ties, MLB 2009–26
 
 **League study from public transaction data.** Every MLB trade in the MLB Stats API from its first record (April 15, 2009) through October 13, 2026, loaded as a graph in Neo4j. It is observational: it counts trades that happened, not offers or prices, and the one front-office explanation below is a hypothesis the data fits, not a tested cause.
-*Written 2026-10-13 · Dylan Fanelli · Data: MLB Stats API transactions (3,290 trades, 6,163 player moves, 30 clubs); Baseball-Reference WAR (daily files, read Oct. 13, 2026); Retrosheet transaction file (deals through Dec. 1, 2021; cross-check only) · Outside facts: MLB.com, AP via ABC News, FanGraphs (each dated below) · Code: `baseball/roster/trades.py` (`bb trades`), `baseball/roster/trade_graph.cypher` · Independently reviewed 2026-10-13; findings addressed*
+*Written 2026-10-13; Dylan Fanelli; Data: MLB Stats API transactions (3,290 trades, 6,163 player moves, 30 clubs); Baseball-Reference WAR (daily files, read Oct. 13, 2026); Retrosheet transaction file (deals through Dec. 1, 2021; cross-check only); Outside facts: MLB.com, AP via ABC News, FanGraphs (each dated below); Code: `baseball/roster/trades.py` (`bb trades`), `baseball/roster/trade_graph.cypher`; Reviewed in a separate pass 2026-10-13; findings addressed*
 
 ![Division rivals trade far less with each other; the Angels' share of trades with Atlanta tripled under Perry Minasian](figures/2026-trade-network-rivals.png)
 

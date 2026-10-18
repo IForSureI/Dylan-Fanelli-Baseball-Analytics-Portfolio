@@ -106,8 +106,8 @@ ROLE_BY_OFP_RELIEVER = {60: "Elite closer", 55: "Closer / high-leverage reliever
 
 
 def reliever_ofp(pitch_grades: dict[str, int], control: int) -> dict:
-    """Reliever OFP from my scouting grading notes: min(60, 0.55 best + 0.35 second
-    + 0.10 control), to the nearest 5. Relief OFPs top out at 60 (grading-scale §5.2). Needs two graded pitches."""
+    """Reliever OFP: min(60, 0.55 best + 0.35 second + 0.10 control), to the nearest 5. Relief OFPs top
+    out at 60, since a one-inning role caps a reliever's value. Needs two graded pitches."""
     g = sorted((v for v in pitch_grades.values() if v is not None), reverse=True)
     if len(g) < 2 or control is None:
         return {"ofp": None, "role": None, "raw": None}

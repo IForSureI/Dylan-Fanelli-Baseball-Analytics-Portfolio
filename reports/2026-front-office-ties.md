@@ -1,7 +1,7 @@
 # Do front-office ties predict trade partners? MLB 2009–26
 
 **League study from public data, a follow-up to [Who trades with whom](2026-trade-network-rivals.md).** That study found that the Angels' share of trades made with the Braves tripled after Perry Minasian, Alex Anthopoulos's former assistant GM, took over the Angels. This one tests whether ties like that predict trading across all 30 clubs. It is observational: it counts completed trades, and the main test compares each pair of clubs with itself across seasons.
-*Written 2026-10-13, revised 2026-10-14 · Dylan Fanelli · Data: MLB Stats API transactions (3,273 two-club trades, Apr. 2009 – Sept. 2026); career histories of 115 club decision-makers (825 front-office stints, each with a source URL, researched Oct. 13, 2026); Baseball-Reference team pages (front-office listings, 1998–2026) · Code: `baseball/roster/front_office.py` (`bb front-office`), `baseball/roster/front_office.cypher`, `baseball/roster/executive_careers.json` · Independently reviewed three times (Oct. 13–14); findings addressed*
+*Written 2026-10-13, revised 2026-10-14; Dylan Fanelli; Data: MLB Stats API transactions (3,273 two-club trades, Apr. 2009 – Sept. 2026); career histories of 115 club decision-makers (825 front-office stints, each with a source URL, researched Oct. 13, 2026); Baseball-Reference team pages (front-office listings, 1998–2026); Code: `baseball/roster/front_office.py` (`bb front-office`), `baseball/roster/front_office.cypher`, `baseball/roster/executive_careers.json`; Reviewed in a separate pass three times (Oct. 13–14); findings addressed*
 
 ![Trading between two clubs before and after one's decision-maker becomes the other's former protégé](figures/2026-front-office-ties.png)
 

@@ -1,17 +1,17 @@
 # Tarik Skubal (DET, LHP): 2025 arsenal read
 
 **Data-only arsenal read.** Built from Statcast pitch data, not a live look; no 20-80 grades.
-*Tarik Skubal · LHP · Detroit Tigers · B/T R/L · born 1996-11-20 · 2025 regular season (age-28 season), with a 2024 comparison*
-*Written 2026-10-12 · Dylan Fanelli · Data: Statcast via Baseball Savant (pybaseball), pulled 2026-10-12*
+*Tarik Skubal, LHP, Detroit Tigers. B/T R/L, born 1996-11-20. 2025 regular season (age-28 season), with a 2024 comparison.*
+*Written 2026-10-12 by Dylan Fanelli; league check added 2026-10-17. Data: Statcast via Baseball Savant (pybaseball), pulled 2026-10-12.*
 
 ![Skubal 2025 pitch movement](figures/2025-skubal-movement.png)
 
 ## Summary
 - **The changeup is the pitch the arsenal is built around, and its level is established.** He gets whiffs on 46.6% of swings against it across 2024–25 (997 swings; 95% interval 43.6–49.7%). The usual rate for changeups is about 31%.
 - **He leans on the changeup more each year.** Usage went from 27.0% to 31.4%, and it's his most-used pitch and his two-strike finisher.
-- **The open questions are the slider and the 2025 measurement jump.** The slider's whiff rate fell from 34.4% to 25.5%, but that isn't confirmed (p = 0.07). Velocity and spin rose on every pitch at once, so both need a league-wide check before they're treated as real changes in him.
+- **The 2025 jump in velocity and spin was him, not the cameras.** Against every pitcher who threw the same pitch type in both seasons, his gains sat at the 80th-94th percentile on velocity and the 94th-98th on spin, while the league median barely moved (+21 rpm and -0.1 mph on four-seamers). The open question is the slider: its whiff rate fell from 34.4% to 25.5%, but that isn't confirmed (p = 0.07).
 
-**What to watch in 2026:** slider whiff rate, changeup use against left-handers, and whether the 2025 velocity holds once it's measured against the league.
+**What to watch in 2026:** slider whiff rate, changeup use against left-handers, and whether the 2025 velocity holds.
 
 ## The read
 - **Changeup:** the best of his four main pitches on every outcome measure (whiff, CSW, chase, xwOBA on contact, hard-hit, run value), and stable across two seasons.
@@ -34,7 +34,7 @@
 Whole arsenal: 33.3% CSW, 35.2% chase, 33.0% hard-hit on balls in play.
 
 ## Evidence, pitch by pitch
-League whiff rates below are approximate, from the sabermetrics reference: changeup ~31%, four-seamer ~21–22%, sinker ~13–14%, slider ~33–34%. They are not matched to 2025, and season-matched norms are roadmap issue #3. The gaps that matter here are large enough that a difference of a point or two in the norms doesn't change any conclusion.
+League whiff rates below are approximate league-wide figures: changeup ~31%, four-seamer ~21–22%, sinker ~13–14%, slider ~33–34%. They are not matched to 2025. The gaps that matter here are large enough that a difference of a point or two in the norms doesn't change any conclusion.
 
 **Changeup**
 - **Whiff rate:** 46.8% in 2025 (252 of 538 swings; 95% interval 42.7–51.1%) and 46.4% in 2024. Even the low end of the two-season interval (43.6%) is far above the usual ~31%.
@@ -80,12 +80,22 @@ League whiff rates below are approximate, from the sabermetrics reference: chang
   - He threw it 45 times to lefties in 2024 and 103 in 2025, while total pitches to lefties went from 428 to 527.
   - In 2025 it got 35.1% whiffs against lefties (20 of 57 swings; interval 24.0–48.1%) and 48.2% against righties (232 of 481). That gap is not confirmed (p = 0.06). In 2024 it went the other way (54.2% against lefties on only 24 swings).
   - Worth watching in 2026. The data can't say whether the change was planned.
-- **Velocity, spin, extension and arm angle all rose in 2025, so check them before trusting them.**
+- **Velocity, spin, extension and arm angle all rose in 2025, and the league check says the change was his.**
   - Velocity rose on every pitch type: +0.7 mph on both fastballs, +1.2 on the slider, +1.7 on the changeup, +2.7 on the curveball.
   - The four-seamer gain wasn't steady through the season. It was about 1 mph in April, May and September, and under half a mph in June through August.
   - Spin rose 128–182 rpm on every pitch, spin per mph rose 4–7% on every pitch, extension rose 0.13 ft, and arm angle rose 1.5°.
   - The arm-angle change, and velocity gains that differ by pitch, fit a real change in his delivery. But a rise in every tracked number on every pitch in the same year also fits a change in how Statcast measured him.
-  - Neither velocity nor spin should be treated as settled until it's compared with league-wide 2024 → 2025 changes (roadmap issue #3).
+  - **League check (`bb edge` baselines, 2024 → 2025).** For every pitcher with 100+ pitches of the same type in both seasons (1,175 pitcher-pitch pairs), the change on each metric, and where Skubal's change ranks:
+
+    | Pitch | Velo change (league median) | Pctile | Spin change (league median) | Pctile | Extension pctile | Arm angle change (league median) | Pctile |
+    |---|---|---|---|---|---|---|---|
+    | Four-seam | +0.70 mph (-0.14) | 81 | +128 rpm (+21) | 97 | 87 | +2.5° (-0.8) | 88 |
+    | Sinker | +0.69 (-0.03) | 80 | +135 (+19) | 98 | 93 | +3.1° (-1.1) | 92 |
+    | Slider | +1.24 (+0.04) | 81 | +128 (+5) | 94 | 91 | +2.3° (-0.4) | 84 |
+    | Changeup | +1.73 (0.00) | 94 | +148 (+2) | 95 | 95 | -0.2° (-1.2) | 71 |
+
+  - The league didn't move: median changes are near zero on velocity and extension and about +20 rpm on fastball spin. A camera recalibration would have moved everyone. His changes sit at the 80th-98th percentile, so they are his.
+  - He raised his arm slot on every pitch except the changeup, which is why the changeup's release separates from his fastballs more than before.
 
 ## Postseason (3 starts, 303 pitches)
 - **Four-seamer:** averaged 98.7 mph, 1.2 mph above his regular-season average.
@@ -98,7 +108,7 @@ League whiff rates below are approximate, from the sabermetrics reference: chang
 ## What would change this read
 - ~~Was the 2025 changeup whiff rate a one-year peak?~~ Answered: no. 2024 was the same (46.4%).
 - **Slider:** if its whiff rate stays near 25% in 2026, the 2025 drop is real and tied to the firmer, flatter shape. If it returns toward 34%, 2025 was noise.
-- **Velocity and spin:** if league-wide velocity and spin rose by similar amounts from 2024 to 2025, his gains reflect a measurement change and shouldn't be credited to him.
+- ~~Velocity and spin: did the league rise by similar amounts?~~ Answered: no (league check above). The gains are credited to him.
 - **Pitches labeled splitters:**
   - Three in each season. The 2025 ones came on 2025-04-27; the 2024 ones on 2024-04-22, 05-22 and 09-18.
   - Their speed and rise are close to his changeup, but their spin (882–995 rpm) is about half of it (his lowest 2025 changeup was 1,417 rpm).

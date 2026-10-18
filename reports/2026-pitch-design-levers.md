@@ -1,7 +1,7 @@
 # What pitch-design changes stick and pay, MLB 2024–26
 
 **League study from public pitch data.** Every regular-season pitch of 2024, 2025 and 2026 (Statcast), not a scouting look and not any club's data. It is observational: pitchers chose these changes, so every number below is an association with controls, matching and a placebo, not the result of a randomized pitch-design program.
-*Written 2026-10-12, revised 2026-10-13 · Dylan Fanelli · Data: Statcast via Baseball Savant, 2,141,219 pitches, 11,839 pitcher-season-pitch types, 1,822 season-over-season pitch pairs from 481 pitchers · Code: `baseball/development/levers.py` (`bb levers 2026`), `baseball/development/idp.py` (`bb idp`) · Independently reviewed 2026-10-13; findings addressed*
+*Written 2026-10-12, revised 2026-10-13; Dylan Fanelli; Data: Statcast via Baseball Savant, 2,141,219 pitches, 11,839 pitcher-season-pitch types, 1,822 season-over-season pitch pairs from 481 pitchers; Code: `baseball/development/levers.py` (`bb levers 2026`), `baseball/development/idp.py` (`bb idp`); Reviewed in a separate pass 2026-10-13; findings addressed*
 
 ![What a shape change is worth, and whether it lasted](figures/2026-pitch-design-levers.png)
 

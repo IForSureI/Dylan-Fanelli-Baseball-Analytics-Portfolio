@@ -5,7 +5,7 @@
 - **Out of sample:** the familiarity costs are re-estimated on 2024–25 only, so 2026 is a true out-of-sample test.
 - **Observational:** every number below is an association with fixed effects and controls, not a randomized test of pulling a pitcher.
 
-*Written 2026-10-12 · Dylan Fanelli · Data: Statcast via Baseball Savant; in 2026, 104,249 starter PAs (104,247 in the models) and 66,018 removal decisions (65,991 in the models) across 2,429 games, plus 2024 and 2025 · Code: `baseball/edge/hook.py` · Builds on [Does a pitch wear out?](2026-league-pitch-familiarity.md) · Independently reviewed 2026-10-13; findings addressed*
+*Written 2026-10-12; Dylan Fanelli; Data: Statcast via Baseball Savant; in 2026, 104,249 starter PAs (104,247 in the models) and 66,018 removal decisions (65,991 in the models) across 2,429 games, plus 2024 and 2025; Code: `baseball/edge/hook.py`; Builds on [Does a pitch wear out?](2026-league-pitch-familiarity.md); Reviewed in a separate pass 2026-10-13; findings addressed*
 
 ![Calibration of the exposure index, and what managers act on](figures/2026-exposure-aware-hook.png)
 

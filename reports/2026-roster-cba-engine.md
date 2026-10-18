@@ -6,7 +6,7 @@
 - where the labor talks stand as of October 12, 2026
 - one live decision worked end to end: whether, and at what price, the Pirates should extend Paul Skenes before the agreement expires
 
-*Written 2026-10-12 · Dylan Fanelli · Sources: CBS Sports, AP, MLB.com, MLB Trade Rumors, FanGraphs, Baseball-Reference (each dated below) · Code: `baseball/roster/` (`uv run python -m baseball.roster.cases`) · Independently reviewed 2026-10-13; findings addressed*
+*Written 2026-10-12; Dylan Fanelli; Sources: CBS Sports, AP, MLB.com, MLB Trade Rumors, FanGraphs, Baseball-Reference (each dated below); Code: `baseball/roster/` (`uv run python -m baseball.roster.cases`); Reviewed in a separate pass 2026-10-13; findings addressed*
 
 ![Skenes extension price band under each rule set](figures/2026-skenes-extension-band.png)
 

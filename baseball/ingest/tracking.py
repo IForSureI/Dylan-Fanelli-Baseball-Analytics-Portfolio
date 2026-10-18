@@ -23,7 +23,7 @@ Usage examples:
 Then hand the normalized file to the sabermetrics tools:
   uv run bb arsenal  (or baseball.evaluation.arsenal on the normalized frame)
 
-Frames and signs (see references/trackman-columns.md):
+Frames and signs (from TrackMan's column definitions):
   TrackMan native fields (RelSide, HorzBreak, PlateLocSide) are positive toward the pitcher's
   right (third-base side, the right-handed batter's box). Savant plate_x / pfx_x / release_pos_x
   are positive toward the catcher's right (first-base side). The loader does not trust either
@@ -109,7 +109,7 @@ HITTYPE_MAP = {"groundball": "ground_ball", "linedrive": "line_drive", "flyball"
 SZ_TOP_DEFAULT, SZ_BOT_DEFAULT = 3.5, 1.5       # feet; Savant-style defaults when no per-batter zone
 HALF_PLATE_FT = 8.5 / 12.0                       # zone half-width used by statcast_tools
 
-# QC thresholds (see references/qc-checklist.md)
+# QC thresholds: physical limits per column; values outside them are flagged, not fixed
 LIMITS = {
     "release_speed": (50.0, 110.0),
     "release_spin_rate": (0.0, 3500.0),

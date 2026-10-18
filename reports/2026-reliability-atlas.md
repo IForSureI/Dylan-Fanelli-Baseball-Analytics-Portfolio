@@ -10,7 +10,7 @@
 - **2026 was also the development test set,** so it isn't a clean holdout: one design choice was dropped after it failed there.
 - **The clean holdout is a replication,** fit on 2024 and tested on 2025, run once after every choice was fixed. It agrees.
 
-*Written 2026-10-13 · Dylan Fanelli · Data: Statcast via Baseball Savant, 2,134,079 pitches, 7,288 games, 1,310 pitchers, 905 batters · Code: `baseball/evaluation/reliability.py` · Independently reviewed 2026-10-13; findings addressed*
+*Written 2026-10-13; Dylan Fanelli; Data: Statcast via Baseball Savant, 2,134,079 pitches, 7,288 games, 1,310 pitchers, 905 batters; Code: `baseball/evaluation/reliability.py`; Reviewed in a separate pass 2026-10-13; findings addressed*
 
 ![The atlas: how fast each metric becomes signal against how much it carries over](figures/2026-reliability-atlas.png)
 

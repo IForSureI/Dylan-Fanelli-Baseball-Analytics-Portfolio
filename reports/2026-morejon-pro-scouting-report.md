@@ -1,7 +1,7 @@
 # Adrián Morejón (LHP, pending free agent): pro scouting report
 
-*Adrián Morejón · LHP · B/T L/L · 5'11", 224 lb (listed) · born Feb. 27, 1999, Havana, Cuba (27.6 on the report date; 2027 age 28) · San Diego Padres*
-*Report date 2026-10-14 · Scout: Dylan Fanelli · Basis: data (Statcast, all 1,318 regular-season pitches of 2026, with 2024–25 for history and the 2026 postseason as a check) and public reporting. No live or video look: the delivery items that need eyes are NG (no grade).*
+*Adrián Morejón; LHP; B/T L/L; 5'11", 224 lb (listed); born Feb. 27, 1999, Havana, Cuba (27.6 on the report date; 2027 age 28); San Diego Padres*
+*Report date 2026-10-14; Scout: Dylan Fanelli; Basis: data (Statcast, all 1,318 regular-season pitches of 2026, with 2024–25 for history and the 2026 postseason as a check) and public reporting. No live or video look: the delivery items that need eyes are NG (no grade).*
 
 **Status:** first free agency after 2026 ("set to become a free agent after the 2026 season," Matt Levine, Padres On SI, Aug. 3, 2026). He's qualifying-offer eligible: with San Diego all season, he can't have received a QO before. Whether the Padres make the offer is their call this offseason.
 
@@ -136,7 +136,7 @@
   - These are questions for the look and for background calls to people outside the Padres.
 
 ## OFP, role, risk
-**OFP 60 · Role: B1 now and in 2027 (B1 = closer or high-leverage reliever, OFP band 55–60) · Risk: moderate · ETA: established**
+**OFP 60; Role: B1 now and in 2027 (B1 = closer or high-leverage reliever, OFP band 55–60); Risk: moderate; ETA: established**
 - **The roll-up:** `grades.py ofp --pitcher SI=70 CH=70 FF=70 SL=55` gives a 60 reliever estimate. The starter estimate is 64 with command entered at 50 and 67 at control's 60. Command is NG, so it's run both ways.
 - **Why I grade the reliever:**
   - **No changeup to left-handers:** against them his third pitch would be a 50-now slider.

@@ -4,13 +4,13 @@
 - **The scouting reports are data-informed, not a live look.** Grades come from Statcast shape and results. Health appears only as public injured-list and surgery reporting, cited, with no inference.
 - **Closes roadmap issues #13** (acquisition memo: compare three relievers) **and #8** (20-80 scouting report template and first full report).
 
-*Written 2026-10-13 · Dylan Fanelli · Data: Statcast via Baseball Savant (regular seasons 2024-26) · Outside facts: MLB.com, MiLB.com, CBS Sports, AP, MLB Trade Rumors (via NewsBeep and Yardbarker), Spotrac, Texas Rangers On SI, Padres On SI, FanSided, Just Baseball, Roundtable, NBC Sports, RotoWire, Yahoo Sports/NBC tracker, Bleacher Nation, FanGraphs (each dated below) · Code: `baseball/evaluation/reliever.py`, `baseball/roster/acquisition.py`, `baseball/roster/bullpen_case.py` · Independently reviewed 2026-10-13; findings addressed*
+*Written 2026-10-13; Dylan Fanelli; Data: Statcast via Baseball Savant (regular seasons 2024-26); Outside facts: MLB.com, MiLB.com, CBS Sports, AP, MLB Trade Rumors (via NewsBeep and Yardbarker), Spotrac, Texas Rangers On SI, Padres On SI, FanSided, Just Baseball, Roundtable, NBC Sports, RotoWire, Yahoo Sports/NBC tracker, Bleacher Nation, FanGraphs (each dated below); Code: `baseball/evaluation/reliever.py`, `baseball/roster/acquisition.py`, `baseball/roster/bullpen_case.py`; Reviewed in a separate pass 2026-10-13; findings addressed*
 
 ![Pitch grades, the reliever market's price per projected win, and fastball velocity by month](figures/2026-bullpen-acquisition-memo.png)
 
 ## Decision summary
 
-**Compiled:** 2026-10-13 · **On:** Bid on Adrián Morejón to his value; expect Abreu about half the time
+**Compiled:** 2026-10-13; **On:** Bid on Adrián Morejón to his value; expect Abreu about half the time
 
 **Recommendation.**
 - **Bid on Adrián Morejón.** Open at four years, $60M with a 2031 club option. Walk away above four years, $72M ($18M a year), which is his value to us at the reliever market's own price of a win.
@@ -63,8 +63,8 @@
 | 2 (B) | Bryan Abreu | R/R, 30, Astros | 50 | B2 setup (15% walks) | B2; B1 if his walk rate stays at or below about 11% | Moderate to high | Slider and four-seamer (60 / 60-65) | Free agent. Expected price $12.2M ($3.1–21.3M). No public projection found. QO-eligible | 1.5 (B2); 1.6 in the B1 job |
 | 3 (C) | Pete Fairbanks | R/R, 33, Marlins | 50 | B2 when active | Out about 9-10 months after surgery; B2 when back | High (health) | Cutter (65 / 75; 86 swings) | Free agent. 2026 deal 1 year, $13M. Rehab-deal value about $4.5M a year over two years | 0.24 in 2027 (about a third of a season) |
 
-- **Roles:** the pro-scouting-ops model system (B1 closer or high leverage, OFP band 55-60; B2 setup, OFP 50).
-- **OFP:** my scouting notes' reliever formula, min(60, 0.55 × best pitch + 0.35 × second + 0.10 × control), overridden where stated.
+- **Roles:** a reliever role scale (B1 closer or high leverage, OFP band 55-60; B2 setup, OFP 50).
+- **OFP:** my reliever formula, min(60, 0.55 × best pitch + 0.35 × second + 0.10 × control), overridden where stated.
 - **Control:** graded from unintentional walk rate, as a stand-in for command, which the formula asks for and public data can't measure.
 
 **Preference list and statements.**
@@ -196,7 +196,7 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 
 ---
 
-### Adrián Morejón · LHP · Padres · B/T L/L · 5'11", 224 lb · born Feb. 27, 1999 (27 on the report date; 2027 age 28) · free agent
+### Adrián Morejón, LHP, Padres, B/T L/L, 5'11", 224 lb, born Feb. 27, 1999 (27 on the report date; 2027 age 28), free agent
 
 **Basis:** data only (Statcast 2024-26 regular season), not a live look.
 - **Measurements:** MiLB.com player page, read Oct. 13, 2026.
@@ -278,7 +278,7 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
   - Earlier games: 0.23 × 2.35 = 0.54 × −0.77 = −0.42 points.
   - The total, about −1.8 points, is one measured reason to value him as a reliever.
 
-**OFP 60 · Role: B1 now and in 2027 · Risk: moderate.**
+**OFP 60; Role: B1 now and in 2027; Risk: moderate.**
 - **The formula:** 0.55 × 75 + 0.35 × 75 + 0.10 × 60 = 73.5, capped at 60.
 - **The risk** rests on three things: the velocity gain and the changeup's share of his results holding, and an elbow with a 2021 reconstruction and a 2023 sprain behind three healthy seasons.
 - **Summary:** a ground-ball, platoon-neutral late-inning lefty at 28, coming off his best season, whose velocity has climbed for two years.
@@ -287,7 +287,7 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 
 ---
 
-### Bryan Abreu · RHP · Astros · B/T R/R · 6'1", 230 lb · born Apr. 22, 1997 (29 on the report date; 2027 age 30) · free agent
+### Bryan Abreu, RHP, Astros, B/T R/R, 6'1", 230 lb, born Apr. 22, 1997 (29 on the report date; 2027 age 30), free agent
 
 **Basis:** data only (Statcast 2024-26 regular season), not a live look.
 - **Measurements and transactions:** MiLB.com player page, read Oct. 13, 2026.
@@ -376,14 +376,14 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 
 **Familiarity:** low, as for any reliever: −0.27 whiff points on the slider from earlier-game exposure, −0.20 on the four-seamer.
 
-**OFP 50 (formula 60, overridden) · Role: B2 in 2027; B1 if his unintentional walk rate holds at or below about 11% through his first 150 PA · Risk: moderate to high.**
+**OFP 50 (formula 60, overridden); Role: B2 in 2027; B1 if his unintentional walk rate holds at or below about 11% through his first 150 PA; Risk: moderate to high.**
 - **Why the override:** the formula gives control 10% weight. A 15% walk rate costs runs that whiff-based pitch grades can't see.
   - **On the role scale:** a 55 would be a B1 (55-60 band). Until the walks are settled, his role is B2 (50).
 - **Action:** pref list #2, tier B, the plan if Morejón's price passes the walk-away.
 
 ---
 
-### Pete Fairbanks · RHP · Marlins · B/T R/R · 6'6", 225 lb · born Dec. 16, 1993 (32 on the report date; 2027 age 33) · free agent
+### Pete Fairbanks, RHP, Marlins, B/T R/R, 6'6", 225 lb, born Dec. 16, 1993 (32 on the report date; 2027 age 33), free agent
 
 **Basis:** data only (Statcast 2024-26 regular season), not a live look.
 - **Measurements:** RotoWire player page, read Oct. 13, 2026.
@@ -457,7 +457,7 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 
 **Familiarity:** low: −0.10 to −0.13 whiff points per group.
 
-**OFP 50 (formula 60, overridden) · Role: B2 when healthy · Risk: high (health).**
+**OFP 50 (formula 60, overridden); Role: B2 when healthy; Risk: high (health).**
 - **Why the override:** the cutter's 65 present grade rests on 86 swings in its first season, and an 11% walk rate keeps him off the B1 line.
 - **Action:** pref list #3, tier C.
   - **2027:** not an option.

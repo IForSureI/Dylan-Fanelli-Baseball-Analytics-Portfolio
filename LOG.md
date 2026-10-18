@@ -272,7 +272,7 @@ Each study was built and integrated, then independently reviewed against its own
 ## 2026-10-12 (late): Tracking data pipeline (public loader, private repo)
 **Built**
 - `baseball/ingest/tracking.py`: the TrackMan / Rapsodo / Savant loader, with tests. It tests the horizontal sign on the data itself and flags QC problems.
-- Portable stuff model (`bb stuff-model`). It uses only features TrackMan and Rapsodo also measure, so there's no arm angle. Cross-fitted AUC is 0.631, against 0.633 for the full model, so device data gets essentially the same model. It's saved with MLB percentile references by pitch type.
+- Portable stuff model (`bb stuff-model`). It uses only features TrackMan and Rapsodo also measure, so there's no arm angle. Cross-fitted AUC is 0.630, against 0.633 for the full model, so device data gets essentially the same model. It's saved with MLB percentile references by pitch type.
 - Release tells now take any feature set and session column, so they work on pen and game files.
 - Private repo `bbp` commands: `ingest` (inbox, QC, deduplicated store), `report` (shape per device, MLB-equivalent expected whiff% with percentile, game results, release consistency, velocity by session), and `demo` on fictional files.
 - The monthly update now pulls the private repo, processes its inbox, and commits and pushes.
@@ -320,7 +320,7 @@ Each study was built and integrated, then independently reviewed against its own
 - Skubal's changeup whiff rate is his real level: 46.4% in 2024 and 46.8% in 2025, or 46.6% on 997 swings across both (95% interval 43.6–49.7%).
 
 **Decided**
-- Every finished report gets an independent review before it's final.
+- Every finished report gets a separate review pass before it's final.
 - A change counts as confirmed at p < 0.05 with at least 30 swings in each sample. Anything near 0.05 is called borderline, because many tests run at once.
 
 **Learned**

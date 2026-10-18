@@ -23,14 +23,14 @@ Baseball-operations research and tools built on every public pitch of 2024–202
 | Should the Pirates extend Paul Skenes before the CBA expires on Dec. 1? | Open at about $200M in present value and walk away above about $215M. The answer depends on the next agreement, and the memo prices both rule sets. The tax engine reproduces the 2025 luxury-tax bills within $1 for eight of nine clubs. | [Memo](reports/2026-roster-cba-engine.md) |
 | Who trades with whom? | Division rivals trade at 0.56 times the rate of other pairs (0.49–0.65), and 52 of 60 rival pairs fall below expectation. The deadline is the one window where they come closer to normal. Dodgers–Giants, Guardians–Royals and Cubs–Cardinals haven't traded since 2009. | [Report](reports/2026-trade-network-rivals.md) |
 | Do front-office ties predict trade partners? | Yes, modestly. A pair of clubs trades about 14–18% more in seasons when their decision-makers share front-office history (1.18, 1.04–1.34, p = 0.009; permutation p = 0.015), and it holds without the Angels and Braves. The narrower protégé-meets-old-boss tie is borderline at best. For scale, division rivalry is −45%. | [Report](reports/2026-front-office-ties.md) |
-| What would a pro scout write on the top free-agent reliever? | Adrián Morejón: OFP 60, a B1 reliever for 2027. Sinker, changeup and four-seamer grade 70; the slider is 50 now and 55 future. It got 3.3 mph harder and lost 2.7 in of drop as its whiffs fell from 40% to 30%. Delivery items that need eyes are NG, and the look before the bid is written out. | [Report](reports/2026-morejon-pro-scouting-report.md) · [one page](reports/2026-morejon-pro-scouting-report.pdf) |
+| What would a pro scout write on the top free-agent reliever? | Adrián Morejón: OFP 60, a B1 reliever for 2027. Sinker, changeup and four-seamer grade 70; the slider is 50 now and 55 future. It got 3.3 mph harder and lost 2.7 in of drop as its whiffs fell from 40% to 30%. Delivery items that need eyes are NG, and the look before the bid is written out. | [Report](reports/2026-morejon-pro-scouting-report.md), [one page](reports/2026-morejon-pro-scouting-report.pdf) |
 | Was Tarik Skubal's 2025 change real? | Yes. It was him, not the cameras: he ranked at the 80th–98th percentile on the changes, and the league didn't move. His changeup's 46.6% whiff rate (997 swings) is his true level. | [Report](reports/2025-skubal-arsenal.md) |
 
-The **Edge Board** is a monthly league scan, refreshed by `bb edge` and `bb board`. It covers:
+The **Edge Board** is a monthly league scan, refreshed by `bb edge` and `bb board` ([numbers](reports/2026-edge-board.md)). It covers:
 - release tells
-- hidden in-season pitch changes (291 in 2026)
+- hidden in-season pitch changes (291 in 2026, by 225 pitchers)
 - results beyond stuff, which persist year to year (r = 0.56 and 0.53)
-- next-season whiff projections, validated against a regressed baseline (8% less error, leave-one-out)
+- next-season whiff projections, validated against a regressed baseline (8.1% less error, leave-one-out)
 
 ## How the work is held up
 - **Out of sample by default.** Forecasts are tested on seasons their parameters never saw, against a regressed baseline, never raw last season.
@@ -38,7 +38,7 @@ The **Edge Board** is a monthly league scan, refreshed by `bb edge` and `bb boar
   - Confirmed means p < 0.05 with enough sample; near 0.05 is borderline.
   - Many tests at once get a Benjamini–Hochberg correction.
   - "No sign of an effect" is claimed only when the interval rules out effects that matter. Otherwise the report says "not detected" and gives the bound.
-- **Independent review.** Every finished report goes to a reviewer who didn't build it and who checks each number against the saved outputs. The reviews changed real conclusions:
+- **Separate review.** Every finished report gets a separate review pass that checks each number against the saved outputs. The reviews changed real conclusions:
   - the Skenes price
   - the ranking of pitch-design levers
   - a noise model for pitch physics
