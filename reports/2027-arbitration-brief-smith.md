@@ -7,17 +7,17 @@
 ![The comp line for first-time-eligible closers and the club's hearing odds at each filing](figures/2027-arbitration-brief-smith.png)
 
 ## Decision summary
-- **File at $4.8M.**
-  - **Why that number:** it pays Smith more than every first-time closer since 2016 he matches or beats on the panel's stats (nine of them, Romano and Bednar the closest), even with their salaries restated to 2027. It sits just under what the comparable closers' salaries predict for him ($4.82M).
+- **File at $4.65M.**
+  - **Why that number:** it pays Smith more than every first-time closer since 2016 he matches or beats on the panel's stats (thirteen of them, Romano and Bednar the closest), even with their salaries restated to 2027. It sits $0.07M above what the comparable closers' salaries predict for him ($4.58M), because Romano's salary, restated, sets the floor.
   - **What it concedes:** the platform year. He tied for the major-league lead with 41 saves (with Tampa Bay's Bryan Baker), had a 1.95 ERA and made the All-Star team.
-- **Settle between $5.0M and $5.2M.** Open at $5.0M, ideally before December 1.
-- **Walk to a hearing above $5.2M.** That is the average award a hearing would produce ($5.20M) on the $50K grid. Above it, the hearing is the cheaper path on average.
-- **The player's likely number is about $5.9M** (inference). That puts the midpoint at $5.35M.
-  - **The club's chance at that midpoint is about 63% in the base case.** It rises to about 92% if the panel reads the case the way the comparable salaries do. It falls to 34% if the panel reads it like MLB Trade Rumors' $5.5M projection.
-- **The one risk:** the panel pays for his ERA, his strikeouts and the All-Star selection the way the market projection does. The comps put him near $4.8M (about $4.9M if ERA is priced too). MLB Trade Rumors' model says $5.5M. The club stays the favorite at $4.8M unless the panel leans about three-to-one toward the market view.
+- **Settle between $5.0M and $5.1M.** Open at $5.0M, ideally before December 1.
+- **Walk to a hearing above $5.1M.** A hearing's average award is $5.15M, and $5.10M is the last $50K step under it. Above that, the hearing is the cheaper path on average.
+- **The player's likely number is about $5.9M** (inference). That puts the midpoint at $5.275M.
+  - **The club's chance at that midpoint is about 60% in the base case.** It rises to about 82% if the panel reads the case the way the comparable salaries do. It falls to 38% if the panel reads it like MLB Trade Rumors' $5.5M projection.
+- **The one risk:** the panel pays for his ERA, his strikeouts and the All-Star selection the way the market projection does. The comps put him near $4.6M (about $4.7M if ERA is priced too). MLB Trade Rumors' model says $5.5M. The club stays the favorite at $4.65M unless the panel leans about three-to-one toward the market view.
 - **The cost of being wrong:**
-  - **Losing at $5.9M:** $1.1M more in 2027. Because later arbitration raises build on this salary, the gap repeats through 2029: about $3.0M in present value, or $2.1M if only half of it carries.
-  - **Settling at the $5.35M midpoint:** about $0.15M a year above the hearing's average outcome, about $0.40M in present value.
+  - **Losing at $5.9M:** $1.25M more in 2027. Because later arbitration raises build on this salary, the gap repeats through 2029: about $3.4M in present value, or $2.3M if only half of it carries.
+  - **Settling at the $5.275M midpoint:** about $0.13M a year above the hearing's average outcome, about $0.35M in present value.
 - **The labor clock matters more than usual.** The 2022-26 agreement expires December 1. A lockout ends all contact with 40-man players. In 2022, figures were exchanged March 22 and hearings ran into June. A one-year deal signed before the tender deadline (expected about November 20; not yet announced) removes the hearing and the rules risk together. Cleveland made three such November deals last year.
 
 ## The case as a panel sees it
@@ -69,13 +69,13 @@ Sources: Baseball-Reference (read Oct. 18, 2026); holds, MLB.com; save chances, 
 
 ### The club's argument, in the panel's language
 1. **One full season as a closer.** 41 of his 58 career saves came in 2026. The four first-time closers since 2016 paid $5.0M or more (Rosenthal, Osuna, Colomé, Edwin Díaz) brought 84-135 career saves, the product of two or more seasons in the job.
-2. **The comparable salaries.** The nine first-time closers he matches or beats on platform saves, platform ERA and career saves were paid $3.275-4.54M. Restated to 2027 at this market's own growth rate, that is $3.73-4.76M. At $4.8M, the club pays him above all of them.
+2. **The comparable salaries.** The thirteen first-time closers he matches or beats on platform saves, platform ERA and career saves were paid $1.94-4.54M. Restated to 2027 at this market's own growth rate, that is $1.96-4.65M. At $4.65M, the club pays him above all of them.
 3. **Consistency.** His 2025 was the weakest of his three seasons: a 2.93 ERA, 8-5, and 16 saves. His walks and home runs allowed have risen each year (17, 19, 23 walks; 1, 4, 5 home runs).
-4. **The Familia precedent.** Jeurys Familia had 43 saves and a 1.85 ERA in his one full season as a closer. He settled at $4.1M in 2016, a record at the time for a reliever with one full season as closer (MLB.com, Feb. 15, 2020). That is $4.67M in 2027 dollars.
+4. **The Familia precedent.** Jeurys Familia had 43 saves and a 1.85 ERA in his one full season as a closer. He settled at $4.1M in 2016, a record at the time for a reliever with one full season as closer (MLB.com, Feb. 15, 2020). That is $4.38M in 2027 dollars.
 5. **The Hader precedent.** In February 2020 a panel chose Milwaukee's $4.1M over Josh Hader's $6.4M. Hader had 37 saves, 49 career saves, two All-Star selections and two Trevor Hoffman Awards. He asked for a first-year reliever record; the panel paid the club's number.
 
 ### What the club concedes
-- **The platform year is among the best in the comparison set.** Of the 19 first-time closers since 2016, only Rondón (1.67), Knebel (1.78) and Familia (1.85) had a lower platform ERA, and only Rosenthal (48), Colomé (47) and Familia (43) had more platform saves. No comparable closer beats him on all three panel stats.
+- **The platform year is among the best in the comparison set.** Of the 23 first-time closers since 2016, only Rondón (1.67), Knebel (1.78) and Familia (1.85) had a lower platform ERA, and only Rosenthal (48), Colomé (47) and Familia (43) had more platform saves. No comparable closer beats him on all three panel stats.
 - **The All-Star selection counts.** Recognized awards are admissible.
 - **His strikeouts are a counting stat a panel reads.** His 107 were more than every comp's except Hader's 138 and Knebel's 126.
 - **The club's own record helps him.** A division champion's closer is a contributor to the club's recent performance, and the criteria name leadership and public appeal. The club shouldn't contest either.
@@ -106,9 +106,12 @@ Reliever cases run on traditional numbers: saves first, then ERA, the default he
 
 ## The comparables
 
-**The pool** (`POOL_RULE`): every reliever with 20 or more saves in a platform season from 2015 to 2025 (the MLB Stats API's season leaders) whose next season was his first arbitration year, Super Twos included, and whose salary was set by a one-year settlement or a hearing. That gives 19 closers for 2016-26, plus Papelbon's 2009 record as an exhibit.
-- **Screened out, with the reason** (`SCREENED_OUT`): players already past their first arbitration year (Britton, Kela, Treinen, Greene, Rogers, Robles, Trivino, Reyes), Boxberger and Neris (still pre-arbitration), and extensions or multi-year deals (Vázquez, Iglesias, Hand, Clase, Fairbanks, Muñoz).
-- **Not yet confirmed and left out:** ten 2023-26 candidates (Holmes, Soto, Sewald, Barlow, Phillips, Alzolay, Foley, Megill, Vest, Palencia) whose first-year status or salary I couldn't confirm from a public page for this version. They should be added once confirmed.
+**The pool** (`POOL_RULE`): every reliever with 20 or more saves in a platform season from 2015 to 2025 (the MLB Stats API's season leaders) whose next season was his first arbitration year, Super Twos included, and whose salary was set by a one-year settlement or a hearing. That gives 23 closers for 2016-26, plus Papelbon's 2009 record as an exhibit.
+- **Screened out, with the reason** (`SCREENED_OUT`): players already past their first arbitration year (Britton, Kela, Treinen, Greene, Rogers, Robles, Trivino, Reyes, Holmes, Sewald, Barlow, Phillips, Vest), Boxberger, Neris and Palencia (still pre-arbitration), and extensions or multi-year deals (Vázquez, Iglesias, Hand, Clase, Fairbanks, Muñoz).
+- **The 2023-26 candidates, confirmed Oct. 18, 2026:** each was checked against MLB Trade Rumors' service-time lists, Baseball-Reference's salary table and a dated report of the deal.
+  - **Four joined the pool, all settled:** Gregory Soto (2023, $3.925M), Adbert Alzolay (2024, $2.11M), Jason Foley (2025, $3.15M) and Trevor Megill (2025, $1.94M).
+  - **Six failed the rule:** Holmes, Sewald and Barlow had their first arbitration year in 2022, Phillips was a Super Two in 2023 and Vest's first year was 2025, so each candidate season was a second year. Palencia (1.154 service) was still pre-arbitration in 2026.
+  - **Rechecked the same way:** Britton (a Super Two in 2015), Treinen and Greene (first arbitration year 2018).
 
 **How the six nearest were chosen** (`select_comparables`): nearest to Smith on platform saves, career saves, platform ERA and the year the salary was set. The distance scales (10 saves, 25 career saves, 1.00 of ERA, 8 years) are assumptions. The service rule allows a comp with at most one more year of service; Super Twos (less service) are allowed.
 
@@ -117,53 +120,57 @@ Reliever cases run on traditional numbers: saves first, then ERA, the default he
 | Player | Salary season | Service class | Platform SV | Platform ERA | IP | SO | Career SV | All-Star (platform) | Salary | How set | In 2027 dollars | Smith vs. comp |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | **Cade Smith** | 2027 | 3.000 | **41** | **1.95** | 74.0 | 107 | **58** | Yes | — | — | — | — |
-| David Bednar | 2024 | 3.076 | 39 | 2.00 | 67.1 | 80 | 61 | Yes | $4.51M | Settled | $4.67M | Smith matches or better |
-| Jordan Romano | 2023 | Arb 1 | 36 | 2.11 | 64.0 | 73 | 61 | Yes | $4.5375M | Settled | $4.76M | Smith matches or better |
-| Josh Hader | 2020 | Super Two (2.115) | 37 | 2.62 | 75.2 | 138 | 49 | Yes | $4.1M | Hearing: club's $4.1M over his $6.4M | $4.46M | Smith better |
-| Corey Knebel | 2018 | Super Two | 39 | 1.78 | 76.0 | 126 | 41 | Yes | $3.65M | Settled | $4.06M | Mixed |
-| Ken Giles | 2018 | Arb 1 | 34 | 2.30 | 62.2 | 83 | 65 | No | $4.6M | Hearing: his $4.6M over the club's $4.2M | $5.12M | Mixed |
-| Jeurys Familia | 2016 | Arb 1 | 43 | 1.85 | 78.0 | 86 | 49 | No | $4.1M | Settled | $4.67M | Mixed |
+| David Bednar | 2024 | 3.076 | 39 | 2.00 | 67.1 | 80 | 61 | Yes | $4.51M | Settled | $4.59M | Smith matches or better |
+| Jordan Romano | 2023 | Arb 1 | 36 | 2.11 | 64.0 | 73 | 61 | Yes | $4.5375M | Settled | $4.65M | Smith matches or better |
+| Josh Hader | 2020 | Super Two (2.115) | 37 | 2.62 | 75.2 | 138 | 49 | Yes | $4.1M | Hearing: club's $4.1M over his $6.4M | $4.27M | Smith better |
+| Corey Knebel | 2018 | Super Two | 39 | 1.78 | 76.0 | 126 | 41 | Yes | $3.65M | Settled | $3.85M | Mixed |
+| Ken Giles | 2018 | Arb 1 | 34 | 2.30 | 62.2 | 83 | 65 | No | $4.6M | Hearing: his $4.6M over the club's $4.2M | $4.85M | Mixed |
+| Jeurys Familia | 2016 | Arb 1 | 43 | 1.85 | 78.0 | 86 | 49 | No | $4.1M | Settled | $4.38M | Mixed |
 
 **The exhibits each side will add:**
 
 | Player | Salary season | Platform SV | Platform ERA | Career SV | Salary | How set | In 2027 dollars | Who cites it |
 |---|---|---|---|---|---|---|---|---|
 | Jonathan Papelbon | 2009 | 41 | 2.34 | 113 | $6.25M | Settled; the first-year reliever record | — (too old to restate) | Player: the record |
-| Trevor Rosenthal | 2016 | 48 | 2.10 | 96 | $5.6M | Settled | $6.38M | Player; club answers with 96 career saves |
-| Roberto Osuna | 2018 | 39 | 3.38 | 95 | $5.3M | Hearing: club's $5.3M over his $5.8M | $5.90M | Both: player for the level, club for the result |
-| Álex Colomé | 2018 | 47 | 3.24 | 84 | $5.3M | Settled | $5.90M | Player; club answers with 84 career saves and a 3.24 ERA |
-| Edwin Díaz | 2020 | 26 | 5.59 | 135 | $5.1M | Settled | $5.54M | Player; club answers with 135 career saves |
-| Héctor Rondón | 2016 | 30 | 1.67 | 59 | $4.2M | Settled | $4.79M | Player: a lower ERA, $4.79M in 2027 dollars |
-| Cody Allen | 2016 | 34 | 2.99 | 60 | $4.15M | Settled | $4.73M | Club |
-| Alexis Díaz | 2025 | 28 | 3.99 | 75 | $4.5M | Settled (3.000) | $4.61M | Club |
-| Camilo Doval | 2025 | 23 | 4.88 | 92 | $4.525M | Settled (3.071) | $4.63M | Club: 92 career saves, $4.5M |
-| Jhoan Duran | 2025 | 23 | 3.64 | 58 | $4.125M | Settled (3.000) | $4.22M | Club: same career saves, $4.1M |
+| Trevor Rosenthal | 2016 | 48 | 2.10 | 96 | $5.6M | Settled | $5.98M | Player; club answers with 96 career saves |
+| Roberto Osuna | 2018 | 39 | 3.38 | 95 | $5.3M | Hearing: club's $5.3M over his $5.8M | $5.59M | Both: player for the level, club for the result |
+| Álex Colomé | 2018 | 47 | 3.24 | 84 | $5.3M | Settled | $5.59M | Player; club answers with 84 career saves and a 3.24 ERA |
+| Edwin Díaz | 2020 | 26 | 5.59 | 135 | $5.1M | Settled | $5.32M | Player; club answers with 135 career saves |
+| Héctor Rondón | 2016 | 30 | 1.67 | 59 | $4.2M | Settled | $4.48M | Club: a lower ERA than Smith's, $4.48M in 2027 dollars |
+| Cody Allen | 2016 | 34 | 2.99 | 60 | $4.15M | Settled | $4.43M | Club |
+| Alexis Díaz | 2025 | 28 | 3.99 | 75 | $4.5M | Settled (3.000) | $4.55M | Club |
+| Camilo Doval | 2025 | 23 | 4.88 | 92 | $4.525M | Settled (3.071) | $4.58M | Club: 92 career saves, $4.5M |
+| Jhoan Duran | 2025 | 23 | 3.64 | 58 | $4.125M | Settled (3.000) | $4.17M | Club: same career saves, $4.1M |
+| Gregory Soto | 2023 | 30 | 3.28 | 50 | $3.925M | Settled (3.102) | $4.02M | Club: an All-Star closer with 30 saves, under $4.0M |
+| Jason Foley | 2025 | 28 | 3.15 | 35 | $3.15M | Settled (3.033) | $3.19M | Club |
+| Adbert Alzolay | 2024 | 22 | 2.67 | 23 | $2.11M | Settled (3.050) | $2.15M | Club: the low end of the pool |
+| Trevor Megill | 2025 | 21 | 2.72 | 21 | $1.94M | Settled (3.002) | $1.96M | Club: the low end of the pool |
 
-- **"In 2027 dollars":** each salary grown at 1.20% a year, the rate the comp line below estimates from these salaries themselves.
+- **"In 2027 dollars":** each salary grown at 0.59% a year, the rate the comp line below estimates from these salaries themselves (standard error about 1.0% a year).
 - **"Matches or better":** at least as good on platform saves and platform ERA, and the comp has no more than five more career saves (Bednar and Romano have 61, three more than Smith). "Mixed" means each side has an edge.
 - **Papelbon's record:** MLB Trade Rumors' records page (January 2017) and MLB.com (February 2020) both list his $6.25M as the record for a first-time-eligible reliever. No first-year salary in the 2016-26 pool is higher.
 - **The three first-time closer hearings in the pool:** the club won two (Osuna 2018, Hader 2020) and Giles won one (2018, $4.6M over $4.2M, the closest gap of the three).
 - **The bracket** (`bracket`):
-  - **Floor:** Romano at $4.76M in 2027 dollars, the highest-paid comp Smith matches or beats on all three panel stats. A filing under it would ask the panel to pay him less than a closer he out-pitched.
+  - **Floor:** Romano at $4.65M in 2027 dollars, the highest-paid comp Smith matches or beats on all three panel stats. A filing under it would ask the panel to pay him less than a closer he out-pitched.
   - **Ceiling:** no first-year comp beats him on every stat, so the comps set no ceiling. The player's case for more than about $5.5M rests on first-year comps with 84 or more career saves, the second-year salaries above, or a special-accomplishment argument.
 
 ## The arithmetic
 
-### 1. What the comparables say he's worth: $4.82M
-- **The comp line** (`fit_comp_line`): log salary on platform saves, career saves and the season the salary was set, fit on the 19 first-time closers of 2016-26. Papelbon's 2009 salary stays an exhibit.
+### 1. What the comparables say he's worth: $4.58M
+- **The comp line** (`fit_comp_line`): log salary on platform saves, career saves and the season the salary was set, fit on the 23 first-time closers of 2016-26. Papelbon's 2009 salary stays an exhibit.
 - **What it finds:**
-  - **Each platform save** adds about 0.9% to the salary.
-  - **Each career save** adds about 0.5%.
-  - **The season term** says this market's salaries grew about 1.2% a year. The settlements bear that out: closers with under 60 career saves got $3.3-4.2M in 2016-17 and $4.0-4.5M in 2023-26.
-  - **The fit:** the typical miss is about 6% in sample (residual standard deviation 0.060 in log terms) and about 8% out of sample (leave-one-out RMSE 0.079). The biggest out-of-sample miss is Edwin Díaz, about 20% under the line: his 135 career saves predict more than his $5.1M. The three hearing awards sit within 10% of the line (Hader 0%, Osuna +4%, Giles +10%).
-- **Smith's line value:** $4.82M, with a prediction standard error of $0.37M.
+  - **Each platform save** adds about 1.4% to the salary.
+  - **Each career save** adds about 0.7%.
+  - **The season term** says this market's salaries grew about 0.6% a year, with a standard error of about 1.0%, so the comps can't tell slow growth from none. Closers with under 60 career saves got $3.3-4.2M in 2016-17 and $1.9-4.1M in 2023-26.
+  - **The fit:** the typical miss is about 13% in sample (residual standard deviation 0.130 in log terms) and about 16% out of sample (leave-one-out RMSE 0.158). The biggest out-of-sample misses are under the line: Edwin Díaz and Megill, each about 32%, and Alzolay, about 25%. Díaz's 135 career saves predict more than his $5.1M; Alzolay and Megill settled far below Duran and Doval, who had about as many platform saves. On the other side, Mason Miller ($4.0M on 22 saves) sits about 26% over. The three hearing awards sit within 12% of the line (Hader +5%, Osuna −3%, Giles +12%).
+- **Smith's line value:** $4.58M, with a prediction standard error of $0.75M.
 - **Do panels pay for more than saves?** Added one at a time to the line (`added_predictor_tests`):
-  - **Platform ERA:** about 6% less per run of ERA (coefficient −0.059, standard error 0.020), and the fit tightens (residual sd 0.049). With it, Smith's 1.95 ERA lifts his value to $4.89M.
-  - **An All-Star selection in the platform year:** no premium (+0.0%, standard error 4.0%).
-  - **Platform strikeouts:** none (−0.3% per 10, standard error 0.7%).
-  - **So:** the comps pay a little for ERA and nothing extra for the All-Star selection or strikeouts. Nineteen points can't rule out a small premium, but they don't show one.
-- **Against MLB Trade Rumors:** MLBTR projects $5.5M, about 1.8 standard errors above the line. Its model (Matt Swartz's) uses playing time, role and performance stats with inflation, and its exact terms aren't public. The gap between the two numbers is the hearing question: how much a panel pays above the saves line for his ERA, strikeouts and All-Star selection. The comps' answer is about $0.07M, for the ERA.
-- **The pool matters less than it did.** The hand-built ten-comp version of this line put him at $4.90M; the systematic 19 put him at $4.82M; adding ERA, $4.89M. The filing is $4.8M in every case, because the floor (Romano) sets it.
+  - **Platform ERA:** about 6% less per run of ERA (coefficient −0.060, standard error 0.050). The size matches the 19-comp version, but on 23 comps it sits within its own error, and the fit barely tightens (residual sd 0.128). With it, Smith's 1.95 ERA lifts his value to $4.70M.
+  - **An All-Star selection in the platform year:** +1.8%, standard error 7.7%.
+  - **Platform strikeouts:** +1.2% per 10, standard error 1.3%.
+  - **So:** none of the three is clearly different from zero. ERA has the largest effect, and it is the default hearing statistic, so it is the one to prepare for.
+- **Against MLB Trade Rumors:** MLBTR projects $5.5M, about 1.2 standard errors above the line. Its model (Matt Swartz's) uses playing time, role and performance stats with inflation, and its exact terms aren't public. The gap between the two numbers is the hearing question: how much a panel pays above the saves line for his ERA, strikeouts and All-Star selection. The comps' answer is about $0.12M, for the ERA, and even that is uncertain.
+- **The pool moves the line more than the filing.** The hand-built ten-comp version of this line put him at $4.90M; the systematic 19 put him at $4.82M; the full 23, with the four added Oct. 18, put him at $4.58M; adding ERA, $4.70M. The filing ranges only $4.65-4.80M across those versions, because Romano's salary sets the floor in each and only the growth rate used to restate it changes.
 
 ### 2. The player's likely figure: about $5.9M (inference)
 - **The 2026 exchanges as a guide:** in the 18 cases where figures were exchanged for 2026, the player's figure ran a median 1.148 times the club's (MLB.com, Jan. 9, 2026).
@@ -172,66 +179,68 @@ Reliever cases run on traditional numbers: saves first, then ERA, the default he
 
 ### 3. The hearing odds at each filing
 - **How the panel picks:** it takes the figure nearer its own view of his value. So the club wins when the panel's value is below the midpoint.
-- **Two views of the panel** (the panel's value is normal with sd $0.37M around each center):
-  - **"Reads the comps":** centered on the $4.82M line value.
+- **Two views of the panel** (the panel's value is normal with sd $0.75M around each center):
+  - **"Reads the comps":** centered on the $4.58M line value.
   - **"Reads the market":** centered on MLBTR's $5.5M.
   - **The base case weights them evenly.** No public record says how panels split between a saves line and a full-stat model, so even weight is the no-information choice. The evidence that exists leans a little toward the market view: players won 8 of 12 hearings in 2026, and Fink found panels picked the model-favored side only about half the time. So the decision below is written on the weight itself.
 - **At the recommended filing:**
-  - **Midpoint:** ($4.80M + $5.90M) / 2 = $5.35M.
-  - **Reads the comps:** P(club) = Φ((5.35 − 4.82) / 0.37) = Φ(1.42) = **0.923**.
-  - **Reads the market:** P(club) = Φ((5.35 − 5.50) / 0.37) = Φ(−0.40) = **0.345**.
-  - **Base case:** (0.923 + 0.345) / 2 = **0.634**.
-- **Expected award** (base case): 0.634 × $4.80M + 0.366 × $5.90M = **$5.20M**. That is the walk-to-hearing point: a settlement above it costs more, on average, than trying the case.
-- **The weight that flips it:** the club is the favorite at $4.8M until the panel puts about 73% of its weight on the market view (`breakeven_weight`). File $4.8M if you believe the panel prices him nearer the comps than about three-to-one toward MLBTR; past that, settle up to the walk point for that weight (about $5.36M at 75%).
+  - **Midpoint:** ($4.65M + $5.90M) / 2 = $5.275M.
+  - **Reads the comps:** P(club) = Φ((5.275 − 4.58) / 0.75) = Φ(0.93) = **0.823**.
+  - **Reads the market:** P(club) = Φ((5.275 − 5.50) / 0.75) = Φ(−0.30) = **0.382**.
+  - **Base case:** (0.823 + 0.382) / 2 = **0.603**.
+- **Expected award** (base case): 0.603 × $4.65M + 0.397 × $5.90M = **$5.15M**. That is the walk-to-hearing point: a settlement above it costs more, on average, than trying the case.
+- **The weight that flips it:** the club is the favorite at $4.65M until the panel puts about 73% of its weight on the market view (`breakeven_weight`). File $4.65M if you believe the panel prices him nearer the comps than about three-to-one toward MLBTR; past that, settle up to the walk point for that weight (about $5.28M at 75%).
 
 | Club files | P(club wins), base case | Expected award | P, reads the comps | P, reads the market |
 |---|---|---|---|---|
-| $4.50M | 0.53 | $5.16M | 0.85 | 0.21 |
-| $4.60M | 0.56 | $5.17M | 0.88 | 0.25 |
-| $4.75M | 0.62 | $5.19M | 0.91 | 0.32 |
-| **$4.80M** | **0.63** | **$5.20M** | **0.92** | **0.35** |
-| $4.90M | 0.67 | $5.23M | 0.94 | 0.40 |
-| $5.00M | 0.70 | $5.27M | 0.95 | 0.45 |
-| $5.10M | 0.73 | $5.31M | 0.97 | 0.50 |
+| $4.50M | 0.57 | $5.10M | 0.80 | 0.34 |
+| $4.60M | 0.59 | $5.13M | 0.81 | 0.37 |
+| **$4.65M** | **0.60** | **$5.15M** | **0.82** | **0.38** |
+| $4.75M | 0.62 | $5.18M | 0.84 | 0.41 |
+| $4.80M | 0.63 | $5.20M | 0.85 | 0.42 |
+| $4.90M | 0.66 | $5.24M | 0.86 | 0.45 |
+| $5.00M | 0.68 | $5.29M | 0.88 | 0.47 |
+| $5.10M | 0.70 | $5.34M | 0.89 | 0.50 |
 
 (Player files $5.90M in every row.)
 
-### 4. Why $4.8M
-- **The expected award barely moves between $4.5M and $4.8M** ($5.16-5.20M). A lower filing buys a lower award when the club wins and gives up almost the same amount in win probability.
-- **Below $4.76M, the club files under a comp Smith clearly matches** (Romano, restated). That invites the panel to read the whole filing as a lowball. So the filing is the lowest round figure at or above that floor (`best_filing` with the floor, rounded up to $50K).
-- **It matches the theory.** Farber (1980): the side that files nearer the panel's expected award wins more often. $4.8M sits $0.02M under the comp line's $4.82M.
-- **Against a record-claim filing ($6.3M):** the midpoint moves to $5.55M, the club's chance rises to 0.76, and the expected award is $5.15M.
+### 4. Why $4.65M
+- **The expected award barely moves between $4.5M and $4.65M** ($5.10-5.15M). A lower filing buys a lower award when the club wins and gives up almost the same amount in win probability.
+- **Below $4.646M, the club files under a comp Smith clearly matches** (Romano, restated). That invites the panel to read the whole filing as a lowball. So the filing is the lowest round figure at or above that floor (`best_filing` with the floor, rounded up to $50K).
+- **It matches the theory.** Farber (1980): the side that files nearer the panel's expected award wins more often. $4.65M sits $0.07M above the comp line's $4.58M.
+- **Against a record-claim filing ($6.3M):** the midpoint moves to $5.475M, the club's chance rises to 0.69, and the expected award is $5.17M.
 
 ### 5. Settle or try the case
-- **Settlements cluster near the midpoint.** Bennett (Baseball Prospectus, Feb. 2, 2010): half the gap was the most common settlement point, and the average was 46% of the gap. Here that is $5.31-5.35M.
-- **The hearing averages $5.20M** in the base case, about $0.15M a year less than a midpoint settlement.
+- **Settlements cluster near the midpoint.** Bennett (Baseball Prospectus, Feb. 2, 2010): half the gap was the most common settlement point, and the average was 46% of the gap. Here that is $5.225-5.275M.
+- **The hearing averages $5.15M** in the base case, about $0.13M a year less than a midpoint settlement.
 - **The carry:** later arbitration raises build on this salary, so a 2027 dollar tends to repeat in 2028 and 2029 (`carry_cost`). At a 10% discount rate and full carry:
-  - **Settling at the midpoint instead of trying the case:** $0.147M × (1 + 1/1.1 + 1/1.21) = $0.147M × 2.736 = about **$0.40M** in present value.
-  - **Losing the hearing:** ($5.90M − $4.80M) × 2.736 = **$3.01M** in present value. If only half the gap carries into 2028-29, it is **$2.05M**. The base-case chance of losing is about 37%.
+  - **Settling at the midpoint instead of trying the case:** $0.128M × (1 + 1/1.1 + 1/1.21) = $0.128M × 2.736 = about **$0.35M** in present value.
+  - **Losing the hearing:** ($5.90M − $4.65M) × 2.736 = **$3.42M** in present value. If only half the gap carries into 2028-29, it is **$2.33M**. The base-case chance of losing is about 40%.
 - **The recommendation:**
-  - **Settle at $5.2M or less.** Open at $5.0M before December 1, when a one-year deal can still be signed under known rules.
-  - **If figures are exchanged:** file $4.8M and treat the case as file-and-trial. Above $5.2M the hearing is cheaper on average, and the club is the favorite in two of the three views.
-  - **If the player files a record claim** ($6.25M or more), try the case. The club's chance rises to about three in four.
-- **Cleveland's own practice:** the club has avoided arbitration hearings every year since 2019 (MLB.com, Jan. 12, 2024). It settled with every eligible player before the exchange in 2025 and 2026 (MLB.com, Jan. 10, 2025 and Jan. 8-9, 2026). A settlement inside the $5.0-5.2M range fits that record. A hearing is the fallback if his camp prices him like the market projection.
+  - **Settle at $5.1M or less.** Open at $5.0M before December 1, when a one-year deal can still be signed under known rules.
+  - **If figures are exchanged:** file $4.65M and treat the case as file-and-trial. Above $5.1M the hearing is cheaper on average, and the club is the favorite in two of the three views.
+  - **If the player files a record claim** ($6.25M or more), try the case. The club's chance rises to about two in three.
+- **Cleveland's own practice:** the club has avoided arbitration hearings every year since 2019 (MLB.com, Jan. 12, 2024). It settled with every eligible player before the exchange in 2025 and 2026 (MLB.com, Jan. 10, 2025 and Jan. 8-9, 2026). A settlement inside the $5.0-5.1M range fits that record. A hearing is the fallback if his camp prices him like the market projection.
 
 ### Sensitivity
-| Case | Line value | P(club wins) at $4.80M | Walk point |
+| Case | Line value | P(club wins) at $4.65M | Walk point |
 |---|---|---|---|
-| Base: even weight on the two views | $4.82M | 0.63 | $5.20M |
-| Weight on the market view 0.25 | $4.82M | 0.78 | $5.04M |
-| Weight on the market view 0.60 | $4.82M | 0.58 | $5.27M |
-| Weight on the market view 0.75 | $4.82M | 0.49 | $5.36M |
-| Player files the record claim ($6.3M) | $4.82M | 0.76 | $5.15M |
-| Fit without the three hearing awards (Hader, Osuna, Giles) | $4.83M | 0.63 | $5.21M |
-| Fit on the original ten hand-picked comps | $4.90M | 0.62 | $5.22M |
-| Comp line with platform ERA added | $4.89M | 0.62 | $5.21M |
-| Fit including Papelbon (2009) | $4.55M | 0.66 | $5.17M |
-| Panel noise sd $0.25M | $4.82M | 0.63 | $5.21M |
-| Panel noise sd $0.50M | $4.82M | 0.62 | $5.22M |
+| Base: even weight on the two views | $4.58M | 0.60 | $5.15M |
+| Weight on the market view 0.25 | $4.58M | 0.71 | $5.01M |
+| Weight on the market view 0.60 | $4.58M | 0.56 | $5.20M |
+| Weight on the market view 0.75 | $4.58M | 0.49 | $5.28M |
+| Player files the record claim ($6.3M) | $4.58M | 0.69 | $5.17M |
+| Fit without the three hearing awards (Hader, Osuna, Giles) | $4.58M | 0.60 | $5.15M |
+| Fit on the original ten hand-picked comps | $4.90M | 0.56 | $5.20M |
+| Comp line with platform ERA added | $4.70M | 0.58 | $5.18M |
+| Fit including Papelbon (2009) | $4.54M | 0.61 | $5.13M |
+| Panel noise sd $0.25M | $4.58M | 0.59 | $5.16M |
+| Panel noise sd $0.50M | $4.58M | 0.62 | $5.12M |
 
-- **What moves the answer:** the weight on the market view. At 0.75 the club is an underdog at $4.8M, and the walk point rises to $5.36M, above the midpoint. Settling then becomes the better choice.
-- **What doesn't:** the comp set (systematic, hand-picked or without the hearings), ERA in the line, and the panel noise. The two views offset, so noise barely matters.
-- **Papelbon:** adding his 2009 salary turns the estimated growth slightly negative and drops the line to $4.55M. That would help the club, but it rests on an 18-year-old salary, and a panel would discount a line built on it.
+- **What moves the answer:** the weight on the market view. At 0.75 the club is an underdog at $4.65M, and the walk point rises to $5.28M, just above the $5.275M midpoint. Settling then becomes the better choice.
+- **What moves the line but not the decision:** the comp set. The hand-picked ten put him $0.32M higher than the full 23, yet the chance at $4.65M stays between 0.56 and 0.61 in every version, because a higher line comes with a smaller error.
+- **What doesn't move either:** dropping the hearings, ERA in the line, and the panel noise. The two views offset, so noise barely matters.
+- **Papelbon:** adding his 2009 salary lowers the estimated growth to 0.5% a year and the line to $4.54M. That would help the club, but it rests on an 18-year-old salary, and a panel would discount a line built on it.
 
 ## The labor situation
 - **Assumed here:** the 2022-26 system carries into 2027 unchanged. That covers final-offer arbitration, the same criteria and exclusions, the comparisons rule, and an exchange on the second Friday in January (Jan. 8, 2027) with hearings into February (the 2026 figures were exchanged Jan. 9, and the 2026 hearings ran through mid-February).
@@ -245,16 +254,16 @@ Reliever cases run on traditional numbers: saves first, then ERA, the default he
 | Exchange and hearing dates | Exchange on the second Friday in January, hearings into February | A lockout freezes contact with 40-man players. In 2022, figures were exchanged March 22 and hearings ran May 2 to June 24 | Sign before Dec. 1 if possible. Otherwise a hearing could fall in spring training or the season, with the club arguing against its own closer |
 | The system | Final offer, panel criteria | MLB (June 25, 2026) proposed to "maintain the status quo" while staying open to changes that would "increase compensation for arbitration-eligible players under a new framework that addresses the league's concerns." In Nov. 2021 MLB proposed pay by a formula on FanGraphs WAR | A WAR formula would price him on 2.6-2.7 WAR a season, with no credit for 41 saves; for a closer the likely direction is lower pay (not quantified). A higher-paying framework would raise his number. A deal signed under the old rules fixes the price either way |
 | Eligibility | 3 years, plus Super Twos | The union proposed expanded eligibility | None for Smith (already eligible). More young comparables in later years |
-| Service in a stoppage | Not covered | If 2027 games are lost and the days aren't credited, a 120-day 2027 leaves him at 5.120 after 2029 and adds a fourth arbitration year (`timeline("3.000", 2026, [120, 172, 172])`) | The cost of losing the 2027 hearing would carry four years: $1.1M × 3.487 = $3.84M in present value at full carry. Precedent (the 1994-95 strike, 2020, 2022) protected service; see the roster and CBA memo |
+| Service in a stoppage | Not covered | If 2027 games are lost and the days aren't credited, a 120-day 2027 leaves him at 5.120 after 2029 and adds a fourth arbitration year (`timeline("3.000", 2026, [120, 172, 172])`) | The cost of losing the 2027 hearing would carry four years: $1.25M × 3.487 = $4.36M in present value at full carry. Precedent (the 1994-95 strike, 2020, 2022) protected service; see the roster and CBA memo |
 | Salary in a stoppage | Paid by days of the season | Same | Filings are full-season numbers. A shortened season prorates either figure |
 
 ## What this doesn't show
 - **Cleveland's current arbitration policy isn't public.** MLB.com listed it among file-and-trial clubs in 2015 (Simon, Jan. 16, 2015). Its record since then is settlements.
 - **The panel model is a stand-in.**
-  - **Its parts:** the comp line, MLBTR's projection and the even weighting are the model; the panel's value is assumed normal. The sd is the comp line's prediction error, $0.37M.
+  - **Its parts:** the comp line, MLBTR's projection and the even weighting are the model; the panel's value is assumed normal. The sd is the comp line's prediction error, $0.75M.
   - **What panels actually do:** Fink (2023, Dartmouth) found arbitrators picked the offer a salary model favored only about half the time (166 of 323 hearings, 1990-2022), so real panels are noisier than any line.
-- **The comp line has 19 points and three predictors.** ERA, All-Star selections and strikeouts were each tested as a fourth; only ERA showed up. More predictors at once would overfit 19 points.
-- **The pool isn't finished.** Ten 2023-26 candidates are left out until their first-year status and salary are confirmed. Most were 20-30-save closers, so they'd mostly land near the low end of the line; their effect on the $4.82M isn't known.
+- **The comp line has 23 points and three predictors.** ERA, All-Star selections and strikeouts were each tested as a fourth; none was clearly different from zero. More predictors at once would overfit 23 points.
+- **The full pool is noisier than the partial one was.** The four closers confirmed Oct. 18 were paid $1.94-3.925M, all under what the first 19 predicted for their saves. Adding them lowered Smith's line value $0.24M and doubled its prediction error. Leaving unconfirmed candidates out had kept the line high.
 - **The player's figure is inferred.** It comes from 2026 exchange gaps around the MLBTR projection, and his agent's number may differ.
 - **Missing facts:**
   - his exact 2026 salary
@@ -287,7 +296,7 @@ uv run pytest tests/test_arbitration.py          # 19 tests, arithmetic checked 
   - Mandy Bell, MLB.com: no hearings since 2019 (Jan. 12, 2024)
   - Tim Stebbins, MLB.com: Kwan deal; November 2025 agreements with Festa, Fry and Jones (Jan. 8, 2026)
 - **The pool screen:** MLB Stats API, season pitching leaders by saves, 2015-25, and year-by-year career lines (read Oct. 18, 2026).
-- **First-year comparables** (platform lines from the MLB Stats API, matching Baseball-Reference for the original ten):
+- **First-year comparables** (platform lines from the MLB Stats API, matching Baseball-Reference for the original ten and the four added Oct. 18, 2026):
   - Bednar: Jake Crouse, MLB.com (Jan. 11, 2024); Spotrac (3.076)
   - Romano: Keegan Matheson, MLB.com (Jan. 14, 2023); Spotrac
   - Hader: Adam McCalvy, MLB.com (Feb. 15, 2020), the source for his $4.1M award, his $6.4M filing, 2.115 service, Papelbon's record and Familia's $4.1M; Brew Crew Ball (Jan. 10, 2020)
@@ -306,7 +315,11 @@ uv run pytest tests/test_arbitration.py          # 19 tests, arithmetic checked 
   - Edwin Díaz: Spotrac (signed Jan. 10, 2020)
   - Alexis Díaz: Greg Kuffner, Reds On SI (Jan. 2025); Spotrac (3.000, Jan. 9, 2025)
   - Duran 2025: CBS Sports (Jan. 9, 2025); Spotrac (3.000)
-  - Screened out: Spotrac player pages (Neris, Kela, Rogers, Robles, Trivino, Reyes); AP via Fox News (Boxberger's 2017 first arbitration salary, Jan. 14, 2017)
+  - Soto: Tim Dierkes, "Projected Arbitration Salaries For 2023," MLB Trade Rumors (Oct. 10, 2022), "Gregory Soto (3.102)"; Alex Coffey, Philadelphia Inquirer (Jan. 13, 2023), "Soto ($3.925 million)"
+  - Alzolay: Anthony Franco, "Projected Arbitration Salaries For 2024," MLB Trade Rumors (Oct. 6, 2023), 3.050; Jordan Bastian, MLB.com (Jan. 11, 2024), "$2.11 million for '24"
+  - Foley: Anthony Franco, "Projected Arbitration Salaries For 2025," MLB Trade Rumors (Oct. 1, 2024), 3.033; Anne Rogers, MLB.com (Jan. 9, 2025), "Foley at $3.15 million"
+  - Megill: the same MLB Trade Rumors list, 3.002; Adam McCalvy, MLB.com (Jan. 10, 2025), "$1.94 million"
+  - Screened out: Spotrac player pages (Neris, Kela, Rogers, Robles, Trivino, Reyes); AP via Fox News (Boxberger's 2017 first arbitration salary, Jan. 14, 2017); MLB Trade Rumors' "Projected Arbitration Salaries" lists for 2016 (Oct. 6, 2015; Britton 3.158), 2018 (Oct. 10, 2017; Treinen 3.065, Greene 3.075), 2022 (Feb. 17, 2022; Holmes 3.031, Sewald 3.072, Barlow 3.030), 2023 (Oct. 10, 2022; Phillips 2.136) and 2025 (Oct. 1, 2024; Vest 3.100); Steve Adams, MLB Trade Rumors (Feb. 4, 2015), Britton's $3.2M settlement; Eric Stephen, True Blue LA (Jan. 7, 2023), "Evan Phillips and Brusdar Graterol are Super Two players"; Baseball-Reference salary tables and service time for all nine, Palencia's 1.154 included (read Oct. 18, 2026)
 - **Second-year comparables:**
   - Romano 2024: Canadian Press via CP24 (Jan. 12, 2024), "a deal worth US$7.75 million"
   - Bednar 2025: Pittsburgh Baseball Now (Jan. 9, 2025), "$5.9 million"
@@ -333,16 +346,16 @@ uv run pytest tests/test_arbitration.py          # 19 tests, arithmetic checked 
   - The rest of the labor background, the lockout memo and the tender-deadline estimate: [the roster and CBA memo](2026-roster-cba-engine.md)
 
 ## Walk me through it
-1. **"MLB Trade Rumors says $5.5M. Why file $4.8M?"**
-   - **The panel decides on comparable salaries.** A projection is a forecast of them. The 19 first-time closers since 2016 put him at $4.82M on saves and time, and $4.89M if ERA is priced too.
-   - **$4.8M is defensible on its face.** It's above every first-year closer he matches or beats on the panel's stats, with their salaries restated to 2027.
-   - **The $0.7M gap between the two numbers is the risk I'm flagging.** The comps pay about $0.07M of it, for his ERA; nothing for the All-Star selection or strikeouts.
+1. **"MLB Trade Rumors says $5.5M. Why file $4.65M?"**
+   - **The panel decides on comparable salaries.** A projection is a forecast of them. The 23 first-time closers since 2016 put him at $4.58M on saves and time, and $4.70M if ERA is priced too.
+   - **$4.65M is defensible on its face.** It's above every first-year closer he matches or beats on the panel's stats, with their salaries restated to 2027.
+   - **The $0.9M gap between the two numbers is the risk I'm flagging.** The comps pay about $0.12M of it, for his ERA, and even that is within their error; nothing measurable for the All-Star selection or strikeouts.
 2. **"Their exhibit is Duran's $7.5M."**
    - **It's a second-year salary.** Duran's $7.5M is his $4.125M first-year salary plus a $3.375M raise. The rule makes it admissible, but it isn't a level comparison: Smith has no arbitration base yet.
    - **Where Duran started is the comparison.** All four second-year closers they'll cite (Romano, Duran, Doval, Bednar) started at $4.125-4.54M. We're filing above that.
    - **On Bednar's $5.9M after a 5.77 ERA:** $4.51M of it was his first-year base. The raise his bad year earned was $1.39M, the smallest of the four.
 3. **"What's their best first-year comp, and how do you beat it?"**
-   - **Their comp:** Rosenthal, 2016. He had 48 saves and got $5.6M, which is $6.38M in 2027 dollars. Colomé ($5.3M, 47 saves) is next.
+   - **Their comp:** Rosenthal, 2016. He had 48 saves and got $5.6M, which is $5.98M in 2027 dollars. Colomé ($5.3M, 47 saves) is next.
    - **The answer is career.** Rosenthal had 96 career saves over two seasons as a closer, Colomé 84. Smith has 58, and 41 of them came this year.
    - **Smith's edge is ERA,** 1.95 against 2.10 and 3.24, so the comparisons are mixed. The panel weighs career length and consistency, and that criterion is ours.
 4. **"Can't they argue special accomplishment?"**
@@ -354,20 +367,20 @@ uv run pytest tests/test_arbitration.py          # 19 tests, arithmetic checked 
    - **The club's consistency argument is stronger in ERA and counts:** his 2.93 ERA in 2025, and walks and home runs up each year.
    - **And no Statcast numbers:** pitch grades are inadmissible for both sides.
 6. **"What does losing cost us?"**
-   - **The 2027 cost:** $1.1M ($5.9M against $4.8M).
-   - **The carry:** raises build on the base, so the gap repeats in 2028 and 2029. That's about $3.0M in present value at 10%, or $2.1M if only half carries.
-   - **If a stoppage costs him uncredited service,** he gets a fourth arbitration year and the cost is about $3.8M.
+   - **The 2027 cost:** $1.25M ($5.9M against $4.65M).
+   - **The carry:** raises build on the base, so the gap repeats in 2028 and 2029. That's about $3.4M in present value at 10%, or $2.3M if only half carries.
+   - **If a stoppage costs him uncredited service,** he gets a fourth arbitration year and the cost is about $4.4M.
 7. **"Why not settle at the midpoint and move on?"**
-   - **The hearing averages $5.20M** against a $5.35M midpoint. That makes trying the case about $0.40M better in present value, and we're about a 63% favorite.
-   - **So I'd settle at $5.2M or less** and try the case above that.
-   - **The exception:** if we believe a panel would lean three-to-one toward the market projection, the club is no longer the favorite at $4.8M, the walk point rises to about $5.36M, and settling at the midpoint becomes the better call.
+   - **The hearing averages $5.15M** against a $5.275M midpoint. That makes trying the case about $0.35M better in present value, and we're about a 60% favorite.
+   - **So I'd settle at $5.1M or less** and try the case above that.
+   - **The exception:** if we believe a panel would lean three-to-one toward the market projection, the club is no longer the favorite at $4.65M, the walk point rises to about $5.28M, and settling at the midpoint becomes the better call.
 8. **"Why weight the two views evenly?"**
    - **Nothing public says how panels split.** Even weight is the no-information choice.
    - **The evidence leans slightly to the market side** (players 8-4 in 2026 hearings), so I show the decision at every weight. The filing holds until about 73% on the market view.
 9. **"How do you know saves drive the number?"**
-   - **The comps:** platform and career saves, plus a time trend, fit 19 first-time closers within about 6% in sample and 8% out of sample.
+   - **The comps:** platform and career saves, plus a time trend, fit 23 first-time closers within about 13% in sample and 16% out of sample.
    - **Outside work agrees.** Rieders (FanGraphs, 2015) found career saves had the strongest correlation with first-time reliever pay (83%), with platform saves next (79%).
-   - **What else I tested:** ERA adds about 6% per run; an All-Star selection and strikeouts add nothing measurable.
+   - **What else I tested:** ERA is worth about 6% per run, though within its error on 23 comps; an All-Star selection and strikeouts add nothing measurable.
 10. **"What happens to all this in a lockout?"**
     - **After December 1:** no contact with 40-man players. In 2022, figures were exchanged March 22 and hearings ran into June.
     - **The plan:** make the $5.0M offer before December 1. The tender deadline is expected around November 20.

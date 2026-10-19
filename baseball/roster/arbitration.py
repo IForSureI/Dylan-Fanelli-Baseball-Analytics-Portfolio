@@ -127,7 +127,8 @@ SMITH_FREE_AGENT_AFTER = 2029     # Baseball-Reference: "Free Agent: 2030"; arbi
 # ------------------------------------------------------------------ comparables: first-time-eligible closers
 # The screen (POOL_RULE): MLB Stats API season pitching leaders by saves, 2015-25 (read 2026-10-18), every reliever
 # with 20+ saves; career saves summed from the same API's year-by-year lines. Platform lines below match
-# Baseball-Reference for the original eleven rows (read 2026-10-18). Salaries, first-year status and how each salary
+# Baseball-Reference for the original eleven rows and for Soto, Alzolay, Foley and Megill, whose career saves and
+# innings are summed from its year-by-year lines (read 2026-10-18). Salaries, first-year status and how each salary
 # was set: the source on each row.
 POOL = [
     Reliever("Jonathan Papelbon", 2009, 41, 2.34, ip("69.1"), 77, 113, ip("230.0"), True, salary=6.25,
@@ -170,39 +171,60 @@ POOL = [
              source="MLB.com (Adam McCalvy, Feb. 15, 2020)"),
     Reliever("Jordan Romano", 2023, 36, 2.11, ip("64.0"), 73, 61, ip("157.0"), True, salary=4.5375,
              how="settled", source="MLB.com (Keegan Matheson, Jan. 14, 2023); Spotrac"),
+    Reliever("Gregory Soto", 2023, 30, 3.28, ip("60.1"), 60, 50, ip("204.2"), True, service="3.102", salary=3.925,
+             how="settled", source="MLBTR, 'Projected Arbitration Salaries For 2023' (Oct. 10, 2022): 'Gregory Soto "
+                                   "(3.102)', absent from the 2022 list; Philadelphia Inquirer (Alex Coffey, Jan. 13, "
+                                   "2023): one-year deal, 'Soto ($3.925 million)'"),
     Reliever("David Bednar", 2024, 39, 2.00, ip("67.1"), 80, 61, ip("197.0"), True, service="3.076", salary=4.51,
              how="settled", source="MLB.com (Jake Crouse, Jan. 11, 2024); Spotrac (3.076)"),
+    Reliever("Adbert Alzolay", 2024, 22, 2.67, ip("64.0"), 67, 23, ip("236.2"), False, service="3.050", salary=2.11,
+             how="settled", source="MLBTR, 'Projected Arbitration Salaries For 2024' (Oct. 6, 2023): 'Adbert Alzolay "
+                                   "(3.050)'; MLB.com (Jordan Bastian, Jan. 11, 2024): avoided arbitration, '$2.11 "
+                                   "million for '24'"),
     Reliever("Alexis Díaz", 2025, 28, 3.99, ip("56.1"), 55, 75, ip("187.1"), False, service="3.000", salary=4.5,
              how="settled", source="Reds On SI (Greg Kuffner, Jan. 2025); Spotrac (3.000, signed Jan. 9, 2025)"),
     Reliever("Jhoan Duran", 2025, 23, 3.64, ip("54.1"), 66, 58, ip("184.1"), False, service="3.000", salary=4.125,
              how="settled", source="CBS Sports (Jan. 9, 2025); Spotrac (3.000)"),
     Reliever("Camilo Doval", 2025, 23, 4.88, ip("59.0"), 78, 92, ip("221.1"), False, service="3.071", salary=4.525,
              how="settled", source="Spotrac (3.071; signed Jan. 9, 2025, avoiding arbitration)"),
+    Reliever("Jason Foley", 2025, 28, 3.15, ip("60.0"), 46, 35, ip("199.2"), False, service="3.033", salary=3.15,
+             how="settled", source="MLBTR, 'Projected Arbitration Salaries For 2025' (Oct. 1, 2024): 'Jason Foley "
+                                   "(3.033)'; MLB.com (Anne Rogers, Jan. 9, 2025): 'settled with ... Foley at $3.15 "
+                                   "million'"),
+    Reliever("Trevor Megill", 2025, 21, 2.72, ip("46.1"), 50, 21, ip("149.2"), False, service="3.002", salary=1.94,
+             how="settled", source="MLBTR, 'Projected Arbitration Salaries For 2025' (Oct. 1, 2024): 'Trevor Megill "
+                                   "(3.002)'; MLB.com (Adam McCalvy, Jan. 10, 2025): avoided arbitration, '$1.94 "
+                                   "million'"),
     Reliever("Mason Miller", 2026, 22, 2.63, ip("61.2"), 104, 50, ip("160.0"), False, super_two=True, salary=4.0,
              how="settled", source="MLB.com (AJ Cassavell, Jan. 9, 2026): Super Two, $4M"),
 ]
 ORIGINAL_TEN = ["Trevor Rosenthal", "Jeurys Familia", "Roberto Osuna", "Edwin Díaz", "Josh Hader", "Jordan Romano",
                 "David Bednar", "Alexis Díaz", "Jhoan Duran", "Mason Miller"]   # the hand-built set, for comparison
 
-# Screened by POOL_RULE and left out, with the reason. "unconfirmed": the public pages that would settle first-year
-# status and salary couldn't be read for this version (MLB Trade Rumors' tracker was blocked); add them when confirmed.
+# Screened by POOL_RULE and left out, with the reason. Service time in parentheses is MLB Trade Rumors' figure from its
+# "Projected Arbitration Salaries" list for that winter; salaries are Baseball-Reference's salary table (read 2026-10-18).
 SCREENED_OUT = [
     ("Brad Boxberger", 2016, "pre-arbitration in 2016 (first arbitration salary $1.6M in 2017; AP via Fox News)"),
-    ("Zack Britton", 2016, "second arbitration year (not rechecked for this version)"),
+    ("Zack Britton", 2016, "second arbitration year: a Super Two in 2015 (2.158), settled at $3.2M (MLBTR, Feb. 4, "
+                           "2015); 2016 was $6.75M at 3.158"),
     ("Héctor Neris", 2018, "pre-arbitration in 2018 (Spotrac)"),
     ("Keone Kela", 2019, "second arbitration year (Super Two in 2018; Spotrac)"),
-    ("Blake Treinen", 2019, "second arbitration year (not rechecked for this version)"),
-    ("Shane Greene", 2019, "second arbitration year (not rechecked for this version)"),
+    ("Blake Treinen", 2019, "second arbitration year: first was 2018 at $2.15M (3.065; MLBTR, Oct. 10, 2017)"),
+    ("Shane Greene", 2019, "second arbitration year: first was 2018 at $1.95M (3.075; MLBTR, Oct. 10, 2017)"),
     ("Taylor Rogers", 2020, "second arbitration year (Super Two in 2019; Spotrac)"),
     ("Hansel Robles", 2020, "third arbitration year (Spotrac)"),
     ("Lou Trivino", 2022, "second arbitration year (Super Two in 2021; Spotrac)"),
     ("Alex Reyes", 2022, "second arbitration year (Spotrac)"),
     ("Felipe Vázquez, Raisel Iglesias, Brad Hand, Emmanuel Clase, Pete Fairbanks, Andrés Muñoz", None,
      "extensions or multi-year contracts"),
-    ("Clay Holmes", 2023, "unconfirmed"), ("Gregory Soto", 2023, "unconfirmed"), ("Paul Sewald", 2023, "unconfirmed"),
-    ("Scott Barlow", 2023, "unconfirmed"), ("Evan Phillips", 2024, "unconfirmed"),
-    ("Adbert Alzolay", 2024, "unconfirmed"), ("Jason Foley", 2025, "unconfirmed"),
-    ("Trevor Megill", 2025, "unconfirmed"), ("Will Vest", 2026, "unconfirmed"), ("Daniel Palencia", 2026, "unconfirmed"),
+    ("Clay Holmes", 2023, "second arbitration year: first was 2022 at $1.1M (3.031; MLBTR, Feb. 17, 2022)"),
+    ("Paul Sewald", 2023, "second arbitration year: first was 2022 at $1.735M (3.072; MLBTR, Feb. 17, 2022)"),
+    ("Scott Barlow", 2023, "second arbitration year: first was 2022 at $2.4M (3.030; MLBTR, Feb. 17, 2022)"),
+    ("Evan Phillips", 2024, "second arbitration year: a Super Two in 2023 at $1.3M (2.136; MLBTR, Oct. 10, 2022; "
+                            "True Blue LA, Jan. 7, 2023)"),
+    ("Will Vest", 2026, "second arbitration year: first was 2025 at $1.4M (3.100; MLBTR, Oct. 1, 2024), after a "
+                        "two-save platform"),
+    ("Daniel Palencia", 2026, "pre-arbitration in 2026 (1.154 service; Baseball-Reference, earliest arbitration 2027)"),
 ]
 
 # ------------------------------------------------------------------ the next service group (the player's exhibits)
@@ -523,7 +545,7 @@ def smith_case(view_weight_market: float = VIEW_WEIGHT_MARKET, record_figure: fl
     out["next_group"] = next_group_raises()
     out["grid"] = [(c, p_club_wins(c, player_likely, views), expected_award(c, player_likely, views),
                     p_club_wins(c, player_likely, comp_only), p_club_wins(c, player_likely, market_only))
-                   for c in (4.5, 4.6, 4.75, 4.8, 4.9, 5.0, 5.1, 5.2)]
+                   for c in sorted({4.5, 4.6, 4.75, 4.8, 4.9, 5.0, 5.1, 5.2, club})]
     return out
 
 
@@ -575,11 +597,14 @@ def figure(path: str = "reports/figures/2027-arbitration-brief-smith.png") -> st
     blue, orange, green = "#2a78d6", "#eb6834", "#008300"
     chosen = {n for n, _ in case["chosen"]}
     offsets = {"Osuna": (-5, 3, "right"), "Colomé": (5, 3, "left"), "Giles": (-6, 2, "right"),
-               "Rondón": (-5, 4, "right"), "Allen": (-5, -7, "right"), "Familia": (-6, -8, "right"),
-               "Romano": (-4, 6, "right"), "Hader": (-6, -3, "right"), "Duran": (5, -3, "left"),
-               "Knebel": (-6, 5, "right"), "Miller": (-5, -2, "right"), "Dyson": (5, -7, "left"),
-               "Ramos": (5, -3, "left"), "Tolleson": (5, -3, "left"), "Bednar": (-4, 14, "center"),
-               "Doval": (5, -3, "left"), "Díaz": (-5, -8, "right"), "Rosenthal": (5, -3, "left")}
+               "Rondón": (-5, 4, "right"), "Hader": (-6, 3, "right"), "Duran": (-5, 0, "right"),
+               "Knebel": (6, -6, "left"), "Miller": (0, -9, "center"), "Dyson": (-5, -3, "right"),
+               "Ramos": (-5, -3, "right"), "Tolleson": (5, -3, "left"), "Rosenthal": (5, -3, "left"),
+               "Soto": (5, -3, "left"), "Alzolay": (5, -3, "left"), "Foley": (5, -3, "left"),
+               "Megill": (5, -3, "left")}
+    # The crowded middle of the plot: labels in a column to the right, with leader lines (data coordinates).
+    callouts = {"Romano": (4.85, 5.1), "Bednar": (4.85, 4.9), "Doval": (4.85, 4.45), "A. Díaz": (4.85, 4.25),
+                "Familia": (4.85, 4.05), "Allen": (4.85, 3.85)}
     for c in rows:
         actual = restate(c.salary, c.season, SMITH.season, line.growth)
         fitted = line.predict(c)["value"]
@@ -588,16 +613,22 @@ def figure(path: str = "reports/figures/2027-arbitration-brief-smith.png") -> st
                   marker="s" if hearing else "o", zorder=3, alpha=1 if c.name in chosen else 0.55)
         first, last = c.name.split()[0], c.name.split()[-1]
         label = f"{first[0]}. {last}" if last == "Díaz" else last
+        color = INK if c.name in chosen else MUTED
+        if label in callouts:
+            a.annotate(f"{label} {c.season}", (fitted, actual), xytext=callouts[label], textcoords="data",
+                       fontsize=6.5, color=color, ha="left", va="center",
+                       arrowprops=dict(arrowstyle="-", color=MUTED, lw=0.5, shrinkA=1, shrinkB=3))
+            continue
         dx, dy, ha = offsets.get(last, (5, -3, "left"))
         if c.name == "Edwin Díaz":
             dx, dy, ha = -6, -9, "right"
         a.annotate(f"{label} {c.season}", (fitted, actual), xytext=(dx, dy), textcoords="offset points",
-                   fontsize=6.5, color=INK if c.name in chosen else MUTED, ha=ha)
-    lo, hi = 3.3, 6.6
+                   fontsize=6.5, color=color, ha=ha)
+    lo, hi = 1.8, 6.6
     a.plot([lo, hi], [lo, hi], color=MUTED, lw=0.8, ls="--")
     v = case["line_value"]
     a.errorbar([v], [v], yerr=[[case["line_se"]], [case["line_se"]]], fmt="D", color=orange, ms=7, capsize=3, zorder=4)
-    a.annotate(f"Smith line value \\${v:.2f}M", (v, v), xytext=(10, -26), textcoords="offset points", ha="left",
+    a.annotate(f"Smith line value \\${v:.2f}M", (v, v), xytext=(4.68, 3.5), textcoords="data", ha="left",
                fontsize=8, color=orange)
     for y, txt, col in ((case["club_filing"], "club files", green), (case["player_likely"], "player's likely figure", MUTED),
                         (MLBTR_2027, "MLBTR projection", MUTED)):

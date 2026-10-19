@@ -106,7 +106,7 @@ def test_comp_line_recovers_an_exact_line():
 
 def test_fit_pool_keeps_recent_comps_only():
     names = [c.name for c in fit_pool(POOL, 2027)]
-    assert "Jonathan Papelbon" not in names and len(names) == 19           # 2009 is 18 seasons back: an exhibit
+    assert "Jonathan Papelbon" not in names and len(names) == 23           # 2009 is 18 seasons back: an exhibit
     assert "Jonathan Papelbon" in [c.name for c in fit_pool(POOL, 2027, max_age=30)]
     assert set(ORIGINAL_TEN) <= set(names)
 
@@ -118,6 +118,15 @@ def test_pool_follows_its_rule():
     assert len({(c.name, c.season) for c in POOL}) == len(POOL)
     screened = {(n, y) for n, y, _ in SCREENED_OUT}
     assert not screened & {(c.name, c.season) for c in POOL}
+    # Every 2023-26 candidate the screen found is settled one way or the other, with a confirmed reason.
+    candidates = {("Clay Holmes", 2023), ("Gregory Soto", 2023), ("Paul Sewald", 2023), ("Scott Barlow", 2023),
+                  ("Evan Phillips", 2024), ("Adbert Alzolay", 2024), ("Jason Foley", 2025), ("Trevor Megill", 2025),
+                  ("Will Vest", 2026), ("Daniel Palencia", 2026)}
+    pooled = {(c.name, c.season) for c in POOL}
+    assert candidates <= pooled | screened
+    assert candidates & pooled == {("Gregory Soto", 2023), ("Adbert Alzolay", 2024), ("Jason Foley", 2025),
+                                   ("Trevor Megill", 2025)}
+    assert not [r for _, _, r in SCREENED_OUT if "unconfirmed" in r or "not rechecked" in r]
 
 
 def test_next_group_raises_by_hand():
@@ -196,21 +205,23 @@ def test_2026_exchange_gaps_and_straddle():
 # ------------------------------------------------------------------ the case (pins the brief's numbers)
 def test_smith_case_numbers():
     c = smith_case()
-    assert c["fit_n"] == 19
-    assert c["line_value"] == pytest.approx(4.817, abs=0.001) and c["line_se"] == pytest.approx(0.375, abs=0.001)
-    assert c["growth"] == pytest.approx(0.0120, abs=0.0001)
-    assert c["bracket"]["floor_comp"] == "Jordan Romano" and c["bracket"]["floor"] == pytest.approx(4.758, abs=0.001)
+    assert c["fit_n"] == 23
+    assert c["line_value"] == pytest.approx(4.580, abs=0.001) and c["line_se"] == pytest.approx(0.749, abs=0.001)
+    assert c["growth"] == pytest.approx(0.0059, abs=0.0001)
+    # Floor: Romano's $4.5375M (2023) restated at 0.59% a year for four seasons = 4.646.
+    assert c["bracket"]["floor_comp"] == "Jordan Romano" and c["bracket"]["floor"] == pytest.approx(4.646, abs=0.001)
     assert c["bracket"]["ceiling"] is None                       # no comp beats him on every panel stat
-    assert c["player_likely"] == 5.9 and c["club_filing"] == 4.8 and c["midpoint"] == pytest.approx(5.35)
-    # P(win): comp view Phi((5.35 - 4.817)/0.375) = Phi(1.42) = 0.923; market Phi((5.35 - 5.5)/0.375) = Phi(-0.40) = 0.345.
-    assert c["p_win"]["comp line"] == pytest.approx(0.923, abs=0.002)
-    assert c["p_win"]["market"] == pytest.approx(0.345, abs=0.002)
-    assert c["p_win"]["blend"] == pytest.approx((0.923 + 0.345) / 2, abs=0.002)
-    # Expected award 4.8 x 0.634 + 5.9 x 0.366 = 5.203; settle at or below $5.20M; losing costs 1.1 x 2.735537 = 3.009.
-    assert c["walk_point"] == pytest.approx(5.203, abs=0.002) and c["walk_point_grid"] == pytest.approx(5.20)
-    assert c["cost_lose"] == pytest.approx(3.009, abs=0.001)
-    # Out of sample the line misses by about 8% (in sample about 6%).
-    assert c["in_sample_sd"] == pytest.approx(0.060, abs=0.001) and c["loo_rmse"] == pytest.approx(0.079, abs=0.001)
+    # The filing is the floor rounded up to $50K: 4.65. Midpoint (4.65 + 5.9) / 2 = 5.275.
+    assert c["player_likely"] == 5.9 and c["club_filing"] == 4.65 and c["midpoint"] == pytest.approx(5.275)
+    # P(win): comp view Phi((5.275 - 4.580)/0.749) = Phi(0.93) = 0.823; market Phi((5.275 - 5.5)/0.749) = Phi(-0.30) = 0.382.
+    assert c["p_win"]["comp line"] == pytest.approx(0.823, abs=0.002)
+    assert c["p_win"]["market"] == pytest.approx(0.382, abs=0.002)
+    assert c["p_win"]["blend"] == pytest.approx((0.823 + 0.382) / 2, abs=0.002)
+    # Expected award 4.65 x 0.603 + 5.9 x 0.397 = 5.147; settle at or below $5.10M; losing costs 1.25 x 2.735537 = 3.419.
+    assert c["walk_point"] == pytest.approx(5.147, abs=0.002) and c["walk_point_grid"] == pytest.approx(5.10)
+    assert c["cost_lose"] == pytest.approx(3.419, abs=0.001)
+    # Out of sample the line misses by about 16% (in sample about 13%).
+    assert c["in_sample_sd"] == pytest.approx(0.130, abs=0.001) and c["loo_rmse"] == pytest.approx(0.158, abs=0.001)
 
 
 def test_sensitivity_rows():
@@ -219,5 +230,5 @@ def test_sensitivity_rows():
     assert rows["weight on MLBTR's view 0.75"]["p_win"] < base["p_win"] < rows["weight on MLBTR's view 0.25"]["p_win"]
     # Dropping the three hearing awards barely moves the line (under $0.02M): the comps fit the same saves line.
     assert rows["fit without the three hearing awards (Hader, Osuna, Giles)"]["line_value"] == pytest.approx(base["line_value"], abs=0.02)
-    # The hand-built ten-comp line was $0.09M higher; the filing doesn't change.
+    # The hand-built ten-comp line was $0.32M higher than the 23-comp line.
     assert rows["fit on the original ten comps only"]["line_value"] == pytest.approx(4.903, abs=0.001)
