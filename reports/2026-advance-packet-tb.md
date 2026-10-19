@@ -6,6 +6,8 @@
 
 **The series:** Cleveland won Game 1 (7-3) and Game 3 (3-2). Tampa Bay won Game 2 (3-1) and Game 4 (7-3, Oct. 17, after an Oct. 16 rainout). The series is tied 2-2. Game 5 is Sunday, Oct. 18, at Progressive Field; Games 6 and 7, if needed, are Oct. 19-20 in Tampa Bay. In Game 4 the damage came from the three hitters this packet flags: Caminero's go-ahead double, Aranda's two-run single and Díaz's two-run homer in the ninth.
 
+*Update, Oct. 18 night: Tampa Bay won Game 5, 3-1, behind seven innings of one-run ball from Drew Rasmussen, and leads the series 3-2. Game 6 is Oct. 19 at Tropicana Field. The cards below are unchanged; they use the 2026 regular season only.*
+
 *Written Oct. 18, 2026, by Dylan Fanelli. Data: Statcast via Baseball Savant, 2026 regular season, 714,483 pitches (716,792 rows less 2,309 automatic balls and strikes), 2,429 games; the nine hitters saw 17,552 of them. Code: `baseball/advance/packet.py` (`python -m baseball.advance.packet TB 2026`).*
 
 ![Where the Rays miss: whiff per swing by zone](figures/2026-advance-tb-whiff.png)
@@ -268,7 +270,7 @@ Peak memory is about 1.2 GB (one season, 34 columns).
 - **Regression constants:** this repo's [Reliability Atlas](2026-reliability-atlas.md).
 - **Platoon regression:** Tom Tango, Mitchel Lichtman and Andrew Dolphin, *The Book: Playing the Percentages in Baseball* (2007).
 - **Bat-tracking definitions:** [Baseball Savant bat-tracking leaderboard glossary](https://baseballsavant.mlb.com/leaderboard/bat-tracking).
-- **Series results:** WKBN, "Guardians top Rays 7-3 in Game 1 of ALCS" (Oct. 12, 2026); Suncoast News, "Tampa Bay tops Guardians 3-1 in Game 2" (Oct. 14, 2026); News 5 Cleveland, "Halpin's go-ahead homer flips Game 3 as Guardians beat Rays 3-2" (Oct. 15, 2026); [MLB.com, "Rays slip past Guards in Game 4 to knot up ALCS"](https://www.mlb.com/guardians/news/rays-win-alcs-game-4-2026) (Oct. 17, 2026); [CBS Sports, Game 4 live updates](https://www.cbssports.com/mlb/news/guardians-rays-live-updates-alcs-game-4/live/) (Oct. 17, 2026); [NBC Bay Area, the schedule after the Game 4 postponement](https://www.nbcbayarea.com/mlb/updated-guardians-rays-alcs-schedule/4160429/) (Oct. 16, 2026).
+- **Series results:** WKBN, "Guardians top Rays 7-3 in Game 1 of ALCS" (Oct. 12, 2026); Suncoast News, "Tampa Bay tops Guardians 3-1 in Game 2" (Oct. 14, 2026); News 5 Cleveland, "Halpin's go-ahead homer flips Game 3 as Guardians beat Rays 3-2" (Oct. 15, 2026); [MLB.com, "Rays slip past Guards in Game 4 to knot up ALCS"](https://www.mlb.com/guardians/news/rays-win-alcs-game-4-2026) (Oct. 17, 2026); [CBS Sports, Game 4 live updates](https://www.cbssports.com/mlb/news/guardians-rays-live-updates-alcs-game-4/live/) (Oct. 17, 2026); [NBC Bay Area, the schedule after the Game 4 postponement](https://www.nbcbayarea.com/mlb/updated-guardians-rays-alcs-schedule/4160429/) (Oct. 16, 2026); [Sports Illustrated, "Rays take control of ALCS after pivotal Game 5 win"](https://www.si.com/fannation/mlb/fastball/news/drew-rasmussen-rays-take-control-alcs-game-5-win-michael3) (Oct. 18, 2026).
 - **ALCS roles:** [MLB.com, "Guardians-Rays ALCS position-by-position breakdown"](https://www.mlb.com/news/guardians-rays-alcs-position-by-position-breakdown).
 
 ## Appendix: the full tables
