@@ -2,7 +2,7 @@
 
 **League study plus one decision, from public pitch data.** A swing-decision value model built on every regular-season pitch of 2024-26, tested for whether it holds from year to year and whether it predicts next season's results, then used to evaluate one hitter with a live 2026-27 decision.
 - **The hitter:** Gleyber Torres, a free agent this winter, whose case turns on exactly the two things the model measures: some of the best swing decisions in baseball, and a bat that lost 2 mph in 2026.
-- **The evaluation is data-informed, with no live look.** Fielding and throwing are NG (no grade); running is graded from a published sprint-speed percentile. Health appears only as public reporting, cited.
+- **The evaluation is data-informed, with no live look.** Throwing is NG (no grade); fielding and running are graded from Statcast's leaderboards. Health appears only as public reporting, cited.
 
 *Gleyber Torres; 2B; B/T R/R; born Dec. 13, 1996 (29 on the report date; 2027 age 30); Detroit Tigers in 2026*
 *Written 2026-10-18; Dylan Fanelli; Data: Statcast via Baseball Savant, 2,122,518 regular-season pitches a hitter could decide on (2024-26), 905 batters; Outside facts: dated public reporting, listed under Sources; Code: `baseball/evaluation/swing_decisions.py`*
@@ -15,7 +15,7 @@
 **Recommendation: sign Torres for two years, $28-32M guaranteed, with a 2029 club option.**
 - **Price shape:** $14-16M a year, a 2029 club option near $16M with a $2M buyout, and plate-appearance escalators worth up to $2M a year.
 - **Walk away** above $17M a year or at any third guaranteed year.
-- **Value:** 1.54 WAR projected for 2027, worth $30.3M over two years at one price of a win; $23.4-44.1M across the public fielding readings, which disagree.
+- **Value:** 1.50 WAR projected for 2027, worth $29.6M over two years at one price of a win; $25.0-34.2M with fielding two runs either side of his Statcast level.
 - **Timing:** the agreement expires Dec. 1 and a lockout would freeze signings, so the offer goes in November.
 - **Role:** an average regular at second base (50) if the bat speed comes back; a bat-first part-time second baseman and DH (45) if it doesn't. OFP 50. Risk: moderate to high, all of it health and bat speed.
 
@@ -82,7 +82,7 @@
 
 ### Grades
 - **Scale:** 20-80 against MLB regulars (hitters with 1,000+ pitches in the season): grade = 50 + 10 × z, rounded to the 5-point scale. Present = 2026; future = his 2027-28 level at ages 30-31.
-- **NG:** there's been no look. Run is graded from a published sprint-speed percentile; field and arm are NG because the public readings disagree or don't exist.
+- **NG:** there's been no look. Run and field are graded from Statcast's sprint-speed and outs-above-average leaderboards; arm is NG because no public reading isolates it.
 
 | Tool | Pres | Fut | The reading |
 |---|---|---|---|
@@ -90,8 +90,8 @@
 | **Raw power** | 35 | 40 | **2026:** 90th-percentile exit velocity 100.3 mph (z −1.44; 7th percentile) and max 106.9 (5th). **2025:** 104.6 and 110.9, a 50. **Future 40:** a partial return. A full return to 70 mph puts it back near 50; the league's base rate says to expect less (see the biggest question) |
 | **Game power** | 40 | 40 | **2026:** .103 ISO (z −1.21), 8 HR in 420 PA, 4.0% barrels per PA (z −0.56). **2024-25:** .121 and .132 ISO, 15 and 16 HR. **Approach caps it:** he pulls fewer balls than almost any regular (28.7% in 2026; 6th percentile in 2024 and 2025) and his attack direction is among the most opposite-field in the league (4th percentile) |
 | **Swing decisions** (not a standard tool; graded the same way) | 70 | 70 | +0.76 runs per 100 pitches (z +2.1); regressed +0.68 for 2026, +0.63 for 2027. 99th, 99th and 94th percentiles in 2026, 2025 and 2024 |
-| **Run** | 35 | 30 | Sprint speed in Statcast's 8th percentile (MLB Trade Rumors, Sept. 23, 2026), z −1.41 on a normal curve; FanGraphs baserunning −3.4 to −4.9 runs a season in 2024-26. **Future 30:** speed falls with age, and his already has. A published percentile, not a timing |
-| **Field / Arm** | NG | NG | No look. The public fielding readings disagree (−5 outs above average in 2025, three runs above average in 2026; see the eye test below), so no grade |
+| **Run** | 35 | 30 | Sprint speed 25.3 ft/s in 2026, the 7th percentile of 567 players with 10+ competitive runs (26th in 2024, 20th in 2025), z −1.48 on a normal curve; FanGraphs baserunning −3.4 to −4.9 runs a season in 2024-26. **Future 30:** speed falls with age, and his already has. A published percentile, not a timing |
+| **Field / Arm** | 40 / NG | 40 / NG | No look. Field from data: −5 outs above average at second base in each of 2024, 2025 and 2026 (−3, −4 and −3 fielding runs), a steady below-average range. Arm: no public reading isolates it, so no grade |
 
 ### What the decision model says
 **The value is in the takes.**
@@ -134,30 +134,30 @@
 - **"He's declining, so the approach is going too."** The data separates the two. His decisions were elite in 2026 while his bat speed fell to the 6th percentile. The decline is in the bat.
 - **"A .727 OPS second baseman is a utility player."** His .364 OBP was the 90th percentile of regulars, built on a 13.6% walk rate (94th). The decisions that produce it are the most stable thing on his card. The slugging is the open question.
 - **"He looked healthy late in the year."** The bat speed didn't come back after either return from the injured list. A look can tell you if he moves freely; the bat-speed readings say the output stayed down.
-- **Defense:** the public numbers disagree. Statcast had him at −5 outs above average in 2025 (+2 on plays to his left, −7 on the rest) after a 5th-percentile fielding run value in 2024 (*Just Baseball*, citing Statcast); one 2026 recap has him three runs above average at second (*Detroit Tigers On SI*). Scouts will grade his range and hands, and this report can't. The price uses −3 runs a season and shows −6 and +3.
+- **Defense:** Statcast has him at −5 outs above average at second in each of the last three seasons (−3, −4 and −3 fielding runs), steady enough to grade from. A 2026 recap that called him three runs above average (*Detroit Tigers On SI*) doesn't match Statcast's own leaderboard. Scouts will grade his hands, first step and arm, and this report can't. The price uses −3.3 runs a season and shows two runs either side.
 
 ### Role, recommendation and price
 **Projection (2027).**
 - **wOBA .324:** his 2024-26 wOBA and xwOBA blended, weighted 5/4/3 by season and plate appearances (.334), regressed with 1,200 plate appearances of league average (.316, FanGraphs Guts 2026), less .003 for age.
-- **Wins:** batting runs at a .316 league and 1.238 wOBA scale (+3.6 in the base case), replacement at 0.030 runs per PA (570 position-player wins at 9.82 runs per win over 183,846 PA; +16.7), second base +2.5 runs per 650 PA (+2.1), fielding −3 runs, baserunning −4.3 runs, 9.82 runs per win.
-  - **Fielding, from public readings that disagree:** −5 outs above average in 2025 and a 5th-percentile fielding run value in 2024 (*Just Baseball*, citing Statcast), three runs above average in 2026 (*Detroit Tigers On SI*). Base −3; range −6 to +3.
-  - **Baserunning:** FanGraphs' BsR of −4.6, −3.4 and −4.9 runs in 2024-26 (665, 628 and 420 PA), weighted 5/4/3 like the wOBA blend: −0.0079 runs per PA. His sprint speed is in Statcast's 8th percentile (MLB Trade Rumors, Sept. 23, 2026). The first version of this report left baserunning out and had the base case at 1.98 WAR; it costs him 0.44 wins.
+- **Wins:** batting runs at a .316 league and 1.238 wOBA scale (+3.6 in the base case), replacement at 0.030 runs per PA (570 position-player wins at 9.82 runs per win over 183,846 PA; +16.7), second base +2.5 runs per 650 PA (+2.1), fielding −3.3 runs, baserunning −4.3 runs, 9.82 runs per win.
+  - **Fielding:** Statcast fielding runs prevented at second base, −3, −4 and −3 in 2024-26 (outs above average −5 each year; Baseball Savant leaderboard, read Oct. 18, 2026), weighted 5/4/3 like the bat: −3.3. Range −5.3 to −1.3, two runs either side, because one season of fielding runs is noisy.
+  - **Baserunning:** FanGraphs' BsR of −4.6, −3.4 and −4.9 runs in 2024-26 (665, 628 and 420 PA), weighted 5/4/3 like the wOBA blend: −0.0079 runs per PA. His sprint speed fell from 26.6 to 25.3 ft/s over 2024-26, the 7th percentile in 2026. The first version of this report left baserunning out and had the base case at 1.98 WAR; baserunning costs him 0.44 wins.
 - **Value:** one price of a win, $11.66M in 2027 dollars (the rate I fit to 46 comparable free-agent contracts; FanGraphs' flat 2026 rate of $11.23M grown 3% gives $11.57M), rising 3% a year, discounted 10% a year, with the repo's aging path (−0.4 wins a year from 29; `baseball/roster/money.py`). One rate, with no tiers: FanGraphs' WAR bands describe average prices paid, and pricing on them puts a cliff at 2.0 WAR where one run of projection moves the value by millions.
 
 | Scenario | wOBA | PA | 2027 WAR | Value, 1 year | Value, 2 years (present value) |
 |---|---|---|---|---|---|
-| The 2026 bat stays | .312 | 450 | 0.76 | $8.8M | $12.8M |
-| Base | .324 | 550 | 1.54 | $17.9M | $30.3M |
-| The 2025 bat comes back | .340 | 600 | 2.49 | $29.1M | $52.0M |
+| The 2026 bat stays | .312 | 450 | 0.72 | $8.4M | $12.0M |
+| Base | .324 | 550 | 1.50 | $17.5M | $29.6M |
+| The 2025 bat comes back | .340 | 600 | 2.46 | $28.7M | $51.2M |
 
 - **The two outer scenarios are judgment inputs, not fits:** the 2026 bat staying costs about .012 of wOBA and 100 plate appearances; the 2025 bat coming back adds .016 and 50.
-- **The range around the base case, from the fielding readings alone:** $23.4M (−6 runs, 1.23 WAR) to $44.1M (+3 runs, 2.15 WAR) over two years. The base value of $30.3M anchors the offer; the range is why the offer carries an option and escalators instead of a bigger guarantee.
-- **Checks:** on FanGraphs' 2026 tiers the base case is worth $22.8M over two years (1.54 WAR prices at the 1-2 WAR rate). Without baserunning it would be 1.98 WAR and $40.3M at the one rate.
+- **The range around the base case, from fielding alone:** $25.0M (−5.3 runs, 1.30 WAR) to $34.2M (−1.3 runs, 1.71 WAR) over two years. The base value of $29.6M anchors the offer; the range is why the offer carries an option and escalators instead of a bigger guarantee.
+- **Checks:** on FanGraphs' 2026 tiers the base case is worth $22.2M over two years (1.50 WAR prices at the 1-2 WAR rate). Without baserunning it would be 1.94 WAR and $39.5M at the one rate.
 - **Market reference points:** one year, $15M with Detroit for 2025 (signed in December 2024), and the $22.025M qualifying offer he accepted for 2026.
 
 **The recommendation.**
 - **Two years, $28-32M guaranteed,** with a 2029 club option near $16M ($2M buyout) and plate-appearance escalators. The guarantee pays for the base case; the escalators pay for the playing time three oblique strains put in doubt; the option buys the 2025 bat if it returns, at a fraction of what that version is worth.
-- **Walk away** above $17M a year or at a third guaranteed year. $17M a year for two years is $32.5M in present value, inside the range but above the base case. The low case is worth $12.8M over two years, so a longer guarantee puts the downside on the club.
+- **Walk away** above $17M a year or at a third guaranteed year. $17M a year for two years is $32.5M in present value, inside the range but above the base case. The low case is worth $12.0M over two years, so a longer guarantee puts the downside on the club.
 - **If he insists on one year:** $15-18M, the base case's one-year value.
 - **The incumbent's version of the same call:** Detroit faces the same numbers, with the advantage of its own medical file.
 
@@ -198,7 +198,7 @@
 - Statcast's 2026 zone is the challenge-system zone, fixed to height, so I gave every batter one fixed zone in all three seasons and judged 2026 against the 2026 league. Without that, the model said the whole league got worse at deciding.
 
 **"Why two years?"**
-- The base case is worth $30.3M over two years, and the fielding readings alone move that from $23.4M to $44.1M. A third guaranteed year adds risk in the scenario we can't rule out. The option keeps the upside.
+- The base case is worth $29.6M over two years, and fielding alone moves that from $25.0M to $34.2M; the bat moves it from $12.0M to $51.2M. A third guaranteed year adds risk in the scenario we can't rule out. The option keeps the upside.
 
 **"Why one price of a win instead of FanGraphs' tiers?"**
 - The tiers are average prices paid by WAR band. Priced on them, a win below 2.0 WAR is worth $8.51M and a win from 2.0 up $12.84M (2026 dollars), so the first version of this report, at 1.98 WAR, was worth $30.3M over two years and the same player at 2.00 WAR $39.6M: a quarter of a run moved the value by $9M. One rate ($11.66M a 2027 win) moves smoothly, and the tiered answer is shown as a check ($22.8M).
@@ -235,7 +235,7 @@
 
 ## What this doesn't show
 - **His own counterfactual.** The model values every swing at league results for that pitch. For a hitter with a slower bat, some of the pitches he takes are worth less to him than to the league, so his decision value is likely a little high. Decision value and swing execution correlate −0.24 among regulars, which is consistent with that.
-- **Defense, running, throwing:** no look. Field and arm are NG; the run grade rests on one published percentile. The price uses public fielding readings that disagree (−6 to +3 runs a season, −3 in the base case) and FanGraphs' baserunning runs.
+- **Defense, running, throwing:** no look. Field and run are graded from Statcast leaderboards and arm is NG. The price uses Statcast's fielding runs (−3.3 a season, two runs either side) and FanGraphs' baserunning runs.
 - **Medical:** public injured-list and surgery reporting only. The biggest question is a medical one.
 - **Base-out state:** run values average over runners and outs; the model doesn't condition on them.
 - **Small samples:** whether decision value helps forecast part-time hitters (300-999 pitches), where it should matter most because it stabilizes faster than wOBA, is untested: a development run (not reproduced by the saved run) had 44-52 such hitters a year with full seasons after, too few to say.
@@ -264,9 +264,8 @@ uv run pytest tests/test_swing_decisions.py
   - "Tigers Place Gleyber Torres On IL, Activate Casey Mize," [MLB Trade Rumors](https://www.mlbtraderumors.com/2026/06/tigers-gleyber-torres-injured-list-again-oblique-casey-mize-return.html), June 17, 2026.
   - "Gleyber Torres returns to the Detroit Tigers after being sidelined by an oblique injury," AP via [WTOP](https://wtop.com/sports/2026/07/gleyber-torres-returns-to-the-detroit-tigers-after-being-sidelined-by-an-oblique-injury/), July 2026.
 - **Defense and running:**
-  - Jordan Leandre, "Gleyber Torres Free Agent Landing Spots," [*Just Baseball*](https://www.justbaseball.com/mlb/gleyber-torres-projections-2026-free-agent/), Oct. 27, 2025 (2025 outs above average and 2024 fielding run value, from Statcast).
+  - Baseball Savant, [outs-above-average](https://baseballsavant.mlb.com/leaderboard/outs_above_average) and [sprint-speed](https://baseballsavant.mlb.com/leaderboard/sprint_speed) leaderboards, 2024-26, read Oct. 18, 2026 (fielding runs, outs above average, sprint speed and its percentile).
   - Dominic Minchella, "Grading Gleyber Torres' Career with the Detroit Tigers," *Detroit Tigers On SI* via [Yahoo Sports](https://sports.yahoo.com/articles/grading-gleyber-torres-career-detroit-170003986.html), Sept. 28, 2026 (2026 fielding).
-  - Steve Adams, "Previewing The Upcoming Second Base Class," [MLB Trade Rumors](https://www.mlbtraderumors.com/2026/09/previewing-the-upcoming-second-base-class.html), Sept. 23, 2026 (sprint speed percentile).
   - [FanGraphs player page](https://www.fangraphs.com/players/gleyber-torres/16997/stats/batting), read 2026-10-18 (BsR by season).
 - **The 2026 strike zone:** "MLB announces ABS Challenge System coming to the Major Leagues beginning in the 2026 season," [MLB.com press release](https://www.mlb.com/press-release/press-release-mlb-announces-abs-challenge-system-coming-to-the-major-leagues-beginning-in-the-2026-season), Sept. 23, 2025.
 - **Qualifying offer rules and 2026 amount:** [MLB.com glossary, "Qualifying Offer"](https://www.mlb.com/glossary/transactions/qualifying-offer), read 2026-10-18.

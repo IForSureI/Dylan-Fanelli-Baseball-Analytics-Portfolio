@@ -729,13 +729,15 @@ class HitterInputs:
 
 
 # Gleyber Torres. Baserunning: FanGraphs player page, read 2026-10-18 (BsR -4.6 in 665 PA, 2024; -3.4 in 628,
-# 2025; -4.9 in 420, 2026); his sprint speed is in Statcast's 8th percentile (MLB Trade Rumors, Sept. 23, 2026).
-# Fielding at second base: -5 outs above average in 2025 (+2 on plays to his left, -7 on the rest) after a
-# 5th-percentile fielding run value in 2024 (Just Baseball, Oct. 27, 2025, from Statcast); "three runs above
-# average" in 2026 (Detroit Tigers On SI via Yahoo, Sept. 28, 2026). Base -3 runs; range -6 (his 2024-25
-# level) to +3 (the 2026 reading).
+# 2025; -4.9 in 420, 2026). Sprint speed (Baseball Savant sprint-speed leaderboard, 10+ competitive runs, read
+# 2026-10-18): 26.6, 26.2 and 25.3 ft/s in 2024-26, the 26th, 20th and 7th percentiles of 566, 579 and 567 players.
+# Fielding at second base (Baseball Savant outs-above-average leaderboard, read 2026-10-18): -5 outs above average
+# in each of 2024, 2025 and 2026, and -3, -4 and -3 fielding runs prevented. Base: those runs weighted 5/4/3 like
+# the bat, -3.3. Range: two runs either side (-5.3 to -1.3), wider than his own three-season spread because one
+# season of fielding runs is noisy.
 TORRES_INPUTS = HitterInputs(bsr={2024: (-4.6, 665), 2025: (-3.4, 628), 2026: (-4.9, 420)},
-                             fielding_runs=-3.0, fielding_low=-6.0, fielding_high=3.0)
+                             fielding_runs=(5 * -3 + 4 * -4 + 3 * -3) / 12, fielding_low=(5 * -3 + 4 * -4 + 3 * -3) / 12 - 2,
+                             fielding_high=(5 * -3 + 4 * -4 + 3 * -3) / 12 + 2)
 
 
 def blend_woba(seasons: dict, weights=(5, 4, 3), regress_pa: float = 1200, league: float = LEAGUE_WOBA,

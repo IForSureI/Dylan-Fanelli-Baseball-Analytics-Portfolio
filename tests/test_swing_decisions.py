@@ -260,3 +260,13 @@ def test_torres_price_scenarios_order_and_range():
 def test_grade_from_percentile():
     assert S.grade_from_percentile(50)["grade"] == 50
     assert S.grade_from_percentile(8)["grade"] == 35
+
+
+def test_torres_fielding_inputs_follow_statcast():
+    # Savant fielding runs prevented at 2B: -3 (2024), -4 (2025), -3 (2026), weighted 5/4/3 newest first:
+    # (5 x -3 + 4 x -4 + 3 x -3) / 12 = -40 / 12 = -3.33; the range is two runs either side.
+    from baseball.evaluation import swing_decisions as S
+
+    t = S.TORRES_INPUTS
+    assert t.fielding_runs == pytest.approx(-3.3333, abs=1e-3)
+    assert (t.fielding_low, t.fielding_high) == pytest.approx((-5.3333, -1.3333), abs=1e-3)
