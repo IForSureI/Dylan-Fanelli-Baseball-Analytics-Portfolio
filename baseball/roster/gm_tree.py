@@ -295,8 +295,8 @@ def tree_layers(prod: pd.DataFrame, root: str, keep: set[str] | None = None) -> 
 
 
 def figure(o: dict, out: Path = Path("reports/figures/2026-gm-tree.png"), root: str = "johnhart") -> Path:
-    """Left: clubs ranked by future heads who worked there first. Right: the lines from John Hart's Cleveland to
-    today's heads."""
+    """Left: clubs ranked by future heads who worked there first. Right: the lines from John Hart (Cleveland, then
+    Texas) to today's heads."""
     import matplotlib.pyplot as plt
 
     from baseball.viz import GRID, INK, MUTED, OTHER, _style
@@ -338,12 +338,12 @@ def figure(o: dict, out: Path = Path("reports/figures/2026-gm-tree.png"), root: 
         b.text(x + 0.05, yy, names.get(k, k), va="center", fontsize=7.8, color=INK if is_cur else MUTED,
                fontweight="bold" if k == root else "normal")
     gens = max(layers)
-    heads = ["Cleveland GM 1991-2001", "learned under Hart", "learned under them", "the next generation"]
+    heads = ["GM: Cleveland 1991-2001, Texas 2002-05", "learned under Hart", "learned under them", "the next generation"]
     for g in range(gens + 1):
         b.text(g, tallest / 2 + 0.2, heads[min(g, 3)], fontsize=8.5, color=MUTED, ha="left")
     b.set_xlim(-0.1, gens + 0.75)
     b.set_ylim(-tallest / 2 - 0.3, tallest / 2 + 0.7)
-    b.set_title(f"From John Hart's Cleveland to {len(set().union(*layers.values()) & cur)} of today's "
+    b.set_title(f"From John Hart to {len(set().union(*layers.values()) & cur)} of today's "
                 f"{len(cur)} heads (blue; gray = no longer running a club)", loc="left", color=INK, fontsize=11.5,
                 fontweight="bold")
     fig.suptitle("The GM tree: Cleveland trained more future heads of baseball operations than any other club",

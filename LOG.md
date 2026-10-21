@@ -2,6 +2,26 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-10-20: The GM tree, built in Neo4j
+**Built**
+- **`baseball/roster/gm_tree.py`** (`bb gm-tree`): who learned under whom in every front office, from the graph tables `bb front-office` exports.
+  - **Outputs:** which bosses and clubs produced future heads of baseball operations, PageRank on the tree, and the path today's heads took to the chair.
+  - **Neo4j:** `gm_tree.cypher` loads 929 `LEARNED_UNDER` relationships and a `first_head` year beside the trade graph. Graph Data Science's PageRank gives the same top-12 order as the Python version.
+  - **Report:** [the GM tree](reports/2026-gm-tree.md).
+- **Tests:** 8 in `tests/test_gm_tree.py`, on a fictional front office.
+
+**Answered**
+- **Cleveland trained the most future heads.** 16 worked there before their first head job, and 9 run a club today.
+- **John Hart's tree is the largest.** He produced 14 heads directly, 43 across generations, and 21 of today's 38.
+- **The path to the chair, since 2009:**
+  - a median of 14 years from the first recorded front-office job (11-18 for the middle half);
+  - 75% held an assistant GM title first;
+  - 56% were promoted from inside the club they then ran.
+
+**Learned**
+- **"Today's heads" needs a departure date.** Counting everyone who ran a club at any point in 2026 included four people who had already left (Forst, Brown, Perry Minasian and Fuld) and two interims. The study counts the 38 people in charge with no departure date.
+- **Title matching needs care.** A first Cypher prototype treated "Vice President of Baseball Operations" as "President of Baseball Operations", which made Ben Cherington's Toronto years count as running the club. The Python version matches general manager titles and the researched decision-maker list instead, with tests.
+
 ## 2026-10-18 (later): Four pieces of everyday department work, a prediction log, and five commands
 **Built**
 - **Advance packet** (`baseball/advance/packet.py`, `bb advance TB 2026 --name Rays`): hitter cards for an opponent's lineup from Statcast. Swing decisions, whiff and damage by zone and pitch group, first-pitch and two-strike tendencies, bat tracking, platoon split and a plan line, every rate with its n and regressed to the league rate for the same zone or pitch group. Switch-hitters are drawn from the side they bat on most. Reports: the [analyst packet](reports/2026-advance-packet-tb.md), a [one-page coach version](reports/2026-advance-packet-tb-coach.md) and the [same page in Spanish](reports/2026-advance-packet-tb-coach-es.md).

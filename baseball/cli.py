@@ -531,6 +531,19 @@ def cmd_swing_decisions(a: argparse.Namespace) -> None:
     swing_decisions.main(a.args)
 
 
+def cmd_gm_tree(a: argparse.Namespace) -> None:
+    from baseball.roster import gm_tree as gt
+
+    o = gt.run()
+    with pd.option_context("display.width", 220, "display.max_colwidth", 90):
+        print(o["boss_table"].head(a.top)[["name", "direct", "tree", "pagerank", "heads"]].round(3).to_string(index=False))
+        print()
+        print(o["club_table"].head(a.top)[["club", "future_heads", "current_heads", "names"]].to_string(index=False))
+    print("\nPath to the chair:", {k: round(v, 3) for k, v in o["path_summary"].items()})
+    print("Neo4j tables -> data/graph/:", gt.export_tables(), "(load with baseball/roster/gm_tree.cypher)")
+    print(gt.figure(o))
+
+
 def cmd_db(a: argparse.Namespace) -> None:
     con = warehouse.connect()
     if a.action == "rebuild":
@@ -717,6 +730,10 @@ def main(argv: list[str] | None = None) -> None:
     se_ = sub.add_parser("shape-exposure", help="do hitters adapt to shapes they've seen from other pitchers? (plan: reports/2026-shape-exposure-plan.md)")
     se_.add_argument("step", choices=["build", "fit-dev", "fit-2026", "followup", "figure"])
     se_.set_defaults(func=cmd_shape_exposure)
+
+    gt_ = sub.add_parser("gm-tree", help="the GM tree: who trained today's heads, which clubs they came from, the path to the chair")
+    gt_.add_argument("--top", type=int, default=10)
+    gt_.set_defaults(func=cmd_gm_tree)
 
     gr = sub.add_parser("grade", help="20-80 grades from measurements: fastball velocity, pitcher OFP roll-up")
     gsub = gr.add_subparsers(dest="what", required=True)
