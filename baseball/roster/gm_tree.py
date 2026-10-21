@@ -94,8 +94,8 @@ def produced(edges: pd.DataFrame, first_head: pd.Series) -> pd.DataFrame:
 def pagerank(edges: pd.DataFrame, src: str = "junior", dst: str = "boss", damping: float = 0.85, iters: int = 200,
              tol: float = 1e-12) -> pd.Series:
     """PageRank with junior -> boss links: a boss scores high when the people who learned under him went on to train
-    heads of their own. Dangling nodes spread their rank evenly. Matches Neo4j GDS's pageRank on the same graph up
-    to its default tolerance."""
+    heads of their own. Dangling nodes spread their rank evenly, so scores sum to 1. Neo4j GDS's pageRank on the
+    same graph leaves scores unnormalized and keeps dangling rank, but on this tree it gives the same top-12 order."""
     pairs = edges[[src, dst]].drop_duplicates()
     nodes = sorted(set(pairs[src]) | set(pairs[dst]))
     idx = {n: i for i, n in enumerate(nodes)}
@@ -151,14 +151,21 @@ def boss_table(prod: pd.DataFrame, names: dict[str, str]) -> pd.DataFrame:
     return t.sort_values(["direct", "tree", "pagerank"], ascending=False).reset_index(drop=True)
 
 
-def club_table(wf: pd.DataFrame, first_head: pd.Series, bosses: pd.DataFrame, names: dict[str, str],
-               current_year: int = 2026) -> pd.DataFrame:
-    """Per club: future heads who worked there before their first head job (below the boss), and how many of the
-    clubs' current heads passed through."""
+def current_heads(ran: pd.DataFrame, current_year: int = 2026) -> set[str]:
+    """People running a club now: a non-interim decision role that runs through `current_year` with no departure
+    date (ran.csv's `left` is blank or "current")."""
+    r = ran[(ran["end"] == current_year) & ~ran["role"].map(is_interim)]
+    if "left" in r:
+        r = r[r["left"].isna() | (r["left"].astype(str).str.strip().str.lower() == "current")]
+    return set(r["key"])
+
+
+def club_table(wf: pd.DataFrame, first_head: pd.Series, current: set[str], names: dict[str, str]) -> pd.DataFrame:
+    """Per club: future heads who worked there before their first head job (below the boss), and how many of
+    today's heads passed through."""
     w = _years(wf)[["key", "club", "year"]].drop_duplicates()
     w = w.assign(first_head=w["key"].map(first_head)).dropna(subset=["first_head"])
     w = w[w["year"] < w["first_head"]]
-    current = set(bosses.loc[bosses["year"] == current_year, "boss"])
     g = w.groupby("club")["key"].apply(lambda s: sorted(set(s)))
     t = pd.DataFrame({"club": g.index, "future_heads": g.map(len).values,
                       "current_heads": [len(set(v) & current) for v in g.values],
@@ -220,6 +227,18 @@ def neo4j_rows(edges: pd.DataFrame, first_head: pd.Series) -> list[dict]:
             for r in e[["junior", "boss", "club", "first", "last", "seasons", "produced_head"]].to_dict("records")]
 
 
+def export_tables(out: Path = GRAPH, graph: Path = GRAPH) -> dict[str, int]:
+    """learned_under.csv and heads.csv for Neo4j (load with gm_tree.cypher)."""
+    o = run(graph)
+    rows = pd.DataFrame(neo4j_rows(o["edges"], o["first_head"]))
+    rows.to_csv(out / "learned_under.csv", index=False)
+    heads = o["first_head"].rename_axis("key").reset_index()
+    heads.to_csv(out / "heads.csv", index=False)
+    return {"learned_under": len(rows), "heads": len(heads)}
+
+
+CYPHER = Path(__file__).with_name("gm_tree.cypher")
+
 LOAD_CYPHER = """
 UNWIND $rows AS r
 MATCH (j:Executive {key: r.junior}), (b:Executive {key: r.boss})
@@ -242,7 +261,8 @@ def run(graph: Path = GRAPH) -> dict:
     prod = produced(edges, fh)
     p = paths(wf, ran, fh)
     return {"bosses": bosses, "first_head": fh, "edges": edges, "produced": prod,
-            "boss_table": boss_table(prod, names), "club_table": club_table(wf, fh, bosses, names),
+            "boss_table": boss_table(prod, names), "current": current_heads(ran),
+            "club_table": club_table(wf, fh, current_heads(ran), names),
             "paths": p, "path_summary": path_summary(p), "names": names}
 
 

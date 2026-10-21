@@ -93,7 +93,17 @@ def test_paths_internal_and_roles():
 
 def test_club_table_counts_future_heads_once():
     wf, ran = _tables()
-    b, fh = G.boss_years(wf, ran), G.first_head_year(wf, ran)
-    t = G.club_table(wf, fh, b, {}, current_year=2026).set_index("club")
+    fh = G.first_head_year(wf, ran)
+    assert G.current_heads(ran) == {"kid"}          # Temp is interim; Grand's job ended in 2020
+    t = G.club_table(wf, fh, G.current_heads(ran), {}).set_index("club")
     # AAA: Kid (2003-2010) and Grand (2012-14) worked there before running a club; Boss's own GM years don't count
     assert t.loc["AAA", "future_heads"] == 2 and t.loc["AAA", "current_heads"] == 1
+
+
+def test_current_heads_drop_departures():
+    ran = pd.DataFrame([("a", "AAA", "General Manager", 2020, 2026, None),
+                        ("b", "BBB", "General Manager", 2021, 2026, "2026-08-24"),
+                        ("c", "CCC", "President of Baseball Operations", 2019, 2026, "current"),
+                        ("d", "AAA", "Interim General Manager", 2026, 2026, None)],
+                       columns=["key", "club", "role", "start", "end", "left"])
+    assert G.current_heads(ran) == {"a", "c"}
