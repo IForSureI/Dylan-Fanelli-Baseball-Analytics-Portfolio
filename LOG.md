@@ -2,6 +2,20 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-10-20: A second arbitration case, Louis Varland (Toronto)
+**Built**
+- **`baseball/roster/arbitration.py`:** the case is now data. A `Target` record holds the player, club, seasons, MLB Trade Rumors projection, free-agent year, Super Two cutoff and figure layout; `case(target)` works any of them, and `smith_case()` is a wrapper that returns exactly what it did before (the Smith brief's numbers and figure are unchanged).
+- **`bb arb-case varland`** (`smith` stays the default).
+- **Report:** [Louis Varland's 2027 arbitration case](reports/2027-arbitration-brief-varland.md), worked from the club side as an independent exercise naming the Toronto Blue Jays.
+- **Tests:** 6 in `tests/test_arbitration_varland.py`; the 19 Smith tests are untouched.
+
+**Answered**
+- **File $3.65M, settle at $3.8M or less, walk above $3.8M.** The same 23-closer pool puts him at $3.58M; A.J. Ramos's 2016 salary, restated to $3.63M, sets the floor.
+- **The club is favored under every weighting:** 61% at a $3.85M midpoint in the base case, 69% reading the comps, 54% reading MLBTR's $3.8M. The two views sit only $0.22M apart, against $0.92M for Smith.
+- **Super Two money:** four arbitration years (2027-30), so losing at $4.05M costs $1.39M in present value.
+- **His side's best route:** the 2020-26 market alone puts him at $4.40M and drops the club to 40%. The answer is career saves: 35, all from 2026.
+- **A 2027 stoppage doesn't move his free agency** (6.111 after 2030); for Smith it adds a year.
+
 ## 2026-10-20: The GM tree, built in Neo4j
 **Built**
 - **`baseball/roster/gm_tree.py`** (`bb gm-tree`): who worked under whom in every front office, from the graph tables `bb front-office` exports.

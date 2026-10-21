@@ -516,7 +516,7 @@ def cmd_sql(a: argparse.Namespace) -> None:
 def cmd_arb_case(a: argparse.Namespace) -> None:
     from baseball.roster import arbitration
 
-    arbitration.main()
+    arbitration.main(a.player)
 
 
 def cmd_advance(a: argparse.Namespace) -> None:
@@ -759,7 +759,9 @@ def main(argv: list[str] | None = None) -> None:
     sq_.add_argument("--limit", type=int, default=30)
     sq_.set_defaults(func=cmd_sql)
 
-    ac = sub.add_parser("arb-case", help="the Cade Smith arbitration case: comp line, filing, win odds, walk point, figure")
+    ac = sub.add_parser("arb-case", help="an arbitration case from the club side (Cade Smith or Louis Varland): comp line, "
+                                         "filing, win odds, walk point, figure")
+    ac.add_argument("player", nargs="?", default="smith", choices=["smith", "varland"])
     ac.set_defaults(func=cmd_arb_case)
 
     av = sub.add_parser("advance", help="advance-scouting packet on a club's hitters, e.g. bb advance TB 2026 --name Rays",

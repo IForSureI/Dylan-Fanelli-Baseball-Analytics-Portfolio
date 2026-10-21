@@ -48,7 +48,9 @@ The method, in the order a club's arbitration group works a case:
    expected hearing award. Arbitration raises build on the prior salary, so a 2027 dollar is paid again in
    each later arbitration year (`carry_cost`; how much of the gap carries is an ASSUMPTION, `CARRY_SHARE`).
 
-Sources for the facts below are on each row and in reports/2027-arbitration-brief-smith.md.
+Two cases are worked here, each a `Target` record: Cade Smith (Cleveland, a three-year player) and Louis Varland
+(Toronto, a Super Two). Sources for the facts below are on each row and in the two briefs,
+reports/2027-arbitration-brief-smith.md and reports/2027-arbitration-brief-varland.md.
 """
 from __future__ import annotations
 
@@ -123,6 +125,32 @@ SMITH_SEASONS = {   # Baseball-Reference standard and value tables; FanGraphs fo
 }   # 2024 holds: MLB.com player page bio (read 2026-10-18).
 MLBTR_2027 = 5.5                  # MLBTR projection (Matt Swartz's model), Oct. 2, 2026
 SMITH_FREE_AGENT_AFTER = 2029     # Baseball-Reference: "Free Agent: 2030"; arbitration 2027-29
+
+# Baseball-Reference player page (read 2026-10-20): 2022-26 standard and value tables, 2026 All-Star, born Dec. 9, 1997,
+# "Service Time (01/2026): 1.163", "Arb Eligible: 2027", "Free Agent: 2031". MLB Trade Rumors, "Projected Arbitration
+# Salaries For 2027" (Darragh McDonald, Oct. 2, 2026): "Louis Varland, 2.163, $3.8MM", a Super Two (2 years 163 days);
+# Heavy (Alvin Garcia, Oct. 14, 2026): "Louis Varland is projected at $3.8 million." First career save Apr. 21, 2026,
+# the closer's job from April (Wikipedia, "Louis Varland", read 2026-10-20).
+VARLAND = Reliever("Louis Varland", 2027, platform_sv=35, platform_era=1.27, platform_ip=ip("78.0"), platform_so=97,
+                   career_sv=35, career_ip=ip("294.1"), all_star_platform=True, service="2.163", super_two=True,
+                   source="Baseball-Reference (read 2026-10-20); MLB Trade Rumors (Oct. 2, 2026)")
+VARLAND_SEASONS = {   # Baseball-Reference standard and value tables (read 2026-10-20); 2025 is Minnesota and Toronto
+    2022: dict(sv=0, era=3.81, ip=ip("26.0"), so=21, bb=6, hr=4, g=5, gs=5, gf=0, w=1, l=2, era_plus=104, fip=4.30,
+               bwar=0.4),
+    2023: dict(sv=0, era=4.63, ip=ip("68.0"), so=71, bb=17, hr=16, g=17, gs=10, gf=1, w=4, l=3, era_plus=95, fip=5.02,
+               bwar=0.6),
+    2024: dict(sv=0, era=7.61, ip=ip("49.2"), so=49, bb=16, hr=12, g=16, gs=7, gf=1, w=0, l=6, era_plus=55, fip=5.54,
+               bwar=-1.3),
+    2025: dict(sv=0, era=2.97, ip=ip("72.2"), so=75, bb=22, hr=6, g=74, gs=1, gf=8, w=4, l=3, era_plus=144, fip=3.14,
+               bwar=1.7),
+    2026: dict(sv=35, era=1.27, ip=ip("78.0"), so=97, bb=23, hr=2, g=71, gs=0, gf=53, w=5, l=6, era_plus=348, fip=1.83,
+               bwar=3.6, whip=1.000),
+}
+VARLAND_MLBTR_2027 = 3.8          # MLBTR projection (Matt Swartz's model), Oct. 2, 2026
+VARLAND_FREE_AGENT_AFTER = 2030   # Baseball-Reference: "Free Agent: 2031"; as a Super Two, arbitration 2027-30
+# MLB Trade Rumors lists him among the 2027 arbitration eligibles at 2.163; the official Super Two cutoff is set after
+# the season, and its 2027 list includes players at 2.133, so 2.163 is above any cutoff that list implies.
+SUPER_TWO_CUTOFF_2027 = "2.133"
 
 # ------------------------------------------------------------------ comparables: first-time-eligible closers
 # The screen (POOL_RULE): MLB Stats API season pitching leaders by saves, 2015-25 (read 2026-10-18), every reliever
@@ -488,31 +516,94 @@ def straddle(center: float, ratio: float) -> tuple[float, float]:
 
 
 # ------------------------------------------------------------------ the case
+@dataclass(frozen=True)
+class Target:
+    """One arbitration case: the player, his club, his season lines, the market projection, his control, and the
+    figure's layout (label positions only)."""
+    player: Reliever
+    club: str
+    seasons: dict
+    mlbtr: float                          # MLB Trade Rumors' projection, $M
+    free_agent_after: int                 # Baseball-Reference's free-agency season minus one
+    slug: str
+    super_two_cutoff: str | None = None
+    record_figure: float | None = None    # a high player filing to test; None = high_filing(mlbtr)
+    record_label: str = ""
+    grid: tuple = ()                      # club figures to tabulate; () = $0.1M steps around the filing
+    alt_fit: str = "original_ten"         # the extra comp-set row in sensitivity(): "original_ten" or "recent"
+    layout: dict = field(default_factory=dict)
+
+
+SMITH_CASE = Target(SMITH, "Cleveland Guardians", SMITH_SEASONS, MLBTR_2027, SMITH_FREE_AGENT_AFTER, "smith",
+                    record_figure=6.3, record_label="player files the record claim ($6.3M)",
+                    grid=(4.5, 4.6, 4.75, 4.8, 4.9, 5.0, 5.1, 5.2), alt_fit="original_ten",
+                    layout=dict(callouts={"Romano": (4.85, 5.1), "Bednar": (4.85, 4.9), "Doval": (4.85, 4.45),
+                                          "A. Díaz": (4.85, 4.25), "Familia": (4.85, 4.05), "Allen": (4.85, 3.85)},
+                                value_xy=(4.68, 3.5), labels_right=("club files",), grid_from=4.4,
+                                filing_text="left", legend="lower right"))
+VARLAND_CASE = Target(VARLAND, "Toronto Blue Jays", VARLAND_SEASONS, VARLAND_MLBTR_2027, VARLAND_FREE_AGENT_AFTER,
+                      "varland", super_two_cutoff=SUPER_TWO_CUTOFF_2027, alt_fit="recent",
+                      layout=dict(callouts={"Romano": (4.85, 5.35), "Bednar": (4.85, 5.15), "Doval": (4.85, 4.95),
+                                            "A. Díaz": (4.85, 4.75), "Familia": (4.85, 4.55), "Allen": (4.85, 4.35),
+                                            "Rondón": (1.95, 5.0), "Hader": (1.95, 4.8), "Duran": (1.95, 4.6),
+                                            "Miller": (1.95, 4.4), "Soto": (1.95, 4.2), "Knebel": (1.95, 3.92),
+                                            "Dyson": (1.95, 3.5), "Ramos": (1.95, 3.3), "Tolleson": (1.95, 3.1),
+                                            "Foley": (1.95, 2.9)},
+                                  value_xy=(4.3, 3.35), labels_right=("club files", "player's likely figure",
+                                                                       "MLBTR projection"),
+                                  grid_from=None, filing_text="top", legend="upper left"))
+CASES = {"smith": SMITH_CASE, "varland": VARLAND_CASE}
+
+
+def high_filing(center: float, exchanges: list[tuple] | None = None, skip: tuple[str, ...] = ("Tarik Skubal",)) -> float:
+    """A high player filing: the widest 2026 player/club ratio (Skubal's record case left out) straddling `center`,
+    rounded to $50K."""
+    exchanges = EXCHANGES_2026 if exchanges is None else exchanges
+    r = max(p / c for n, p, c, _ in exchanges if n not in skip)
+    return round(straddle(center, r)[1] * 20) / 20
+
+
 def smith_case(view_weight_market: float = VIEW_WEIGHT_MARKET, record_figure: float = 6.3,
                seasons_carried: int | None = None) -> dict:
-    """Every number in the brief. The two views of the panel: the comp line (mu = its value) and the market
-    projection (mu = MLBTR's $5.5M), each with the comp line's prediction SE as sigma."""
-    target = SMITH.season
-    chosen = select_comparables(SMITH, POOL, k=6)
+    """Cade Smith's case (the first brief)."""
+    return case(SMITH_CASE, view_weight_market, record_figure, seasons_carried)
+
+
+def varland_case(view_weight_market: float = VIEW_WEIGHT_MARKET, record_figure: float | None = None,
+                 seasons_carried: int | None = None) -> dict:
+    """Louis Varland's case (the second brief)."""
+    return case(VARLAND_CASE, view_weight_market, record_figure, seasons_carried)
+
+
+def case(t: Target = SMITH_CASE, view_weight_market: float = VIEW_WEIGHT_MARKET, record_figure: float | None = None,
+         seasons_carried: int | None = None) -> dict:
+    """Every number in a brief. The two views of the panel: the comp line (mu = its value) and the market
+    projection (mu = MLBTR's figure), each with the comp line's prediction SE as sigma."""
+    P, MLBTR = t.player, t.mlbtr
+    record_figure = record_figure if record_figure is not None else (
+        t.record_figure if t.record_figure is not None else high_filing(MLBTR))
+    target = P.season
+    chosen = select_comparables(P, POOL, k=6)
     fit_rows = fit_pool(POOL, target)
     line = fit_comp_line(fit_rows, target)
-    pred = line.predict(SMITH)
+    pred = line.predict(P)
     sigma = pred["se"]
-    views = [(1 - view_weight_market, pred["value"], sigma), (view_weight_market, MLBTR_2027, sigma)]
+    views = [(1 - view_weight_market, pred["value"], sigma), (view_weight_market, MLBTR, sigma)]
     comp_only = [(1.0, pred["value"], sigma)]
-    market_only = [(1.0, MLBTR_2027, sigma)]
-    br = bracket(SMITH, [c for c, _ in chosen], line.growth)
+    market_only = [(1.0, MLBTR, sigma)]
+    br = bracket(P, [c for c, _ in chosen], line.growth)
     ratios = gap_ratios()
     r_med = median(ratios)
-    club_sym, player_likely = straddle(MLBTR_2027, r_med)
+    club_sym, player_likely = straddle(MLBTR, r_med)
     player_likely = round(player_likely * 20) / 20          # filings are round numbers: nearest $50K
     fil = best_filing(player_likely, views, floor=br["floor"])
     club = math.ceil(fil["club"] * 20 - 1e-9) / 20      # round up to $50K so the figure stays at or above the floor
-    control = timeline(SMITH.service, target - 1)            # 3.000 after 2026: arbitration 2027-29, FA after 2029
-    if control.free_agent_after != SMITH_FREE_AGENT_AFTER:
+    control = timeline(P.service, target - 1, super_two_cutoff=t.super_two_cutoff)
+    if control.free_agent_after != t.free_agent_after:
         raise ValueError("service engine and Baseball-Reference disagree on free agency")
     seasons = seasons_carried or control.arb_years
     out = {
+        "target": t, "player": P.name, "club": t.club, "mlbtr": MLBTR,
         "chosen": [(c.name, d) for c, d in chosen],
         "line": line, "line_value": pred["value"], "line_se": sigma, "growth": line.growth,
         "bracket": br, "ratios_median": r_med, "player_likely": player_likely, "record_figure": record_figure,
@@ -535,23 +626,28 @@ def smith_case(view_weight_market: float = VIEW_WEIGHT_MARKET, record_figure: fl
     out["walk_point_grid"] = math.floor(out["walk_point"] * 20 + 1e-9) / 20     # settle at or below this $50K figure
     out["cost_settle_at_mid_vs_hearing"] = carry_cost(out["settle_50"] - out["walk_point"], seasons)
     out["cost_lose_half_carry"] = carry_cost(player_likely - club, seasons, share=0.5)
-    out["cost_lose_stoppage"] = carry_cost(player_likely - club, seasons + 1)     # a fourth arbitration year
+    # A 2027 cut to 120 credited days: one more arbitration year before free agency.
+    stop = timeline(P.service, target - 1, future_days=[120] + [172] * 7, super_two_cutoff=t.super_two_cutoff)
+    out["stoppage_arb_seasons"] = stop.arb_seasons
+    out["cost_lose_stoppage"] = carry_cost(player_likely - club, stop.arb_years)
     out["fit_n"] = len(fit_rows)
     out["loo"] = loo_errors(fit_rows, target)
     out["loo_rmse"] = rms(out["loo"])
     out["in_sample_sd"] = line.resid_sd
-    out["added_predictors"] = added_predictor_tests(fit_rows, SMITH, target)
-    out["breakeven_weight"] = breakeven_weight(club, player_likely, pred["value"], MLBTR_2027, sigma)
+    out["added_predictors"] = added_predictor_tests(fit_rows, P, target)
+    out["breakeven_weight"] = breakeven_weight(club, player_likely, pred["value"], MLBTR, sigma)
     out["next_group"] = next_group_raises()
     out["grid"] = [(c, p_club_wins(c, player_likely, views), expected_award(c, player_likely, views),
                     p_club_wins(c, player_likely, comp_only), p_club_wins(c, player_likely, market_only))
-                   for c in sorted({4.5, 4.6, 4.75, 4.8, 4.9, 5.0, 5.1, 5.2, club})]
+                   for c in sorted(set(t.grid or {round(club + d, 2) for d in (-0.3, -0.2, -0.1, 0.1, 0.2, 0.3, 0.4, 0.5)
+                                                   if club + d < player_likely}) | {club})]
     return out
 
 
-def sensitivity() -> list[dict]:
+def sensitivity(t: Target = SMITH_CASE) -> list[dict]:
     """How the line value, the chance of winning at the filing and the walk point move with each assumption."""
-    base = smith_case()
+    base = case(t)
+    P, MLBTR = t.player, t.mlbtr
     club, player = base["club_filing"], base["player_likely"]
     rows = []
 
@@ -562,51 +658,55 @@ def sensitivity() -> list[dict]:
     v, sd = base["line_value"], base["line_se"]
     add("base: even blend of the comp line and MLBTR", v, base["views"])
     for w in (0.25, 0.6, 0.75):
-        add(f"weight on MLBTR's view {w:.2f}", v, [(1 - w, v, sd), (w, MLBTR_2027, sd)])
-    add("player files the record claim ($6.3M)", v, base["views"], player_fig=base["record_figure"])
+        add(f"weight on MLBTR's view {w:.2f}", v, [(1 - w, v, sd), (w, MLBTR, sd)])
+    add(t.record_label or f"player files high (${base['record_figure']:.2f}M)", v, base["views"],
+        player_fig=base["record_figure"])
+    alt = (("fit on the original ten comps only", [c for c in fit_pool(POOL, P.season) if c.name in ORIGINAL_TEN])
+           if t.alt_fit == "original_ten" else
+           ("fit on the 2020-26 comps only (the recent market)", [c for c in fit_pool(POOL, P.season) if c.season >= 2020]))
     for lab, rows_fit in (("fit without the three hearing awards (Hader, Osuna, Giles)",
-                           [c for c in fit_pool(POOL, SMITH.season) if not c.how.startswith("hearing")]),
-                          ("fit on the original ten comps only",
-                           [c for c in fit_pool(POOL, SMITH.season) if c.name in ORIGINAL_TEN]),
-                          ("fit including Papelbon 2009", fit_pool(POOL, SMITH.season, max_age=30))):
-        ln = fit_comp_line(rows_fit, SMITH.season).predict(SMITH)
-        add(lab, ln["value"], [(1 - VIEW_WEIGHT_MARKET, ln["value"], ln["se"]), (VIEW_WEIGHT_MARKET, MLBTR_2027, ln["se"])])
+                           [c for c in fit_pool(POOL, P.season) if not c.how.startswith("hearing")]),
+                          alt,
+                          ("fit including Papelbon 2009", fit_pool(POOL, P.season, max_age=30))):
+        ln = fit_comp_line(rows_fit, P.season).predict(P)
+        add(lab, ln["value"], [(1 - VIEW_WEIGHT_MARKET, ln["value"], ln["se"]), (VIEW_WEIGHT_MARKET, MLBTR, ln["se"])])
     era = next(r for r in base["added_predictors"] if r["stat"].startswith("platform ERA"))
     add("comp line with platform ERA added", era["value"],
-        [(1 - VIEW_WEIGHT_MARKET, era["value"], era["se"]), (VIEW_WEIGHT_MARKET, MLBTR_2027, era["se"])])
+        [(1 - VIEW_WEIGHT_MARKET, era["value"], era["se"]), (VIEW_WEIGHT_MARKET, MLBTR, era["se"])])
     for sd2 in (0.25, 0.5):
-        add(f"panel noise sigma ${sd2:.2f}M", v, [(1 - VIEW_WEIGHT_MARKET, v, sd2), (VIEW_WEIGHT_MARKET, MLBTR_2027, sd2)])
+        add(f"panel noise sigma ${sd2:.2f}M", v, [(1 - VIEW_WEIGHT_MARKET, v, sd2), (VIEW_WEIGHT_MARKET, MLBTR, sd2)])
     return rows
 
 
-def figure(path: str = "reports/figures/2027-arbitration-brief-smith.png") -> str:
-    """Left: comps' salaries in 2027 dollars against the comp line, with Smith's line value, the filing, the
+def figure(path: str | None = None, t: Target = SMITH_CASE) -> str:
+    """Left: comps' salaries in 2027 dollars against the comp line, with the player's line value, the filing, the
     player's likely figure and MLBTR's projection. Right: chance the club wins by club figure, three views."""
+    path = path or f"reports/figures/2027-arbitration-brief-{t.slug}.png"
+    lay = t.layout
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
     from baseball.viz import INK, MUTED, _style
 
-    case = smith_case()
-    line = case["line"]
-    rows = fit_pool(POOL, SMITH.season)
+    cs = case(t)
+    line = cs["line"]
+    rows = fit_pool(POOL, t.player.season)
     fig, (a, b) = plt.subplots(1, 2, figsize=(10.5, 4.4), dpi=150, gridspec_kw={"width_ratios": [1.15, 1]})
     for ax in (a, b):
         _style(ax)
     blue, orange, green = "#2a78d6", "#eb6834", "#008300"
-    chosen = {n for n, _ in case["chosen"]}
+    chosen = {n for n, _ in cs["chosen"]}
     offsets = {"Osuna": (-5, 3, "right"), "Colomé": (5, 3, "left"), "Giles": (-6, 2, "right"),
                "Rondón": (-5, 4, "right"), "Hader": (-6, 3, "right"), "Duran": (-5, 0, "right"),
                "Knebel": (6, -6, "left"), "Miller": (0, -9, "center"), "Dyson": (-5, -3, "right"),
                "Ramos": (-5, -3, "right"), "Tolleson": (5, -3, "left"), "Rosenthal": (5, -3, "left"),
                "Soto": (5, -3, "left"), "Alzolay": (5, -3, "left"), "Foley": (5, -3, "left"),
                "Megill": (5, -3, "left")}
-    # The crowded middle of the plot: labels in a column to the right, with leader lines (data coordinates).
-    callouts = {"Romano": (4.85, 5.1), "Bednar": (4.85, 4.9), "Doval": (4.85, 4.45), "A. Díaz": (4.85, 4.25),
-                "Familia": (4.85, 4.05), "Allen": (4.85, 3.85)}
+    # The crowded middle of the plot: labels in columns with leader lines (data coordinates), set per target.
+    callouts = lay["callouts"]
     for c in rows:
-        actual = restate(c.salary, c.season, SMITH.season, line.growth)
+        actual = restate(c.salary, c.season, t.player.season, line.growth)
         fitted = line.predict(c)["value"]
         hearing = c.how.startswith("hearing")
         a.scatter(fitted, actual, s=40 if c.name in chosen else 22, color=INK if hearing else blue,
@@ -626,14 +726,14 @@ def figure(path: str = "reports/figures/2027-arbitration-brief-smith.png") -> st
                    fontsize=6.5, color=color, ha=ha)
     lo, hi = 1.8, 6.6
     a.plot([lo, hi], [lo, hi], color=MUTED, lw=0.8, ls="--")
-    v = case["line_value"]
-    a.errorbar([v], [v], yerr=[[case["line_se"]], [case["line_se"]]], fmt="D", color=orange, ms=7, capsize=3, zorder=4)
-    a.annotate(f"Smith line value \\${v:.2f}M", (v, v), xytext=(4.68, 3.5), textcoords="data", ha="left",
-               fontsize=8, color=orange)
-    for y, txt, col in ((case["club_filing"], "club files", green), (case["player_likely"], "player's likely figure", MUTED),
-                        (MLBTR_2027, "MLBTR projection", MUTED)):
+    v = cs["line_value"]
+    a.errorbar([v], [v], yerr=[[cs["line_se"]], [cs["line_se"]]], fmt="D", color=orange, ms=7, capsize=3, zorder=4)
+    a.annotate(f"{t.player.name.split()[-1]} line value \\${v:.2f}M", (v, v), xytext=lay["value_xy"], textcoords="data",
+               ha="left", fontsize=8, color=orange)
+    for y, txt, col in ((cs["club_filing"], "club files", green), (cs["player_likely"], "player's likely figure", MUTED),
+                        (t.mlbtr, "MLBTR projection", MUTED)):
         a.axhline(y, color=col, lw=1, ls=":")
-        right = txt == "club files"
+        right = txt in lay["labels_right"]
         a.text(hi - 0.03 if right else lo + 0.03, y + 0.03, f"{txt} \\${y:.2f}M", ha="right" if right else "left", fontsize=7, color=col)
     a.set_xlim(lo, hi)
     a.set_ylim(lo, hi)
@@ -641,37 +741,44 @@ def figure(path: str = "reports/figures/2027-arbitration-brief-smith.png") -> st
     a.set_ylabel("Actual first-year salary, \\$M (2027 dollars)", fontsize=8, color=MUTED)
     a.set_title("First-time-eligible closers, 2016-26 (squares: hearings; bold: the six nearest)", fontsize=9, color=INK, loc="left")
 
-    grid = np.arange(4.4, case["player_likely"] - 0.04, 0.02)
-    P = case["player_likely"]
-    sig = case["line_se"]
+    gfrom = lay["grid_from"] if lay["grid_from"] is not None else cs["club_filing"] - 0.6
+    grid = np.arange(gfrom, cs["player_likely"] - 0.04, 0.02)
+    P = cs["player_likely"]
+    sig = cs["line_se"]
     for views, lab, col, ls in (([(1, v, sig)], "panel reads the comps", blue, "-"),
-                                (case["views"], "even blend (base case)", INK, "-"),
-                                ([(1, MLBTR_2027, sig)], "panel reads the market projection", orange, "--")):
+                                (cs["views"], "even blend (base case)", INK, "-"),
+                                ([(1, t.mlbtr, sig)], "panel reads the market projection", orange, "--")):
         b.plot(grid, [p_club_wins(c, P, views) for c in grid], color=col, lw=1.8, ls=ls, label=lab)
-    b.axvline(case["club_filing"], color=green, lw=1, ls=":")
-    b.text(case["club_filing"] - 0.02, 0.06, f"club files \\${case['club_filing']:.2f}M", fontsize=7.5, color=green, ha="right")
+    b.axvline(cs["club_filing"], color=green, lw=1, ls=":")
+    if lay["filing_text"] == "left":
+        b.text(cs["club_filing"] - 0.02, 0.06, f"club files \\${cs['club_filing']:.2f}M", fontsize=7.5, color=green, ha="right")
+    else:
+        b.text(cs["club_filing"] + 0.02, 0.95, f"club files \\${cs['club_filing']:.2f}M", fontsize=7.5, color=green, ha="left")
     b.set_ylim(0, 1)
     b.set_xlabel(f"Club figure, \\$M (player files \\${P:.2f}M)", fontsize=8, color=MUTED)
     b.set_ylabel("Chance the panel picks the club's figure", fontsize=8, color=MUTED)
     b.set_title("The hearing at each club figure", fontsize=9.5, color=INK, loc="left")
-    b.legend(fontsize=7.5, frameon=False, loc="lower right")
+    b.legend(fontsize=7.5, frameon=False, loc=lay["legend"])
     fig.tight_layout()
     fig.savefig(path)
     plt.close(fig)
     return path
 
 
-def main() -> None:
-    c = smith_case()
+def main(player: str = "smith") -> None:
+    t = CASES[player.lower()]
+    c = case(t)
     line = c["line"]
+    print(f"{t.player.name} ({t.club}), service {t.player.service}{' (Super Two)' if t.player.super_two else ''}; "
+          f"MLBTR ${t.mlbtr:.2f}M")
     print("Comparables chosen (distance):", [(n, round(d, 2)) for n, d in c["chosen"]])
     print("Comp line coefficients:", np.round(line.coef, 4), f"growth {line.growth:.4f}", f"resid sd {line.resid_sd:.4f}")
     print("Fit rows and residuals:", [(n, round(e, 3)) for n, e in zip(line.names, line.residuals)])
-    print(f"Smith line value {c['line_value']:.3f}  se {c['line_se']:.3f}")
+    print(f"{t.player.name} line value {c['line_value']:.3f}  se {c['line_se']:.3f}")
     print("Bracket:", {k: (round(v, 3) if isinstance(v, float) else v) for k, v in c["bracket"].items()})
     for r in POOL:
         print(f"  {r.name:18s} {r.season} ${r.salary:.4f}M -> 2027 ${restate(r.salary, r.season, 2027, line.growth):.3f}M"
-              f"  dominance {dominance(SMITH, r):+d}  line {line.predict(r)['value']:.3f}")
+              f"  dominance {dominance(t.player, r):+d}  line {line.predict(r)['value']:.3f}")
     print(f"2026 exchange gap ratio median {c['ratios_median']:.4f}; symmetric club {c['club_symmetric']:.3f}")
     print(f"Player likely {c['player_likely']:.2f}; club files {c['club_filing']:.2f}; midpoint {c['midpoint']:.3f}")
     print("P(club wins):", {k: round(v, 3) for k, v in c["p_win"].items()})
@@ -687,22 +794,24 @@ def main() -> None:
     print("Leave-one-out errors:", [(n, round(e, 3)) for n, e in zip(line.names, c["loo"])])
     print("Added predictors:")
     for r in c["added_predictors"]:
-        print(f"   {r['stat']:32s} coef {r['coef']:+.4f} (se {r['coef_se']:.4f})  Smith {r['value']:.3f}"
+        print(f"   {r['stat']:32s} coef {r['coef']:+.4f} (se {r['coef_se']:.4f})  player {r['value']:.3f}"
               f"  se {r['se']:.3f}  resid sd {r['resid_sd']:.4f}")
     print("Next service group (salary = first-year base + raise):")
     for r in c["next_group"]:
         print(f"   {r['name']:15s} {r['season']} ${r['salary']:.3f}M = ${r['first_year']:.4f}M + ${r['raise_']:.4f}M"
               f"  platform {r['platform_sv']} SV, {r['platform_era']} ERA, {r['career_sv']} career")
     print(f"Screened out: {len(SCREENED_OUT)} entries")
-    print("Record-claim case:", {k: round(v, 3) for k, v in c["record_case"].items()})
+    print(f"High-filing case (${c['record_figure']:.2f}M):", {k: round(v, 3) for k, v in c["record_case"].items()})
     print("Grid (club, P blend, E blend, P comp, P market):")
     for g in c["grid"]:
         print("  ", [round(x, 3) for x in g])
     print("Sensitivity:")
-    for r in sensitivity():
+    for r in sensitivity(t):
         print(f"   {r['case']:55s} line {r['line_value']:.3f}  P(win) {r['p_win']:.3f}  walk {r['walk_point']:.3f}")
-    print(figure())
+    print(figure(t=t))
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+
+    main(sys.argv[1] if len(sys.argv) > 1 else "smith")
