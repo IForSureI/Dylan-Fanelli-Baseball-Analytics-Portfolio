@@ -4,23 +4,35 @@ Newest first. One entry per working session: what was built, what was decided, w
 
 ## 2026-10-20: The GM tree, built in Neo4j
 **Built**
-- **`baseball/roster/gm_tree.py`** (`bb gm-tree`): who learned under whom in every front office, from the graph tables `bb front-office` exports.
-  - **Outputs:** which bosses and clubs produced future heads of baseball operations, PageRank on the tree, and the path today's heads took to the chair.
-  - **Neo4j:** `gm_tree.cypher` loads 929 `LEARNED_UNDER` relationships and a `first_head` year beside the trade graph. Graph Data Science's PageRank gives the same top-12 order as the Python version.
+- **`baseball/roster/gm_tree.py`** (`bb gm-tree`): who worked under whom in every front office, from the graph tables `bb front-office` exports.
+  - **Outputs:** which bosses had future heads of baseball operations working under them, which clubs future heads came through, PageRank on the tree, and the path today's heads took to the chair.
+  - **Neo4j:** `gm_tree.cypher` loads 927 `LEARNED_UNDER` relationships and a `first_head` year beside the trade graph. Graph Data Science's PageRank gives the same top-12 order as the Python version.
   - **Report:** [the GM tree](reports/2026-gm-tree.md).
-- **Tests:** 8 in `tests/test_gm_tree.py`, on a fictional front office.
+- **Tests:** 13 in `tests/test_gm_tree.py`, on a fictional front office.
 
 **Answered**
-- **Cleveland trained the most future heads.** 16 worked there before their first head job, and 9 run a club today.
-- **John Hart's tree is the largest.** He produced 14 heads directly, 43 across generations, and 21 of today's 38.
+- **More future heads came through Cleveland than any other club.** 15 worked there before their first head job, and 9 hold a top baseball-operations job today.
+- **John Hart's tree is the largest across generations and on PageRank.** It has 40 heads, including 21 of today's 38. Directly, he and Epstein are tied at 10, counting people who shared two or more seasons with them.
 - **The path to the chair, since 2009:**
-  - a median of 14 years from the first recorded front-office job (11-18 for the middle half);
+  - a median of 14 years from the first recorded front-office job (10-17 for the middle half);
   - 75% held an assistant GM title first;
-  - 56% were promoted from inside the club they then ran.
+  - 58% were promoted from inside the club they then ran.
+
+**Changed (same day, after a separate review pass)**
+- **Interim GMs:** Baseball-Reference lists interim GMs as plain "General Manager", so eight interims had counted as heads. They're out, using the decision-maker list's interim flags plus four documented pre-2009 interims.
+- **"Interim, then permanent" tenures:** Rizzo, Terry Ryan and Gillick had been dropped whole, which left Washington and Minnesota without a boss for several seasons. They now count from their start.
+- **GMs before 2009:** they're filled in by person, so a GM working beside a president counts as a co-boss.
+- **Corrected numbers:**
+  - Cleveland 16 to 15; Hart's tree 43 to 40.
+  - Heads who got the job at the only club they'd worked for: 15. The first version said 30, which is the number who had worked for only one club, before the interim fix.
+  - Scouting director split into amateur (12) and pro (9).
+- **Wording:**
+  - "Trained" became "came through" and "worked under", because the data record shared employment.
+  - "Heads" means the 38 people in a club's top baseball-operations job, a GM under a president included.
 
 **Learned**
-- **"Today's heads" needs a departure date.** Counting everyone who ran a club at any point in 2026 included four people who had already left (Forst, Brown, Perry Minasian and Fuld) and two interims. The study counts the 38 people in charge with no departure date.
-- **Title matching needs care.** A first Cypher prototype treated "Vice President of Baseball Operations" as "President of Baseball Operations", which made Ben Cherington's Toronto years count as running the club. The Python version matches general manager titles and the researched decision-maker list instead, with tests.
+- **"Today's heads" needs a departure date.** Counting everyone who ran a club at any point in 2026 included four people who had already left (Forst, Brown, Perry Minasian and Fuld) and two interims.
+- **Title matching needs care, in both directions.** A first Cypher prototype treated "Vice President of Baseball Operations" as running the club. The first Python version then counted Baseball-Reference's interim GMs as heads. Both are now tested.
 
 ## 2026-10-18 (later): Four pieces of everyday department work, a prediction log, and five commands
 **Built**

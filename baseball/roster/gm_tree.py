@@ -1,24 +1,26 @@
-"""The GM tree: who learned under whom, which bosses and clubs produce future heads of baseball operations, and
-what the path to the chair looks like.
+"""The GM tree: whose front offices today's heads of baseball operations came through, which bosses had future heads
+working under them, and what the path to the chair looks like.
 
 Inputs are the front-office graph tables `bb front-office` exports to data/graph/ (and loads into Neo4j):
 - worked_for.csv: every sourced job, one row per person, club, role and span of seasons;
 - ran.csv: who ran each club (the president of baseball operations and the general manager), with dates.
 
 Definitions:
-- A club's **bosses** in a season are its non-interim decision-makers from ran.csv. Seasons before 2009 that
-  ran.csv doesn't cover fall back to the club's general manager title in worked_for.csv.
-- A person **became a head** in the first season he ran a club or held a general manager title (assistant,
-  special-assistant, interim, acting and co-GM titles don't count).
-- **Learned under:** a person worked for a club, below its boss, in a season that boss ran it. The edge keeps the
-  club and the first and last shared seasons.
-- A boss **produced** a head when someone who learned under him later became a head, after their first shared
-  season.
+- **Head seasons** are the seasons a person held a club's top baseball-operations job: a non-interim decision role in
+  ran.csv (a GM under a president counts), plus, before 2009, a general manager title in worked_for.csv.
+  Interim and acting roles don't count. "Interim, then permanent" tenures count from their start. Baseball-Reference
+  lists interim GMs as plain "General Manager", so those GM-title rows are dropped where ran.csv marks the season
+  interim and for four pre-2009 interims it doesn't cover (KNOWN_INTERIM).
+- A club's **bosses** in a season are the people with a head season there. A person **became a head** in his first
+  head season.
+- **Learned under:** a person worked for a club, below its boss, in a season that boss ran it. Co-heads aren't each
+  other's juniors. The edge keeps the club and the first and last shared seasons. It records shared employment only.
+- A boss **had a future head under him** when someone who worked under him later became a head, after their first
+  shared season.
 
 Coverage: ran.csv and the careers file research every decision-maker from 2009 on, and Baseball-Reference's team
-pages add each club's GM, scouting director and farm director from 1998. People who never reached one of those
-jobs are mostly missing, so the tree counts future heads, not everyone a boss trained, and the path statistics use
-heads whose first head job came in 2009 or later.
+pages add each club's GM, scouting director and farm director from 1998. People who never reached one of those jobs
+are mostly missing, so the tree counts future heads only.
 """
 from __future__ import annotations
 
@@ -29,7 +31,14 @@ import numpy as np
 import pandas as pd
 
 GRAPH = Path("data/graph")
-FILL_BEFORE = 2009      # ran.csv is complete for every club from this season on
+FILL_BEFORE = 2009      # ran.csv covers every club from this season on; GM titles fill in before it
+
+# Interim GMs before 2009 that Baseball-Reference lists as plain "General Manager" and ran.csv doesn't cover:
+# Mike Port, Boston 2002 (acting GM, Feb.-Nov. 2002; en.wikipedia.org/wiki/Mike_Port); Tom Lasorda, Los Angeles 1998
+# (interim GM, June-Sept. 1998); Dave Wallace, Los Angeles 2001 (interim GM; en.wikipedia.org/wiki/Dave_Wallace_(baseball));
+# Bob Gebhard, Arizona 2005 (interim GM, Aug. 7-Oct. 28, 2005; en.wikipedia.org/wiki/Bob_Gebhard).
+KNOWN_INTERIM = {("mikeport", "BOS", 2002), ("tomlasorda", "LAD", 1998), ("davewallace", "LAD", 2001),
+                 ("bobgebhard", "ARI", 2005)}
 
 _GM = re.compile(r"general manager", re.I)
 _NOT_GM = re.compile(r"assistant|to the general manager|interim|acting|\bco-|committee", re.I)
@@ -41,8 +50,16 @@ def is_gm_title(role: str) -> bool:
     return bool(_GM.search(role or "")) and not _NOT_GM.search(role or "")
 
 
+_BECAME_PERMANENT = re.compile(r"(interim|acting)[^;]*\bthen\b", re.I)
+_SHARED = re.compile(r"\bco-|co-head|committee", re.I)
+
+
 def is_interim(role: str) -> bool:
-    return bool(_INTERIM.search(role or ""))
+    """An interim, acting or shared caretaker role. "Interim GM, then General Manager" became permanent, so it isn't."""
+    r = role or ""
+    if _SHARED.search(r):
+        return True
+    return bool(_INTERIM.search(r)) and not _BECAME_PERMANENT.search(r)
 
 
 def _years(df: pd.DataFrame) -> pd.DataFrame:
@@ -58,20 +75,25 @@ def load(graph: Path = GRAPH) -> tuple[pd.DataFrame, pd.DataFrame, dict[str, str
     return wf, ran, names
 
 
+def head_seasons(wf: pd.DataFrame, ran: pd.DataFrame, fill_before: int = FILL_BEFORE) -> pd.DataFrame:
+    """key, club, year: every season a person held a club's top baseball-operations job (see the module notes)."""
+    r = _years(ran[~ran["role"].map(is_interim)])[["key", "club", "year"]]
+    interim = {(k, c, y) for k, c, y in _years(ran[ran["role"].map(is_interim)])[["key", "club", "year"]].itertuples(index=False)}
+    g = _years(wf[wf["role"].map(is_gm_title)])[["key", "club", "year"]]
+    keep = [(y < fill_before) and (k, c, y) not in interim and (k, c, y) not in KNOWN_INTERIM
+            for k, c, y in g.itertuples(index=False)]
+    g = g[np.array(keep, dtype=bool)]
+    return pd.concat([r, g]).drop_duplicates().reset_index(drop=True)
+
+
 def boss_years(wf: pd.DataFrame, ran: pd.DataFrame, fill_before: int = FILL_BEFORE) -> pd.DataFrame:
-    """club, year, boss: who ran each club each season."""
-    r = _years(ran[~ran["role"].map(is_interim)])[["club", "year", "key"]]
-    covered = set(zip(r["club"], r["year"]))
-    g = _years(wf[wf["role"].map(is_gm_title)])[["club", "year", "key"]]
-    g = g[(g["year"] < fill_before).to_numpy() & np.array([(c, y) not in covered for c, y in zip(g["club"], g["year"])], dtype=bool)]
-    return pd.concat([r, g]).drop_duplicates().rename(columns={"key": "boss"}).reset_index(drop=True)
+    """club, year, boss: who ran each club each season (a club can have two: a president and his GM)."""
+    return head_seasons(wf, ran, fill_before).rename(columns={"key": "boss"})[["club", "year", "boss"]]
 
 
 def first_head_year(wf: pd.DataFrame, ran: pd.DataFrame) -> pd.Series:
-    """The first season each person ran a club or held a GM title."""
-    a = ran[~ran["role"].map(is_interim)].groupby("key")["start"].min()
-    b = wf[wf["role"].map(is_gm_title)].groupby("key")["start"].min()
-    return pd.concat([a, b]).groupby(level=0).min().astype(int).rename("first_head")
+    """The first head season of each person."""
+    return head_seasons(wf, ran).groupby("key")["year"].min().astype(int).rename("first_head")
 
 
 def learned_under(wf: pd.DataFrame, bosses: pd.DataFrame) -> pd.DataFrame:
@@ -93,8 +115,8 @@ def produced(edges: pd.DataFrame, first_head: pd.Series) -> pd.DataFrame:
 
 def pagerank(edges: pd.DataFrame, src: str = "junior", dst: str = "boss", damping: float = 0.85, iters: int = 200,
              tol: float = 1e-12) -> pd.Series:
-    """PageRank with junior -> boss links: a boss scores high when the people who learned under him went on to train
-    heads of their own. Dangling nodes spread their rank evenly, so scores sum to 1. Neo4j GDS's pageRank on the
+    """PageRank with junior -> boss links: a boss scores high when the people who worked under him went on to have
+    future heads under them too. Dangling nodes spread their rank evenly, so scores sum to 1. Neo4j GDS's pageRank on the
     same graph leaves scores unnormalized and keeps dangling rank, but on this tree it gives the same top-12 order."""
     pairs = edges[[src, dst]].drop_duplicates()
     nodes = sorted(set(pairs[src]) | set(pairs[dst]))
@@ -139,11 +161,15 @@ def descendants(prod: pd.DataFrame) -> dict[str, set[str]]:
 
 
 def boss_table(prod: pd.DataFrame, names: dict[str, str]) -> pd.DataFrame:
-    """Per boss: heads produced directly, heads in the whole tree, PageRank, and the names."""
+    """Per boss: future heads who worked under him (all, and those who shared two or more seasons with him), heads in
+    the whole tree, PageRank, and the names."""
     direct = prod.groupby("boss")["junior"].apply(lambda s: sorted(set(s)))
+    seasons = prod.groupby(["boss", "junior"])["seasons"].sum()
+    two_plus = seasons[seasons >= 2].reset_index().groupby("boss")["junior"].nunique()
     desc = descendants(prod)
     pr = pagerank(prod)
     t = pd.DataFrame({"boss": direct.index, "direct": direct.map(len).values,
+                      "direct_2plus": [int(two_plus.get(b, 0)) for b in direct.index],
                       "tree": [len(desc.get(b, ())) for b in direct.index],
                       "pagerank": [pr.get(b, 0.0) for b in direct.index],
                       "heads": [", ".join(names.get(j, j) for j in v) for v in direct.values]})
@@ -161,8 +187,7 @@ def current_heads(ran: pd.DataFrame, current_year: int = 2026) -> set[str]:
 
 
 def club_table(wf: pd.DataFrame, first_head: pd.Series, current: set[str], names: dict[str, str]) -> pd.DataFrame:
-    """Per club: future heads who worked there before their first head job (below the boss), and how many of
-    today's heads passed through."""
+    """Per club: future heads who worked there before their first head job, and how many of today's heads did."""
     w = _years(wf)[["key", "club", "year"]].drop_duplicates()
     w = w.assign(first_head=w["key"].map(first_head)).dropna(subset=["first_head"])
     w = w[w["year"] < w["first_head"]]
@@ -173,50 +198,62 @@ def club_table(wf: pd.DataFrame, first_head: pd.Series, current: set[str], names
     return t.sort_values(["future_heads", "current_heads"], ascending=False).reset_index(drop=True)
 
 
-_AGM = re.compile(r"assistant general manager|\bagm\b", re.I)
-_SCOUT_DIR = re.compile(r"scouting director|director of (amateur |professional )?scouting|director, (amateur|pro)", re.I)
+_AGM = re.compile(r"assistant (general manager|gm)\b|\bagm\b", re.I)
+_SCOUT_DIR = re.compile(r"scouting director|director of (amateur |professional |pro )?scouting|director, (amateur|pro)", re.I)
+_PRO = re.compile(r"\bpro(fessional)?\b", re.I)
 _PD_DIR = re.compile(r"farm director|player development|minor league", re.I)
-_ENTRY = re.compile(r"intern|assistant, baseball operations|baseball operations assistant|entry-level|video", re.I)
+_ENTRY = re.compile(r"\bintern(ship)?s?\b|assistant, baseball operations|baseball operations assistant|entry-level|video",
+                    re.I)
 _SCOUT = re.compile(r"scout", re.I)
+
+
+def _amateur_director(role: str) -> bool:
+    return bool(_SCOUT_DIR.search(role)) and not re.search(r"assistant", role, re.I) and not _PRO.search(role)
+
+
+def _pro_director(role: str) -> bool:
+    return bool(_SCOUT_DIR.search(role)) and not re.search(r"assistant", role, re.I) and bool(_PRO.search(role))
 
 
 def paths(wf: pd.DataFrame, ran: pd.DataFrame, first_head: pd.Series, since: int = FILL_BEFORE) -> pd.DataFrame:
     """One row per head whose first head job came in `since` or later: what came before it."""
+    hs = head_seasons(wf, ran)
     rows = []
     for k, fh in first_head.items():
         if fh < since:
             continue
+        head_club = sorted(hs.loc[(hs["key"] == k) & (hs["year"] == fh), "club"])[0]
         before = wf[(wf["key"] == k) & (wf["start"] < fh)]
         if before.empty:
-            rows.append({"key": k, "first_head": fh, "first_job": np.nan, "years_to_head": np.nan, "clubs_before": 0,
-                         "agm": False, "scouting_director": False, "pd_role": False, "entry_level": False,
-                         "scout": False, "internal": False, "head_club": None, "prior_roles": ""})
+            rows.append({"key": k, "first_head": fh, "head_club": head_club, "first_job": np.nan,
+                         "years_to_head": np.nan, "clubs_before": 0, "only_club_hired_there": False})
             continue
-        r_head = ran[(ran["key"] == k) & ~ran["role"].map(is_interim)]
-        g_head = wf[(wf["key"] == k) & wf["role"].map(is_gm_title)]
-        firsts = pd.concat([r_head[["club", "start"]], g_head[["club", "start"]]])
-        head_club = firsts.sort_values("start").iloc[0]["club"]
-        roles = " | ".join(before["role"].astype(str))
-        rows.append({"key": k, "first_head": fh, "first_job": int(before["start"].min()),
-                     "years_to_head": fh - int(before["start"].min()), "clubs_before": before["club"].nunique(),
-                     "agm": bool(_AGM.search(roles)), "scouting_director": bool(_SCOUT_DIR.search(roles)),
-                     "pd_role": bool(_PD_DIR.search(roles)), "entry_level": bool(_ENTRY.search(roles)),
-                     "scout": bool(_SCOUT.search(roles)),
+        roles = list(before["role"].astype(str))
+        clubs = set(before["club"])
+        rows.append({"key": k, "first_head": fh, "head_club": head_club, "first_job": int(before["start"].min()),
+                     "years_to_head": fh - int(before["start"].min()), "clubs_before": len(clubs),
+                     "only_club_hired_there": clubs == {head_club},
+                     "agm": any(_AGM.search(r) for r in roles),
+                     "amateur_scouting_director": any(_amateur_director(r) for r in roles),
+                     "pro_scouting_director": any(_pro_director(r) for r in roles),
+                     "pd_role": any(_PD_DIR.search(r) for r in roles),
+                     "entry_level": any(_ENTRY.search(r) for r in roles),
+                     "scout": any(_SCOUT.search(r) for r in roles),
                      "internal": bool(((before["club"] == head_club) & (before["end"].fillna(before["start"]) >= fh - 1)).any()),
-                     "head_club": head_club, "prior_roles": roles})
+                     "prior_roles": " | ".join(roles)})
     return pd.DataFrame(rows)
 
 
 def path_summary(p: pd.DataFrame) -> dict:
     """The path to the chair in numbers (heads with a recorded job before their first head job)."""
     q = p.dropna(subset=["years_to_head"])
-    return {"heads": len(p), "with_prior_jobs": len(q),
-            "years_median": float(q["years_to_head"].median()), "years_p25": float(q["years_to_head"].quantile(0.25)),
-            "years_p75": float(q["years_to_head"].quantile(0.75)),
-            "clubs_median": float(q["clubs_before"].median()),
-            "share_agm": float(q["agm"].mean()), "share_scouting_director": float(q["scouting_director"].mean()),
-            "share_pd": float(q["pd_role"].mean()), "share_entry_level": float(q["entry_level"].mean()),
-            "share_scout": float(q["scout"].mean()), "share_internal": float(q["internal"].mean())}
+    out = {"heads": len(p), "with_prior_jobs": len(q),
+           "years_median": float(q["years_to_head"].median()), "years_p25": float(q["years_to_head"].quantile(0.25)),
+           "years_p75": float(q["years_to_head"].quantile(0.75)), "clubs_median": float(q["clubs_before"].median()),
+           "one_club": int((q["clubs_before"] == 1).sum()), "one_club_hired_there": int(q["only_club_hired_there"].sum())}
+    for c in ("agm", "amateur_scouting_director", "pro_scouting_director", "pd_role", "entry_level", "scout", "internal"):
+        out[c] = int(q[c].astype(bool).sum())
+    return out
 
 
 def neo4j_rows(edges: pd.DataFrame, first_head: pd.Series) -> list[dict]:
@@ -307,14 +344,16 @@ def figure(o: dict, out: Path = Path("reports/figures/2026-gm-tree.png"), root: 
     ct = o["club_table"].head(12).iloc[::-1]
     _style(a)
     y = np.arange(len(ct))
-    a.barh(y, ct["future_heads"], color=OTHER, height=0.62, label="Worked there before a first head job")
-    a.barh(y, ct["current_heads"], color=accent, height=0.62, label="...and runs a club today")
+    a.barh(y, ct["future_heads"], color=OTHER, height=0.62)
+    a.barh(y, ct["current_heads"], color=accent, height=0.62)
     for yi, (f, c) in enumerate(zip(ct["future_heads"], ct["current_heads"])):
         a.text(f + 0.25, yi, f"{f}  ({c} today)", va="center", fontsize=8.5, color=INK)
     a.set_yticks(y, ct["club"], fontsize=9, color=INK)
-    a.set_xlim(0, ct["future_heads"].max() + 5)
+    a.set_xlim(0, ct["future_heads"].max() + 3.5)
+    from matplotlib.ticker import MaxNLocator
+    a.xaxis.set_major_locator(MaxNLocator(integer=True))
     a.grid(axis="y", visible=False)
-    a.set_xlabel("Future heads who worked there first (blue: running a club today)", color=MUTED, fontsize=9)
+    a.set_xlabel("Future heads who worked there first (blue: in a top job today)", color=MUTED, fontsize=9)
     a.set_title("Where future heads worked first", loc="left", color=INK, fontsize=11.5, fontweight="bold")
 
     layers, parent = tree_layers(o["produced"], root, keep=cur)
@@ -323,7 +362,7 @@ def figure(o: dict, out: Path = Path("reports/figures/2026-gm-tree.png"), root: 
     pos: dict[str, tuple[float, float]] = {}
     tallest = max(len(v) for v in layers.values())
     for g, people in layers.items():
-        if g:   # children sit in their parents' order, so lines don't cross labels
+        if g:   # children sit in their parents' order, which keeps most lines apart
             people = sorted(people, key=lambda k: (-pos[parent[k]][1], names.get(k, k)))
         n = len(people)
         for i, k in enumerate(people):
@@ -331,27 +370,29 @@ def figure(o: dict, out: Path = Path("reports/figures/2026-gm-tree.png"), root: 
     for k, (x, yy) in pos.items():
         if k in parent and parent[k] in pos:
             px, py = pos[parent[k]]
-            b.plot([px + 0.55, x - 0.04], [py, yy], color=GRID, lw=1.1, zorder=1)
+            b.plot([px + (0.72 if parent[k] == root else 0.55), x - 0.04], [py, yy], color=GRID, lw=1.1, zorder=1)
     for k, (x, yy) in pos.items():
         is_cur = k in cur
         b.scatter([x], [yy], s=34, color=accent if is_cur else OTHER, zorder=3, edgecolors="#fcfcfb", linewidths=1.2)
         b.text(x + 0.05, yy, names.get(k, k), va="center", fontsize=7.8, color=INK if is_cur else MUTED,
                fontweight="bold" if k == root else "normal")
+    rx, ry = pos[root]
+    b.text(rx + 0.05, ry - 0.45, "GM: Cleveland 1991-2001,\nTexas 2002-05", va="top", fontsize=7.2, color=MUTED)
     gens = max(layers)
-    heads = ["GM: Cleveland 1991-2001, Texas 2002-05", "learned under Hart", "learned under them", "the next generation"]
+    heads = ["", "worked under Hart", "worked under them", "the next generation"]
     for g in range(gens + 1):
         b.text(g, tallest / 2 + 0.2, heads[min(g, 3)], fontsize=8.5, color=MUTED, ha="left")
     b.set_xlim(-0.1, gens + 0.75)
     b.set_ylim(-tallest / 2 - 0.3, tallest / 2 + 0.7)
-    b.set_title(f"From John Hart to {len(set().union(*layers.values()) & cur)} of today's "
-                f"{len(cur)} heads (blue; gray = no longer running a club)", loc="left", color=INK, fontsize=11.5,
-                fontweight="bold")
-    fig.suptitle("The GM tree: Cleveland trained more future heads of baseball operations than any other club",
+    b.set_title(f"From John Hart to {len(set().union(*layers.values()) & cur)} of the {len(cur)} people in a club's "
+                f"top baseball-operations job today (blue)", loc="left", color=INK, fontsize=11.5, fontweight="bold")
+    fig.suptitle("The GM tree: more future heads of baseball operations came through Cleveland than any other club",
                  x=0.01, ha="left", color=INK, fontsize=13, fontweight="bold")
-    fig.text(0.01, 0.008, "A head ran a club or held a GM title. Learned under = worked for the club below its boss in the "
-             "same season. Lines show each person's shortest route to Hart; trees overlap.\nToday = in charge as of "
-             "Oct. 2026 (interim heads and departures excluded). Sources: sourced career histories of every "
-             "decision-maker since 2009; Baseball-Reference team pages, 1998-2026.", color=MUTED, fontsize=7.5)
+    fig.text(0.01, 0.008, "A head held a club's top baseball-operations job: president of baseball operations or GM, "
+             "interims excluded. Worked under = worked for the club below its boss in the same season (shared employment; the "
+             "data hold no record of mentoring).\nLines show each person's shortest route to Hart; where two are equally short, "
+             "one is drawn. Gray = no longer in a top job. Today = Oct. 2026. Sources: sourced career histories of every "
+             "decision-maker since 2009; Baseball-Reference team pages, 1998-2026.", color=MUTED, fontsize=7.3)
     fig.tight_layout(rect=(0, 0.05, 1, 0.95))
     out.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out)

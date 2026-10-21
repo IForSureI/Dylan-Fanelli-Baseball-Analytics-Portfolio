@@ -86,8 +86,10 @@ def test_paths_internal_and_roles():
     # Kid: first job 2003, head 2011 -> 8 years, one club, intern and AGM, promoted from inside
     assert p.loc["kid", ["years_to_head", "clubs_before"]].tolist() == [8, 1]
     assert bool(p.loc["kid", "agm"]) and bool(p.loc["kid", "entry_level"]) and bool(p.loc["kid", "internal"])
+    assert bool(p.loc["kid", "only_club_hired_there"])
     # Grand: PD director at AAA, then GM of BBB: hired from outside, a player-development role, no AGM title
     assert bool(p.loc["grand", "pd_role"]) and not bool(p.loc["grand", "internal"]) and not bool(p.loc["grand", "agm"])
+    assert not bool(p.loc["grand", "only_club_hired_there"])     # worked only at AAA, hired by BBB
     assert "boss" not in p.index      # first head job before 2009
 
 
@@ -107,3 +109,51 @@ def test_current_heads_drop_departures():
                         ("d", "AAA", "Interim General Manager", 2026, 2026, None)],
                        columns=["key", "club", "role", "start", "end", "left"])
     assert G.current_heads(ran) == {"a", "c"}
+
+
+def test_interim_rules():
+    # "Interim GM, then General Manager" became permanent; a co-GM committee and a plain interim did not.
+    assert not G.is_interim("Interim GM, then Senior VP and General Manager")
+    assert not G.is_interim("General Manager (interim, then permanent)")
+    assert G.is_interim("Interim General Manager") and G.is_interim("Interim co-GM (Office of the General Manager)")
+
+
+def test_baseball_reference_interims_are_not_heads():
+    # Baseball-Reference lists every GM as plain "General Manager". Two cases must not become heads:
+    # Lou ran BBB as interim in 2015 (ran.csv says so) and has a plain GM row for that season;
+    # Mike Port's 2002 Boston season is a known interim with no ran.csv row.
+    # Ron's 2005 GM row is before 2009 and not interim, so it counts; his 2012 plain row doesn't (ran.csv rules after 2009).
+    wf = pd.DataFrame([("lou", "BBB", "General Manager", 2015, 2015), ("mikeport", "BOS", "General Manager", 2002, 2002),
+                       ("ron", "CCC", "General Manager", 2005, 2005), ("ron", "DDD", "General Manager", 2012, 2012)],
+                      columns=["key", "club", "role", "start", "end"])
+    ran = pd.DataFrame([("lou", "BBB", "Interim General Manager", 2015, 2015)], columns=["key", "club", "role", "start", "end"])
+    fh = G.first_head_year(wf, ran)
+    assert list(fh.index) == ["ron"] and fh["ron"] == 2005
+    assert set(G.boss_years(wf, ran)["year"]) == {2005}
+
+
+def test_pre_2009_gm_counts_beside_a_president():
+    # A president (ran.csv) and a GM (title only) ran EEE in 2000: both are bosses, so the GM isn't the president's junior.
+    wf = pd.DataFrame([("gm", "EEE", "General Manager", 2000, 2000), ("kid", "EEE", "Scout", 2000, 2000)],
+                      columns=["key", "club", "role", "start", "end"])
+    ran = pd.DataFrame([("pres", "EEE", "President", 2000, 2000)], columns=["key", "club", "role", "start", "end"])
+    b = G.boss_years(wf, ran)
+    assert set(b["boss"]) == {"gm", "pres"}
+    e = G.learned_under(wf, b)
+    assert set(zip(e["junior"], e["boss"])) == {("kid", "gm"), ("kid", "pres")}
+
+
+def test_role_patterns():
+    assert G._AGM.search("Vice President of Baseball Operations / Assistant GM")
+    assert not G._ENTRY.search("Director of international operations") and G._ENTRY.search("Baseball operations intern")
+    assert G._amateur_director("Scouting Director") and G._amateur_director("Director of Amateur Scouting")
+    assert not G._amateur_director("Assistant Scouting Director") and not G._amateur_director("Director of Professional Scouting")
+    assert G._pro_director("Director of Professional Scouting")
+
+
+def test_boss_table_two_plus_seasons():
+    # Kid shared 6 seasons with Boss; Grand shared 3 with Kid; One shared a single season with Boss.
+    prod = pd.DataFrame({"junior": ["kid", "grand", "one"], "boss": ["boss", "kid", "boss"], "club": "AAA",
+                         "seasons": [6, 3, 1]})
+    t = G.boss_table(prod, {}).set_index("boss")
+    assert t.loc["boss", ["direct", "direct_2plus", "tree"]].tolist() == [2, 1, 3]

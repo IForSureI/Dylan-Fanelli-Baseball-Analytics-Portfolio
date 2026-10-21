@@ -2,9 +2,9 @@
 // Needs the front-office graph (Executive, Team, WORKED_FOR, RAN) already loaded. Rerunnable.
 //
 // (:Executive)-[:LEARNED_UNDER {club, first, last, seasons, produced_head}]->(:Executive)
-//     the junior worked for the club, below its boss, in the seasons first..last; produced_head = the junior
-//     ran a club or held a GM title later
-// (:Executive {first_head})   the first season the person ran a club or held a GM title
+//     the junior worked for the club, below its boss, in the seasons first..last (shared employment);
+//     produced_head = the junior later held a club's top baseball-operations job
+// (:Executive {first_head})   the first season the person held a club's top baseball-operations job
 
 MATCH ()-[e:LEARNED_UNDER]->() DELETE e;
 MATCH (x:Executive) REMOVE x.first_head;
@@ -22,12 +22,12 @@ SET x.first_head = toInteger(r.first_head);
 // Examples
 // Cleveland's tree, three generations down from John Hart:
 //   MATCH p = (j:Executive)-[:LEARNED_UNDER*1..3 {produced_head: true}]->(:Executive {name: 'John Hart'}) RETURN p
-// Who taught today's heads:
-//   MATCH (j:Executive)-[e:LEARNED_UNDER {produced_head: true}]->(b) WHERE j.first_head IS NOT NULL
+// Bosses with the most future heads working under them:
+//   MATCH (j:Executive)-[e:LEARNED_UNDER {produced_head: true}]->(b)
 //   RETURN b.name, count(DISTINCT j) AS heads ORDER BY heads DESC
 // Influence (Graph Data Science):
 //   MATCH (j:Executive)-[e:LEARNED_UNDER {produced_head: true}]->(b:Executive)
-//   WITH gds.graph.project('gmTree', j, b) AS g RETURN g.graphName;
+//   WITH DISTINCT j, b WITH gds.graph.project('gmTree', j, b) AS g RETURN g.graphName;
 //   CALL gds.pageRank.stream('gmTree') YIELD nodeId, score
 //   RETURN gds.util.asNode(nodeId).name AS name, score ORDER BY score DESC LIMIT 15;
 //   CALL gds.graph.drop('gmTree');
