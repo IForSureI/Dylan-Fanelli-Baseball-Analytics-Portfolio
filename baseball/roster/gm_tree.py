@@ -266,6 +266,99 @@ def run(graph: Path = GRAPH) -> dict:
             "paths": p, "path_summary": path_summary(p), "names": names}
 
 
+def tree_layers(prod: pd.DataFrame, root: str, keep: set[str] | None = None) -> tuple[dict[int, list[str]], dict[str, str]]:
+    """Generations below `root` (breadth-first, each person at his shortest distance). With `keep`, only people in
+    `keep` and the people on a shortest line from the root down to them."""
+    kids: dict[str, set[str]] = {}
+    for b, j in zip(prod["boss"], prod["junior"]):
+        kids.setdefault(b, set()).add(j)
+    gen, parent, frontier = {root: 0}, {}, [root]
+    while frontier:
+        nxt = []
+        for x in sorted(frontier):
+            for k in sorted(kids.get(x, ())):
+                if k not in gen:
+                    gen[k], parent[k] = gen[x] + 1, x
+                    nxt.append(k)
+        frontier = nxt
+    if keep is not None:
+        on = {root}
+        for k in set(gen) & keep:
+            while k != root:
+                on.add(k)
+                k = parent[k]
+        gen = {k: g for k, g in gen.items() if k in on}
+    layers: dict[int, list[str]] = {}
+    for k, g in gen.items():
+        layers.setdefault(g, []).append(k)
+    return {g: sorted(v) for g, v in sorted(layers.items())}, parent
+
+
+def figure(o: dict, out: Path = Path("reports/figures/2026-gm-tree.png"), root: str = "johnhart") -> Path:
+    """Left: clubs ranked by future heads who worked there first. Right: the lines from John Hart's Cleveland to
+    today's heads."""
+    import matplotlib.pyplot as plt
+
+    from baseball.viz import GRID, INK, MUTED, OTHER, _style
+
+    accent = "#2a78d6"
+    names, cur = o["names"], o["current"]
+    fig, (a, b) = plt.subplots(1, 2, figsize=(14, 7.6), dpi=160, gridspec_kw={"width_ratios": [1, 2.1]})
+    ct = o["club_table"].head(12).iloc[::-1]
+    _style(a)
+    y = np.arange(len(ct))
+    a.barh(y, ct["future_heads"], color=OTHER, height=0.62, label="Worked there before a first head job")
+    a.barh(y, ct["current_heads"], color=accent, height=0.62, label="...and runs a club today")
+    for yi, (f, c) in enumerate(zip(ct["future_heads"], ct["current_heads"])):
+        a.text(f + 0.25, yi, f"{f}  ({c} today)", va="center", fontsize=8.5, color=INK)
+    a.set_yticks(y, ct["club"], fontsize=9, color=INK)
+    a.set_xlim(0, ct["future_heads"].max() + 5)
+    a.grid(axis="y", visible=False)
+    a.set_xlabel("Future heads who worked there first (blue: running a club today)", color=MUTED, fontsize=9)
+    a.set_title("Where future heads worked first", loc="left", color=INK, fontsize=11.5, fontweight="bold")
+
+    layers, parent = tree_layers(o["produced"], root, keep=cur)
+    b.set_facecolor("#fcfcfb")
+    b.axis("off")
+    pos: dict[str, tuple[float, float]] = {}
+    tallest = max(len(v) for v in layers.values())
+    for g, people in layers.items():
+        if g:   # children sit in their parents' order, so lines don't cross labels
+            people = sorted(people, key=lambda k: (-pos[parent[k]][1], names.get(k, k)))
+        n = len(people)
+        for i, k in enumerate(people):
+            pos[k] = (g, (n - 1) / 2 - i)
+    for k, (x, yy) in pos.items():
+        if k in parent and parent[k] in pos:
+            px, py = pos[parent[k]]
+            b.plot([px + 0.55, x - 0.04], [py, yy], color=GRID, lw=1.1, zorder=1)
+    for k, (x, yy) in pos.items():
+        is_cur = k in cur
+        b.scatter([x], [yy], s=34, color=accent if is_cur else OTHER, zorder=3, edgecolors="#fcfcfb", linewidths=1.2)
+        b.text(x + 0.05, yy, names.get(k, k), va="center", fontsize=7.8, color=INK if is_cur else MUTED,
+               fontweight="bold" if k == root else "normal")
+    gens = max(layers)
+    heads = ["Cleveland GM 1991-2001", "learned under Hart", "learned under them", "the next generation"]
+    for g in range(gens + 1):
+        b.text(g, tallest / 2 + 0.2, heads[min(g, 3)], fontsize=8.5, color=MUTED, ha="left")
+    b.set_xlim(-0.1, gens + 0.75)
+    b.set_ylim(-tallest / 2 - 0.3, tallest / 2 + 0.7)
+    b.set_title(f"From John Hart's Cleveland to {len(set().union(*layers.values()) & cur)} of today's "
+                f"{len(cur)} heads (blue; gray = no longer running a club)", loc="left", color=INK, fontsize=11.5,
+                fontweight="bold")
+    fig.suptitle("The GM tree: Cleveland trained more future heads of baseball operations than any other club",
+                 x=0.01, ha="left", color=INK, fontsize=13, fontweight="bold")
+    fig.text(0.01, 0.008, "A head ran a club or held a GM title. Learned under = worked for the club below its boss in the "
+             "same season. Lines show each person's shortest route to Hart; trees overlap.\nToday = in charge as of "
+             "Oct. 2026 (interim heads and departures excluded). Sources: sourced career histories of every "
+             "decision-maker since 2009; Baseball-Reference team pages, 1998-2026.", color=MUTED, fontsize=7.5)
+    fig.tight_layout(rect=(0, 0.05, 1, 0.95))
+    out.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out)
+    plt.close(fig)
+    return out
+
+
 if __name__ == "__main__":
     out = run()
     with pd.option_context("display.width", 220, "display.max_colwidth", 120):
