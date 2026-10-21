@@ -157,3 +157,29 @@ def test_boss_table_two_plus_seasons():
                          "seasons": [6, 3, 1]})
     t = G.boss_table(prod, {}).set_index("boss")
     assert t.loc["boss", ["direct", "direct_2plus", "tree"]].tolist() == [2, 1, 3]
+
+
+def test_head_table_and_obsidian_export(tmp_path, monkeypatch):
+    # The fictional front office from _tables(), written as graph tables, then exported as notes.
+    wf, ran = _tables()
+    wf = wf.assign(uncertain=False, source="https://example.com/source")
+    ran = ran.assign(hired="", left=None)
+    g = tmp_path / "graph"
+    g.mkdir()
+    wf.to_csv(g / "worked_for.csv", index=False)
+    ran.to_csv(g / "ran.csv", index=False)
+    pd.DataFrame({"key": ["boss", "kid", "pal", "grand", "temp", "johnhart"],
+                  "name": ["Boss Man", "Kid Smith", "Pal", "Grand Kid", "Temp", "John Hart"]}).to_csv(g / "executives.csv", index=False)
+    monkeypatch.setattr(G, "CLUBS", {"AAA": "Alpha Club", "BBB": "Beta Club", "CLE": "Cleveland"})
+    ht = G.head_table(pd.read_csv(g / "worked_for.csv"), pd.read_csv(g / "ran.csv")).set_index("key")
+    assert ht.loc["kid", ["first_head", "head_club", "current", "current_job"]].tolist() == [2011, "AAA", True, "General Manager, AAA"]
+    assert not ht.loc["grand", "current"] and ht.loc["boss", "head_club"] == "AAA"
+    out = tmp_path / "vault"
+    n = G.export_obsidian(out, graph=g)
+    assert n == {"executives": 3, "clubs": 3}
+    kid = (out / "Executives" / "Kid Smith.md").read_text()
+    assert "current_head: true" in kid and "- [[Boss Man]] at [[Alpha Club (AAA)]], 2003-2008 (6 seasons)" in kid
+    assert "- [[Grand Kid]] at [[Alpha Club (AAA)]], 2012-2014 (first head job 2016)" in kid
+    club = (out / "Clubs" / "Alpha Club (AAA).md").read_text()
+    assert "future_heads: 2" in club and "[[Kid Smith]] (first head job 2011; in a top job today)" in club
+    assert (out / "GM Tree.md").exists()

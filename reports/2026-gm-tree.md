@@ -141,7 +141,8 @@ Five of the 15 without an assistant GM title came up through Tampa Bay: Bloom, N
 ## Neo4j
 The study runs from the CSV tables in Python. The same graph loads into Neo4j next to the trade graph:
 - **Load:** `bb gm-tree` writes `data/graph/learned_under.csv` and `heads.csv`. Then run `baseball/roster/gm_tree.cypher` with the import folder pointed at `data/graph`.
-- **What it adds:** 927 `LEARNED_UNDER` relationships, 246 of them `produced_head: true`, plus a `first_head` year on 128 executives.
+- **What it adds:** 927 `LEARNED_UNDER` relationships, 246 of them `produced_head: true`; a `Head` label, first head year and first head club on 128 executives; and a `CurrentHead` label with the current job on the 38 in a top job today.
+- **Obsidian:** `gm_tree.export_obsidian(folder)` writes the same tree as linked notes, one per head and one per club, with an index, for browsing in a notes app's graph view.
 
 Example queries (also in the `.cypher` file):
 

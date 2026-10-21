@@ -4,10 +4,11 @@
 // (:Executive)-[:LEARNED_UNDER {club, first, last, seasons, produced_head}]->(:Executive)
 //     the junior worked for the club, below its boss, in the seasons first..last (shared employment);
 //     produced_head = the junior later held a club's top baseball-operations job
-// (:Executive {first_head})   the first season the person held a club's top baseball-operations job
+// (:Executive:Head {first_head, first_head_club, current_job})   a person who has held a club's top
+//     baseball-operations job; :CurrentHead = holds one today (no departure date, not interim)
 
 MATCH ()-[e:LEARNED_UNDER]->() DELETE e;
-MATCH (x:Executive) REMOVE x.first_head;
+MATCH (x:Executive) REMOVE x.first_head, x.first_head_club, x.current_job, x:Head, x:CurrentHead;
 
 LOAD CSV WITH HEADERS FROM 'file:///learned_under.csv' AS r
 MATCH (j:Executive {key: r.junior}), (b:Executive {key: r.boss})
@@ -17,9 +18,12 @@ SET e.first = toInteger(r.first), e.last = toInteger(r.last), e.seasons = toInte
 
 LOAD CSV WITH HEADERS FROM 'file:///heads.csv' AS r
 MATCH (x:Executive {key: r.key})
-SET x.first_head = toInteger(r.first_head);
+SET x.first_head = toInteger(r.first_head), x.first_head_club = r.head_club, x.current_job = r.current_job, x:Head
+FOREACH (_ IN CASE WHEN r.current = 'True' THEN [1] ELSE [] END | SET x:CurrentHead);
 
-// Examples
+// Examples (more, worked through with their results, in the Neo4j guide note of the Obsidian export)
+// Today's heads and their jobs:
+//   MATCH (x:CurrentHead) RETURN x.name, x.current_job ORDER BY x.name
 // Cleveland's tree, three generations down from John Hart:
 //   MATCH p = (j:Executive)-[:LEARNED_UNDER*1..3 {produced_head: true}]->(:Executive {name: 'John Hart'}) RETURN p
 // Bosses with the most future heads working under them:

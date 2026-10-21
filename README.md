@@ -54,7 +54,7 @@ The **Edge Board** is a monthly league scan, refreshed by `bb edge` and `bb boar
   - the dating of front-office ties, and which tie results count as confirmed
   - a reliever's changeup history and the cause of his slider's decline
   - [LOG.md](LOG.md) records each one.
-- **Hand-checked tests.** 394 of them, with the arithmetic in comments.
+- **Hand-checked tests.** 395 of them, with the arithmetic in comments.
 - **Pooling and regression rules.** Seasons are pooled only with standard errors clustered by pitcher. Small samples are regressed before they're compared.
 - **Public data only.** Statcast via Baseball Savant, the Chadwick register for names, MLB Stats API transactions, Baseball-Reference (WAR and front-office listings), Retrosheet, and cited, dated public reporting for contracts, transactions and executive careers. No club's data is in this repository.
 
@@ -79,7 +79,7 @@ Requires [uv](https://docs.astral.sh/uv/).
 git clone https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio.git ~/Baseball
 cd ~/Baseball
 uv sync
-uv run pytest                                # 394 tests
+uv run pytest                                # 395 tests
 uv run bb people                             # player names
 uv run bb pull-league 2026 && uv run bb seq 2026   # every pitch of a season (pulls from Baseball Savant)
 uv run bb regress hitter/whiff 0.40 50 --horizon next_season

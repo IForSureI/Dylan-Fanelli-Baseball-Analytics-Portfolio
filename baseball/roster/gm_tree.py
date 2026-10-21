@@ -264,14 +264,151 @@ def neo4j_rows(edges: pd.DataFrame, first_head: pd.Series) -> list[dict]:
             for r in e[["junior", "boss", "club", "first", "last", "seasons", "produced_head"]].to_dict("records")]
 
 
+CLUBS = {"ARI": "Arizona Diamondbacks", "ATH": "Athletics", "ATL": "Atlanta Braves", "BAL": "Baltimore Orioles",
+         "BOS": "Boston Red Sox", "CHC": "Chicago Cubs", "CHW": "Chicago White Sox", "CIN": "Cincinnati Reds",
+         "CLE": "Cleveland Guardians", "COL": "Colorado Rockies", "DET": "Detroit Tigers", "HOU": "Houston Astros",
+         "KCR": "Kansas City Royals", "LAA": "Los Angeles Angels", "LAD": "Los Angeles Dodgers", "MIA": "Miami Marlins",
+         "MIL": "Milwaukee Brewers", "MIN": "Minnesota Twins", "NYM": "New York Mets", "NYY": "New York Yankees",
+         "PHI": "Philadelphia Phillies", "PIT": "Pittsburgh Pirates", "SDP": "San Diego Padres", "SEA": "Seattle Mariners",
+         "SFG": "San Francisco Giants", "STL": "St. Louis Cardinals", "TBR": "Tampa Bay Rays", "TEX": "Texas Rangers",
+         "TOR": "Toronto Blue Jays", "WSN": "Washington Nationals"}
+
+
+def head_table(wf: pd.DataFrame, ran: pd.DataFrame, current_year: int = 2026) -> pd.DataFrame:
+    """key, first_head, head_club (club of the first head season), current (in a top job now), current_job."""
+    hs = head_seasons(wf, ran)
+    first = hs.sort_values(["key", "year", "club"]).groupby("key").first().reset_index()
+    cur = current_heads(ran, current_year)
+    r = ran[(ran["end"] == current_year) & ran["key"].isin(cur) & ~ran["role"].map(is_interim)]
+    job = (r.sort_values("start").groupby("key").last().apply(lambda x: f"{x['role']}, {x['club']}", axis=1)
+           if len(r) else pd.Series(dtype=str))
+    return pd.DataFrame({"key": first["key"], "first_head": first["year"].astype(int), "head_club": first["club"],
+                         "current": first["key"].isin(cur), "current_job": first["key"].map(job).fillna("")})
+
+
 def export_tables(out: Path = GRAPH, graph: Path = GRAPH) -> dict[str, int]:
     """learned_under.csv and heads.csv for Neo4j (load with gm_tree.cypher)."""
     o = run(graph)
+    wf, ran, _ = load(graph)
     rows = pd.DataFrame(neo4j_rows(o["edges"], o["first_head"]))
     rows.to_csv(out / "learned_under.csv", index=False)
-    heads = o["first_head"].rename_axis("key").reset_index()
+    heads = head_table(wf, ran)
     heads.to_csv(out / "heads.csv", index=False)
-    return {"learned_under": len(rows), "heads": len(heads)}
+    return {"learned_under": len(rows), "heads": len(heads), "current": int(heads["current"].sum())}
+
+
+def _safe(name: str) -> str:
+    """A note name Obsidian accepts as a file and a link: no / \\ : # ^ [ ] |."""
+    return re.sub(r"[\\/:#^\[\]|]", "-", name).strip()
+
+
+def export_obsidian(out: Path, graph: Path = GRAPH, current_year: int = 2026) -> dict[str, int]:
+    """The GM tree as linked Markdown notes for an Obsidian vault: one note per head of baseball operations, one per
+    club, and an index. Executives link to the bosses they worked under and to their clubs, so Obsidian's graph view
+    shows the tree with the clubs as hubs. Rewrites the folder's notes each run (files it didn't write are left)."""
+    o = run(graph)
+    wf, ran, names = load(graph)
+    ht = head_table(wf, ran, current_year).set_index("key")
+    prod, edges, bt = o["produced"], o["edges"], o["boss_table"].set_index("boss")
+    pr = pagerank(prod)
+    rank = {k: i + 1 for i, k in enumerate(pr.index)}
+    club_note = {c: _safe(f"{n} ({c})") for c, n in CLUBS.items()}
+    people = sorted(set(ht.index))
+    nm = {k: _safe(names.get(k, k)) for k in set(people) | set(prod["boss"]) | set(prod["junior"])}
+    (out / "Executives").mkdir(parents=True, exist_ok=True)
+    (out / "Clubs").mkdir(parents=True, exist_ok=True)
+    hart, _ = tree_layers(prod, "johnhart")
+    hart_gen = {k: g for g, ks in hart.items() for k in ks}
+
+    for k in people:
+        h = ht.loc[k]
+        tags = ["gm-tree", "head"] + (["current-head"] if h["current"] else [])
+        mine = wf[wf["key"] == k].sort_values(["start", "end"])
+        under = edges[edges["junior"] == k].sort_values("first")
+        below = prod[prod["boss"] == k].sort_values("first")
+        lines = ["---", "type: executive", f"first_head: {h['first_head']}", f"first_head_club: {h['head_club']}",
+                 f"current_head: {str(bool(h['current'])).lower()}"]
+        if h["current_job"]:
+            lines.append(f'current_job: "{h["current_job"]}"')
+        if k in hart_gen:
+            lines.append(f"hart_generation: {hart_gen[k]}")
+        if k in bt.index:
+            lines += [f"future_heads_under_him: {int(bt.loc[k, 'direct'])}", f"tree_size: {int(bt.loc[k, 'tree'])}",
+                      f"pagerank_rank: {rank[k]}"]
+        lines += [f"tags: [{', '.join(tags)}]", "---", "", f"# {names.get(k, k)}", ""]
+        now = f" Now: {h['current_job']}." if h["current_job"] else ""
+        lines += [f"First head job: {h['first_head']}, [[{club_note[h['head_club']]}]].{now}", ""]
+        lines += ["## Worked under", ""]
+        if under.empty:
+            lines.append("No boss in the data (see the GM tree report's limits).")
+        for e in under.itertuples():
+            lines.append(f"- [[{nm.get(e.boss, e.boss)}]] at [[{club_note[e.club]}]], {e.first}-{e.last} "
+                         f"({e.seasons} season{'s' if e.seasons != 1 else ''})")
+        lines += ["", "## Future heads who worked under him", ""]
+        if below.empty:
+            lines.append("None in the data.")
+        for e in below.itertuples():
+            lines.append(f"- [[{nm.get(e.junior, e.junior)}]] at [[{club_note[e.club]}]], {e.first}-{e.last} "
+                         f"(first head job {e.junior_first_head})")
+        lines += ["", "## Career", "", "| Club | Role | Seasons | Source |", "|---|---|---|---|"]
+        for r in mine.itertuples():
+            src = r.source if isinstance(r.source, str) and r.source.startswith("http") else (r.source or "")
+            src = f"[link]({src})" if str(src).startswith("http") else str(src)
+            role = str(r.role).replace("|", "/")
+            lines.append(f"| [[{club_note[r.club]}]] | {role} | {r.start}-{r.end} | {src} |")
+        (out / "Executives" / f"{nm[k]}.md").write_text("\n".join(lines) + "\n")
+
+    w = _years(wf)[["key", "club", "year"]].drop_duplicates()
+    w = w.assign(fh=w["key"].map(o["first_head"])).dropna(subset=["fh"])
+    w = w[w["year"] < w["fh"]]
+    hs = head_seasons(wf, ran)
+    for c, n in CLUBS.items():
+        came = sorted(set(w.loc[w["club"] == c, "key"]), key=lambda k: (ht.loc[k, "first_head"], k))
+        ran_it = hs[hs["club"] == c].groupby("key")["year"].agg(["min", "max"]).sort_values("min")
+        lines = ["---", "type: club", f"abbr: {c}", f"future_heads: {len(came)}",
+                 f"current_heads_who_came_through: {sum(bool(ht.loc[k, 'current']) for k in came)}",
+                 "tags: [gm-tree, club]", "---", "", f"# {n}", ""]
+        if c == "WSN":
+            lines += ["Includes the Montreal Expos, before the move in 2005.", ""]
+        lines += [
+                 "## Future heads who worked here before their first head job", ""]
+        lines += [f"- [[{nm[k]}]] (first head job {ht.loc[k, 'first_head']}"
+                  f"{'; in a top job today' if ht.loc[k, 'current'] else ''})" for k in came] or ["None in the data."]
+        lines += ["", "## Who ran it (head seasons in the data)", ""]
+        lines += [f"- [[{nm.get(k, _safe(names.get(k, k)))}]], {r['min']}-{r['max']}" for k, r in ran_it.iterrows()]
+        (out / "Clubs" / f"{club_note[c]}.md").write_text("\n".join(lines) + "\n")
+    ps, ct = o["path_summary"], o["club_table"]
+    top = o["boss_table"].head(10)
+    idx = ["---", "type: index", "tags: [gm-tree]", "---", "", "# GM Tree", "",
+           "Whose front offices today's heads of baseball operations came through, and the path to the chair. "
+           "Built from sourced career histories by `bb gm-tree` (baseball/roster/gm_tree.py); the full study is "
+           "reports/2026-gm-tree.md in the portfolio repo. \"Worked under\" means worked for the club below its boss "
+           "in the same season: shared employment, with no record of mentoring.", "",
+           "## Findings", "",
+           f"- More future heads came through [[{club_note[ct.iloc[0]['club']]}]] than any other club: "
+           f"{int(ct.iloc[0]['future_heads'])} worked there before their first head job, and "
+           f"{int(ct.iloc[0]['current_heads'])} are in a top baseball-operations job today.",
+           f"- Since 2009 ({ps['with_prior_jobs']} heads with a job on record before the chair): a median of "
+           f"{ps['years_median']:.0f} years from the first front-office job; {ps['agm']} of {ps['with_prior_jobs']} held an "
+           f"assistant GM title; {ps['internal']} of {ps['with_prior_jobs']} were promoted from inside.", ""]
+    if "johnhart" in nm:
+        layers, _ = tree_layers(prod, "johnhart", keep=o["current"])
+        idx.insert(len(idx) - 2, f"- [[{nm['johnhart']}]]'s tree reaches {len(set().union(*layers.values()) & o['current'])} of "
+                       f"today's {len(o['current'])} heads within three generations.")
+    idx += ["## Clubs future heads came through", "", "| Club | Future heads | In a top job today |", "|---|---|---|"]
+    idx += [f"| [[{club_note[r.club]}]] | {r.future_heads} | {r.current_heads} |" for r in ct.head(10).itertuples()]
+    idx += ["", "## Bosses with the most future heads under them", "",
+            "| Boss | Future heads under him | Heads in his tree | PageRank rank |", "|---|---|---|---|"]
+    idx += [f"| [[{nm[r.boss]}]] | {r.direct} | {r.tree} | {rank[r.boss]} |" for r in top.itertuples()]
+    idx += ["", "## Today's heads", ""]
+    idx += [f"- [[{nm[k]}]]: {ht.loc[k, 'current_job']}" for k in sorted(o["current"], key=lambda k: nm[k])]
+    idx += ["", "## Using the graph view", "",
+            "- Open the graph view and filter to this folder: `path:\"GM Tree\"`.",
+            "- Color groups (graph settings, Groups): `tag:#current-head` for today's heads, "
+            "`path:\"GM Tree/Clubs\"` for clubs. The clubs show up as hubs; Cleveland's is the largest.",
+            "- Open any executive and use the local graph to see who he worked under and who worked under him."]
+    (out / "GM Tree.md").write_text("\n".join(idx) + "\n")
+    return {"executives": len(people), "clubs": len(CLUBS)}
 
 
 CYPHER = Path(__file__).with_name("gm_tree.cypher")
@@ -286,7 +423,8 @@ SET e.first = r.first, e.last = r.last, e.seasons = r.seasons, e.produced_head =
 HEAD_CYPHER = """
 UNWIND $rows AS r
 MATCH (x:Executive {key: r.key})
-SET x.first_head = r.first_head
+SET x.first_head = r.first_head, x.first_head_club = r.head_club, x.current_job = r.current_job, x:Head
+FOREACH (_ IN CASE WHEN r.current THEN [1] ELSE [] END | SET x:CurrentHead)
 """
 
 
