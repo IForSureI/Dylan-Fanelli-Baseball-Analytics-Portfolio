@@ -2,6 +2,17 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-10-28: The atlas's whiff step, rebuilt in R
+**Built**
+- **`reports/r/`:** hitter whiff per swing, split-half reliability by game, the fit r(n) = n/(n + M), and `regress()` with intervals, in R (tidyverse, DuckDB through DBI). Data: every 2026 regular-season swing, pulled from Baseball Savant into DuckDB by `pull_swings.R`.
+- **A cross-language check:** `python_reference.py` runs `baseball/evaluation/reliability.py` on the same DuckDB file; `check_against_python.R` compares the two. 79 of 79 checks pass.
+
+**Answered**
+- **R matches Python.** On the same 20 splits, r(n) agrees to 1e-14; on the same curve, M agrees to within 1e-6 swings; `regress()` agrees exactly. Independent runs: M = 54.5 (R) vs 54.7 (Python) swings, inside Python's own seed-to-seed range (54.2-54.8).
+- **2026 alone gives M = 54.5 swings (48.6-61.2),** next to the atlas's pooled 55.4 (49.0-62.7).
+- **Splitting by swing instead of by game** gives M = 46.9, the same 1.16 ratio the atlas found.
+- **By pitch group (first read, one season):** hitters' whiff rate on offspeed reads fastest (M = 35 swings), fastballs slowest (52).
+
 ## 2026-10-20: A second arbitration case, Louis Varland (Toronto)
 **Built**
 - **`baseball/roster/arbitration.py`:** the case is now data. A `Target` record holds the player, club, seasons, MLB Trade Rumors projection, free-agent year, Super Two cutoff and figure layout; `case(target)` works any of them, and `smith_case()` is a wrapper that returns exactly what it did before (the Smith brief's numbers and figure are unchanged).

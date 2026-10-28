@@ -1,0 +1,144 @@
+---
+title: "Hitter whiff rate: how far to regress it (the Reliability Atlas step, rebuilt in R)"
+output:
+  github_document:
+    toc: false
+    df_print: kable
+    html_preview: false
+params:
+  season: 2026
+  db: "data/r/swings_2026.duckdb"
+  reps: 200
+---
+
+```{r setup, include = FALSE}
+knitr::opts_knit$set(root.dir = rprojroot::find_root(rprojroot::has_file("pyproject.toml")))
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 4.2, dpi = 120)
+```
+
+```{r compute, include = FALSE}
+# Everything is computed once here, so the answer can come first; the chunks below show each step.
+source("reports/r/whiff_regress.R")
+library(ggplot2)
+swings <- load_swings(params$db, params$season)
+league_mean <- mean(swings$whiff)
+grid <- usable_grid(swings)
+rel <- run_splits(swings, grid, reps = params$reps, boot = 100, seed = 2026)
+fit <- fit_curve(rel, swings_per_game(swings))
+ex <- regress(0.40, 50, 0.251, M = 55.40049, tau = 0.061794)
+```
+
+**Question.** After *n* swings, how much of a hitter's whiff rate is really him? And how far should it be
+regressed toward the league before anyone acts on it?
+
+**Answer first.** In the `r params$season` regular season alone, a hitter's whiff per swing is half signal
+after about **`r round(fit$M)` swings** (95% interval `r round(fit$M_lo)`-`r round(fit$M_hi)`), in line with the atlas's
+2024-26 constant of 55 swings (49-63). A hitter who whiffs on 40% of 50 swings (league 25.1%) is best read as a
+`r sprintf("%.1f", 100 * ex$estimate)`% whiffer, with a 95% interval of `r sprintf("%.1f", 100 * ex$lo)`-`r sprintf("%.1f", 100 * ex$hi)`% for his true level.
+
+This is an R rebuild of one step of the [Reliability Atlas](../2026-reliability-atlas.md). The Python original
+is `baseball/evaluation/reliability.py`. The check that the two agree is `reports/r/check_against_python.R`
+(results: [output/check-results.md](output/check-results.md)).
+
+## 1. Data: one season of swings, from DuckDB
+
+`reports/r/pull_swings.R` pulls every regular-season swing from Baseball Savant into a DuckDB file.
+Here we read it back with SQL through DBI. The swing and whiff lists are the repo's (`arsenal.SWINGS`, `WHIFFS`).
+
+```{r data}
+# swings <- load_swings(params$db, params$season)   (run in the setup chunk)
+tibble(n_swings = nrow(swings), hitters = n_distinct(swings$batter), games = n_distinct(swings$game_pk),
+       league_whiff = league_mean, first_day = min(swings$game_date), last_day = max(swings$game_date))
+```
+
+Grain: one row per swing. The denominator for whiff rate is swings, not pitches.
+
+## 2. Split each hitter's season by game
+
+For each hitter, shuffle his games and deal them alternately into two halves. Then fill each half,
+game by game, until it holds exactly *n* swings. Halves never share a game, so a day's conditions
+(opponent, park, how he feels) can't show up in both halves and pass for skill.
+
+```{r one-split}
+grid                              # sample sizes where 50+ hitters have 2n swings
+set.seed(1)
+one <- half_rates(swings, deal_games(distinct(swings, batter, game_pk)), grid)
+one |> filter(n == 64) |> head(5)
+```
+
+Each row is one hitter at *n* = 64: his whiff rate in half A (`a`) and half B (`b`), 64 swings each.
+
+## 3. Correlate the halves, many times
+
+The split-half correlation across hitters is the reliability of an *n*-swing sample. Because each half
+holds exactly *n*, no Spearman-Brown step-up is needed. We repeat over `r params$reps` random splits and
+pool the sums before taking the ratio. A bootstrap of hitters (100 draws) gives the intervals.
+
+```{r splits, eval = FALSE}
+rel <- run_splits(swings, grid, reps = params$reps, boot = 100, seed = 2026)   # (run in the setup chunk)
+fit <- fit_curve(rel, swings_per_game(swings))
+```
+
+```{r curve-table}
+fit$curve
+```
+
+## 4. Fit r(n) = n / (n + M)
+
+M is the sample at which r = 0.5: signal and noise are equal, so you regress halfway. Points below one
+typical game (`r fit$per_game` swings) are left out of the fit, as in the atlas.
+
+```{r fit-table}
+tibble(M = fit$M, M_lo = fit$M_lo, M_hi = fit$M_hi, n_for_r_0.7 = 7 * fit$M / 3,
+       sigma2_per_swing = fit$sigma2, tau_talent_sd = fit$tau)
+```
+
+**M = `r round(fit$M, 1)` swings (95% interval `r round(fit$M_lo, 1)`-`r round(fit$M_hi, 1)`).**
+The atlas, pooling 2024-26, has 55.4 (49.0-62.7).
+
+```{r curve-plot}
+ggplot(fit$curve, aes(n, r)) +
+  geom_function(fun = \(n) n / (n + fit$M), colour = "grey40") +
+  geom_errorbar(aes(ymin = r_lo, ymax = r_hi), width = 0.04, colour = "#2b6cb0") +
+  geom_point(aes(shape = in_fit), colour = "#2b6cb0", size = 2) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", colour = "grey60") +
+  scale_x_log10() + scale_shape_manual(values = c(`TRUE` = 16, `FALSE` = 1), labels = c("not in fit", "in fit")) +
+  labs(x = "Swings in each half (log scale)", y = "Split-half reliability r(n)", shape = NULL,
+       title = sprintf("Hitter whiff per swing, %d: M = %.0f swings", params$season, fit$M)) +
+  theme_minimal()
+```
+
+## 5. Regress
+
+Weight on the hitter's own number: w = n / (n + M). Estimate = league + w x (observed - league).
+95% interval for his true level: estimate +/- 1.96 x tau x sqrt(1 - w).
+
+The atlas's worked example, with the shipped 2024-26 constants (M = 55.4, tau = 0.0618, league 25.1%):
+
+```{r worked-example}
+regress(observed = 0.40, n = 50, league_mean = 0.251, M = 55.40049, tau = 0.061794)
+```
+
+The atlas prints 32.2% (23.4-40.9). Same here.
+
+Real `r params$season` hitters with 50-80 swings (call-ups and part-timers), with this season's constants:
+
+```{r hitters}
+regress_hitters(swings, fit, league_mean) |>
+  filter(between(swings, 50, 80)) |>
+  arrange(desc(observed)) |>
+  slice(c(1:4, (n() - 3):n())) |>
+  mutate(across(c(observed, estimate, lo, hi), \(x) round(100 * x, 1)), weight = round(weight, 2))
+```
+
+The highest and lowest raw rates move about halfway back toward the league (25.1%), because 50-80 swings
+carry only about half weight (w = 0.48-0.58).
+
+## What this does not do
+
+- One season, not three. The atlas pools 2024-26; this uses 2026 only. It checks the method, not the
+  shipped constant (though the two land within a swing of each other).
+- No year-to-year persistence (rho) or in-season drift. Those widen the "next season" and
+  "rest of season" intervals in the atlas; `regress()` here accepts them as inputs.
+- The prior is the league mean. Part-timers are worse hitters on average, so a better prior for them
+  might sit above 25.1% whiffs. Not tested here.
