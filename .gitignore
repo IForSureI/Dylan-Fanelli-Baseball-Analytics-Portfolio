@@ -19,3 +19,4 @@ data/**
 
 # Cloned external data (never committed)
 data/people/register/
+reports/bayes/out/
