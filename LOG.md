@@ -2,6 +2,11 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-05: The MLB draft project added to the portfolio
+**Built**
+- **`reports/2026-mlb-draft-analytics.md`:** a summary of the separate draft repository (pick values on 17 drafts, the college-stat model and its recent-class failure, 2026 bonus pools, amateur pitch shapes graded by this portfolio's whiff model).
+- **README:** one row in the research table.
+
 ## 2026-10-28: The atlas's whiff step, rebuilt in R
 **Built**
 - **`reports/r/`:** hitter whiff per swing, split-half reliability by game, the fit r(n) = n/(n + M), and `regress()` with intervals, in R (tidyverse, DuckDB through DBI). Data: every 2026 regular-season swing, pulled from Baseball Savant into DuckDB by `pull_swings.R`.
