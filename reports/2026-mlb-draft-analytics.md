@@ -1,6 +1,6 @@
 # MLB Draft Analytics: what a pick is worth, and what a college line still tells you
 
-Dylan Fanelli. October 2026. Public data only. The code lives in a separate repository, `IForSureI/Dylan-Fanelli-Draft-Analytics`; it is shared on request.
+Dylan Fanelli. October 2026. Public data only. My code lives in a separate repository, `IForSureI/Dylan-Fanelli-Draft-Analytics`: If any club would like to view it I will glady share it.
 
 Four questions about the MLB draft, each answered with public data and tested out of sample.
 
