@@ -1,4 +1,19 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Pitch-design levers](2026-pitch-design-levers.md) &nbsp;|&nbsp; [Trade network →](2026-trade-network-rivals.md)</sub>
+
+<p><img src="../assets/strips/camden.jpg" width="100%" alt="Oriole Park at Camden Yards, Baltimore"></p>
+<!-- /portfolio:header -->
+
 # The roster and CBA engine, and the Paul Skenes extension: a decision memo for the 2026-27 offseason
+
+<!-- portfolio:glance -->
+<p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Front%20office%20and%20payroll-6b6b6b" alt="for: Front office and payroll"> <img src="https://img.shields.io/badge/method-CBA-b4532a" alt="method: CBA"> <img src="https://img.shields.io/badge/method-luxury%20tax-b4532a" alt="method: luxury tax"> <img src="https://img.shields.io/badge/method-extension%20pricing-b4532a" alt="method: extension pricing"></p>
+
+> **At a glance**
+> - **The question:** Should the Pirates extend Paul Skenes before the CBA expires on Dec. 1?
+> - **The answer:** Open at about \$200M in present value and walk away above about \$215M, priced under both possible rule sets. The tax engine reproduces 2025 luxury-tax bills within \$1 for eight of nine clubs.
+> - **For a club:** A payroll and service-time engine checked against real tax bills, and an extension price that holds up under the next agreement.
+<!-- /portfolio:glance -->
 
 **Decision memo from public data.** It covers:
 - the rules of the 2022-26 Basic Agreement as code
@@ -391,3 +406,10 @@ uv run pytest tests/test_roster_service.py tests/test_roster_money.py
 
 ---
 © 2026 Dylan Fanelli. All rights reserved. See [LICENSE](../LICENSE).
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Pitch-design levers](2026-pitch-design-levers.md) &nbsp;|&nbsp; [Trade network →](2026-trade-network-rivals.md)</sub>
+
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *The roster and CBA engine, and the Paul Skenes extension: a decision memo for the 2026-27 offseason*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-roster-cba-engine.md. Photo: Oriole Park at Camden Yards, Baltimore, Carol M. Highsmith, Library of Congress (public domain), https://www.loc.gov/item/2010630835/</sub>
+<!-- /portfolio:footer -->

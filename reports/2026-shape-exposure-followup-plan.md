@@ -1,3 +1,7 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; Part of: [Shape exposure](2026-shape-exposure.md)</sub>
+<!-- /portfolio:header -->
+
 # Shape exposure: follow-up designs, specified after the placebo failed and before they were fit
 
 *Written 2026-10-18, after [the 2026 confirmation](2026-shape-exposure-2026-results.md) failed its lead placebo, and before either design below was fit. These are exploratory: they were not in the original plan, and the report will say so.*
@@ -33,3 +37,8 @@
 ## Reporting
 - Both designs are reported whatever they show, labeled exploratory, next to the original plan's results.
 - If either design passes, the decision translation from the original plan is redone on that design's coefficient. If neither passes, there is no translation, and the report says the public data can't separate adaptation from selection with these designs.
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; Part of: [Shape exposure](2026-shape-exposure.md)</sub>
+<!-- /portfolio:footer -->

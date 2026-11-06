@@ -1,4 +1,19 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Advance packet](2026-advance-packet-tb.md) &nbsp;|&nbsp; [Arbitration: Varland →](2027-arbitration-brief-varland.md)</sub>
+
+<p><img src="../assets/strips/camden.jpg" width="100%" alt="Oriole Park at Camden Yards, Baltimore"></p>
+<!-- /portfolio:header -->
+
 # Cade Smith's 2027 arbitration case, worked from the club side
+
+<!-- portfolio:glance -->
+<p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Front%20office%20and%20arbitration-6b6b6b" alt="for: Front office and arbitration"> <img src="https://img.shields.io/badge/method-arbitration-b4532a" alt="method: arbitration"> <img src="https://img.shields.io/badge/method-comp%20pool-b4532a" alt="method: comp pool"> <img src="https://img.shields.io/badge/method-win%20odds-b4532a" alt="method: win odds"></p>
+
+> **At a glance**
+> - **The question:** What should a club file in Cade Smith's first arbitration case?
+> - **The answer:** \$4.65M, settle at \$5.0-5.1M, and go to a hearing above \$5.1M. The club wins at a \$5.275M midpoint about 60% of the time.
+> - **For a club:** The club-side case from the comp pool to the walk point, under the CBA's criteria and what a panel can't hear.
+<!-- /portfolio:glance -->
 
 **An arbitration exercise built from public data.** Cleveland's closer is arbitration-eligible for the first time this winter, after a platform year in which he tied for the major-league lead in saves. This brief works his case the way a club's arbitration group would: the record as a panel reads it, the comparable salaries, the club's filing number, the player's likely number, the midpoint and the odds of winning a hearing there, what losing costs, and whether to settle or try the case.
 
@@ -388,3 +403,10 @@ uv run pytest tests/test_arbitration.py          # 19 tests, arithmetic checked 
 
 ---
 © 2026 Dylan Fanelli. All rights reserved. See [LICENSE](../LICENSE).
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Advance packet](2026-advance-packet-tb.md) &nbsp;|&nbsp; [Arbitration: Varland →](2027-arbitration-brief-varland.md)</sub>
+
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Cade Smith's 2027 arbitration case, worked from the club side*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2027-arbitration-brief-smith.md. Photo: Oriole Park at Camden Yards, Baltimore, Carol M. Highsmith, Library of Congress (public domain), https://www.loc.gov/item/2010630835/</sub>
+<!-- /portfolio:footer -->

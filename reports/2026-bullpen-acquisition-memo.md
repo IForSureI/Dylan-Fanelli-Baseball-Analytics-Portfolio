@@ -1,4 +1,19 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [Pitch familiarity →](2026-league-pitch-familiarity.md)</sub>
+
+<p><img src="../assets/strips/gabp_close.jpg" width="100%" alt="Great American Ball Park, Cincinnati"></p>
+<!-- /portfolio:header -->
+
 # Bullpen acquisition memo, 2026-27 offseason: three relievers for the Texas Rangers
+
+<!-- portfolio:glance -->
+<p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-GM%20and%20pro%20personnel-6b6b6b" alt="for: GM and pro personnel"> <img src="https://img.shields.io/badge/method-decision%20memo-b4532a" alt="method: decision memo"> <img src="https://img.shields.io/badge/method-contract%20pricing-b4532a" alt="method: contract pricing"> <img src="https://img.shields.io/badge/method-20--80%20scouting-b4532a" alt="method: 20-80 scouting"></p>
+
+> **At a glance**
+> - **The question:** Which reliever should the Rangers sign this winter, and at what price?
+> - **The answer:** Adrián Morejón. Open at 4 years, \$60M; walk away above \$72M, which lands him a little less than half the time. Bryan Abreu is the plan above that.
+> - **For a club:** One real offseason decision made the way a front office makes it: the target, the opening offer, the walk-away and the plan if he goes elsewhere. The [one-page version](2026-bullpen-one-page.md) is what a GM reads.
+<!-- /portfolio:glance -->
 
 **Decision memo from public data.** One real offseason decision, made the way a front office makes it: the club's need, three relievers it could sign this winter, a data-informed scouting report on each, what each costs and is worth under the 2022-26 agreement and its December 1 expiration, and a ranked recommendation with a price.
 - **The scouting reports are data-informed, not a live look.** Grades come from Statcast shape and results. Health appears only as public injured-list and surgery reporting, cited, with no inference.
@@ -724,3 +739,10 @@ uv run pytest tests/test_reliever.py tests/test_acquisition.py
 
 ---
 © 2026 Dylan Fanelli. All rights reserved. See [LICENSE](../LICENSE).
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [Pitch familiarity →](2026-league-pitch-familiarity.md)</sub>
+
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Bullpen acquisition memo, 2026-27 offseason: three relievers for the Texas Rangers*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-bullpen-acquisition-memo.md. Photo: Great American Ball Park, Cincinnati, Carol M. Highsmith, Library of Congress (public domain), https://www.loc.gov/item/2016632836/</sub>
+<!-- /portfolio:footer -->

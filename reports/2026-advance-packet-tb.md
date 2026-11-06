@@ -1,4 +1,19 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Pro scouting report](2026-morejon-pro-scouting-report.md) &nbsp;|&nbsp; [Arbitration: Smith →](2027-arbitration-brief-smith.md)</sub>
+
+<p><img src="../assets/strips/groundscrew.jpg" width="100%" alt="Lining the batter's box, Salt River Fields"></p>
+<!-- /portfolio:header -->
+
 # Advance packet: the Tampa Bay Rays' hitters (2026 ALCS)
+
+<!-- portfolio:glance -->
+<p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Advance%20scouting%20and%20coaches-6b6b6b" alt="for: Advance scouting and coaches"> <img src="https://img.shields.io/badge/method-advance%20scouting-b4532a" alt="method: advance scouting"> <img src="https://img.shields.io/badge/method-coach--facing-b4532a" alt="method: coach-facing"> <img src="https://img.shields.io/badge/method-English%20and%20Spanish-b4532a" alt="method: English and Spanish"></p>
+
+> **At a glance**
+> - **The question:** How should a club pitch the Rays' lineup in the ALCS?
+> - **The answer:** Pitch in the zone and get outs on weak contact: the nine regulars missed on 19.9% of swings (league 25.1%) and did little damage on contact (.331 xwOBA).
+> - **For a club:** Hitter-by-hitter cards plus a one-page [coach version](2026-advance-packet-tb-coach.md), also [in Spanish](2026-advance-packet-tb-coach-es.md).
+<!-- /portfolio:glance -->
 
 **Opponent hitter packet from public pitch data.** The nine Rays with the most 2026 plate appearances for Tampa Bay, scouted the way a club's advance group prepares its pitchers: where each hitter does damage, where he chases and misses, how he handles velocity and spin, what he does on the first pitch and with two strikes, what his swing looks like in bat-tracking numbers, his platoon split, and the plan. Every rate carries its n and is regressed toward the league rate for the same zone or pitch group. A [one-page coach version](2026-advance-packet-tb-coach.md) and a [Spanish coach version](2026-advance-packet-tb-coach-es.md) (my translation, under review) go with it.
 
@@ -1177,3 +1192,10 @@ Two-strike bat speed 75.4 mph (n = 172) vs 77.2 otherwise (n = 293); the league'
 
 ---
 © 2026 Dylan Fanelli. All rights reserved. See [LICENSE](../LICENSE).
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Pro scouting report](2026-morejon-pro-scouting-report.md) &nbsp;|&nbsp; [Arbitration: Smith →](2027-arbitration-brief-smith.md)</sub>
+
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Advance packet: the Tampa Bay Rays' hitters (2026 ALCS)*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-advance-packet-tb.md. Photo: Lining the batter's box, Salt River Fields, Carol M. Highsmith, Library of Congress (public domain), https://www.loc.gov/item/2018663400/</sub>
+<!-- /portfolio:footer -->

@@ -1,4 +1,19 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Roster and CBA engine](2026-roster-cba-engine.md) &nbsp;|&nbsp; [Front-office ties →](2026-front-office-ties.md)</sub>
+
+<p><img src="../assets/strips/polo1912.jpg" width="100%" alt="Right-field grandstand, Polo Grounds, 1912 World Series"></p>
+<!-- /portfolio:header -->
+
 # Who trades with whom: division rivals and front-office ties, MLB 2009–26
+
+<!-- portfolio:glance -->
+<p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Pro%20scouting%20and%20trades-6b6b6b" alt="for: Pro scouting and trades"> <img src="https://img.shields.io/badge/method-Neo4j-b4532a" alt="method: Neo4j"> <img src="https://img.shields.io/badge/method-network%20analysis-b4532a" alt="method: network analysis"> <img src="https://img.shields.io/badge/method-rate%20ratios-b4532a" alt="method: rate ratios"></p>
+
+> **At a glance**
+> - **The question:** Who trades with whom?
+> - **The answer:** Division rivals trade at 0.56 times the rate of other pairs (0.49-0.65), and 52 of 60 rival pairs fall below expectation. The deadline is the one window where they come closer to normal.
+> - **For a club:** Tells a trade desk which partners are realistic and when rivals are most willing to deal.
+<!-- /portfolio:glance -->
 
 **League study from public transaction data.** Every MLB trade in the MLB Stats API from its first record (April 15, 2009) through October 13, 2026, loaded as a graph in Neo4j. It is observational: it counts trades that happened, not offers or prices, and the one front-office explanation below is a hypothesis the data fits, not a tested cause.
 *Written 2026-10-13; Dylan Fanelli; Data: MLB Stats API transactions (3,290 trades, 6,163 player moves, 30 clubs); Baseball-Reference WAR (daily files, read Oct. 13, 2026); Retrosheet transaction file (deals through Dec. 1, 2021; cross-check only); Outside facts: MLB.com, AP via ABC News, FanGraphs (each dated below); Code: `baseball/roster/trades.py` (`bb trades`), `baseball/roster/trade_graph.cypher`; Reviewed in a separate pass 2026-10-13; findings addressed*
@@ -266,3 +281,10 @@ uv run bb trades --no-pull --report   # rebuild from cached pulls, print this re
 
 ---
 © 2026 Dylan Fanelli. All rights reserved. See [LICENSE](../LICENSE).
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Roster and CBA engine](2026-roster-cba-engine.md) &nbsp;|&nbsp; [Front-office ties →](2026-front-office-ties.md)</sub>
+
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Who trades with whom: division rivals and front-office ties, MLB 2009–26*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-trade-network-rivals.md. Photo: Right-field grandstand, Polo Grounds, 1912 World Series, Bain News Service, Library of Congress (public domain), https://www.loc.gov/item/2014690718/</sub>
+<!-- /portfolio:footer -->

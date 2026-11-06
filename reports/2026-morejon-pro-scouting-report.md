@@ -1,4 +1,19 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← GM tree](2026-gm-tree.md) &nbsp;|&nbsp; [Advance packet →](2026-advance-packet-tb.md)</sub>
+
+<p><img src="../assets/strips/shibe1913.jpg" width="100%" alt="First-base grandstand, Shibe Park, 1913 World Series"></p>
+<!-- /portfolio:header -->
+
 # Adrián Morejón (LHP, pending free agent): pro scouting report
+
+<!-- portfolio:glance -->
+<p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Pro%20scouting-6b6b6b" alt="for: Pro scouting"> <img src="https://img.shields.io/badge/method-20--80%20scouting-b4532a" alt="method: 20-80 scouting"> <img src="https://img.shields.io/badge/method-Statcast-b4532a" alt="method: Statcast"> <img src="https://img.shields.io/badge/method-role%20and%20risk-b4532a" alt="method: role and risk"></p>
+
+> **At a glance**
+> - **The question:** What would a pro scout write on the top free-agent reliever?
+> - **The answer:** Adrián Morejón: OFP 60, a B1 reliever for 2027. Sinker, changeup and four-seamer grade 70; the slider is 50 now and 55 future.
+> - **For a club:** The report a pro scouting director reads before a bid, with the look still needed written out.
+<!-- /portfolio:glance -->
 
 *Adrián Morejón; LHP; B/T L/L; 5'11", 224 lb (listed); born Feb. 27, 1999, Havana, Cuba (27.6 on the report date; 2027 age 28); San Diego Padres*
 *Report date 2026-10-14; Scout: Dylan Fanelli; Basis: data (Statcast, all 1,318 regular-season pitches of 2026, with 2024–25 for history and the 2026 postseason as a check) and public reporting. No live or video look: the delivery items that need eyes are NG (no grade).*
@@ -256,3 +271,10 @@ print(f"Morejon FIP {(13 * 4 + 3 * (28 - 7 + 5) - 2 * 107) / 86 + c:.2f}")'
 
 ---
 © 2026 Dylan Fanelli. All rights reserved. See [LICENSE](../LICENSE).
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← GM tree](2026-gm-tree.md) &nbsp;|&nbsp; [Advance packet →](2026-advance-packet-tb.md)</sub>
+
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Adrián Morejón (LHP, pending free agent): pro scouting report*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-morejon-pro-scouting-report.md. Photo: First-base grandstand, Shibe Park, 1913 World Series, Bain News Service, Library of Congress (public domain), https://www.loc.gov/item/2014694445/</sub>
+<!-- /portfolio:footer -->

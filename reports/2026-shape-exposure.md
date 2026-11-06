@@ -1,4 +1,19 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Pitch familiarity](2026-league-pitch-familiarity.md) &nbsp;|&nbsp; [Exposure-aware hook →](2026-exposure-aware-hook.md)</sub>
+
+<p><img src="../assets/strips/bobcene.jpg" width="100%" alt="Bob Cene Park, Struthers, Ohio"></p>
+<!-- /portfolio:header -->
+
 # Do hitters adapt to pitch shapes they've seen from other pitchers? A pre-registered test, MLB 2024–26
+
+<!-- portfolio:glance -->
+<p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-R&D-6b6b6b" alt="for: R&D"> <img src="https://img.shields.io/badge/method-pre--registered-b4532a" alt="method: pre-registered"> <img src="https://img.shields.io/badge/method-placebo%20test-b4532a" alt="method: placebo test"> <img src="https://img.shields.io/badge/method-honest%20null-b4532a" alt="method: honest null"></p>
+
+> **At a glance**
+> - **The question:** Do hitters adapt to pitch shapes they have seen from other pitchers?
+> - **The answer:** The planned test can't say: the raw association replicated, then failed its own placebo. An exploratory follow-up finds a small recent effect, at most about 2 runs a club-season.
+> - **For a club:** Shows how the department should handle a tempting result: write the test down first, run the placebo, and report what survives.
+<!-- /portfolio:glance -->
 
 **League study from public pitch data.** Every regular-season pitch of 2024–2026 (Statcast). The analysis plan was committed before any outcome was fit, the 2026 season was held out, and the planned test failed its own placebo. This report says so first, then shows the follow-up designs that were also written down before they were run.
 *Written 2026-10-18 (the plan was committed Oct. 17 at 11:22 p.m. ET, before any fit); Dylan Fanelli; Data: Statcast via Baseball Savant, 2,124,882 pitches with a complete shape; Code: `baseball/edge/shape_exposure.py` (`bb shape-exposure`); Plan: [the analysis plan](2026-shape-exposure-plan.md), [development results](2026-shape-exposure-dev-results.md), [2026 results as fit](2026-shape-exposure-2026-results.md), [follow-up plan](2026-shape-exposure-followup-plan.md), each committed before the step after it; Reviewed in a separate pass 2026-10-18; findings addressed*
@@ -149,3 +164,10 @@ The sequence data (`data/seq/`) comes from `bb pull-league` and `bb seq` for eac
 - My [pitch familiarity study](2026-league-pitch-familiarity.md): the same-game effect, including partial carryover to the next same-handed pitcher in the same game.
 - Edward Egros, ["Jeepers! Sweepers!"](https://edwithsports.substack.com/p/jeepers-sweepers) (Aug. 11, 2026): asks whether the sweeper's decline is hitters adapting or weaker pitchers adopting it.
 - Davy Andrews, ["They Don't Make Pitch Models Like They Used To"](https://blogs.fangraphs.com/they-dont-make-pitch-models-like-they-used-to/) (FanGraphs, Jan. 20, 2026): stuff grades predict results less well than they did.
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Pitch familiarity](2026-league-pitch-familiarity.md) &nbsp;|&nbsp; [Exposure-aware hook →](2026-exposure-aware-hook.md)</sub>
+
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Do hitters adapt to pitch shapes they've seen from other pitchers? A pre-registered test, MLB 2024–26*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-shape-exposure.md. Photo: Bob Cene Park, Struthers, Ohio, Carol M. Highsmith, Library of Congress (public domain), https://www.loc.gov/item/2016632390/</sub>
+<!-- /portfolio:footer -->

@@ -1,4 +1,19 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Reliability Atlas](2026-reliability-atlas.md) &nbsp;|&nbsp; [Roster and CBA engine →](2026-roster-cba-engine.md)</sub>
+
+<p><img src="../assets/strips/saltriver.jpg" width="100%" alt="Salt River Fields complex, Scottsdale, from the air"></p>
+<!-- /portfolio:header -->
+
 # What pitch-design changes stick and pay, MLB 2024–26
+
+<!-- portfolio:glance -->
+<p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Player%20development-6b6b6b" alt="for: Player development"> <img src="https://img.shields.io/badge/method-development-b4532a" alt="method: development"> <img src="https://img.shields.io/badge/method-placebo%20test-b4532a" alt="method: placebo test"> <img src="https://img.shields.io/badge/method-IDP-b4532a" alt="method: IDP"></p>
+
+> **At a glance**
+> - **The question:** Which pitch-design changes stick and pay?
+> - **The answer:** Four-seam ride is the best-supported lever (+1.62 whiff points per 2 in). Velocity's payoff fails a placebo, so selection or recovery isn't ruled out.
+> - **For a club:** Points a pitching lab at the shape changes most likely to pay, and comes with an individual development plan format that tracks them.
+<!-- /portfolio:glance -->
 
 **League study from public pitch data.** Every regular-season pitch of 2024, 2025 and 2026 (Statcast), not a scouting look and not any club's data. It is observational: pitchers chose these changes, so every number below is an association with controls, matching and a placebo, not the result of a randomized pitch-design program.
 *Written 2026-10-12, revised 2026-10-13; Dylan Fanelli; Data: Statcast via Baseball Savant, 2,141,219 pitches, 11,839 pitcher-season-pitch types, 1,822 season-over-season pitch pairs from 481 pitchers; Code: `baseball/development/levers.py` (`bb levers 2026`), `baseball/development/idp.py` (`bb idp`); Reviewed in a separate pass 2026-10-13; findings addressed*
@@ -339,3 +354,10 @@ uv run bb idp examples/idp-fictional.yaml                   # the fictional exam
 
 ---
 © 2026 Dylan Fanelli. All rights reserved. See [LICENSE](../LICENSE).
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Reliability Atlas](2026-reliability-atlas.md) &nbsp;|&nbsp; [Roster and CBA engine →](2026-roster-cba-engine.md)</sub>
+
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *What pitch-design changes stick and pay, MLB 2024–26*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-pitch-design-levers.md. Photo: Salt River Fields complex, Scottsdale, from the air, Carol M. Highsmith, Library of Congress (public domain), https://www.loc.gov/item/2018703535/</sub>
+<!-- /portfolio:footer -->

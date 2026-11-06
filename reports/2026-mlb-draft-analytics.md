@@ -1,4 +1,19 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Hitter evaluation](2026-hitter-evaluation-torres.md) &nbsp;|&nbsp; [Skubal arsenal →](2025-skubal-arsenal.md)</sub>
+
+<p><img src="../assets/strips/saltriver.jpg" width="100%" alt="Salt River Fields complex, Scottsdale, from the air"></p>
+<!-- /portfolio:header -->
+
 # MLB Draft Analytics: what a pick is worth, and what a college line still tells you
+
+<!-- portfolio:glance -->
+<p><img src="https://img.shields.io/badge/status-summary-1d5c3f" alt="status: summary"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Amateur%20scouting-6b6b6b" alt="for: Amateur scouting"> <img src="https://img.shields.io/badge/method-pick%20values-b4532a" alt="method: pick values"> <img src="https://img.shields.io/badge/method-out--of--sample-b4532a" alt="method: out-of-sample"> <img src="https://img.shields.io/badge/method-bonus%20pools-b4532a" alt="method: bonus pools"></p>
+
+> **At a glance**
+> - **The question:** What is a draft pick worth, and does a college stat line still beat the pick?
+> - **The answer:** Pick 1 is worth about \$75M before the bonus; from the second round on, the typical player returns nothing. A college-stat model no longer adds to the pick on 2020-2023 classes.
+> - **For a club:** Pick values and bonus-pool math for the draft room, and an honest read on what public college lines still add.
+<!-- /portfolio:glance -->
 
 By Dylan Fanelli, October 2026. I used public data only. My code lives in a separate repository, `IForSureI/Dylan-Fanelli-Draft-Analytics`. If any club would like to view it, I will gladly share it.
 
@@ -44,3 +59,10 @@ I pulled 590,044 Hawk-Eye pitches from 1,874 amateur games at pro parks (2024-20
 - Six seasons stands in for team control, and the short 2020 season falls inside most windows.
 - The college model has no tracking data and only a three-tier conference code.
 - Shape grades come from a few games per pitcher.
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Hitter evaluation](2026-hitter-evaluation-torres.md) &nbsp;|&nbsp; [Skubal arsenal →](2025-skubal-arsenal.md)</sub>
+
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *MLB Draft Analytics: what a pick is worth, and what a college line still tells you*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-mlb-draft-analytics.md. Photo: Salt River Fields complex, Scottsdale, from the air, Carol M. Highsmith, Library of Congress (public domain), https://www.loc.gov/item/2018703535/</sub>
+<!-- /portfolio:footer -->

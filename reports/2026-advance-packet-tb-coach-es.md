@@ -1,3 +1,7 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; Part of: [Advance packet](2026-advance-packet-tb.md)</sub>
+<!-- /portfolio:header -->
+
 # Bateadores de los Rays: el plan
 
 *Para los lanzadores y receptores. 18 de octubre de 2026. Dylan Fanelli. Datos: cada pitcheo de la temporada regular 2026 (Statcast); los números detrás de cada línea están en el [paquete completo](2026-advance-packet-tb.md), en inglés. Un ejercicio independiente con datos públicos; no fue preparado para los Cleveland Guardians ni con ellos.*
@@ -57,3 +61,8 @@
 
 ---
 © 2026 Dylan Fanelli. Todos los derechos reservados. Ver [LICENSE](../LICENSE).
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; Part of: [Advance packet](2026-advance-packet-tb.md)</sub>
+<!-- /portfolio:footer -->

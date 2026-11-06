@@ -1,3 +1,7 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; Part of: [Shape exposure](2026-shape-exposure.md)</sub>
+<!-- /portfolio:header -->
+
 # Shape exposure: 2026 confirmation results
 
 *Fit 2026-10-18, once, with the frozen specification in [the plan](2026-shape-exposure-plan.md), after [the development results](2026-shape-exposure-dev-results.md) were committed. Recorded here before any interpretation.*
@@ -28,3 +32,8 @@
 - **H3 (lead placebo):** fails. Exposure from the *next* 30 days has a coefficient of its own whose interval excludes zero. Under the plan, H1 is therefore reported as confounded: the association is real, but it isn't evidence that hitters adapt to shapes they've seen.
 - **H2:** the wide kernel's coefficient is larger than the narrow one's, the opposite of what an exact-shape effect predicts (reported, not a pass/fail test).
 - **H5:** negative, interval excludes zero; it carries the same confound as H1.
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; Part of: [Shape exposure](2026-shape-exposure.md)</sub>
+<!-- /portfolio:footer -->

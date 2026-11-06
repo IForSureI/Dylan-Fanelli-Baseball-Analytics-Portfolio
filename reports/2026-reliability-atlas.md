@@ -1,4 +1,19 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Exposure-aware hook](2026-exposure-aware-hook.md) &nbsp;|&nbsp; [Pitch-design levers →](2026-pitch-design-levers.md)</sub>
+
+<p><img src="../assets/strips/quietfield.jpg" width="100%" alt="Salt River Fields, Scottsdale, before a spring training game"></p>
+<!-- /portfolio:header -->
+
 # The Reliability Atlas: which numbers to trust, and when (MLB 2024–26)
+
+<!-- portfolio:glance -->
+<p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Every%20department%20that%20reads%20a%20number-6b6b6b" alt="for: Every department that reads a number"> <img src="https://img.shields.io/badge/method-split--half%20reliability-b4532a" alt="method: split-half reliability"> <img src="https://img.shields.io/badge/method-shrinkage-b4532a" alt="method: shrinkage"> <img src="https://img.shields.io/badge/method-replication-b4532a" alt="method: replication"></p>
+
+> **At a glance**
+> - **The question:** Which numbers can you trust, and after how many pitches, swings or batted balls?
+> - **The answer:** Regressing beats raw numbers out of sample for 135 of the 147 metric groups that could be scored (of 157). Bat speed is half signal after about 3 swings; wOBA's fitted curve does not reach r = 0.5 until about 500 PA (an extrapolation).
+> - **For a club:** One table every scout, coach and analyst can use to decide how much to believe a number and how far to regress it.
+<!-- /portfolio:glance -->
 
 **League study from public pitch data.** Every regular-season pitch of 2024, 2025 and 2026 (Statcast), not a scouting look. For 29 pitcher and hitter metrics (157 metric groups once pitcher metrics are split by pitch type) it measures:
 - how fast each metric becomes signal
@@ -523,3 +538,10 @@ uv run bb regress hitter/whiff 0.40 50 --horizon next_season
 
 ---
 © 2026 Dylan Fanelli. All rights reserved. See [LICENSE](../LICENSE).
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Exposure-aware hook](2026-exposure-aware-hook.md) &nbsp;|&nbsp; [Pitch-design levers →](2026-pitch-design-levers.md)</sub>
+
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *The Reliability Atlas: which numbers to trust, and when (MLB 2024–26)*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-reliability-atlas.md. Photo: Salt River Fields, Scottsdale, before a spring training game, Carol M. Highsmith, Library of Congress (public domain), https://www.loc.gov/item/2018703511/</sub>
+<!-- /portfolio:footer -->

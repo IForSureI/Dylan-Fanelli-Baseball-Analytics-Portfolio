@@ -1,3 +1,7 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; Part of: [Advance packet](2026-advance-packet-tb.md)</sub>
+<!-- /portfolio:header -->
+
 # Rays hitters: the plan
 
 *For the pitchers and catchers. Oct. 18, 2026. Dylan Fanelli. Data: every 2026 regular-season pitch (Statcast); the numbers behind each line are in the [full packet](2026-advance-packet-tb.md). An independent exercise from public data; not prepared for or with the Cleveland Guardians.*
@@ -55,3 +59,8 @@
 
 ---
 © 2026 Dylan Fanelli. All rights reserved. See [LICENSE](../LICENSE).
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; Part of: [Advance packet](2026-advance-packet-tb.md)</sub>
+<!-- /portfolio:footer -->

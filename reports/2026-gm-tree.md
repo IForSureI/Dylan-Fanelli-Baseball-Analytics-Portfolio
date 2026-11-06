@@ -1,4 +1,19 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Front-office ties](2026-front-office-ties.md) &nbsp;|&nbsp; [Pro scouting report →](2026-morejon-pro-scouting-report.md)</sub>
+
+<p><img src="../assets/strips/polo1912.jpg" width="100%" alt="Right-field grandstand, Polo Grounds, 1912 World Series"></p>
+<!-- /portfolio:header -->
+
 # The GM tree: whose front offices today's heads of baseball operations came through, and the path to the chair
+
+<!-- portfolio:glance -->
+<p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Front%20office-6b6b6b" alt="for: Front office"> <img src="https://img.shields.io/badge/method-Neo4j-b4532a" alt="method: Neo4j"> <img src="https://img.shields.io/badge/method-PageRank-b4532a" alt="method: PageRank"> <img src="https://img.shields.io/badge/method-career%20paths-b4532a" alt="method: career paths"></p>
+
+> **At a glance**
+> - **The question:** Whose front offices did today's heads of baseball operations come through?
+> - **The answer:** More came through Cleveland than any other club: 15 worked there before their first head job. Since 2009 the median head took 14 years from his first front-office job.
+> - **For a club:** A map of how front offices hire and promote, built as a graph a department can query.
+<!-- /portfolio:glance -->
 
 **League study from public data, built as a graph in Neo4j.** Every club decision-maker since 2009 has a sourced career history in this repo, and Baseball-Reference's team pages add each club's GM, scouting director and farm director from 1998. Together they show who worked under whom. This study asks three questions:
 - **Bosses:** which bosses had future heads of baseball operations working under them?
@@ -163,3 +178,10 @@ CALL gds.graph.drop('gmTree');
 uv run bb front-office --no-pull   # the graph tables, if data/graph/ isn't built yet
 uv run bb gm-tree                  # tables, figure, and the Neo4j CSVs
 ```
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Front-office ties](2026-front-office-ties.md) &nbsp;|&nbsp; [Pro scouting report →](2026-morejon-pro-scouting-report.md)</sub>
+
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *The GM tree: whose front offices today's heads of baseball operations came through, and the path to the chair*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-gm-tree.md. Photo: Right-field grandstand, Polo Grounds, 1912 World Series, Bain News Service, Library of Congress (public domain), https://www.loc.gov/item/2014690718/</sub>
+<!-- /portfolio:footer -->

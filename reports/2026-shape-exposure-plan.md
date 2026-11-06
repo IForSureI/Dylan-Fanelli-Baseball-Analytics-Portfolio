@@ -1,3 +1,7 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; Part of: [Shape exposure](2026-shape-exposure.md)</sub>
+<!-- /portfolio:header -->
+
 # Does a pitch shape lose value as hitters see more of it? Analysis plan, fixed before the data is fit
 
 *Written 2026-10-18, before any outcome in this design was computed. Dylan Fanelli. The study report will cite this file's commit and list every departure from it.*
@@ -62,3 +66,8 @@
 - Every test above, including failures and the placebo.
 - The development-season estimates next to the 2026 estimates.
 - Any departure from this plan, with the reason and the date.
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; Part of: [Shape exposure](2026-shape-exposure.md)</sub>
+<!-- /portfolio:footer -->

@@ -1,4 +1,19 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Draft analytics](2026-mlb-draft-analytics.md) &nbsp;|&nbsp; [Edge Board →](2026-edge-board.md)</sub>
+
+<p><img src="../assets/strips/bobcene.jpg" width="100%" alt="Bob Cene Park, Struthers, Ohio"></p>
+<!-- /portfolio:header -->
+
 # Tarik Skubal (DET, LHP): 2025 arsenal read
+
+<!-- portfolio:glance -->
+<p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Pitching%20and%20pro%20scouting-6b6b6b" alt="for: Pitching and pro scouting"> <img src="https://img.shields.io/badge/method-arsenal%20analysis-b4532a" alt="method: arsenal analysis"> <img src="https://img.shields.io/badge/method-league%20context-b4532a" alt="method: league context"></p>
+
+> **At a glance**
+> - **The question:** Was Tarik Skubal's 2025 change real?
+> - **The answer:** Yes, and the change was his: he ranked at the 80th-98th percentile on the changes while the league did not move. His changeup's 46.6% whiff rate is his true level.
+> - **For a club:** Separates a pitcher's real change from a league-wide or measurement shift before anyone pays for it.
+<!-- /portfolio:glance -->
 
 **Data-only arsenal read.** Built from Statcast pitch data, not a live look; no 20-80 grades.
 *Tarik Skubal, LHP, Detroit Tigers. B/T R/L, born 1996-11-20. 2025 regular season (age-28 season), with a 2024 comparison.*
@@ -135,3 +150,10 @@ League whiff rates below are approximate league-wide figures: changeup ~31%, fou
 
 ---
 © 2026 Dylan Fanelli. All rights reserved. See [LICENSE](../LICENSE).
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Draft analytics](2026-mlb-draft-analytics.md) &nbsp;|&nbsp; [Edge Board →](2026-edge-board.md)</sub>
+
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Tarik Skubal (DET, LHP): 2025 arsenal read*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2025-skubal-arsenal.md. Photo: Bob Cene Park, Struthers, Ohio, Carol M. Highsmith, Library of Congress (public domain), https://www.loc.gov/item/2016632390/</sub>
+<!-- /portfolio:footer -->

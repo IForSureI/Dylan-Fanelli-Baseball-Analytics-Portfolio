@@ -1,4 +1,19 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Arbitration: Varland](2027-arbitration-brief-varland.md) &nbsp;|&nbsp; [Draft analytics →](2026-mlb-draft-analytics.md)</sub>
+
+<p><img src="../assets/strips/quietfield.jpg" width="100%" alt="Salt River Fields, Scottsdale, before a spring training game"></p>
+<!-- /portfolio:header -->
+
 # Gleyber Torres (2B, free agent): a hitter evaluation built on swing decisions and bat tracking
+
+<!-- portfolio:glance -->
+<p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Pro%20personnel-6b6b6b" alt="for: Pro personnel"> <img src="https://img.shields.io/badge/method-swing%20decisions-b4532a" alt="method: swing decisions"> <img src="https://img.shields.io/badge/method-bat%20tracking-b4532a" alt="method: bat tracking"> <img src="https://img.shields.io/badge/method-contract%20pricing-b4532a" alt="method: contract pricing"></p>
+
+> **At a glance**
+> - **The question:** Do good swing decisions last, and what is Gleyber Torres worth?
+> - **The answer:** Yes: decision value repeats year to year (r = 0.80). 1.50 WAR projected for 2027; sign at two years, \$28-32M, walk away above \$17M a year.
+> - **For a club:** A free-agent hitter priced from the skill that repeats, with the bat-speed decline weighed against it.
+<!-- /portfolio:glance -->
 
 **League study plus one decision, from public pitch data.** A swing-decision value model built on every regular-season pitch of 2024-26, tested for whether it holds from year to year and whether it predicts next season's results, then used to evaluate one hitter with a live 2026-27 decision.
 - **The hitter:** Gleyber Torres, a free agent this winter, whose case turns on exactly the two things the model measures: some of the best swing decisions in baseball, and a bat that lost 2 mph in 2026.
@@ -282,3 +297,10 @@ uv run pytest tests/test_swing_decisions.py
 
 ---
 © 2026 Dylan Fanelli. All rights reserved. See [LICENSE](../LICENSE).
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Arbitration: Varland](2027-arbitration-brief-varland.md) &nbsp;|&nbsp; [Draft analytics →](2026-mlb-draft-analytics.md)</sub>
+
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Gleyber Torres (2B, free agent): a hitter evaluation built on swing decisions and bat tracking*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-hitter-evaluation-torres.md. Photo: Salt River Fields, Scottsdale, before a spring training game, Carol M. Highsmith, Library of Congress (public domain), https://www.loc.gov/item/2018703511/</sub>
+<!-- /portfolio:footer -->

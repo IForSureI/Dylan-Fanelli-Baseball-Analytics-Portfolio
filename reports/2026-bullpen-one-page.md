@@ -1,3 +1,7 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; Part of: [Bullpen memo](2026-bullpen-acquisition-memo.md)</sub>
+<!-- /portfolio:header -->
+
 # Rangers bullpen, 2026-27: sign Adrián Morejón
 
 *To: the general manager. From: Dylan Fanelli. Oct. 18, 2026. The one-page version of the [full memo](2026-bullpen-acquisition-memo.md); every number below is derived there.*
@@ -22,3 +26,8 @@
 - **A decision that 2027 wins near the wild-card line are worth more to us than the market rate:** raise the walk-away. At $80M we land him about 62% of the time.
 
 **The ask.** Approve the offer, the walk-away and the medical review before the qualifying-offer deadline, and aim to sign before the labor agreement expires on Dec. 1. A lockout would stop free-agent talks.
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; Part of: [Bullpen memo](2026-bullpen-acquisition-memo.md)</sub>
+<!-- /portfolio:footer -->

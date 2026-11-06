@@ -1,3 +1,7 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; Part of: [Shape exposure](2026-shape-exposure.md)</sub>
+<!-- /portfolio:header -->
+
 # Shape exposure: development results (2024–2025)
 
 *Fit 2026-10-18 on the development seasons only, with the specification in [the plan](2026-shape-exposure-plan.md). Committed before the 2026 confirmation fit, as the plan requires. Code: `baseball/edge/shape_exposure.py`.*
@@ -28,3 +32,8 @@ Two technical notes, neither a change to the plan:
 | H5 | rv | logN30 | +0.157 | 0.078 | +0.004 to +0.310 | 0.0445 | 1,013,197 | 703 |
 
 Units: whiff points per swing (whiff) or runs per 100 pitches from the pitcher's side (rv), per 1 SD of the share; log-count terms per unit of log count.
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; Part of: [Shape exposure](2026-shape-exposure.md)</sub>
+<!-- /portfolio:footer -->

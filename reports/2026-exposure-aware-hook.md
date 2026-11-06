@@ -1,4 +1,19 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Shape exposure](2026-shape-exposure.md) &nbsp;|&nbsp; [Reliability Atlas →](2026-reliability-atlas.md)</sub>
+
+<p><img src="../assets/strips/bobcene.jpg" width="100%" alt="Bob Cene Park, Struthers, Ohio"></p>
+<!-- /portfolio:header -->
+
 # The exposure-aware hook: should what a hitter has seen decide when the starter comes out? MLB 2024–26
+
+<!-- portfolio:glance -->
+<p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Manager%20and%20in--game%20strategy-6b6b6b" alt="for: Manager and in-game strategy"> <img src="https://img.shields.io/badge/method-out--of--sample-b4532a" alt="method: out-of-sample"> <img src="https://img.shields.io/badge/method-calibration-b4532a" alt="method: calibration"> <img src="https://img.shields.io/badge/method-decision%20rule-b4532a" alt="method: decision rule"></p>
+
+> **At a glance**
+> - **The question:** Should what a hitter has seen change when the starter comes out?
+> - **The answer:** No. The per-pitch cost replicates out of sample but does not reach plate-appearance run value, and managers show no response to it either.
+> - **For a club:** Saves a staff from adding a hook rule that would not win runs, with the calibration to show why.
+<!-- /portfolio:glance -->
 
 **League study from public pitch data.**
 - **Scope:** every regular-season plate appearance by a starting pitcher in 2024–26 (Statcast).
@@ -348,3 +363,10 @@ uv run bb hook-card 823907 669373      # the card for Skubal's September 3, 2026
 
 ---
 © 2026 Dylan Fanelli. All rights reserved. See [LICENSE](../LICENSE).
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Shape exposure](2026-shape-exposure.md) &nbsp;|&nbsp; [Reliability Atlas →](2026-reliability-atlas.md)</sub>
+
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *The exposure-aware hook: should what a hitter has seen decide when the starter comes out? MLB 2024–26*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-exposure-aware-hook.md. Photo: Bob Cene Park, Struthers, Ohio, Carol M. Highsmith, Library of Congress (public domain), https://www.loc.gov/item/2016632390/</sub>
+<!-- /portfolio:footer -->
