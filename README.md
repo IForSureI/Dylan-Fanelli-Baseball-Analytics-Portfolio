@@ -1,6 +1,6 @@
 # Dylan Fanelli Baseball Analytics Portfolio
 
-Baseball-operations research and tools built on every public pitch of 2024–2026 (2.14 million regular-season pitches) and every MLB trade since 2009. Each piece:
+My baseball-operations research and tools, built on every public pitch of 2024–2026 (2.14 million regular-season pitches) and every MLB trade since 2009. Each piece:
 - **Answers a question a club would want to know.**
 - **Is validated out of sample.**
 - **Gets a separate review pass** that checks every number against its saved outputs before it's final.
@@ -94,7 +94,7 @@ uv run bb predictions check
 A monthly job (`scripts/automation/`) pulls new pitches and reruns the studies. The data stays local (`data/` is never committed) and every result rebuilds from it.
 
 ## About
-Dylan Fanelli, M.S. Sport Management candidate at the Isenberg School of Management (McCormack Department of Sport Management), UMass Amherst. Working toward baseball operations. [LinkedIn](https://www.linkedin.com/in/dylanfanelli/)
+I'm Dylan Fanelli, an M.S. Sport Management candidate at the Isenberg School of Management (McCormack Department of Sport Management), UMass Amherst. I'm working toward a career in baseball operations. [LinkedIn](https://www.linkedin.com/in/dylanfanelli/)
 
 ## License
 © 2026 Dylan Fanelli. All rights reserved. The code, reports and figures may be viewed here; they may not be copied, modified or used without written permission. See [LICENSE](LICENSE). To cite this work, use the **Cite this repository** button (from [CITATION.cff](CITATION.cff)).

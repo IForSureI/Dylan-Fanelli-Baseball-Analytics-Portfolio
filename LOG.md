@@ -4,8 +4,9 @@ Newest first. One entry per working session: what was built, what was decided, w
 
 ## 2026-11-05: The MLB draft project added to the portfolio
 **Built**
-- **`reports/2026-mlb-draft-analytics.md`:** a summary of the separate draft repository (pick values on 17 drafts, the college-stat model and its recent-class failure, 2026 bonus pools, amateur pitch shapes graded by this portfolio's whiff model).
+- **`reports/2026-mlb-draft-analytics.md`:** my summary of my separate draft repository (pick values on 17 drafts, the college-stat model and its recent-class failure, 2026 bonus pools, amateur pitch shapes graded by this portfolio's whiff model).
 - **README:** one row in the research table.
+- **Voice:** the draft report, the README intro and About now speak in first person.
 
 ## 2026-10-28: The atlas's whiff step, rebuilt in R
 **Built**
