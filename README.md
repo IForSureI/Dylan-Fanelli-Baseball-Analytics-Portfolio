@@ -1,3 +1,9 @@
+<p align="center"><img src="assets/banner.jpg" alt="Baseball Analytics by Dylan Fanelli" width="100%"></p>
+
+<p align="center"><a href="https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/actions/workflows/tests.yml"><img src="https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/actions/workflows/tests.yml/badge.svg" alt="tests"></a> <img src="https://img.shields.io/badge/python-3.11%2B-1f1f1f" alt="python: 3.11+"> <img src="https://img.shields.io/badge/data-2.14M%20pitches,%202024--2026-1f1f1f" alt="data: 2.14M pitches, 2024-2026"> <img src="https://img.shields.io/badge/tools-Python,%20SQL,%20Neo4j,%20R-b4532a" alt="tools: Python, SQL, Neo4j, R"> <img src="https://img.shields.io/badge/license-all%20rights%20reserved-6b6b6b" alt="license: all rights reserved"></p>
+
+<p align="center"><b><a href="#start-here">Start here</a> &nbsp;|&nbsp; <a href="#the-research">The research</a> &nbsp;|&nbsp; <a href="#what-a-club-gets">What a club gets</a> &nbsp;|&nbsp; <a href="#how-the-work-is-held-up">How the work is held up</a> &nbsp;|&nbsp; <a href="#the-toolkit-bb">Toolkit</a> &nbsp;|&nbsp; <a href="docs/glossary.md">Glossary</a> &nbsp;|&nbsp; <a href="#about">About</a></b></p>
+
 # Dylan Fanelli Baseball Analytics Portfolio
 
 My baseball-operations research and tools, built on every public pitch of 2024â€“2026 (2.14 million regular-season pitches) and every MLB trade since 2009. Each piece:
@@ -6,12 +12,16 @@ My baseball-operations research and tools, built on every public pitch of 2024â€
 - **Gets a separate review pass** that checks every number against its saved outputs before it's final.
 - **Ships as code a club can run.** Nulls are reported as nulls.
 
+<p align="center"><img src="assets/at-a-glance.png" alt="Selected studies at a glance" width="100%"></p>
+
 ## Start here
 1. **[Bullpen acquisition memo, 2026-27](reports/2026-bullpen-acquisition-memo.md)** and its **[one-page version](reports/2026-bullpen-one-page.md)** for a GM. The capstone: one real offseason decision made the way a front office makes it, using every tool below.
 2. **[Do hitters adapt to shapes they've seen from other pitchers?](reports/2026-shape-exposure.md)** A pre-registered study whose planned test failed its own placebo, and what an exploratory follow-up found.
 3. **[Does a pitch wear out?](reports/2026-league-pitch-familiarity.md)** An original question with a clear answer, and a [follow-up](reports/2026-exposure-aware-hook.md) that tested whether it should change the hook. It shouldn't.
 4. **[The Reliability Atlas](reports/2026-reliability-atlas.md).** Which numbers to trust, after how many pitches, swings or batted balls, and how far to regress them.
 5. **The everyday work of a department:** an [advance packet](reports/2026-advance-packet-tb.md) with a [coach page](reports/2026-advance-packet-tb-coach.md) in English and [Spanish](reports/2026-advance-packet-tb-coach-es.md), two arbitration cases ([Cade Smith](reports/2027-arbitration-brief-smith.md) and [Louis Varland](reports/2027-arbitration-brief-varland.md)), a [hitter evaluation](reports/2026-hitter-evaluation-torres.md), a [SQL module](sql/README.md), and a [dated prediction log](reports/2027-prediction-log.md) scored after 2027.
+
+<p><img src="assets/strips/gabp_close.jpg" width="100%" alt="Great American Ball Park, Cincinnati"></p>
 
 ## The research
 
@@ -41,6 +51,31 @@ The **Edge Board** is a monthly league scan, refreshed by `bb edge` and `bb boar
 - hidden in-season pitch changes (291 in 2026, by 225 pitchers)
 - results beyond stuff, which persist year to year (r = 0.56 and 0.53)
 - next-season whiff projections, validated against a regressed baseline (8.1% less error, leave-one-out)
+
+<table>
+<tr><td width="25%" valign="top"><a href="reports/2026-bullpen-acquisition-memo.md"><img src="reports/figures/2026-bullpen-acquisition-memo.png" width="100%" alt="Bullpen memo"></a><br><sub><b>Bullpen memo</b></sub></td><td width="25%" valign="top"><a href="reports/2026-league-pitch-familiarity.md"><img src="reports/figures/2026-league-pitch-familiarity.png" width="100%" alt="Pitch familiarity"></a><br><sub><b>Pitch familiarity</b></sub></td><td width="25%" valign="top"><a href="reports/2026-reliability-atlas.md"><img src="reports/figures/2026-reliability-atlas.png" width="100%" alt="Reliability Atlas"></a><br><sub><b>Reliability Atlas</b></sub></td><td width="25%" valign="top"><a href="reports/2026-pitch-design-levers.md"><img src="reports/figures/2026-pitch-design-levers.png" width="100%" alt="Pitch-design levers"></a><br><sub><b>Pitch-design levers</b></sub></td></tr>
+<tr><td width="25%" valign="top"><a href="reports/2026-roster-cba-engine.md"><img src="reports/figures/2026-skenes-extension-band.png" width="100%" alt="Skenes extension"></a><br><sub><b>Skenes extension</b></sub></td><td width="25%" valign="top"><a href="reports/2026-gm-tree.md"><img src="reports/figures/2026-gm-tree.png" width="100%" alt="GM tree"></a><br><sub><b>GM tree</b></sub></td><td width="25%" valign="top"><a href="reports/2026-morejon-pro-scouting-report.md"><img src="reports/figures/2026-morejon-pro-scouting-report.png" width="100%" alt="Pro scouting report"></a><br><sub><b>Pro scouting report</b></sub></td><td width="25%" valign="top"><a href="reports/2026-advance-packet-tb.md"><img src="reports/figures/2026-advance-tb-whiff.png" width="100%" alt="Advance packet"></a><br><sub><b>Advance packet</b></sub></td></tr>
+<tr><td width="25%" valign="top"><a href="reports/2027-arbitration-brief-smith.md"><img src="reports/figures/2027-arbitration-brief-smith.png" width="100%" alt="Arbitration case"></a><br><sub><b>Arbitration case</b></sub></td><td width="25%" valign="top"><a href="reports/2026-trade-network-rivals.md"><img src="reports/figures/2026-trade-network-rivals.png" width="100%" alt="Trade network"></a><br><sub><b>Trade network</b></sub></td><td width="25%" valign="top"><a href="reports/2026-hitter-evaluation-torres.md"><img src="reports/figures/2026-hitter-evaluation-torres.png" width="100%" alt="Hitter evaluation"></a><br><sub><b>Hitter evaluation</b></sub></td><td width="25%" valign="top"><a href="reports/2025-skubal-arsenal.md"><img src="reports/figures/2025-skubal-movement.png" width="100%" alt="Skubal arsenal"></a><br><sub><b>Skubal arsenal</b></sub></td></tr>
+</table>
+
+<a id="what-a-club-gets"></a>
+## What a club gets
+
+| Department | Question it answers | Work |
+|---|---|---|
+| GM and pro personnel | Who do we sign, at what price, and where do we walk away? | [Bullpen memo](reports/2026-bullpen-acquisition-memo.md), [hitter evaluation](reports/2026-hitter-evaluation-torres.md) |
+| Front office and payroll | What does the tax bill look like, and what is an extension worth under the next CBA? | [Roster and CBA engine](reports/2026-roster-cba-engine.md) |
+| Arbitration | What do we file, where do we settle, when do we go to a hearing? | [Smith](reports/2027-arbitration-brief-smith.md), [Varland](reports/2027-arbitration-brief-varland.md) |
+| Pro scouting and trades | Who are the realistic trade partners, and what does a scout write before a bid? | [Trade network](reports/2026-trade-network-rivals.md), [front-office ties](reports/2026-front-office-ties.md), [pro scouting report](reports/2026-morejon-pro-scouting-report.md) |
+| Advance scouting and coaches | How do we pitch this lineup, in a page a coach will read (in English or Spanish)? | [Advance packet](reports/2026-advance-packet-tb.md) |
+| Player development | Which pitch-design changes stick and pay, and how is a plan tracked? | [Pitch-design levers](reports/2026-pitch-design-levers.md) |
+| In-game strategy | Do pitches wear out, and should that change the hook? | [Pitch familiarity](reports/2026-league-pitch-familiarity.md), [exposure-aware hook](reports/2026-exposure-aware-hook.md) |
+| Amateur scouting | What is a pick worth, and what does a college line still add? | [Draft analytics](reports/2026-mlb-draft-analytics.md) |
+| R&D, every department | How much should we believe this number? | [Reliability Atlas](reports/2026-reliability-atlas.md), [shape exposure](reports/2026-shape-exposure.md) |
+
+Every report page opens the same way: the question, the answer and what a club does with it, then the full work. The format is written down in the [report standard](docs/report-standard.md).
+
+<p><img src="assets/strips/shibe1913.jpg" width="100%" alt="First-base grandstand, Shibe Park, 1913 World Series"></p>
 
 ## How the work is held up
 - **Out of sample by default.** Forecasts are tested on seasons their parameters never saw, against a regressed baseline, never raw last season.
@@ -74,6 +109,20 @@ The **Edge Board** is a monthly league scan, refreshed by `bb edge` and `bb boar
 
 A dated record of what was built, decided and learned is in [LOG.md](LOG.md). The roadmap is in [Issues](../../issues).
 
+<p><img src="assets/strips/groundscrew.jpg" width="100%" alt="Lining the batter's box, Salt River Fields"></p>
+
+## Under the hood
+
+```mermaid
+flowchart LR
+    A[Public data<br>Statcast, MLB Stats API,<br>Baseball-Reference, Retrosheet] --> B[DuckDB warehouse<br>and slim parquet seasons]
+    B --> C[bb toolkit<br>evaluation, edge, development,<br>roster, department work]
+    C --> D[Reports and figures<br>reports/]
+    C --> E[Neo4j graphs<br>trades, front offices]
+    D --> F[Separate review pass<br>every number checked]
+    C --> G[Hand-checked tests<br>GitHub Actions]
+```
+
 ## Run it
 Requires [uv](https://docs.astral.sh/uv/).
 
@@ -93,6 +142,15 @@ uv run bb predictions check
 
 A monthly job (`scripts/automation/`) pulls new pitches and reruns the studies. The data stays local (`data/` is never committed) and every result rebuilds from it.
 
+## Reference
+- [Glossary](docs/glossary.md): the terms used across the reports, in plain words first.
+- [Data dictionary](docs/data-dictionary.md): every source, what it covers, and the key columns.
+- [Report standard](docs/report-standard.md): how every report page is built.
+- [Photo credits](docs/photo-credits.md): every photograph is public domain, from the Library of Congress.
+
+<p><img src="assets/strips/cardines.jpg" width="100%" alt="Cardines Field, Newport, Rhode Island"></p>
+
+<a id="about"></a>
 ## About
 I'm Dylan Fanelli, an M.S. Sport Management candidate at the Isenberg School of Management (McCormack Department of Sport Management), UMass Amherst. I'm working toward a career in baseball operations. [LinkedIn](https://www.linkedin.com/in/dylanfanelli/)
 
