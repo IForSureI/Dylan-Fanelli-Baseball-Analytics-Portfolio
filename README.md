@@ -21,8 +21,8 @@ My baseball-operations research and tools, built on every public pitch of 2024â€
 4. **[The Reliability Atlas](reports/2026-reliability-atlas.md).** Which numbers to trust, after how many pitches, swings or batted balls, and how far to regress them.
 5. **The everyday work of a department:** an [advance packet](reports/2026-advance-packet-tb.md) with a [coach page](reports/2026-advance-packet-tb-coach.md) in English and [Spanish](reports/2026-advance-packet-tb-coach-es.md), two arbitration cases ([Cade Smith](reports/2027-arbitration-brief-smith.md) and [Louis Varland](reports/2027-arbitration-brief-varland.md)), a [hitter evaluation](reports/2026-hitter-evaluation-torres.md), a [SQL module](sql/README.md), and a [dated prediction log](reports/2027-prediction-log.md) scored after 2027.
 
-<p><img src="assets/img/strip-field_dusk.jpg" width="100%" alt="Harry & David Field at dusk, from the press box"></p>
-<p align="center"><sub>Charting a Medford Rogues game from the press box, Harry & David Field.</sub></p>
+<p><img src="assets/img/strip-field_dusk.jpg" width="100%" alt="Late nights at the ballpark, Harry & David Field"></p>
+<p align="center"><sub>Late nights at the ballpark. Harry & David Field, Medford, Oregon.</sub></p>
 
 ## The research
 
