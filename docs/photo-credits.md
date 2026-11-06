@@ -5,7 +5,7 @@ The photographs in this portfolio are from my own playing and scouting years. Th
 | Where it appears | Photo |
 |---|---|
 | README banner | Harry & David Field, Medford, Oregon, home of the Medford Rogues |
-| README: The research | Charting a Rogues game from the press box, Harry & David Field |
+| README: The research | Late nights at the ballpark, Harry & David Field |
 | README: What a club gets | With the radar gun in the stands, Medford Rogues |
 | README: About | Pitching at Allegheny College, Occidental College and for the Medford Rogues; UMass Amherst |
 

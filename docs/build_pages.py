@@ -32,7 +32,7 @@ PAPER, INK, MUTED, GREEN, CLAY = "#f6f3ec", "#1f1f1f", "#6b6b6b", "#1d5c3f", "#b
 # ---------------------------------------------------------------------------------------------
 PHOTO = {
     "field_day": ("Harry & David Field, Medford, Oregon, home of the Medford Rogues", (0.5, 0.47)),
-    "field_dusk": ("Charting a Rogues game from the press box, Harry & David Field", (0.5, 0.46)),
+    "field_dusk": ("Late nights at the ballpark, Harry & David Field", (0.5, 0.46)),
     "scouting": ("With the radar gun in the stands, Medford Rogues", (0.5, 0.42)),
     "allegheny": ("Allegheny College", (0.55, 0.42)),
     "oxy": ("Occidental College", (0.55, 0.45)),
