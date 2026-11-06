@@ -37,7 +37,7 @@ PHOTO = {
     "allegheny": ("Allegheny College", (0.55, 0.42)),
     "oxy": ("Occidental College", (0.55, 0.45)),
     "rogues": ("Medford Rogues", (0.5, 0.40)),
-    "umass": ("UMass Amherst", (0.47, 0.45)),
+    "umass": ("UMass Amherst", (0.42, 0.5)),
 }
 CAREER = ["allegheny", "oxy", "rogues", "umass"]
 TRIM = {"field_dusk": (0, 0, 0.91, 1)}  # (left, top, right, bottom): cut the press-box window frame
