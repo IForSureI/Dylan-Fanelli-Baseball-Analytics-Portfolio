@@ -1,7 +1,5 @@
 <!-- portfolio:header -->
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Trade network](2026-trade-network-rivals.md) &nbsp;|&nbsp; [GM tree →](2026-gm-tree.md)</sub>
-
-<p><img src="../assets/strips/polo1912.jpg" width="100%" alt="Right-field grandstand, Polo Grounds, 1912 World Series"></p>
 <!-- /portfolio:header -->
 
 # Do front-office ties predict trade partners? MLB 2009–26
@@ -203,5 +201,5 @@ uv run bb front-office --permute 1000   # team pages (cached), Neo4j tables, eve
 ---
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Trade network](2026-trade-network-rivals.md) &nbsp;|&nbsp; [GM tree →](2026-gm-tree.md)</sub>
 
-<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Do front-office ties predict trade partners? MLB 2009–26*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-front-office-ties.md. Photo: Right-field grandstand, Polo Grounds, 1912 World Series, Bain News Service, Library of Congress (public domain), https://www.loc.gov/item/2014690718/</sub>
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Do front-office ties predict trade partners? MLB 2009–26*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-front-office-ties.md</sub>
 <!-- /portfolio:footer -->

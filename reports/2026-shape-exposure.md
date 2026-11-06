@@ -1,7 +1,5 @@
 <!-- portfolio:header -->
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Pitch familiarity](2026-league-pitch-familiarity.md) &nbsp;|&nbsp; [Exposure-aware hook →](2026-exposure-aware-hook.md)</sub>
-
-<p><img src="../assets/strips/bobcene.jpg" width="100%" alt="Bob Cene Park, Struthers, Ohio"></p>
 <!-- /portfolio:header -->
 
 # Do hitters adapt to pitch shapes they've seen from other pitchers? A pre-registered test, MLB 2024–26
@@ -169,5 +167,5 @@ The sequence data (`data/seq/`) comes from `bb pull-league` and `bb seq` for eac
 ---
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Pitch familiarity](2026-league-pitch-familiarity.md) &nbsp;|&nbsp; [Exposure-aware hook →](2026-exposure-aware-hook.md)</sub>
 
-<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Do hitters adapt to pitch shapes they've seen from other pitchers? A pre-registered test, MLB 2024–26*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-shape-exposure.md. Photo: Bob Cene Park, Struthers, Ohio, Carol M. Highsmith, Library of Congress (public domain), https://www.loc.gov/item/2016632390/</sub>
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Do hitters adapt to pitch shapes they've seen from other pitchers? A pre-registered test, MLB 2024–26*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-shape-exposure.md</sub>
 <!-- /portfolio:footer -->

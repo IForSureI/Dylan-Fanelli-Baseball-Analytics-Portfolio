@@ -1,7 +1,5 @@
 <!-- portfolio:header -->
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Advance packet](2026-advance-packet-tb.md) &nbsp;|&nbsp; [Arbitration: Varland →](2027-arbitration-brief-varland.md)</sub>
-
-<p><img src="../assets/strips/camden.jpg" width="100%" alt="Oriole Park at Camden Yards, Baltimore"></p>
 <!-- /portfolio:header -->
 
 # Cade Smith's 2027 arbitration case, worked from the club side
@@ -408,5 +406,5 @@ uv run pytest tests/test_arbitration.py          # 19 tests, arithmetic checked 
 ---
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Advance packet](2026-advance-packet-tb.md) &nbsp;|&nbsp; [Arbitration: Varland →](2027-arbitration-brief-varland.md)</sub>
 
-<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Cade Smith's 2027 arbitration case, worked from the club side*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2027-arbitration-brief-smith.md. Photo: Oriole Park at Camden Yards, Baltimore, Carol M. Highsmith, Library of Congress (public domain), https://www.loc.gov/item/2010630835/</sub>
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Cade Smith's 2027 arbitration case, worked from the club side*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2027-arbitration-brief-smith.md</sub>
 <!-- /portfolio:footer -->

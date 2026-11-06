@@ -1,7 +1,5 @@
 <!-- portfolio:header -->
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [Pitch familiarity →](2026-league-pitch-familiarity.md)</sub>
-
-<p><img src="../assets/strips/gabp_close.jpg" width="100%" alt="Great American Ball Park, Cincinnati"></p>
 <!-- /portfolio:header -->
 
 # Bullpen acquisition memo, 2026-27 offseason: three relievers for the Texas Rangers
@@ -744,5 +742,5 @@ uv run pytest tests/test_reliever.py tests/test_acquisition.py
 ---
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [Pitch familiarity →](2026-league-pitch-familiarity.md)</sub>
 
-<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Bullpen acquisition memo, 2026-27 offseason: three relievers for the Texas Rangers*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-bullpen-acquisition-memo.md. Photo: Great American Ball Park, Cincinnati, Carol M. Highsmith, Library of Congress (public domain), https://www.loc.gov/item/2016632836/</sub>
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Bullpen acquisition memo, 2026-27 offseason: three relievers for the Texas Rangers*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-bullpen-acquisition-memo.md</sub>
 <!-- /portfolio:footer -->

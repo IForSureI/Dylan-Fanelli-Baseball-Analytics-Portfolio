@@ -1,7 +1,5 @@
 <!-- portfolio:header -->
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Pro scouting report](2026-morejon-pro-scouting-report.md) &nbsp;|&nbsp; [Arbitration: Smith →](2027-arbitration-brief-smith.md)</sub>
-
-<p><img src="../assets/strips/groundscrew.jpg" width="100%" alt="Lining the batter's box, Salt River Fields"></p>
 <!-- /portfolio:header -->
 
 # Advance packet: the Tampa Bay Rays' hitters (2026 ALCS)
@@ -1197,5 +1195,5 @@ Two-strike bat speed 75.4 mph (n = 172) vs 77.2 otherwise (n = 293); the league'
 ---
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Pro scouting report](2026-morejon-pro-scouting-report.md) &nbsp;|&nbsp; [Arbitration: Smith →](2027-arbitration-brief-smith.md)</sub>
 
-<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Advance packet: the Tampa Bay Rays' hitters (2026 ALCS)*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-advance-packet-tb.md. Photo: Lining the batter's box, Salt River Fields, Carol M. Highsmith, Library of Congress (public domain), https://www.loc.gov/item/2018663400/</sub>
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Advance packet: the Tampa Bay Rays' hitters (2026 ALCS)*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-advance-packet-tb.md</sub>
 <!-- /portfolio:footer -->

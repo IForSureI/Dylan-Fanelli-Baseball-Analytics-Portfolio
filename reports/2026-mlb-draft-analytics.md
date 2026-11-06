@@ -1,7 +1,5 @@
 <!-- portfolio:header -->
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Hitter evaluation](2026-hitter-evaluation-torres.md) &nbsp;|&nbsp; [Skubal arsenal →](2025-skubal-arsenal.md)</sub>
-
-<p><img src="../assets/strips/saltriver.jpg" width="100%" alt="Salt River Fields complex, Scottsdale, from the air"></p>
 <!-- /portfolio:header -->
 
 # MLB Draft Analytics: what a pick is worth, and what a college line still tells you
@@ -64,5 +62,5 @@ I pulled 590,044 Hawk-Eye pitches from 1,874 amateur games at pro parks (2024-20
 ---
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Hitter evaluation](2026-hitter-evaluation-torres.md) &nbsp;|&nbsp; [Skubal arsenal →](2025-skubal-arsenal.md)</sub>
 
-<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *MLB Draft Analytics: what a pick is worth, and what a college line still tells you*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-mlb-draft-analytics.md. Photo: Salt River Fields complex, Scottsdale, from the air, Carol M. Highsmith, Library of Congress (public domain), https://www.loc.gov/item/2018703535/</sub>
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *MLB Draft Analytics: what a pick is worth, and what a college line still tells you*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-mlb-draft-analytics.md</sub>
 <!-- /portfolio:footer -->

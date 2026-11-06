@@ -1,7 +1,5 @@
 <!-- portfolio:header -->
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Front-office ties](2026-front-office-ties.md) &nbsp;|&nbsp; [Pro scouting report →](2026-morejon-pro-scouting-report.md)</sub>
-
-<p><img src="../assets/strips/polo1912.jpg" width="100%" alt="Right-field grandstand, Polo Grounds, 1912 World Series"></p>
 <!-- /portfolio:header -->
 
 # The GM tree: whose front offices today's heads of baseball operations came through, and the path to the chair
@@ -183,5 +181,5 @@ uv run bb gm-tree                  # tables, figure, and the Neo4j CSVs
 ---
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Front-office ties](2026-front-office-ties.md) &nbsp;|&nbsp; [Pro scouting report →](2026-morejon-pro-scouting-report.md)</sub>
 
-<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *The GM tree: whose front offices today's heads of baseball operations came through, and the path to the chair*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-gm-tree.md. Photo: Right-field grandstand, Polo Grounds, 1912 World Series, Bain News Service, Library of Congress (public domain), https://www.loc.gov/item/2014690718/</sub>
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *The GM tree: whose front offices today's heads of baseball operations came through, and the path to the chair*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-gm-tree.md</sub>
 <!-- /portfolio:footer -->

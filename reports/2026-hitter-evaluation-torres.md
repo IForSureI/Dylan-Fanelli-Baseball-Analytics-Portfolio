@@ -1,7 +1,5 @@
 <!-- portfolio:header -->
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Arbitration: Varland](2027-arbitration-brief-varland.md) &nbsp;|&nbsp; [Draft analytics →](2026-mlb-draft-analytics.md)</sub>
-
-<p><img src="../assets/strips/quietfield.jpg" width="100%" alt="Salt River Fields, Scottsdale, before a spring training game"></p>
 <!-- /portfolio:header -->
 
 # Gleyber Torres (2B, free agent): a hitter evaluation built on swing decisions and bat tracking
@@ -302,5 +300,5 @@ uv run pytest tests/test_swing_decisions.py
 ---
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Arbitration: Varland](2027-arbitration-brief-varland.md) &nbsp;|&nbsp; [Draft analytics →](2026-mlb-draft-analytics.md)</sub>
 
-<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Gleyber Torres (2B, free agent): a hitter evaluation built on swing decisions and bat tracking*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-hitter-evaluation-torres.md. Photo: Salt River Fields, Scottsdale, before a spring training game, Carol M. Highsmith, Library of Congress (public domain), https://www.loc.gov/item/2018703511/</sub>
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Gleyber Torres (2B, free agent): a hitter evaluation built on swing decisions and bat tracking*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-hitter-evaluation-torres.md</sub>
 <!-- /portfolio:footer -->

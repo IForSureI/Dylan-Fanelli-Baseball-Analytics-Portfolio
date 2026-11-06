@@ -1,7 +1,5 @@
 <!-- portfolio:header -->
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Draft analytics](2026-mlb-draft-analytics.md) &nbsp;|&nbsp; [Edge Board →](2026-edge-board.md)</sub>
-
-<p><img src="../assets/strips/bobcene.jpg" width="100%" alt="Bob Cene Park, Struthers, Ohio"></p>
 <!-- /portfolio:header -->
 
 # Tarik Skubal (DET, LHP): 2025 arsenal read
@@ -155,5 +153,5 @@ League whiff rates below are approximate league-wide figures: changeup ~31%, fou
 ---
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Draft analytics](2026-mlb-draft-analytics.md) &nbsp;|&nbsp; [Edge Board →](2026-edge-board.md)</sub>
 
-<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Tarik Skubal (DET, LHP): 2025 arsenal read*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2025-skubal-arsenal.md. Photo: Bob Cene Park, Struthers, Ohio, Carol M. Highsmith, Library of Congress (public domain), https://www.loc.gov/item/2016632390/</sub>
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Tarik Skubal (DET, LHP): 2025 arsenal read*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2025-skubal-arsenal.md</sub>
 <!-- /portfolio:footer -->

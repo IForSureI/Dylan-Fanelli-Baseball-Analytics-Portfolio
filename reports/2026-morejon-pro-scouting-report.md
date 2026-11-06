@@ -1,7 +1,5 @@
 <!-- portfolio:header -->
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← GM tree](2026-gm-tree.md) &nbsp;|&nbsp; [Advance packet →](2026-advance-packet-tb.md)</sub>
-
-<p><img src="../assets/strips/shibe1913.jpg" width="100%" alt="First-base grandstand, Shibe Park, 1913 World Series"></p>
 <!-- /portfolio:header -->
 
 # Adrián Morejón (LHP, pending free agent): pro scouting report
@@ -276,5 +274,5 @@ print(f"Morejon FIP {(13 * 4 + 3 * (28 - 7 + 5) - 2 * 107) / 86 + c:.2f}")'
 ---
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← GM tree](2026-gm-tree.md) &nbsp;|&nbsp; [Advance packet →](2026-advance-packet-tb.md)</sub>
 
-<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Adrián Morejón (LHP, pending free agent): pro scouting report*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-morejon-pro-scouting-report.md. Photo: First-base grandstand, Shibe Park, 1913 World Series, Bain News Service, Library of Congress (public domain), https://www.loc.gov/item/2014694445/</sub>
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Adrián Morejón (LHP, pending free agent): pro scouting report*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-morejon-pro-scouting-report.md</sub>
 <!-- /portfolio:footer -->

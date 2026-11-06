@@ -1,7 +1,5 @@
 <!-- portfolio:header -->
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Bullpen memo](2026-bullpen-acquisition-memo.md) &nbsp;|&nbsp; [Shape exposure →](2026-shape-exposure.md)</sub>
-
-<p><img src="../assets/strips/bobcene.jpg" width="100%" alt="Bob Cene Park, Struthers, Ohio"></p>
 <!-- /portfolio:header -->
 
 # Does a pitch wear out? Pitch-type familiarity, MLB 2024–26
@@ -306,5 +304,5 @@ uv run bb familiarity 2026  # pools 2024-26; tables, page and figure -> data/edg
 ---
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Bullpen memo](2026-bullpen-acquisition-memo.md) &nbsp;|&nbsp; [Shape exposure →](2026-shape-exposure.md)</sub>
 
-<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Does a pitch wear out? Pitch-type familiarity, MLB 2024–26*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-league-pitch-familiarity.md. Photo: Bob Cene Park, Struthers, Ohio, Carol M. Highsmith, Library of Congress (public domain), https://www.loc.gov/item/2016632390/</sub>
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Does a pitch wear out? Pitch-type familiarity, MLB 2024–26*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-league-pitch-familiarity.md</sub>
 <!-- /portfolio:footer -->

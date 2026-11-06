@@ -1,7 +1,5 @@
 <!-- portfolio:header -->
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Roster and CBA engine](2026-roster-cba-engine.md) &nbsp;|&nbsp; [Front-office ties →](2026-front-office-ties.md)</sub>
-
-<p><img src="../assets/strips/polo1912.jpg" width="100%" alt="Right-field grandstand, Polo Grounds, 1912 World Series"></p>
 <!-- /portfolio:header -->
 
 # Who trades with whom: division rivals and front-office ties, MLB 2009–26
@@ -286,5 +284,5 @@ uv run bb trades --no-pull --report   # rebuild from cached pulls, print this re
 ---
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Roster and CBA engine](2026-roster-cba-engine.md) &nbsp;|&nbsp; [Front-office ties →](2026-front-office-ties.md)</sub>
 
-<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Who trades with whom: division rivals and front-office ties, MLB 2009–26*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-trade-network-rivals.md. Photo: Right-field grandstand, Polo Grounds, 1912 World Series, Bain News Service, Library of Congress (public domain), https://www.loc.gov/item/2014690718/</sub>
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Who trades with whom: division rivals and front-office ties, MLB 2009–26*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-trade-network-rivals.md</sub>
 <!-- /portfolio:footer -->

@@ -1,7 +1,5 @@
 <!-- portfolio:header -->
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Exposure-aware hook](2026-exposure-aware-hook.md) &nbsp;|&nbsp; [Pitch-design levers →](2026-pitch-design-levers.md)</sub>
-
-<p><img src="../assets/strips/quietfield.jpg" width="100%" alt="Salt River Fields, Scottsdale, before a spring training game"></p>
 <!-- /portfolio:header -->
 
 # The Reliability Atlas: which numbers to trust, and when (MLB 2024–26)
@@ -543,5 +541,5 @@ uv run bb regress hitter/whiff 0.40 50 --horizon next_season
 ---
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Exposure-aware hook](2026-exposure-aware-hook.md) &nbsp;|&nbsp; [Pitch-design levers →](2026-pitch-design-levers.md)</sub>
 
-<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *The Reliability Atlas: which numbers to trust, and when (MLB 2024–26)*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-reliability-atlas.md. Photo: Salt River Fields, Scottsdale, before a spring training game, Carol M. Highsmith, Library of Congress (public domain), https://www.loc.gov/item/2018703511/</sub>
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *The Reliability Atlas: which numbers to trust, and when (MLB 2024–26)*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-reliability-atlas.md</sub>
 <!-- /portfolio:footer -->

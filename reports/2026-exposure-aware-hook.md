@@ -1,7 +1,5 @@
 <!-- portfolio:header -->
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Shape exposure](2026-shape-exposure.md) &nbsp;|&nbsp; [Reliability Atlas →](2026-reliability-atlas.md)</sub>
-
-<p><img src="../assets/strips/bobcene.jpg" width="100%" alt="Bob Cene Park, Struthers, Ohio"></p>
 <!-- /portfolio:header -->
 
 # The exposure-aware hook: should what a hitter has seen decide when the starter comes out? MLB 2024–26
@@ -368,5 +366,5 @@ uv run bb hook-card 823907 669373      # the card for Skubal's September 3, 2026
 ---
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Shape exposure](2026-shape-exposure.md) &nbsp;|&nbsp; [Reliability Atlas →](2026-reliability-atlas.md)</sub>
 
-<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *The exposure-aware hook: should what a hitter has seen decide when the starter comes out? MLB 2024–26*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-exposure-aware-hook.md. Photo: Bob Cene Park, Struthers, Ohio, Carol M. Highsmith, Library of Congress (public domain), https://www.loc.gov/item/2016632390/</sub>
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *The exposure-aware hook: should what a hitter has seen decide when the starter comes out? MLB 2024–26*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-exposure-aware-hook.md</sub>
 <!-- /portfolio:footer -->
