@@ -9,7 +9,7 @@ The prediction log is the exception: `bb predictions render` writes it from `pre
 2. **The title**, then badges: status, data, who in a club uses it, and the methods.
 3. **At a glance:** the question, the answer, and what a club does with it.
 4. **The work:** the report's own sections (the answer first, then method, validation, limits).
-5. **Footer:** navigation, how to cite, and the photo credit.
+5. **Footer:** navigation and how to cite.
 
 The header, the at-a-glance box and the footer are stamped by `docs/build_pages.py`, between marker comments, so they can be refreshed without touching the report's text. `tests/test_portfolio_pages.py` fails if a report is missing them or if a link or image on the front page is broken.
 
