@@ -36,8 +36,10 @@ def test_every_report_meets_the_standard():
     assert build_pages.check() == []
 
 
-def test_every_report_photo_is_credited():
-    credits = (ROOT / "docs" / "photo-credits.md").read_text()
-    for key, (_, _, url, _) in build_pages.PHOTO.items():
-        assert url in credits, key
-        assert (ROOT / "assets" / "photos" / f"{key}.jpg").exists(), key
+def test_every_photo_has_a_source_and_no_location_data():
+    from PIL import Image
+    for key in build_pages.PHOTO:
+        src = ROOT / "assets" / "img" / "src" / f"{key}.jpg"
+        assert src.exists(), key
+        exif = Image.open(src).getexif()
+        assert 0x8825 not in exif, f"{key}: GPS data in the published photo"
