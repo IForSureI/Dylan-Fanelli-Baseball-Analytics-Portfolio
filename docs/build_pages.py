@@ -261,22 +261,10 @@ def build_images() -> None:
         cap, (cx, cy) = PHOTO[key]
         crop(open_src(key), 600, 760, cx, cy).save(IMG / f"tile-{key}.jpg", quality=84, optimize=True)
 
-    # banner: Harry & David Field, darkened on the left for the title
+    # banner: Harry & David Field, the photo alone (no overlay text)
     W, H = 2000, 620
     cap, (cx, cy) = PHOTO["field_day"]
     im = crop(open_src("field_day"), W, H, cx, cy)
-    shade = Image.new("L", (W, H))
-    sd = ImageDraw.Draw(shade)
-    for x in range(W):
-        a = int(245 * max(0.0, 1 - x / (W * 0.80)) ** 0.9)
-        sd.line([(x, 0), (x, H)], fill=a)
-    dark = Image.new("RGB", (W, H), (14, 26, 20))
-    im = Image.composite(dark, im, shade)
-    d = ImageDraw.Draw(im, "RGBA")
-    d.text((80, 150), "Baseball Analytics", font=font([black], 108), fill=(250, 248, 242))
-    d.text((84, 290), "Front-office decisions, built on every public pitch of 2024-2026", font=font([reg], 38), fill=(235, 232, 222))
-    d.text((84, 350), "and every MLB trade since 2009.", font=font([reg], 38), fill=(235, 232, 222))
-    d.text((84, 440), "Dylan Fanelli  |  Python, SQL, Neo4j, R  |  Statcast", font=font([semi], 28), fill=(214, 168, 120))
     im.save(ASSETS / "banner.jpg", quality=86, optimize=True)
 
     # at-a-glance: 2 x 4 cards, headline number over the study's own figure
