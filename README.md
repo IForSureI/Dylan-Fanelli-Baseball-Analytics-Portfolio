@@ -21,7 +21,8 @@ My baseball-operations research and tools, built on every public pitch of 2024â€
 4. **[The Reliability Atlas](reports/2026-reliability-atlas.md).** Which numbers to trust, after how many pitches, swings or batted balls, and how far to regress them.
 5. **The everyday work of a department:** an [advance packet](reports/2026-advance-packet-tb.md) with a [coach page](reports/2026-advance-packet-tb-coach.md) in English and [Spanish](reports/2026-advance-packet-tb-coach-es.md), two arbitration cases ([Cade Smith](reports/2027-arbitration-brief-smith.md) and [Louis Varland](reports/2027-arbitration-brief-varland.md)), a [hitter evaluation](reports/2026-hitter-evaluation-torres.md), a [SQL module](sql/README.md), and a [dated prediction log](reports/2027-prediction-log.md) scored after 2027.
 
-<p><img src="assets/strips/gabp_close.jpg" width="100%" alt="Great American Ball Park, Cincinnati"></p>
+<p><img src="assets/img/strip-field_dusk.jpg" width="100%" alt="Harry & David Field at dusk, from the press box"></p>
+<p align="center"><sub>Charting a Medford Rogues game from the press box, Harry & David Field.</sub></p>
 
 ## The research
 
@@ -75,7 +76,8 @@ The **Edge Board** is a monthly league scan, refreshed by `bb edge` and `bb boar
 
 Every report page opens the same way: the question, the answer and what a club does with it, then the full work. The format is written down in the [report standard](docs/report-standard.md).
 
-<p><img src="assets/strips/shibe1913.jpg" width="100%" alt="First-base grandstand, Shibe Park, 1913 World Series"></p>
+<p><img src="assets/img/strip-scouting.jpg" width="100%" alt="Dylan Fanelli with a radar gun in the stands"></p>
+<p align="center"><sub>Radar gun in the stands with the Medford Rogues. The work starts at the park.</sub></p>
 
 ## How the work is held up
 - **Out of sample by default.** Forecasts are tested on seasons their parameters never saw, against a regressed baseline, never raw last season.
@@ -108,8 +110,6 @@ Every report page opens the same way: the question, the answer and what a club d
 | **Tracking data** | A TrackMan/Rapsodo loader with sign checks and QC, a TrackMan session-PDF reader, and a portable expected-whiff model for device data |
 
 A dated record of what was built, decided and learned is in [LOG.md](LOG.md). The roadmap is in [Issues](../../issues).
-
-<p><img src="assets/strips/groundscrew.jpg" width="100%" alt="Lining the batter's box, Salt River Fields"></p>
 
 ## Under the hood
 
@@ -146,13 +146,18 @@ A monthly job (`scripts/automation/`) pulls new pitches and reruns the studies. 
 - [Glossary](docs/glossary.md): the terms used across the reports, in plain words first.
 - [Data dictionary](docs/data-dictionary.md): every source, what it covers, and the key columns.
 - [Report standard](docs/report-standard.md): how every report page is built.
-- [Photo credits](docs/photo-credits.md): every photograph is public domain, from the Library of Congress.
+- [Photo credits](docs/photo-credits.md): the photographs are from my own playing and scouting years.
 
-<p><img src="assets/strips/cardines.jpg" width="100%" alt="Cardines Field, Newport, Rhode Island"></p>
 
 <a id="about"></a>
 ## About
 I'm Dylan Fanelli, an M.S. Sport Management candidate at the Isenberg School of Management (McCormack Department of Sport Management), UMass Amherst. I'm working toward a career in baseball operations. [LinkedIn](https://www.linkedin.com/in/dylanfanelli/)
+
+I pitched at Allegheny, Occidental and UMass and for the Medford Rogues, where I also built scouting reports on opposing hitters and pitchers. The questions in this portfolio come from there.
+
+<table>
+<tr><td width="25%" align="center" valign="top"><img src="assets/img/tile-allegheny.jpg" width="100%" alt="Dylan Fanelli, Allegheny College"><br><sub><b>Allegheny College</b></sub></td><td width="25%" align="center" valign="top"><img src="assets/img/tile-oxy.jpg" width="100%" alt="Dylan Fanelli, Occidental College"><br><sub><b>Occidental College</b></sub></td><td width="25%" align="center" valign="top"><img src="assets/img/tile-rogues.jpg" width="100%" alt="Dylan Fanelli, Medford Rogues"><br><sub><b>Medford Rogues</b></sub></td><td width="25%" align="center" valign="top"><img src="assets/img/tile-umass.jpg" width="100%" alt="Dylan Fanelli, UMass Amherst"><br><sub><b>UMass Amherst</b></sub></td></tr>
+</table>
 
 ## License
 Â© 2026 Dylan Fanelli. All rights reserved. The code, reports and figures may be viewed here; they may not be copied, modified or used without written permission. See [LICENSE](LICENSE). To cite this work, use the **Cite this repository** button (from [CITATION.cff](CITATION.cff)).
