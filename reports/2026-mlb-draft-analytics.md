@@ -1,11 +1,11 @@
 # MLB Draft Analytics: what a pick is worth, and what a college line still tells you
 
-Dylan Fanelli. October 2026. Public data only. My code lives in a separate repository, `IForSureI/Dylan-Fanelli-Draft-Analytics`: If any club would like to view it I will glady share it.
+By Dylan Fanelli, October 2026. I used public data only. My code lives in a separate repository, `IForSureI/Dylan-Fanelli-Draft-Analytics`. If any club would like to view it, I will gladly share it.
 
-Four questions about the MLB draft, each answered with public data and tested out of sample.
+I asked four questions about the MLB draft. I answered each with public data and tested every answer out of sample.
 
 ## 1. What is a pick worth?
-A pricing backtest on 17 drafts. Value is a player's first six MLB seasons (WAR at $11.23M a win, minus the minimum salary in years 1-3 and arbitration in years 4-6, no season below zero, discounted 7% a year), in 2026 dollars, before the bonus.
+I ran a pricing backtest on 17 drafts. I define value as a player's first six MLB seasons (WAR at $11.23M a win, minus the minimum salary in years 1-3 and arbitration in years 4-6, no season below zero, discounted 7% a year), in 2026 dollars, before the bonus.
 
 | Pick | Typical value before the bonus, 2000-16 drafts | 90% range | Hitters | Pitchers |
 |---|---|---|---|---|
@@ -22,7 +22,7 @@ A pricing backtest on 17 drafts. Value is a player's first six MLB seasons (WAR 
 - **Over-slot money is inconclusive.** Twelve specifications ran from -$2.60 to +$5.60 back per dollar.
 
 ## 2. Can a college stat line rank a class?
-A draft model on NCAA lines, summer wood-bat lines (pitchers), age, age for level and conference tier.
+I built a draft model on NCAA lines, summer wood-bat lines (pitchers), age, age for level and conference tier.
 
 - **On 2012-2019 draftees (out of sample, one year at a time), the line ranked a class nearly as well as draft order** (within-year rank correlation .370 vs .425 for hitters, .282 vs .327 for pitchers), and inside a pick band the model's top half returned 1.16x and 1.23x what the pick predicted.
 - **It hasn't held up on recent classes.** On the 2020-2023 college draftees it never saw, it adds nothing to the pick on reaching the majors (hitters AUC .768 from the pick, .759 with the model). A rebuild under a protocol written in advance failed its locked 2023 test. The draft order has absorbed the public college line.
@@ -33,7 +33,7 @@ A draft model on NCAA lines, summer wood-bat lines (pitchers), age, age for leve
 - Clubs paid $8.62M in tax. None crossed 5%, so in practice the pool is the assigned pool times 1.05, and the last 5% costs $1.75 per dollar.
 
 ## 4. What do amateur pitch shapes look like to a big-league model?
-590,044 Hawk-Eye pitches from 1,874 amateur games at pro parks (2024-2026), scored with this portfolio's physics-only expected-whiff model trained on the 2026 MLB season.
+I pulled 590,044 Hawk-Eye pitches from 1,874 amateur games at pro parks (2024-2026) and scored them with my physics-only expected-whiff model trained on the 2026 MLB season.
 
 - **The MLB model reads amateur pitches about as well as big-league ones:** AUC .623 on 252,920 amateur swings, against .630 on MLB swings.
 - **Shape is the steadier read:** last year's shape predicted this year's whiff% at .65; last year's whiff% did .57 (n=79 pitcher-pitches).
