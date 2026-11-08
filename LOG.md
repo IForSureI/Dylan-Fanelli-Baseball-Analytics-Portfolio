@@ -2,6 +2,20 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-08: 2026 postseason snippets
+**Built**
+- **`reports/2026-postseason-snippets/`:** ten charts on all 40 games of the 2026 postseason (World Series win probability pitch by pitch, team contact quality, hitter and pitcher WPA leaders, results vs. contact, swing decisions, whiffs vs. damage, velocity and exit-velocity leaders, starter depth), with a README written from `findings.json`.
+- **`baseball/postseason.py`:** pulls Savant day by day for game types F, D, L and W, names from the MLB Stats API, and draws every chart.
+- **`tests/test_postseason_snippets.py`:** the World Series result, the 40-game count and Houston's starter line are pinned to the official record.
+
+**Checked**
+- All 40 completed games in the official schedule are in the pull; every game's win-expectancy changes sum to its result.
+- Starter depth is read from the official MLB box scores (Houston's starters: two outs in each of two games).
+
+**Review** (separate pass, every number recomputed and checked against MLB Stats API box scores and linescores for all 40 games)
+- The World Series result, all 40 final scores and every player's club confirmed.
+- Changed: starter depth now comes from the box scores (computing it from pitches gave a starter the out on a plate appearance a reliever finished, and counted intentional-walk placeholders as pitches); `truncated_pa` rows dropped (2,928 plate appearances, not 2,933); automatic balls kept out of pitch counts; the World Series shading is described as "favored", not "ahead"; the win-probability note now says between-pitch changes (pickoffs, caught stealings) aren't credited, so a game falls short of its result by up to about 0.06.
+
 ## 2026-11-05: The MLB draft project added to the portfolio
 **Built**
 - **`reports/2026-mlb-draft-analytics.md`:** my summary of my separate draft repository (pick values on 17 drafts, the college-stat model and its recent-class failure, 2026 bonus pools, amateur pitch shapes graded by this portfolio's whiff model).
