@@ -2,6 +2,15 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-08: House chart style for the whole package
+**Built**
+- **`baseball/house.py`:** one chart style loaded with the package, matching the interactive pages: Syne titles where they fit their panels (one title face per figure), Bricolage Grotesque text, paper and plate surfaces, and a blue, magenta, orange, teal series order checked with the dataviz validator. `baseball/viz.py` takes its tokens from it. Every study picks it up the next time it runs.
+- **Redrawn now:** the Skenes extension band and the Smith and Varland arbitration figures, whose numbers come from tables in the code (Smith files $4.65M, 23 comps; Varland files $3.65M; unchanged).
+
+**Not redrawn, and why**
+- **Trade network:** a re-pull through Oct. 13, 2026 returns 3,291 trades rather than the report's 3,290 (MLB Stats API revision); the rival rate ratio holds at 0.56 (0.49-0.65), but a figure is only replaced when every number matches, so the reviewed figure stays.
+- **GM tree, front-office ties, bullpen memo and the pitch-level studies:** they need hundreds of rate-limited Baseball-Reference pages or the full Savant pull; they take the house style on their next run.
+
 ## 2026-11-08: Postseason charts restyled to match the page
 **Built**
 - **`baseball/postseason.py`:** the ten charts now share the page's design: Syne and Bricolage Grotesque (in `assets/fonts/`, OFL), numbered plates with the number printed in two offset inks, crop marks, the title set left, a plain footer in place of the dark band, names in ink with club colours on the marks, and no bar-end badges or shadows. Same pull and code; `findings.json` and the README are unchanged.
