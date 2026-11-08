@@ -304,6 +304,7 @@ def build() -> dict:
 
     return {
         "meta": {k: f[k] for k in ("games", "pitches", "plate_appearances", "first_date", "last_date")} | {"built": f["built"]},
+        "findings": f,  # the page header (at a glance) quotes findings.json directly
         "colors": ps.TEAM,
         "league": {"xwoba": r3(den.x.mean()), "chase": r3(lg_chase), "whiff": r3(lg_whiff),
                    "fb_velo": r1(fb.release_speed.mean()), "ev": r1(bb.launch_speed.mean())},

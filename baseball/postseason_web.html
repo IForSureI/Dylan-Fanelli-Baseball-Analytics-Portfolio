@@ -20,6 +20,16 @@
   .lede { max-width: 760px; color: #3a3a3a; margin: 0 0 14px; }
   .facts { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--muted); margin: 0 0 6px; }
   .facts b { color: var(--ink); }
+  .crumbs { font-size: 13px; display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 14px; color: var(--muted); }
+  .crumbs a { text-decoration: none; font-weight: 600; }
+  .badges { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 16px; }
+  .badge { display: inline-flex; font: 600 11.5px/1 "Verdana", "DejaVu Sans", sans-serif; border-radius: 3px; overflow: hidden; }
+  .badge span { padding: 4px 7px; color: #fff; white-space: nowrap; }
+  .badge .k { background: #555; }
+  .glance { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--clay); border-radius: 6px; padding: 12px 16px; margin: 0 0 14px; max-width: 900px; }
+  .glance b { font-size: 14px; }
+  .glance ul { margin: 6px 0 0; padding-left: 18px; }
+  .glance li { margin: 4px 0; }
   .hint { display: inline-block; margin-top: 8px; font-size: 13px; background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; color: var(--muted); }
   main { max-width: 1180px; margin: 0 auto; padding: 12px 16px 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 540px), 1fr)); gap: 18px; }
   section.chart { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 16px 10px; min-width: 0; }
@@ -80,9 +90,10 @@
 </head>
 <body>
 <header class="top">
-  <p class="eyebrow">Dylan Fanelli · Baseball research</p>
+  <nav class="crumbs"><a href="portfolio.html">← Portfolio</a><span>|</span><a href="https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/tree/main/reports/2026-postseason-snippets">Static charts and write-up →</a></nav>
   <h1>2026 Postseason Snippets</h1>
-  <p class="lede">Ten quick charts on the 2026 postseason, the kind a front office passes around the morning after the World Series. Every point opens its breakdown: a hitter's line by round, how he handled each pitch group and his biggest swing; a pitcher's arsenal and biggest out; a club's path and its starters; every pitch of the World Series.</p>
+  <div class="badges" id="badges"></div>
+  <section class="glance" aria-label="At a glance"><b>At a glance</b><ul id="glance"></ul></section>
   <p class="facts" id="facts"></p>
   <span class="hint" id="hint">Hover any player, club or pitch for the breakdown. On a phone, tap.</span>
 </header>
@@ -377,6 +388,17 @@ function worldSeries(wrap, games) {
 
 // ---------------------------------------------------------------- the ten charts
 const M = DATA.meta, CH = DATA.charts;
+// header: badges and at a glance, every number from findings.json (docs/report-standard.md)
+const F = DATA.findings;
+const badge = (k, v, c) => `<span class="badge"><span class="k">${k}</span><span style="background:${c}">${v}</span></span>`;
+document.getElementById("badges").innerHTML = [badge("status", "reviewed", "#1d5c3f"), badge("data", "public", "#1f1f1f"),
+  badge("for", "Pro scouting and front office", "#6b6b6b"), ...["win probability added", "xwOBA", "plate discipline", "Statcast"].map(m => badge("method", m, "#b4532a"))].join(" ");
+const wsG = F.world_series.games, tc0 = F.team_contact.teams[0], hw0 = F.hitter_wpa.top5[0], pw0 = F.pitcher_wpa.top5[0];
+document.getElementById("glance").innerHTML = [
+  `<b>The question:</b> Who decided October, and how?`,
+  `<b>The answer:</b> The Brewers, in ${wsG.length}: they beat the Rays ${F.world_series.mil_wins} games to ${wsG.length - F.world_series.mil_wins} and had the best contact gap of any club (${f3(tc0.x_for)} xwOBA on offense, ${f3(tc0.x_against)} allowed). ${pw0.lab} led every pitcher at ${sg(pw0.wpa)} WPA in relief; ${hw0.lab} led hitters at ${sg(hw0.wpa)}.`,
+  `<b>For a club:</b> A morning-after read of October for pro scouting and the front office: who performed, how they did it, and which numbers are small-sample noise rather than a projection for ${F.season + 1}.`
+].map(t => `<li>${t}</li>`).join("");
 document.getElementById("facts").innerHTML = `<span><b>${M.games}</b> games</span><span><b>${M.pitches.toLocaleString()}</b> pitches</span><span><b>${M.plate_appearances.toLocaleString()}</b> plate appearances</span><span>Sept. 29 to Oct. 28, 2026</span><span>Data: Baseball Savant, MLB Stats API</span>`;
 document.getElementById("built").textContent = `Numbers as of the ${M.built} build.`;
 if (matchMedia("(hover: none)").matches) document.getElementById("hint").textContent = "Tap any player, club or pitch for the breakdown. Tap again to close.";
