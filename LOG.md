@@ -2,6 +2,10 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-08: Postseason charts restyled to match the page
+**Built**
+- **`baseball/postseason.py`:** the ten charts now share the page's design: Syne and Bricolage Grotesque (in `assets/fonts/`, OFL), numbered plates with the number printed in two offset inks, crop marks, the title set left, a plain footer in place of the dark band, names in ink with club colours on the marks, and no bar-end badges or shadows. Same pull and code; `findings.json` and the README are unchanged.
+
 ## 2026-11-08: Postseason page redesigned
 **Built**
 - **`docs/postseason.html`:** set as a long-form essay (Syne and Bricolage Grotesque, risograph pink and blue on off-white), with the 4-1 Series as the one oversized numeral and each chart's takeaway in the margin. Charts redraw at the screen's width so phone text stays readable; a dark mode with its own colors; names in ink with club colors on the marks; a table under every chart, including the World Series game by game; the provenance line at the top.
