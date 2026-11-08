@@ -1,0 +1,576 @@
+{
+ "season": 2026,
+ "games": 40,
+ "pitches": 11513,
+ "plate_appearances": 2928,
+ "first_date": "2026-09-29",
+ "last_date": "2026-10-28",
+ "built": "2026-11-08",
+ "world_series": {
+  "games": [
+   {
+    "game": 1,
+    "date": "2026-10-23",
+    "away": "TB",
+    "away_runs": 2,
+    "home": "MIL",
+    "home_runs": 3,
+    "winner": "MIL",
+    "biggest_swing_mil": 0.171,
+    "biggest_swing_inning": 9,
+    "biggest_swing_event": "strikeout"
+   },
+   {
+    "game": 2,
+    "date": "2026-10-24",
+    "away": "TB",
+    "away_runs": 4,
+    "home": "MIL",
+    "home_runs": 5,
+    "winner": "MIL",
+    "biggest_swing_mil": -0.203,
+    "biggest_swing_inning": 9,
+    "biggest_swing_event": "double"
+   },
+   {
+    "game": 3,
+    "date": "2026-10-26",
+    "away": "MIL",
+    "away_runs": 10,
+    "home": "TB",
+    "home_runs": 1,
+    "winner": "MIL",
+    "biggest_swing_mil": 0.135,
+    "biggest_swing_inning": 5,
+    "biggest_swing_event": "single"
+   },
+   {
+    "game": 4,
+    "date": "2026-10-27",
+    "away": "MIL",
+    "away_runs": 3,
+    "home": "TB",
+    "home_runs": 4,
+    "winner": "TB",
+    "biggest_swing_mil": 0.344,
+    "biggest_swing_inning": 12,
+    "biggest_swing_event": "home_run"
+   },
+   {
+    "game": 5,
+    "date": "2026-10-28",
+    "away": "MIL",
+    "away_runs": 4,
+    "home": "TB",
+    "home_runs": 1,
+    "winner": "MIL",
+    "biggest_swing_mil": 0.084,
+    "biggest_swing_inning": 6,
+    "biggest_swing_event": "double"
+   }
+  ],
+  "mil_wins": 4
+ },
+ "team_contact": {
+  "league_xwoba": 0.3,
+  "teams": [
+   {
+    "bat_team": "MIL",
+    "x_for": 0.335,
+    "pa": 499,
+    "x_against": 0.275,
+    "net": 0.06
+   },
+   {
+    "bat_team": "NYY",
+    "x_for": 0.326,
+    "pa": 176,
+    "x_against": 0.269,
+    "net": 0.057
+   },
+   {
+    "bat_team": "CLE",
+    "x_for": 0.31,
+    "pa": 399,
+    "x_against": 0.28,
+    "net": 0.029
+   },
+   {
+    "bat_team": "LAD",
+    "x_for": 0.319,
+    "pa": 286,
+    "x_against": 0.302,
+    "net": 0.018
+   },
+   {
+    "bat_team": "SD",
+    "x_for": 0.307,
+    "pa": 213,
+    "x_against": 0.292,
+    "net": 0.015
+   },
+   {
+    "bat_team": "CWS",
+    "x_for": 0.293,
+    "pa": 266,
+    "x_against": 0.3,
+    "net": -0.007
+   },
+   {
+    "bat_team": "PHI",
+    "x_for": 0.297,
+    "pa": 111,
+    "x_against": 0.325,
+    "net": -0.028
+   },
+   {
+    "bat_team": "ATL",
+    "x_for": 0.289,
+    "pa": 252,
+    "x_against": 0.318,
+    "net": -0.029
+   },
+   {
+    "bat_team": "TB",
+    "x_for": 0.27,
+    "pa": 492,
+    "x_against": 0.313,
+    "net": -0.043
+   },
+   {
+    "bat_team": "HOU",
+    "x_for": 0.275,
+    "pa": 69,
+    "x_against": 0.329,
+    "net": -0.054
+   },
+   {
+    "bat_team": "CHC",
+    "x_for": 0.217,
+    "pa": 70,
+    "x_against": 0.341,
+    "net": -0.124
+   },
+   {
+    "bat_team": "BOS",
+    "x_for": 0.218,
+    "pa": 63,
+    "x_against": 0.393,
+    "net": -0.175
+   }
+  ]
+ },
+ "hitter_wpa": {
+  "top5": [
+   {
+    "lab": "W. Contreras (MIL)",
+    "pa": 58,
+    "wpa": 0.6
+   },
+   {
+    "lab": "J. Ram\u00edrez (CLE)",
+    "pa": 48,
+    "wpa": 0.524
+   },
+   {
+    "lab": "D. Hamilton (MIL)",
+    "pa": 29,
+    "wpa": 0.426
+   },
+   {
+    "lab": "O. Albies (ATL)",
+    "pa": 30,
+    "wpa": 0.418
+   },
+   {
+    "lab": "J. Chourio (MIL)",
+    "pa": 62,
+    "wpa": 0.417
+   }
+  ],
+  "bottom3": [
+   {
+    "lab": "B. Rocchio (CLE)",
+    "pa": 39,
+    "wpa": -0.639
+   },
+   {
+    "lab": "T. Walls (TB)",
+    "pa": 45,
+    "wpa": -0.604
+   },
+   {
+    "lab": "V. Mesa (TB)",
+    "pa": 48,
+    "wpa": -0.582
+   }
+  ]
+ },
+ "pitcher_wpa": {
+  "top5": [
+   {
+    "lab": "A. Ashby (MIL)",
+    "bf": 60,
+    "wpa": 1.825
+   },
+   {
+    "lab": "D. Rasmussen (TB)",
+    "bf": 110,
+    "wpa": 0.887
+   },
+   {
+    "lab": "B. Baker (TB)",
+    "bf": 32,
+    "wpa": 0.798
+   },
+   {
+    "lab": "T. Megill (MIL)",
+    "bf": 35,
+    "wpa": 0.777
+   },
+   {
+    "lab": "M. King (SD)",
+    "bf": 53,
+    "wpa": 0.648
+   }
+  ],
+  "bottom3": [
+   {
+    "lab": "I. Seymour (TB)",
+    "bf": 46,
+    "wpa": -0.762
+   },
+   {
+    "lab": "S. Drohan (MIL)",
+    "bf": 9,
+    "wpa": -0.651
+   },
+   {
+    "lab": "M. Miller (SD)",
+    "bf": 19,
+    "wpa": -0.583
+   }
+  ]
+ },
+ "hitter_xwoba_woba": {
+  "n": 50,
+  "min_pa": 25,
+  "top_xwoba": [
+   {
+    "name": "M. Machado",
+    "team": "SD",
+    "pa": 25,
+    "woba": 0.464,
+    "xwoba": 0.512
+   },
+   {
+    "name": "O. Albies",
+    "team": "ATL",
+    "pa": 29,
+    "woba": 0.431,
+    "xwoba": 0.467
+   },
+   {
+    "name": "F. Freeman",
+    "team": "LAD",
+    "pa": 33,
+    "woba": 0.267,
+    "xwoba": 0.431
+   }
+  ],
+  "most_above": [
+   {
+    "name": "M. Harris",
+    "team": "ATL",
+    "woba": 0.476,
+    "xwoba": 0.316
+   },
+   {
+    "name": "D. Hamilton",
+    "team": "MIL",
+    "woba": 0.47,
+    "xwoba": 0.318
+   },
+   {
+    "name": "C. Simpson",
+    "team": "TB",
+    "woba": 0.378,
+    "xwoba": 0.269
+   }
+  ],
+  "most_below": [
+   {
+    "name": "F. Freeman",
+    "team": "LAD",
+    "woba": 0.267,
+    "xwoba": 0.431
+   },
+   {
+    "name": "P. Bailey",
+    "team": "CLE",
+    "woba": 0.344,
+    "xwoba": 0.43
+   },
+   {
+    "name": "W. Smith",
+    "team": "LAD",
+    "woba": 0.128,
+    "xwoba": 0.207
+   }
+  ]
+ },
+ "hitter_swing_decisions": {
+  "n": 50,
+  "league_chase": 0.316,
+  "league_whiff": 0.266,
+  "lowest_chase": [
+   {
+    "name": "M. Vargas",
+    "team": "CWS",
+    "chase": 0.086,
+    "whiff": 0.125
+   },
+   {
+    "name": "M. Betts",
+    "team": "LAD",
+    "chase": 0.138,
+    "whiff": 0.103
+   },
+   {
+    "name": "M. Machado",
+    "team": "SD",
+    "chase": 0.152,
+    "whiff": 0.122
+   }
+  ],
+  "lowest_whiff": [
+   {
+    "name": "S. Kwan",
+    "team": "CLE",
+    "chase": 0.178,
+    "whiff": 0.052
+   },
+   {
+    "name": "S. Antonacci",
+    "team": "CWS",
+    "chase": 0.175,
+    "whiff": 0.087
+   },
+   {
+    "name": "M. Betts",
+    "team": "LAD",
+    "chase": 0.138,
+    "whiff": 0.103
+   }
+  ]
+ },
+ "pitcher_whiff_xwoba": {
+  "n": 40,
+  "min_pitches": 100,
+  "top_whiff": [
+   {
+    "name": "G. Williams",
+    "team": "CLE",
+    "pitches": 280,
+    "whiff": 0.435,
+    "xwoba": 0.223
+   },
+   {
+    "name": "B. Snell",
+    "team": "LAD",
+    "pitches": 191,
+    "whiff": 0.392,
+    "xwoba": 0.312
+   },
+   {
+    "name": "H. Smith",
+    "team": "CWS",
+    "pitches": 137,
+    "whiff": 0.386,
+    "xwoba": 0.329
+   }
+  ],
+  "best_xwoba": [
+   {
+    "name": "J. Romero",
+    "team": "MIL",
+    "pitches": 119,
+    "whiff": 0.228,
+    "xwoba": 0.137
+   },
+   {
+    "name": "C. Smith",
+    "team": "CLE",
+    "pitches": 157,
+    "whiff": 0.31,
+    "xwoba": 0.184
+   },
+   {
+    "name": "A. Ashby",
+    "team": "MIL",
+    "pitches": 238,
+    "whiff": 0.324,
+    "xwoba": 0.184
+   }
+  ]
+ },
+ "velo_leaders": {
+  "league_fb_velo": 96.07,
+  "top5": [
+   {
+    "lab": "E. Henriquez (LAD)",
+    "n": 43,
+    "velo": 101.74,
+    "top": 103.4
+   },
+   {
+    "lab": "M. Miller (SD)",
+    "n": 40,
+    "velo": 101.52,
+    "top": 103.5
+   },
+   {
+    "lab": "J. Misiorowski (MIL)",
+    "n": 227,
+    "velo": 101.02,
+    "top": 104.8
+   },
+   {
+    "lab": "J. Hicks (CWS)",
+    "n": 51,
+    "velo": 100.36,
+    "top": 102.0
+   },
+   {
+    "lab": "R. Sasaki (LAD)",
+    "n": 29,
+    "velo": 99.77,
+    "top": 102.1
+   }
+  ],
+  "fastest_pitch": {
+   "mph": 104.8,
+   "pitcher": "J. Misiorowski"
+  }
+ },
+ "ev_leaders": {
+  "league_ev": 87.87,
+  "top5": [
+   {
+    "lab": "M. Vargas (CWS)",
+    "n": 16,
+    "ev": 94.756,
+    "top": 110.4,
+    "hard": 0.562
+   },
+   {
+    "lab": "J. Chourio (MIL)",
+    "n": 47,
+    "ev": 94.691,
+    "top": 113.3,
+    "hard": 0.617
+   },
+   {
+    "lab": "O. Albies (ATL)",
+    "n": 20,
+    "ev": 93.795,
+    "top": 106.1,
+    "hard": 0.55
+   },
+   {
+    "lab": "F. Freeman (LAD)",
+    "n": 25,
+    "ev": 93.788,
+    "top": 106.4,
+    "hard": 0.64
+   },
+   {
+    "lab": "A. Pages (LAD)",
+    "n": 17,
+    "ev": 93.188,
+    "top": 111.4,
+    "hard": 0.412
+   }
+  ],
+  "hardest_ball": {
+   "mph": 115.5,
+   "batter": "Y. D\u00edaz"
+  }
+ },
+ "starter_depth": {
+  "teams": [
+   {
+    "team": "NYY",
+    "games": 5,
+    "outs": 16.4,
+    "pitches": 90.6
+   },
+   {
+    "team": "TB",
+    "games": 14,
+    "outs": 15.29,
+    "pitches": 79.71
+   },
+   {
+    "team": "LAD",
+    "games": 8,
+    "outs": 14.75,
+    "pitches": 87.0
+   },
+   {
+    "team": "ATL",
+    "games": 7,
+    "outs": 14.43,
+    "pitches": 72.29
+   },
+   {
+    "team": "BOS",
+    "games": 2,
+    "outs": 14.0,
+    "pitches": 76.5
+   },
+   {
+    "team": "PHI",
+    "games": 3,
+    "outs": 13.33,
+    "pitches": 77.0
+   },
+   {
+    "team": "SD",
+    "games": 6,
+    "outs": 12.67,
+    "pitches": 66.0
+   },
+   {
+    "team": "MIL",
+    "games": 13,
+    "outs": 12.23,
+    "pitches": 66.54
+   },
+   {
+    "team": "CHC",
+    "games": 2,
+    "outs": 11.0,
+    "pitches": 56.0
+   },
+   {
+    "team": "CLE",
+    "games": 11,
+    "outs": 9.82,
+    "pitches": 59.82
+   },
+   {
+    "team": "CWS",
+    "games": 7,
+    "outs": 7.57,
+    "pitches": 42.57
+   },
+   {
+    "team": "HOU",
+    "games": 2,
+    "outs": 2.0,
+    "pitches": 31.5
+   }
+  ]
+ }
+}
