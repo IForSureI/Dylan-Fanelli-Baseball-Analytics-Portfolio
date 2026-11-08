@@ -48,10 +48,18 @@ OUT = ROOT / "reports" / "2026-postseason-snippets"
 SEASON = 2026
 FIRST, LAST = dt.date(2026, 9, 29), dt.date(2026, 10, 28)
 
-INK, MUTED, GRID = "#1f1f1f", "#6b6b6b", "#e6e6e4"
-BAND, ACCENT = "#1f1f1f", "#b4532a"
-BOX, BOX_EDGE = "#f6efe9", "#b4532a"
-HANDLE = "Dylan Fanelli  |  github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio"
+# Look: the static charts share the interactive page's design (fonts in assets/fonts, OFL-licensed): a numbered
+# plate with crop marks, the title set left, the club colour on the marks and every word in ink.
+from matplotlib import font_manager as _fm  # noqa: E402
+import matplotlib.patheffects as _pe  # noqa: E402
+
+for _f in "Syne-SemiBold Syne-ExtraBold BricolageGrotesque-Regular BricolageGrotesque-SemiBold".split():
+    _fm.fontManager.addfont(str(ROOT / "assets" / "fonts" / f"{_f}.ttf"))
+DISPLAY, TEXT = "Syne", "Bricolage Grotesque"
+PAPER, PLATE, INK, MUTED, SOFT, GRID = "#f4f0f0", "#fffdfd", "#1d1a24", "#5a5563", "#8b8592", "#ebe5e5"
+ACCENT, LOT, LOT2 = "#c0136c", "#fa3899", '#1162d4'
+HALO = [_pe.withStroke(linewidth=3, foreground=PLATE)]
+HANDLE = "Dylan Fanelli, github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio"
 SOURCE = "Data: Baseball Savant, MLB Stats API"
 
 # Club colors (primary, secondary) for the twelve 2026 postseason clubs.
@@ -163,35 +171,43 @@ def _lum(hexc: str) -> float:
     return 0.2126 * r + 0.7152 * g + 0.0722 * b
 
 
-def _readable(c1: str, c2: str) -> str:
-    if _lum(c1) < 0.62:
-        return c1
-    return c2 if _lum(c2) < 0.62 else INK
+def _readable(*_):
+    """Words wear ink; the club colour lives on the mark (dataviz: text tokens, never the series colour)."""
+    return INK
 
 
 def canvas(figsize=(10, 8.6)):
-    plt.rcParams.update({"font.family": "DejaVu Sans", "axes.edgecolor": "#9ca3af", "axes.linewidth": 1.0,
-                         "xtick.color": INK, "ytick.color": INK, "axes.labelcolor": INK, "text.color": INK})
-    fig = plt.figure(figsize=figsize, dpi=200, facecolor="white")
-    ax = fig.add_axes([0.10, 0.12, 0.86, 0.70])
+    plt.rcParams.update({"font.family": TEXT, "axes.edgecolor": SOFT, "axes.linewidth": 0.9,
+                         "xtick.color": MUTED, "ytick.color": MUTED, "axes.labelcolor": INK, "text.color": INK,
+                         "axes.labelweight": "semibold"})
+    fig = plt.figure(figsize=figsize, dpi=200, facecolor=PAPER)
+    ax = fig.add_axes([0.10, 0.12, 0.84, 0.68])
+    ax.set_facecolor(PLATE)
     ax.grid(True, color=GRID, lw=0.8, zorder=0)
     ax.set_axisbelow(True)
+    for sp in ("top", "right"):
+        ax.spines[sp].set_visible(False)
     return fig, ax
 
 
 def header_footer(fig, title: str, sub: str):
-    fig.text(0.5, 0.93, title, ha="center", va="center", fontsize=25, fontweight="black", color=INK)
-    fig.text(0.5, 0.875, sub, ha="center", va="center", fontsize=10, color=MUTED)
-    fig.add_artist(Rectangle((0, 0), 1, 0.055, transform=fig.transFigure, color=BAND, zorder=0))
-    fig.text(0.02, 0.0275, HANDLE, ha="left", va="center", fontsize=9.5, color="white", fontweight="bold")
-    fig.text(0.98, 0.0275, SOURCE, ha="right", va="center", fontsize=9.5, color="#f4b183", fontweight="bold")
+    plt.rcParams.update({"font.family": TEXT})
+    fig._plate_title = fig.text(0.06, 0.925, title, ha="left", va="center", fontsize=21,
+                                fontweight="heavy", family=DISPLAY, color=INK)
+    fig.text(0.06, 0.872, sub.replace(" | ", "; "), ha="left", va="center", fontsize=10, style="italic", color=MUTED)
+    fig.add_artist(plt.Line2D([0.06, 0.94], [0.052, 0.052], transform=fig.transFigure, color=SOFT, lw=0.7))
+    fig.text(0.06, 0.028, HANDLE, ha="left", va="center", fontsize=9, color=MUTED)
+    fig.text(0.94, 0.028, SOURCE, ha="right", va="center", fontsize=9, color=MUTED)
+    for x, y, dx, dy in ((0.02, 0.98, 1, -1), (0.98, 0.98, -1, -1), (0.02, 0.02, 1, 1), (0.98, 0.02, -1, 1)):
+        fig.add_artist(plt.Line2D([x, x + dx * 0.022], [y, y], transform=fig.transFigure, color=SOFT, lw=0.8))
+        fig.add_artist(plt.Line2D([x, x], [y, y + dy * 0.022], transform=fig.transFigure, color=SOFT, lw=0.8))
 
 
 def corner(ax, text, where):
     pos = {"tl": (0.02, 0.97, "left", "top"), "tr": (0.98, 0.97, "right", "top"),
            "bl": (0.02, 0.03, "left", "bottom"), "br": (0.98, 0.03, "right", "bottom")}[where]
-    ax.text(pos[0], pos[1], text, transform=ax.transAxes, ha=pos[2], va=pos[3], fontsize=11, fontweight="bold",
-            color=ACCENT, bbox=dict(boxstyle="round,pad=0.35", fc=BOX, ec=BOX_EDGE, lw=1.0), zorder=6)
+    ax.text(pos[0], pos[1], text, transform=ax.transAxes, ha=pos[2], va=pos[3], fontsize=10.5, style="italic",
+            color=ACCENT, zorder=6, path_effects=HALO)
 
 
 def pad(ax, frac=0.12):
@@ -202,28 +218,40 @@ def pad(ax, frac=0.12):
 
 
 def mean_lines(ax, xm, ym):
-    ax.axvline(xm, color=ACCENT, ls=":", lw=1.1, zorder=2)
-    ax.axhline(ym, color=ACCENT, ls=":", lw=1.1, zorder=2)
+    ax.axvline(xm, color=ACCENT, ls=(0, (2, 3)), lw=1.0, zorder=2)
+    ax.axhline(ym, color=ACCENT, ls=(0, (2, 3)), lw=1.0, zorder=2)
 
 
 def sub_line(extra: str) -> str:
-    return f"2026 Postseason | Wild Card through World Series (40 games) | {extra}"
+    return f"2026 postseason, Wild Card Series through World Series (40 games). {extra.replace(' | ', '; ')}"
 
 
 def save(fig, name):
+    """Number the plate, keep the title clear of the number, write it."""
+    lots = [w for w in __doc__.split("Charts")[1].split("Data:")[0].split() if w.endswith(".png")]
+    no = lots.index(name) + 1 if name in lots else None
+    if no:
+        txt = f"{no:02d}"
+        if LOT2:  # two-ink misregistration on the number (risograph)
+            fig.text(0.943, 0.917, txt, ha="right", va="center", fontsize=30, fontweight="heavy", family=DISPLAY, color=LOT2, alpha=0.9)
+        lot = fig.text(0.94, 0.92, txt, ha="right", va="center", fontsize=30, fontweight="heavy", family=DISPLAY, color=LOT)
+        title = getattr(fig, "_plate_title", None)
+        if title is not None:
+            r = fig.canvas.get_renderer()
+            room = lot.get_window_extent(r).x0 - 24
+            while title.get_window_extent(r).x1 > room and title.get_fontsize() > 12:
+                title.set_fontsize(title.get_fontsize() - 0.5)
     OUT.mkdir(parents=True, exist_ok=True)
-    fig.savefig(OUT / name, dpi=200, facecolor="white")
+    fig.savefig(OUT / name, dpi=200, facecolor=PAPER)
     plt.close(fig)
 
 
 def badge(ax, x, y, abbr, c1, c2, s=900, fs=8.2, z=5, text=True):
-    """Team badge: soft shadow, outer ring in the second color, a white gap, the main color, the abbreviation.
+    """Team badge: outer ring in the second color, a white gap, the main color, the abbreviation.
     Sizes are in points, so the badge stays round whatever the axes' aspect."""
     import matplotlib.transforms as mt
-    sh = mt.offset_copy(ax.transData, fig=ax.figure, x=1.2, y=-1.6, units="points")
-    ax.scatter([x], [y], s=s * 1.02, color="black", alpha=0.18, lw=0, transform=sh, zorder=z, clip_on=False)
     ax.scatter([x], [y], s=s, color=c2, lw=0, zorder=z + 0.1, clip_on=False)
-    ax.scatter([x], [y], s=s * 0.74, color="white", lw=0, zorder=z + 0.2, clip_on=False)
+    ax.scatter([x], [y], s=s * 0.74, color=PLATE, lw=0, zorder=z + 0.2, clip_on=False)
     ax.scatter([x], [y], s=s * 0.58, color=c1, lw=0, zorder=z + 0.3, clip_on=False)
     if text:
         ax.text(x, y, abbr, ha="center", va="center", fontsize=fs, fontweight="bold", zorder=z + 0.4,
@@ -231,9 +259,8 @@ def badge(ax, x, y, abbr, c1, c2, s=900, fs=8.2, z=5, text=True):
 
 
 def cap(ax, x, y, abbr):
-    """Small badge at the end of a ranked bar."""
-    c1, c2 = TEAM[abbr]
-    badge(ax, x, y, abbr, c1, c2, s=380, fs=5.8, z=4)
+    """Bar ends carry no badge: the label already names the club, and the badge-on-bar look is a shared template."""
+    return None
 
 
 def side_text(ax, x, y, txt, right=True, pts=14, **kw):
@@ -267,7 +294,7 @@ def team_dots(ax, t, xcol, ycol, size=520):
     for k, abbr in enumerate(t.index):
         c1, c2 = TEAM[abbr]
         if np.hypot(pu[k] - u[k], pv[k] - v[k]) > 0.004:
-            ax.plot([xs[k], px[k]], [ys[k], py[k]], color="#9ca3af", lw=0.8, zorder=4)
+            ax.plot([xs[k], px[k]], [ys[k], py[k]], color=SOFT, lw=0.8, zorder=4)
             ax.scatter([xs[k]], [ys[k]], s=10, color=c1, zorder=4)
         badge(ax, px[k], py[k], abbr, c1, c2)
 
@@ -286,11 +313,11 @@ def player_points(ax, df, x, y, label, team, size_col=None):
     for (_, r), sz in zip(df.iterrows(), sizes):
         c1, c2 = TEAM[r[team]]
         dots.append(ax.scatter(r[x], r[y], s=sz, color=c1, edgecolor=c2, linewidth=1.6, zorder=5))
-    texts = [ax.text(r[x], r[y], r[label], fontsize=8.6, fontweight="bold", color=_readable(*TEAM[r[team]]), zorder=7)
+    texts = [ax.text(r[x], r[y], r[label], fontsize=8.6, fontweight="bold", color=_readable(*TEAM[r[team]]), zorder=7, path_effects=HALO)
              for _, r in df.iterrows()]
     adjust_text(texts, x=df[x].to_numpy(float), y=df[y].to_numpy(float), ax=ax, expand=(1.3, 1.7),
                 force_text=(0.4, 0.6), force_static=(0.5, 0.8),
-                arrowprops=dict(arrowstyle="-", color="#9ca3af", lw=0.6))
+                arrowprops=dict(arrowstyle="-", color=SOFT, lw=0.6))
 
 
 def ranked_bars(rows, value, label, team, fmt, xlabel, title, sub, fname, right=None, right_head="",
@@ -356,7 +383,7 @@ def ranked_bars(rows, value, label, team, fmt, xlabel, title, sub, fname, right=
 # ---------------------------------------------------------------- charts
 
 def chart_world_series(a, f):
-    plt.rcParams.update({"font.family": "DejaVu Sans"})
+    plt.rcParams.update({"font.family": TEXT, "text.color": INK})
     ws = a[a.game_type == "W"]
     games = sorted(ws.game_pk.unique(), key=lambda g: ws.loc[ws.game_pk == g, "game_date"].iloc[0])
     fig = plt.figure(figsize=(10, 9.4), dpi=200, facecolor="white")
@@ -370,6 +397,7 @@ def chart_world_series(a, f):
         mil = hw if home == "MIL" else 1 - hw
         mil = np.r_[0.5, mil]
         ax = fig.add_axes([0.08, 0.715 - i * 0.135, 0.84, 0.098])
+        ax.set_facecolor(PLATE)
         xs = np.arange(len(mil))
         ax.fill_between(xs, 0.5, mil, where=mil >= 0.5, color=TEAM["MIL"][1], alpha=0.55, lw=0, interpolate=True)
         ax.fill_between(xs, 0.5, mil, where=mil < 0.5, color=TEAM["TB"][1], alpha=0.55, lw=0, interpolate=True)
@@ -386,7 +414,7 @@ def chart_world_series(a, f):
         away = d.away_team.iloc[0]
         winner = home if hs > as_ else away
         date = pd.to_datetime(d.game_date.iloc[0]).strftime("%b %-d")
-        ax.text(0.0, 1.06, f"Game {i + 1}  |  {date}  |  {away} {as_}, {home} {hs}", transform=ax.transAxes,
+        ax.text(0.0, 1.06, f"Game {i + 1}, {date}: {away} {as_}, {home} {hs}", transform=ax.transAxes,
                 fontsize=11, fontweight="bold", color=INK, va="bottom")
         ax.text(1.0, 1.06, f"{winner} wins", transform=ax.transAxes, fontsize=10.5, fontweight="bold",
                 color=TEAM[winner][0], va="bottom", ha="right")
@@ -394,7 +422,7 @@ def chart_world_series(a, f):
         dd = d.assign(mil_d=np.where(d.home_team == "MIL", 1, -1) * d.delta_home_win_exp.fillna(0))
         k = dd.mil_d.abs().idxmax()
         pos = list(d.index).index(k) + 1
-        ax.scatter([pos], [mil[pos]], s=30, color=ACCENT, zorder=5, clip_on=False)
+        ax.scatter([pos], [mil[pos]], s=30, color=LOT, zorder=5, clip_on=False)
         summary.append({"game": i + 1, "date": str(d.game_date.iloc[0])[:10], "away": away, "away_runs": as_,
                         "home": home, "home_runs": hs, "winner": winner,
                         "biggest_swing_mil": round(float(dd.loc[k, "mil_d"]), 3),
