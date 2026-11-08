@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026 Postseason Snippets</title>
+<meta name="description" content="Ten interactive charts on the 2026 MLB postseason. Hover any player, club or pitch for the breakdown. Dylan Fanelli.">
+<style>
+  :root {
+    --paper: #f6f3ec; --card: #ffffff; --ink: #1f1f1f; --muted: #6b6b6b; --line: #e3ded3; --grid: #ece8df;
+    --green: #1d5c3f; --clay: #b4532a; --tip: #1f1f1f; --tip-ink: #f6f3ec; --tip-muted: #b9b4aa;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  a { color: var(--green); }
+  header.top { max-width: 1180px; margin: 0 auto; padding: 36px 16px 8px; }
+  .eyebrow { text-transform: uppercase; letter-spacing: .08em; font-size: 12px; font-weight: 700; color: var(--clay); margin: 0 0 6px; }
+  h1 { font-size: clamp(28px, 4.5vw, 44px); line-height: 1.1; margin: 0 0 10px; font-weight: 800; }
+  .lede { max-width: 760px; color: #3a3a3a; margin: 0 0 14px; }
+  .facts { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--muted); margin: 0 0 6px; }
+  .facts b { color: var(--ink); }
+  .hint { display: inline-block; margin-top: 8px; font-size: 13px; background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; color: var(--muted); }
+  main { max-width: 1180px; margin: 0 auto; padding: 12px 16px 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 540px), 1fr)); gap: 18px; }
+  section.chart { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 16px 10px; min-width: 0; }
+  section.chart.wide { grid-column: 1 / -1; }
+  .num-badge { display: inline-block; font-size: 12px; font-weight: 700; color: #fff; background: var(--ink); border-radius: 4px; padding: 1px 7px; margin-right: 8px; vertical-align: 2px; }
+  h2 { font-size: 20px; margin: 0 0 2px; font-weight: 800; }
+  .sub { font-size: 13px; color: var(--muted); margin: 0 0 8px; }
+  .says { font-size: 13.5px; margin: 8px 0 4px; color: #333; }
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+  svg text { font-family: inherit; }
+  .axis text { font-size: 11px; fill: var(--muted); }
+  .axis-title { font-size: 12px; font-weight: 700; fill: var(--ink); }
+  .gridline { stroke: var(--grid); stroke-width: 1; }
+  .ref { stroke: var(--clay); stroke-width: 1.2; stroke-dasharray: 3 3; }
+  .ref-label { font-size: 11px; font-weight: 700; fill: var(--clay); }
+  .corner { font-size: 11px; font-weight: 700; fill: var(--clay); }
+  .hit { cursor: pointer; outline: none; }
+  .hit:focus-visible .mark, .hit.active .mark { stroke: var(--ink) !important; stroke-width: 3 !important; }
+  .hit .mark { transition: opacity .12s; }
+  svg.dim .hit:not(.active) .mark { opacity: .28; }
+  svg.dim .hit:not(.active) text { opacity: .35; }
+  .pt-label { font-size: 10.5px; font-weight: 700; pointer-events: none; paint-order: stroke; stroke: #fff; stroke-width: 3px; stroke-linejoin: round; }
+  .bar-label { font-size: 12px; font-weight: 700; }
+  .bar-val { font-size: 12px; font-weight: 700; fill: var(--ink); }
+  .bar-right { font-size: 11.5px; fill: var(--muted); }
+  .ws-title { font-size: 12.5px; font-weight: 700; fill: var(--ink); }
+  .ws-cursor { stroke: var(--ink); stroke-width: 1; }
+  footer { max-width: 1180px; margin: 0 auto; padding: 0 16px 40px; font-size: 13px; color: var(--muted); }
+  footer h3 { color: var(--ink); font-size: 15px; margin: 18px 0 6px; }
+  footer ul { padding-left: 18px; margin: 0; }
+  /* hover card */
+  #tip { position: fixed; z-index: 10; pointer-events: none; opacity: 0; transform: translateY(4px); transition: opacity .1s, transform .1s;
+         width: min(340px, calc(100vw - 24px)); background: var(--tip); color: var(--tip-ink); border-radius: 10px; padding: 12px 14px;
+         box-shadow: 0 10px 30px rgba(0,0,0,.28); font-size: 12.5px; line-height: 1.4; }
+  #tip.on { opacity: 1; transform: none; }
+  #tip .t-head { display: flex; align-items: center; gap: 8px; margin-bottom: 2px; }
+  #tip .chip { font-size: 11px; font-weight: 800; border-radius: 4px; padding: 1px 6px; border: 2px solid; }
+  #tip .t-name { font-size: 15px; font-weight: 800; }
+  #tip .t-sub { color: var(--tip-muted); margin-bottom: 8px; }
+  #tip .big { display: flex; gap: 14px; margin: 6px 0 8px; }
+  #tip .big div { display: flex; flex-direction: column; }
+  #tip .big b { font-size: 18px; line-height: 1.1; }
+  #tip .big span { font-size: 11px; color: var(--tip-muted); }
+  #tip table { width: 100%; border-collapse: collapse; margin: 4px 0 6px; }
+  #tip th { text-align: left; font-weight: 600; color: var(--tip-muted); font-size: 11px; padding: 2px 4px 2px 0; border-bottom: 1px solid #3a3a3a; }
+  #tip td { padding: 2px 4px 2px 0; font-variant-numeric: tabular-nums; }
+  #tip td.r, #tip th.r { text-align: right; }
+  #tip .sec { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: #f4b183; font-weight: 700; margin: 8px 0 2px; }
+  #tip .note { color: var(--tip-muted); font-size: 11px; margin-top: 6px; }
+  #tip .pos { color: #9fd8b3; } #tip .neg { color: #f4a3a3; }
+  @media (max-width: 640px) {
+    #tip { left: 12px !important; right: 12px; top: auto !important; bottom: 12px; width: auto; pointer-events: auto; }
+    .pt-label { font-size: 9.5px; }
+  }
+  @media (prefers-reduced-motion: reduce) { #tip, .hit .mark { transition: none; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <p class="eyebrow">Dylan Fanelli · Baseball research</p>
+  <h1>2026 Postseason Snippets</h1>
+  <p class="lede">Ten quick charts on the 2026 postseason, the kind a front office passes around the morning after the World Series. Every point opens its breakdown: a hitter's line by round, how he handled each pitch group and his biggest swing; a pitcher's arsenal and biggest out; a club's path and its starters; every pitch of the World Series.</p>
+  <p class="facts" id="facts"></p>
+  <span class="hint" id="hint">Hover any player, club or pitch for the breakdown. On a phone, tap.</span>
+</header>
+<main id="charts"></main>
+<footer>
+  <h3>Method</h3>
+  <ul>
+    <li>Data: Baseball Savant pitch-level search for 2026 game types F, D, L and W, pulled one day at a time; names, the schedule and starters' lines from the MLB Stats API and the official box scores.</li>
+    <li>WPA is Savant's win expectancy, summed over a plate appearance's pitches and credited to the batter and to the pitcher who threw the last pitch. Changes between pitches (pickoffs, caught stealings) aren't credited to anyone.</li>
+    <li>xwOBA uses Savant's expected wOBA on balls in play and the actual value on walks, hit-by-pitches and strikeouts. Zone = Savant zones 1-9. Whiff rate = swinging strikes and foul tips per swing. Hard-hit = 95+ mph. Barrel = Savant's barrel class.</li>
+    <li>Plate appearances cut short by the end of an inning are left out; automatic balls are left out of pitch counts. Small samples by design: these describe October, they don't project 2027.</li>
+    <li>Every headline number on this page is checked against the published charts' <a href="https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-postseason-snippets/findings.json">findings.json</a> when the page is built. Code: <a href="https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/baseball/postseason_web.py">baseball/postseason_web.py</a>. Static charts and write-up: <a href="https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/tree/main/reports/2026-postseason-snippets">reports/2026-postseason-snippets</a>.</li>
+  </ul>
+  <p id="built"></p>
+</footer>
+<div id="tip" role="tooltip" aria-live="polite"></div>
+<script>
+const DATA = /*DATA*/null;
+(() => {
+const NS = "http://www.w3.org/2000/svg";
+const C = DATA.colors, H = DATA.hitters, P = DATA.pitchers, T = DATA.teams, L = DATA.league;
+const f3 = v => v == null ? "–" : v.toFixed(3).replace(/^0\./, ".").replace(/^-0\./, "-.");
+const pc = v => v == null ? "–" : (100 * v).toFixed(1) + "%";
+const sg = (v, d = 2) => v == null ? "–" : (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(d);
+const cls = v => v > 0 ? "pos" : v < 0 ? "neg" : "";
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const lum = h => { const n = parseInt(h.slice(1), 16), r = n >> 16 & 255, g = n >> 8 & 255, b = n & 255;
+  const f = c => (c /= 255) <= .03928 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4; return .2126 * f(r) + .7152 * f(g) + .0722 * f(b); };
+const readable = t => { const [a, b] = C[t]; return lum(a) < .35 ? a : (lum(b) < .35 ? b : "#1f1f1f"); };
+const chip = t => `<span class="chip" style="background:${C[t][0]};border-color:${C[t][1]};color:${lum(C[t][0]) < .5 ? "#fff" : "#111"}">${t}</span>`;
+const el = (tag, attrs = {}, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+
+// ---------------------------------------------------------------- hover card
+const tip = document.getElementById("tip");
+let pinned = null, activeEl = null;
+function place(evt, anchor) {
+  if (matchMedia("(max-width: 640px)").matches) return;
+  const r = anchor ? anchor.getBoundingClientRect() : null;
+  let x = evt && evt.clientX != null && evt.clientX ? evt.clientX : (r ? r.right : 0);
+  let y = evt && evt.clientY != null && evt.clientY ? evt.clientY : (r ? r.top : 0);
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  let left = x + 16, top = y + 14;
+  if (left + w > innerWidth - 8) left = x - w - 16;
+  if (left < 8) left = 8;
+  if (top + h > innerHeight - 8) top = Math.max(8, innerHeight - h - 8);
+  tip.style.left = left + "px"; tip.style.top = top + "px";
+}
+function show(html, evt, node) {
+  tip.innerHTML = html; tip.classList.add("on"); place(evt, node);
+  if (activeEl && activeEl !== node) { activeEl.classList.remove("active"); }
+  if (node) { node.classList.add("active"); node.ownerSVGElement && node.ownerSVGElement.classList.add("dim"); activeEl = node; }
+}
+function hide() {
+  tip.classList.remove("on");
+  if (activeEl) { activeEl.classList.remove("active"); activeEl.ownerSVGElement && activeEl.ownerSVGElement.classList.remove("dim"); activeEl = null; }
+  pinned = null;
+}
+function bind(node, html, label) {
+  node.classList.add("hit"); node.setAttribute("tabindex", "0"); node.setAttribute("role", "button"); node.setAttribute("aria-label", label);
+  node.addEventListener("mouseenter", e => { if (!pinned) show(html(), e, node); });
+  node.addEventListener("mousemove", e => { if (!pinned) place(e, node); });
+  node.addEventListener("mouseleave", () => { if (!pinned) hide(); });
+  node.addEventListener("focus", e => show(html(), null, node));
+  node.addEventListener("blur", () => { if (!pinned) hide(); });
+  node.addEventListener("click", e => { e.stopPropagation(); if (pinned === node) { hide(); return; } show(html(), e, node); pinned = node; });
+}
+document.addEventListener("click", e => { if (!tip.contains(e.target)) hide(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") hide(); });
+
+// ---------------------------------------------------------------- card contents
+const head = (name, team, sub) => `<div class="t-head">${chip(team)}<span class="t-name">${esc(name)}</span></div><div class="t-sub">${sub}</div>`;
+const big = items => `<div class="big">${items.map(([v, l, c]) => `<div><b class="${c || ""}">${v}</b><span>${l}</span></div>`).join("")}</div>`;
+const table = (cols, rows) => `<table><tr>${cols.map(([l, r]) => `<th class="${r ? "r" : ""}">${l}</th>`).join("")}</tr>${rows.map(rw => `<tr>${rw.map((v, i) => `<td class="${cols[i][1] ? "r" : ""}">${v}</td>`).join("")}</tr>`).join("")}</table>`;
+const rounds = (rs, wlabel) => table([["Round"], ["PA", 1], ["wOBA", 1], [wlabel, 1]], rs.map(r => [r.round, r.pa, f3(r.woba), `<span class="${cls(r.wpa)}">${sg(r.wpa)}</span>`]));
+const bestH = b => b ? `<div class="sec">Biggest swing</div>${b.date}, ${b.round}, ${b.inning}: ${esc(b.event)} off ${esc(b.vs)} (<span class="${cls(b.wpa)}">${sg(b.wpa, 3)}</span> WPA)` : "";
+const bestP = b => b ? `<div class="sec">Biggest out</div>${b.date}, ${b.round}, ${b.inning}: ${esc(b.vs)}, ${esc(b.event)} (<span class="${cls(b.wpa)}">${sg(b.wpa, 3)}</span> WPA)` : "";
+const slashTxt = h => `${f3(h.avg)}/${f3(h.obp)}/${f3(h.slg)}`;
+
+function hitterCard(id, focus) {
+  const h = H[id];
+  const sub = `${h.pa} PA in ${h.games} games · ${slashTxt(h)} · ${h.hr} HR, ${h.bb} BB, ${h.k} K`;
+  let body = "";
+  if (focus === "wpa") {
+    body = big([[sg(h.wpa), "WPA", cls(h.wpa)], [f3(h.woba), "wOBA"], [f3(h.xwoba), "xwOBA"]]) + rounds(h.rounds, "WPA") + bestH(h.best);
+  } else if (focus === "x") {
+    const gap = h.woba != null && h.xwoba != null ? h.woba - h.xwoba : null;
+    body = big([[f3(h.woba), "wOBA (results)"], [f3(h.xwoba), "xwOBA (contact)"], [sg(gap, 3), "results − contact", cls(gap)]]) +
+      `<div class="sec">Contact</div>` + table([["Batted balls"], ["Avg EV", 1], ["Hard-hit", 1], ["Barrels", 1]], [[h.bip, h.ev ?? "–", pc(h.hard), h.barrels]]) +
+      rounds(h.rounds, "WPA");
+  } else if (focus === "swing") {
+    body = big([[pc(h.chase), `chase (avg ${pc(L.chase)})`], [pc(h.whiff), `whiff/swing (avg ${pc(L.whiff)})`], [pc(h.zswing), "zone swing"]]) +
+      `<div class="sec">By pitch group</div>` + table([["Group"], ["Seen", 1], ["Swings", 1], ["Whiff", 1]], h.groups.map(g => [g.group, g.seen, g.swings, pc(g.whiff)])) +
+      `<div class="note">${h.pitches} pitches seen. Chase = swings at pitches outside zones 1-9.</div>`;
+  } else if (focus === "ev") {
+    body = big([[h.ev ?? "–", "avg exit velo"], [h.maxev ?? "–", "hardest"], [pc(h.hard), "hard-hit (95+)"]]) +
+      table([["Batted balls"], ["Avg LA", 1], ["Barrels", 1], ["xwOBA", 1]], [[h.bip, h.la == null ? "–" : h.la + "°", h.barrels, f3(h.xwoba)]]) +
+      `<div class="note">Postseason average exit velocity: ${L.ev} mph.</div>`;
+  }
+  return head(h.name, h.team, sub) + body;
+}
+function pitcherCard(id, focus) {
+  const p = P[id];
+  const role = p.starts ? `${p.starts} start${p.starts > 1 ? "s" : ""}, ${p.games - p.starts} relief` : `${p.games} relief appearances`;
+  const sub = `${p.bf} batters · ${p.pitches} pitches · ${role} · ${p.k} K, ${p.bb} BB, ${p.hr} HR`;
+  const ars = `<div class="sec">Arsenal</div>` + table([["Pitch"], ["Use", 1], ["mph", 1], ["Whiff", 1]], p.arsenal.map(a => [esc(a.pitch), pc(a.usage), a.velo ?? "–", a.swings ? pc(a.whiff) : "–"]));
+  let body = "";
+  if (focus === "wpa") {
+    body = big([[sg(p.wpa), "WPA", cls(p.wpa)], [f3(p.xwoba), "xwOBA allowed"], [pc(p.late), "BF in 7th+"]]) + rounds(p.rounds, "WPA") + bestP(p.best);
+  } else if (focus === "x") {
+    body = big([[pc(p.whiff), "whiff/swing"], [f3(p.xwoba), "xwOBA allowed"], [f3(p.woba), "wOBA allowed"]]) + ars +
+      `<div class="note">Chase induced: ${pc(p.chase)}. Postseason averages: whiff ${pc(L.whiff)}, xwOBA ${f3(L.xwoba)}.</div>`;
+  } else if (focus === "velo") {
+    body = ars + `<div class="note">Postseason average four-seamer/sinker: ${L.fb_velo} mph.</div>`;
+  }
+  return head(p.name, p.team, sub) + body;
+}
+function teamCard(t, focus) {
+  const m = T[t];
+  const path = m.rounds.map(r => `${r.round} vs ${r.opp}: ${r.w}-${r.l}`).join("<br>");
+  const sub = `${m.w}-${m.l} in ${m.games} games · ${m.rf} runs scored, ${m.ra} allowed`;
+  if (focus === "starters") {
+    return head(t, t, sub) + table([["Date"], ["Starter"], ["Opp"], ["Outs", 1], ["P", 1]], m.starts.map(s => [s.date, esc(s.pitcher), s.opp, s.outs, s.pitches])) +
+      `<div class="note">Official box-score lines. Innings = outs ÷ 3.</div>`;
+  }
+  return head(t, t, sub) + big([[f3(m.x_for), "xwOBA for"], [f3(m.x_against), "xwOBA against"], [sg(m.x_for - m.x_against, 3), "net", cls(m.x_for - m.x_against)]]) +
+    table([[""], ["PA", 1], ["HR", 1], ["xwOBA", 1]], [["Offense", m.pa_for, m.hr_for, f3(m.x_for)], ["Pitching", m.pa_against, m.hr_against, f3(m.x_against)]]) +
+    `<div class="sec">Path</div>${path}` +
+    `<div class="sec">Top WPA</div>Bats: ${m.top_bats.map(b => `${esc(b.name)} ${sg(b.wpa)}`).join(", ")}<br>Arms: ${m.top_arms.map(b => `${esc(b.name)} ${sg(b.wpa)}`).join(", ")}`;
+}
+
+// ---------------------------------------------------------------- layout helpers
+const charts = document.getElementById("charts");
+function card(n, title, sub, says, wide) {
+  const s = document.createElement("section"); s.className = "chart" + (wide ? " wide" : "");
+  s.innerHTML = `<h2><span class="num-badge">${n}</span>${title}</h2><p class="sub">${sub}</p>`;
+  charts.appendChild(s);
+  const svgWrap = document.createElement("div"); s.appendChild(svgWrap);
+  if (says) { const p = document.createElement("p"); p.className = "says"; p.innerHTML = says; s.appendChild(p); }
+  return svgWrap;
+}
+const scale = (d0, d1, r0, r1) => v => r0 + (v - d0) / (d1 - d0) * (r1 - r0);
+function nice(lo, hi, n = 5) {
+  const span = hi - lo, step0 = span / n, mag = 10 ** Math.floor(Math.log10(step0)), err = step0 / mag;
+  const step = (err >= 7.5 ? 10 : err >= 3.5 ? 5 : err >= 1.5 ? 2 : 1) * mag;
+  const out = []; for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step) out.push(+v.toFixed(10)); return out;
+}
+
+// ---------------------------------------------------------------- scatter
+function scatter(wrap, pts, o) {
+  const W = 560, Hh = 470, m = {l: 58, r: 16, t: 14, b: 48};
+  const svg = el("svg", {viewBox: `0 0 ${W} ${Hh}`, role: "img", "aria-label": o.aria}, null); wrap.appendChild(svg);
+  const xs = pts.map(p => p.x), ys = pts.map(p => p.y);
+  let [x0, x1] = [Math.min(...xs, o.xref ?? Infinity), Math.max(...xs, o.xref ?? -Infinity)];
+  let [y0, y1] = [Math.min(...ys, o.yref ?? Infinity), Math.max(...ys, o.yref ?? -Infinity)];
+  if (o.diag) { x0 = y0 = Math.min(x0, y0); x1 = y1 = Math.max(x1, y1); }
+  const padf = o.badge ? .13 : .08, px = (x1 - x0) * padf, py = (y1 - y0) * padf; x0 -= px; x1 += px; y0 -= py; y1 += py;
+  const sx = scale(x0, x1, m.l, W - m.r), sy = o.invertY ? scale(y0, y1, m.t, Hh - m.b) : scale(y0, y1, Hh - m.b, m.t);
+  const ax = el("g", {class: "axis"}, svg);
+  for (const v of nice(x0, x1)) { el("line", {x1: sx(v), x2: sx(v), y1: m.t, y2: Hh - m.b, class: "gridline"}, ax); el("text", {x: sx(v), y: Hh - m.b + 16, "text-anchor": "middle"}, ax).textContent = o.fx(v); }
+  for (const v of nice(y0, y1)) { el("line", {x1: m.l, x2: W - m.r, y1: sy(v), y2: sy(v), class: "gridline"}, ax); el("text", {x: m.l - 6, y: sy(v) + 4, "text-anchor": "end"}, ax).textContent = o.fy(v); }
+  el("text", {x: (m.l + W - m.r) / 2, y: Hh - 8, "text-anchor": "middle", class: "axis-title"}, svg).textContent = o.xt;
+  el("text", {x: 14, y: (m.t + Hh - m.b) / 2, "text-anchor": "middle", class: "axis-title", transform: `rotate(-90 14 ${(m.t + Hh - m.b) / 2})`}, svg).textContent = o.yt;
+  if (o.diag) el("line", {x1: sx(x0), y1: sy(x0), x2: sx(x1), y2: sy(x1), stroke: "#9ca3af", "stroke-dasharray": "5 4"}, svg);
+  if (o.xref != null) el("line", {x1: sx(o.xref), x2: sx(o.xref), y1: m.t, y2: Hh - m.b, class: "ref"}, svg);
+  if (o.yref != null) el("line", {x1: m.l, x2: W - m.r, y1: sy(o.yref), y2: sy(o.yref), class: "ref"}, svg);
+  for (const [txt, where] of o.corners || []) {
+    const x = where.includes("r") ? W - m.r - 6 : m.l + 6, y = where.includes("t") ? m.t + 14 : Hh - m.b - 8;
+    el("text", {x, y, "text-anchor": where.includes("r") ? "end" : "start", class: "corner"}, svg).textContent = txt;
+  }
+  const placed = [];
+  const boxHit = b => placed.some(p => !(b.x2 < p.x1 || b.x1 > p.x2 || b.y2 < p.y1 || b.y1 > p.y2));
+  const marks = pts.map(p => ({p, x: sx(p.x), y: sy(p.y), r: o.r || 7}));
+  marks.forEach(k => placed.push({x1: k.x - k.r, x2: k.x + k.r, y1: k.y - k.r, y2: k.y + k.r}));
+  for (const k of marks) {
+    const g = el("g", {}, svg);
+    const team = o.team ? o.team(k.p) : k.p.team, [c1, c2] = C[team];
+    if (o.badge) {
+      el("circle", {cx: k.x, cy: k.y, r: k.r, fill: c1, stroke: c2, "stroke-width": 3, class: "mark"}, g);
+      el("text", {x: k.x, y: k.y + 3.8, "text-anchor": "middle", "font-size": 10.5, "font-weight": 800, fill: lum(c1) < .5 ? "#fff" : "#111", "pointer-events": "none"}, g).textContent = team;
+    } else {
+      el("circle", {cx: k.x, cy: k.y, r: k.r, fill: c1, stroke: c2, "stroke-width": 2, class: "mark"}, g);
+      el("circle", {cx: k.x, cy: k.y, r: 14, fill: "transparent"}, g);
+      const name = o.name(k.p), w = name.length * 5.9 + 2;
+      for (const [dx, dy, anchor] of [[10, 4, "start"], [-10, 4, "end"], [0, -11, "middle"], [0, 18, "middle"], [10, -9, "start"], [-10, -9, "end"], [10, 15, "start"], [-10, 15, "end"]]) {
+        const x1 = anchor === "start" ? k.x + dx : anchor === "end" ? k.x + dx - w : k.x - w / 2, b = {x1, x2: x1 + w, y1: k.y + dy - 10, y2: k.y + dy + 2};
+        if (b.x1 < m.l || b.x2 > W - m.r || b.y1 < m.t || b.y2 > Hh - m.b || boxHit(b)) continue;
+        placed.push(b);
+        el("text", {x: k.x + dx, y: k.y + dy, "text-anchor": anchor, class: "pt-label", fill: readable(team)}, g).textContent = name;
+        break;
+      }
+    }
+    bind(g, () => o.card(k.p), o.label(k.p));
+  }
+}
+
+// ---------------------------------------------------------------- ranked bars
+function bars(wrap, rows, o) {
+  const rowH = 22, W = 560, m = {l: o.labelW || 150, r: 74, t: 22, b: 40}, Hh = m.t + m.b + rows.length * rowH;
+  const svg = el("svg", {viewBox: `0 0 ${W} ${Hh}`, role: "img", "aria-label": o.aria}, null); wrap.appendChild(svg);
+  const vals = rows.map(r => r.v);
+  let lo = o.lo ?? Math.min(0, ...vals), hi = Math.max(...vals, o.ref ?? -Infinity);
+  if (o.lo == null && Math.min(...vals) > 0 && o.zoom) lo = Math.min(...vals, o.ref ?? Infinity) - (hi - Math.min(...vals)) * .6;
+  hi += (hi - lo) * .04;
+  const sx = scale(lo, hi, m.l, W - m.r);
+  const ax = el("g", {class: "axis"}, svg);
+  for (const v of nice(lo, hi, 4)) { el("line", {x1: sx(v), x2: sx(v), y1: m.t, y2: Hh - m.b, class: "gridline"}, ax); el("text", {x: sx(v), y: Hh - m.b + 15, "text-anchor": "middle"}, ax).textContent = o.fx(v); }
+  el("text", {x: (m.l + W - m.r) / 2, y: Hh - 6, "text-anchor": "middle", class: "axis-title"}, svg).textContent = o.xt;
+  el("text", {x: W - 4, y: m.t - 8, "text-anchor": "end", class: "bar-right", "font-weight": 700}, svg).textContent = o.rightHead;
+  if (o.ref != null) { el("line", {x1: sx(o.ref), x2: sx(o.ref), y1: m.t - 4, y2: Hh - m.b, class: "ref"}, svg); el("text", {x: sx(o.ref) + 4, y: m.t - 8, class: "ref-label"}, svg).textContent = o.refLabel; }
+  rows.forEach((r, i) => {
+    const y = m.t + i * rowH, g = el("g", {}, svg), team = o.team(r), [c1, c2] = C[team];
+    el("rect", {x: 0, y, width: W, height: rowH, fill: "transparent"}, g);
+    el("text", {x: 4, y: y + 15, class: "bar-right"}, g).textContent = i + 1;
+    el("text", {x: m.l - 6, y: y + 15, "text-anchor": "end", class: "bar-label", fill: readable(team)}, g).textContent = o.name(r);
+    const x0 = sx(Math.max(lo, 0 > lo ? 0 : lo)), x1 = sx(r.v);
+    el("rect", {x: Math.min(x0, x1), y: y + 3, width: Math.max(1, Math.abs(x1 - x0)), height: rowH - 6, rx: 2, fill: c1, stroke: c2, "stroke-width": 1.5, class: "mark"}, g);
+    el("text", {x: x1 + 5, y: y + 15, class: "bar-val"}, g).textContent = o.fv(r.v);
+    el("text", {x: W - 4, y: y + 15, "text-anchor": "end", class: "bar-right"}, g).textContent = o.right(r);
+    bind(g, () => o.card(r), `${o.name(r)}: ${o.fv(r.v)}`);
+  });
+}
+
+// ---------------------------------------------------------------- 1. World Series
+function worldSeries(wrap, games) {
+  const W = 1100, panelH = 92, gap = 34, m = {l: 46, r: 12, t: 24}, Hh = m.t + games.length * (panelH + gap);
+  const svg = el("svg", {viewBox: `0 0 ${W} ${Hh}`, role: "img", "aria-label": "Brewers win probability after every pitch of the 2026 World Series"}, null);
+  wrap.appendChild(svg);
+  games.forEach((g, gi) => {
+    const top = m.t + gi * (panelH + gap), n = g.pts.length;
+    const sx = scale(0, n, m.l, W - m.r), sy = scale(0, 1, top + panelH, top);
+    el("text", {x: m.l, y: top - 8, class: "ws-title"}, svg).textContent = `Game ${g.game} · ${g.date} · ${g.away} ${g.as}, ${g.home} ${g.hs}${g.innings > 9 ? ` (${g.innings} inn.)` : ""}`;
+    el("text", {x: W - m.r, y: top - 8, "text-anchor": "end", class: "ws-title", fill: C[g.winner][0]}, svg).textContent = `${g.winner} wins`;
+    const ax = el("g", {class: "axis"}, svg);
+    for (const v of [0, .5, 1]) { el("line", {x1: m.l, x2: W - m.r, y1: sy(v), y2: sy(v), class: "gridline", stroke: v === .5 ? "#bbb" : null}, ax); el("text", {x: m.l - 6, y: sy(v) + 4, "text-anchor": "end"}, ax).textContent = (100 * v) + "%"; }
+    const pts = [[sx(0), sy(.5)], ...g.pts.map((p, i) => [sx(i + 1), sy(p[0])])];
+    const line = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join("");
+    const mid = sy(.5);
+    const clipA = "c" + gi + "a", clipB = "c" + gi + "b";
+    const defs = el("defs", {}, svg);
+    el("rect", {x: m.l, y: top, width: W, height: mid - top}, el("clipPath", {id: clipA}, defs));
+    el("rect", {x: m.l, y: mid, width: W, height: top + panelH - mid}, el("clipPath", {id: clipB}, defs));
+    const area = line + `L${pts[pts.length - 1][0]} ${mid}L${pts[0][0]} ${mid}Z`;
+    el("path", {d: area, fill: C.MIL[1], opacity: .55, "clip-path": `url(#${clipA})`}, svg);
+    el("path", {d: area, fill: C.TB[1], opacity: .55, "clip-path": `url(#${clipB})`}, svg);
+    el("path", {d: line, fill: "none", stroke: C.MIL[0], "stroke-width": 1.8}, svg);
+    // innings ticks
+    let last = "";
+    g.pts.forEach((p, i) => { const inn = p[1].slice(1); if (inn !== last && p[1][0] === "T") { last = inn; el("text", {x: sx(i + 1), y: top + panelH + 13, class: "bar-right", "text-anchor": "middle", "font-size": 10}, svg).textContent = inn; } });
+    const bp = pts[g.big + 1]; el("circle", {cx: bp[0], cy: bp[1], r: 4.5, fill: "#b4532a"}, svg);
+    // hover layer
+    const cur = el("line", {class: "ws-cursor", y1: top, y2: top + panelH, x1: -10, x2: -10, opacity: 0}, svg);
+    const dot = el("circle", {r: 4, fill: "#1f1f1f", cx: -10, cy: -10, opacity: 0}, svg);
+    const hit = el("rect", {x: m.l, y: top, width: W - m.l - m.r, height: panelH, fill: "transparent"}, svg);
+    hit.classList.add("hit"); hit.setAttribute("tabindex", "0"); hit.setAttribute("role", "slider");
+    hit.setAttribute("aria-label", `Game ${g.game} win probability. Use the arrow keys to step through pitches.`);
+    let idx = g.big;
+    const pitchCard = i => {
+      const p = g.pts[i], [wp, inn, bat, pit, cnt, pitch, mph, what, score, d] = p;
+      const half = inn[0] === "T" ? "Top" : "Bottom";
+      return `<div class="t-head">${chip("MIL")}<span class="t-name">Game ${g.game}, ${half} ${inn.slice(1)}</span></div>
+        <div class="t-sub">Pitch ${i + 1} of ${g.pts.length} · ${score}</div>
+        ${big([[pc(wp), "Brewers win prob."], [`<span class="${cls(d)}">${sg(100 * d, 1)}</span>`, "pts this pitch (MIL)"]])}
+        <table><tr><th>Batter</th><td>${esc(bat)}</td></tr><tr><th>Pitcher</th><td>${esc(pit)}</td></tr>
+        <tr><th>Count</th><td>${cnt}</td></tr><tr><th>Pitch</th><td>${esc(pitch)}${mph ? `, ${mph} mph` : ""}</td></tr><tr><th>Result</th><td>${esc(what)}</td></tr></table>
+        ${i === g.big ? `<div class="note">The biggest single swing of the game.</div>` : ""}`;
+    };
+    const go = (i, evt) => {
+      idx = Math.max(0, Math.min(n - 1, i)); const [x, y] = pts[idx + 1];
+      cur.setAttribute("x1", x); cur.setAttribute("x2", x); cur.setAttribute("opacity", 1);
+      dot.setAttribute("cx", x); dot.setAttribute("cy", y); dot.setAttribute("opacity", 1);
+      tip.innerHTML = pitchCard(idx); tip.classList.add("on");
+      if (evt) place(evt); else { const r = hit.getBoundingClientRect(); place({clientX: r.left + (x - m.l) / (W - m.l - m.r) * r.width, clientY: r.top}); }
+    };
+    const fromEvt = e => { const r = hit.getBoundingClientRect(); return Math.round((e.clientX - r.left) / r.width * n) - 1; };
+    hit.addEventListener("mousemove", e => { if (!pinned) go(fromEvt(e), e); });
+    hit.addEventListener("mouseleave", () => { if (!pinned) { cur.setAttribute("opacity", 0); dot.setAttribute("opacity", 0); hide(); } });
+    hit.addEventListener("click", e => { e.stopPropagation(); pinned = hit; go(fromEvt(e), e); });
+    hit.addEventListener("focus", () => go(idx));
+    hit.addEventListener("blur", () => { cur.setAttribute("opacity", 0); dot.setAttribute("opacity", 0); if (pinned !== hit) hide(); });
+    hit.addEventListener("keydown", e => {
+      const step = e.shiftKey ? 10 : 1;
+      if (e.key === "ArrowRight") { go(idx + step); e.preventDefault(); }
+      if (e.key === "ArrowLeft") { go(idx - step); e.preventDefault(); }
+    });
+  });
+  const lg = el("text", {x: m.l, y: Hh - 4, class: "bar-right"}, svg);
+  lg.textContent = "Line = Brewers' win probability after every pitch. Gold = Brewers favored, light blue = Rays favored. Dot = the game's biggest single swing. Numbers under each game = inning.";
+}
+
+// ---------------------------------------------------------------- the ten charts
+const M = DATA.meta, CH = DATA.charts;
+document.getElementById("facts").innerHTML = `<span><b>${M.games}</b> games</span><span><b>${M.pitches.toLocaleString()}</b> pitches</span><span><b>${M.plate_appearances.toLocaleString()}</b> plate appearances</span><span>Sept. 29 to Oct. 28, 2026</span><span>Data: Baseball Savant, MLB Stats API</span>`;
+document.getElementById("built").textContent = `Numbers as of the ${M.built} build.`;
+if (matchMedia("(hover: none)").matches) document.getElementById("hint").textContent = "Tap any player, club or pitch for the breakdown. Tap again to close.";
+
+const ws = CH.ws, milW = ws.filter(g => g.winner === "MIL").length;
+worldSeries(card(1, "The World Series in Five", `Brewers ${milW}, Rays ${ws.length - milW} · Brewers win probability after every pitch. Hover the line for any pitch; focus a game and use ← → to step.`,
+  "The Brewers won in five. Tampa Bay's only win was Game 4, which went 12 innings.", true), ws);
+
+const tc = CH.team_contact.slice().sort((a, b) => (b.x - b.y) - (a.x - a.y));
+scatter(card(2, "Teams: Contact Quality", "xwOBA on offense vs. xwOBA allowed · dotted lines = postseason average",
+  `${tc[0].team} had the best gap: ${f3(tc[0].x)} xwOBA on offense, ${f3(tc[0].y)} allowed. Hover a club for its path, starters and top performers.`),
+  CH.team_contact, {aria: "Teams: xwOBA for vs against", badge: true, r: 15, invertY: true, xref: L.xwoba, yref: L.xwoba,
+  fx: f3, fy: f3, xt: "Offense: xwOBA", yt: "xwOBA allowed (better is up)", corners: [["Hit hard, allowed little", "tr"], ["Outplayed on contact", "bl"]],
+  card: p => teamCard(p.team, "contact"), label: p => `${p.team}: ${f3(p.x)} for, ${f3(p.y)} against`});
+
+const hw = CH.hitter_wpa;
+bars(card(3, "October's Biggest Bats: WPA", "Top 20 hitters · win probability added on their plate appearances",
+  `${H[hw[0].id].short} (${H[hw[0].id].team}) added ${sg(hw[0].v)} WPA over ${hw[0].right} PA.`), hw,
+  {aria: "Top 20 hitters by WPA", team: r => H[r.id].team, name: r => H[r.id].short, fv: v => sg(v), fx: v => sg(v, 1), right: r => r.right,
+   rightHead: "PA", xt: "Win probability added", card: r => hitterCard(r.id, "wpa"), labelW: 130});
+
+const pw = CH.pitcher_wpa;
+bars(card(4, "October's Biggest Arms: WPA", "Top 20 pitchers · win probability added on the batters they faced",
+  `${P[pw[0].id].short} (${P[pw[0].id].team}) led every pitcher at ${sg(pw[0].v)} over ${pw[0].right} batters.`), pw,
+  {aria: "Top 20 pitchers by WPA", team: r => P[r.id].team, name: r => P[r.id].short, fv: v => sg(v), fx: v => sg(v, 1), right: r => r.right,
+   rightHead: "BF", xt: "Win probability added", card: r => pitcherCard(r.id, "wpa"), labelW: 130});
+
+scatter(card(5, "Hitters: Results vs. Quality of Contact", "Min. 25 PA · dashed line = results equal to contact",
+  "Above the line, results ran ahead of the contact; below it, the hitter made better contact than his line shows."),
+  CH.hitter_x, {aria: "Hitters: wOBA vs xwOBA", diag: true, fx: f3, fy: f3, xt: "xwOBA (quality of contact, walks, strikeouts)", yt: "wOBA (actual results)",
+  corners: [["Results ran ahead of contact", "tl"], ["Hit it well, little to show", "br"]], name: p => H[p.id].short, team: p => H[p.id].team,
+  card: p => hitterCard(p.id, "x"), label: p => `${H[p.id].short}: xwOBA ${f3(p.x)}, wOBA ${f3(p.y)}`});
+
+scatter(card(6, "Hitters: Swing Decisions", "Min. 25 PA · zone = Savant zones 1-9 · dotted lines = postseason average",
+  "Hover a hitter for his chase, zone-swing and whiff rates by pitch group."),
+  CH.swing, {aria: "Hitters: chase rate vs whiff rate", invertY: true, xref: L.chase, yref: L.whiff, fx: v => (100 * v).toFixed(0) + "%", fy: v => (100 * v).toFixed(0) + "%",
+  xt: "Chase rate (swings at pitches outside the zone)", yt: "Whiff rate per swing (better is up)",
+  corners: [["Disciplined and hard to miss", "tl"], ["Chased and missed", "br"]], name: p => H[p.id].short, team: p => H[p.id].team,
+  card: p => hitterCard(p.id, "swing"), label: p => `${H[p.id].short}: chase ${pc(p.x)}, whiff ${pc(p.y)}`});
+
+scatter(card(7, "Pitchers: Whiffs vs. Damage", "Min. 100 pitches · dotted lines = postseason average",
+  "Hover a pitcher for his arsenal: usage, velocity and whiff rate on each pitch."),
+  CH.pitcher_x, {aria: "Pitchers: whiff rate vs xwOBA allowed", invertY: true, xref: L.whiff, yref: L.xwoba, fx: v => (100 * v).toFixed(0) + "%", fy: f3,
+  xt: "Whiff rate per swing", yt: "xwOBA allowed (better is up)", corners: [["Missed bats, limited damage", "tr"], ["Hittable", "bl"]],
+  name: p => P[p.id].short, team: p => P[p.id].team, card: p => pitcherCard(p.id, "x"), label: p => `${P[p.id].short}: whiff ${pc(p.x)}, xwOBA ${f3(p.y)}`});
+
+const vl = CH.velo;
+bars(card(8, "October Velocity Leaders", "Top 20, min. 15 four-seamers or sinkers · fastest pitch at right",
+  `${P[vl[0].id].short} averaged ${vl[0].v} mph. Bars start near the leaders' range, not at zero.`), vl,
+  {aria: "Top 20 by fastball velocity", zoom: true, ref: L.fb_velo, refLabel: `avg ${L.fb_velo}`, team: r => P[r.id].team, name: r => P[r.id].short,
+   fv: v => v.toFixed(1), fx: v => v.toFixed(0), right: r => r.right, rightHead: "Max", xt: "Average four-seam and sinker velocity (mph)",
+   card: r => pitcherCard(r.id, "velo"), labelW: 130});
+
+const evl = CH.ev;
+bars(card(9, "October's Hardest Hitters", "Top 20, min. 15 batted balls · hardest-hit ball at right",
+  `${H[evl[0].id].short} averaged ${evl[0].v} mph on ${evl[0].n} batted balls. Bars start near the leaders' range, not at zero.`), evl,
+  {aria: "Top 20 by exit velocity", zoom: true, ref: L.ev, refLabel: `avg ${L.ev}`, team: r => H[r.id].team, name: r => H[r.id].short,
+   fv: v => v.toFixed(1), fx: v => v.toFixed(0), right: r => r.right, rightHead: "Max", xt: "Average exit velocity (mph)",
+   card: r => hitterCard(r.id, "ev"), labelW: 130});
+
+const st = CH.starters;
+bars(card(10, "How Deep the Starters Went", "Official box-score starter lines · innings = outs ÷ 3",
+  `${st[0].team} starters averaged ${st[0].v.toFixed(1)} innings a start; ${st[st.length - 1].team} averaged ${st[st.length - 1].v.toFixed(1)}. Hover a club for every start.`), st,
+  {aria: "Average innings per start by club", lo: 0, team: r => r.team, name: r => r.team, fv: v => v.toFixed(1), fx: v => v.toFixed(0),
+   right: r => `${Math.round(r.pitches)} p, ${r.games} g`, rightHead: "Per start", xt: "Average innings per start", card: r => teamCard(r.team, "starters"), labelW: 60});
+})();
+</script>
+</body>
+</html>
