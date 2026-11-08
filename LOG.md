@@ -2,6 +2,10 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-08: Postseason page redesigned
+**Built**
+- **`docs/postseason.html`:** set as a long-form essay (Syne and Bricolage Grotesque, risograph pink and blue on off-white), with the 4-1 Series as the one oversized numeral and each chart's takeaway in the margin. Charts redraw at the screen's width so phone text stays readable; a dark mode with its own colors; names in ink with club colors on the marks; a table under every chart, including the World Series game by game; the provenance line at the top.
+
 ## 2026-11-08: Numbers on the portfolio page open their breakdowns
 **Built**
 - **`docs/portfolio.html`:** all 34 number labels on the study cards open a card on hover, tap or keyboard focus: the number's pieces (splits, samples, intervals, the placebo or holdout result, what it's worth), a plain note on what it means, and a link to the report section it comes from. The breakdowns live in `docs/num-details.json`; `docs/build_portfolio.py` puts them in the page. The test count at the top now reads 423.
