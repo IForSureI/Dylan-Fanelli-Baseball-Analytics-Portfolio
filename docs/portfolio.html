@@ -1,3 +1,7 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dylan Fanelli: Baseball Research</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -339,6 +343,9 @@ footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-
   const tip = document.getElementById("numtip"), byChip = new Map(D.map(d => [d.chip, d]));
   const esc = t => String(t).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
   let open = null, pinned = false;
+  let touch = false;
+  document.addEventListener("pointerdown", e => { touch = e.pointerType !== "mouse"; }, true);
+  document.addEventListener("pointermove", e => { if (e.pointerType === "mouse") touch = false; }, true);
   const place = el => {
     if (matchMedia("(max-width: 640px)").matches) return;
     const r = el.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
@@ -361,10 +368,10 @@ footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-
     if (!byChip.has(el.textContent.trim())) continue;
     el.dataset.detail = "1"; el.tabIndex = 0; el.setAttribute("role", "button");
     el.setAttribute("aria-label", el.textContent.trim() + ": show the breakdown");
-    el.addEventListener("mouseenter", () => { if (!pinned) show(el); });
-    el.addEventListener("mouseleave", () => { if (!pinned) setTimeout(() => { if (!pinned && !tip.matches(":hover")) hide(); }, 150); });
-    el.addEventListener("focus", () => show(el));
-    el.addEventListener("blur", () => { if (!pinned) hide(); });
+    el.addEventListener("mouseenter", () => { if (!pinned && !touch) show(el); });
+    el.addEventListener("mouseleave", () => { if (!pinned && !touch) setTimeout(() => { if (!pinned && !tip.matches(":hover")) hide(); }, 150); });
+    el.addEventListener("focus", () => { if (!touch) show(el); });
+    el.addEventListener("blur", () => { if (!pinned && !touch) hide(); });
     el.addEventListener("click", e => { e.stopPropagation(); if (pinned && open === el) { hide(); return; } show(el); pinned = true; });
   }
   tip.addEventListener("mouseleave", () => { if (!pinned) hide(); });

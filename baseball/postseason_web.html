@@ -117,6 +117,9 @@ const el = (tag, attrs = {}, parent) => { const e = document.createElementNS(NS,
 
 // ---------------------------------------------------------------- hover card
 const tip = document.getElementById("tip");
+let touch = false;
+document.addEventListener("pointerdown", e => { touch = e.pointerType !== "mouse"; }, true);
+document.addEventListener("pointermove", e => { if (e.pointerType === "mouse") touch = false; }, true);
 let pinned = null, activeEl = null;
 function place(evt, anchor) {
   if (matchMedia("(max-width: 640px)").matches) return;
@@ -142,10 +145,10 @@ function hide() {
 }
 function bind(node, html, label) {
   node.classList.add("hit"); node.setAttribute("tabindex", "0"); node.setAttribute("role", "button"); node.setAttribute("aria-label", label);
-  node.addEventListener("mouseenter", e => { if (!pinned) show(html(), e, node); });
-  node.addEventListener("mousemove", e => { if (!pinned) place(e, node); });
-  node.addEventListener("mouseleave", () => { if (!pinned) hide(); });
-  node.addEventListener("focus", e => show(html(), null, node));
+  node.addEventListener("mouseenter", e => { if (!pinned && !touch) show(html(), e, node); });
+  node.addEventListener("mousemove", e => { if (!pinned && !touch) place(e, node); });
+  node.addEventListener("mouseleave", () => { if (!pinned && !touch) hide(); });
+  node.addEventListener("focus", e => { if (!touch) show(html(), null, node); });
   node.addEventListener("blur", () => { if (!pinned) hide(); });
   node.addEventListener("click", e => { e.stopPropagation(); if (pinned === node) { hide(); return; } show(html(), e, node); pinned = node; });
 }
@@ -357,10 +360,10 @@ function worldSeries(wrap, games) {
       if (evt) place(evt); else { const r = hit.getBoundingClientRect(); place({clientX: r.left + (x - m.l) / (W - m.l - m.r) * r.width, clientY: r.top}); }
     };
     const fromEvt = e => { const r = hit.getBoundingClientRect(); return Math.round((e.clientX - r.left) / r.width * n) - 1; };
-    hit.addEventListener("mousemove", e => { if (!pinned) go(fromEvt(e), e); });
-    hit.addEventListener("mouseleave", () => { if (!pinned) { cur.setAttribute("opacity", 0); dot.setAttribute("opacity", 0); hide(); } });
+    hit.addEventListener("mousemove", e => { if (!pinned && !touch) go(fromEvt(e), e); });
+    hit.addEventListener("mouseleave", () => { if (!pinned && !touch) { cur.setAttribute("opacity", 0); dot.setAttribute("opacity", 0); hide(); } });
     hit.addEventListener("click", e => { e.stopPropagation(); pinned = hit; go(fromEvt(e), e); });
-    hit.addEventListener("focus", () => go(idx));
+    hit.addEventListener("focus", () => { if (!touch) go(idx); });
     hit.addEventListener("blur", () => { cur.setAttribute("opacity", 0); dot.setAttribute("opacity", 0); if (pinned !== hit) hide(); });
     hit.addEventListener("keydown", e => {
       const step = e.shiftKey ? 10 : 1;
