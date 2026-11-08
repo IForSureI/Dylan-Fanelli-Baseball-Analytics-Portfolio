@@ -2,6 +2,11 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-08: Numbers on the portfolio page open their breakdowns
+**Built**
+- **`docs/portfolio.html`:** all 34 number labels on the study cards open a card on hover, tap or keyboard focus: the number's pieces (splits, samples, intervals, the placebo or holdout result, what it's worth), a plain note on what it means, and a link to the report section it comes from. The breakdowns live in `docs/num-details.json`; `docs/build_portfolio.py` puts them in the page. The test count at the top now reads 423.
+- **`tests/test_num_details.py`:** every label has a breakdown, every number in a breakdown appears in the report it cites, and every link points at a real heading.
+
 ## 2026-11-08: Postseason snippets, interactive
 **Built**
 - **`docs/postseason.html`** ([live](https://iforsurei.github.io/Dylan-Fanelli-Baseball-Analytics-Portfolio/postseason.html)): the ten snippets as one self-contained web page. Hover, tap or tab to any point for its breakdown: hitters (slash line, wOBA and xwOBA, WPA by round, biggest swing, chase, zone-swing and whiff rate by pitch group, exit velocity, hard-hit rate, barrels), pitchers (WPA by round, biggest out, arsenal with usage, velocity and whiff rate), clubs (record and path, xwOBA for and against, every start from the box scores, top bats and arms) and every pitch of the World Series (count, pitch, speed, result, win-probability change; arrow keys step through a game).
