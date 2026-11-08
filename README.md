@@ -63,6 +63,8 @@ The **Edge Board** is a monthly league scan, refreshed by `bb edge` and `bb boar
 
 Ten quick charts on the 2026 postseason, from the Wild Card Series through the Brewers' five-game World Series win over the Rays: win probability pitch by pitch, the biggest bats and arms by WPA, contact quality, swing decisions, velocity and exit-velocity leaders, and how deep the starters went. [See them all](reports/2026-postseason-snippets/).
 
+**Hover for the breakdown:** the [interactive version](https://iforsurei.github.io/Dylan-Fanelli-Baseball-Analytics-Portfolio/postseason.html) opens every player's numbers by round, by pitch group and by pitch type.
+
 <table>
 <tr><td width="33%"><a href="reports/2026-postseason-snippets/"><img src="reports/2026-postseason-snippets/world_series_wp.png" width="100%" alt="World Series win probability"></a></td><td width="33%"><a href="reports/2026-postseason-snippets/"><img src="reports/2026-postseason-snippets/pitcher_wpa.png" width="100%" alt="Pitcher WPA"></a></td><td width="33%"><a href="reports/2026-postseason-snippets/"><img src="reports/2026-postseason-snippets/team_contact.png" width="100%" alt="Team contact quality"></a></td></tr>
 </table>

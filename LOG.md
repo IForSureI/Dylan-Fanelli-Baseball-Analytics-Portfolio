@@ -2,6 +2,15 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-08: Postseason snippets, interactive
+**Built**
+- **`docs/postseason.html`** ([live](https://iforsurei.github.io/Dylan-Fanelli-Baseball-Analytics-Portfolio/postseason.html)): the ten snippets as one self-contained web page. Hover, tap or tab to any point for its breakdown: hitters (slash line, wOBA and xwOBA, WPA by round, biggest swing, chase, zone-swing and whiff rate by pitch group, exit velocity, hard-hit rate, barrels), pitchers (WPA by round, biggest out, arsenal with usage, velocity and whiff rate), clubs (record and path, xwOBA for and against, every start from the box scores, top bats and arms) and every pitch of the World Series (count, pitch, speed, result, win-probability change; arrow keys step through a game).
+- **`baseball/postseason_web.py`:** builds the page from the same pull and data steps as the charts. The build stops if any headline number (games, pitches, plate appearances, league xwOBA, every club's xwOBA for and against, the top five by WPA, the charted player counts, league chase, velocity and exit velocity, the World Series winners) differs from `findings.json`.
+- **`tests/test_postseason_web.py`:** the page's numbers match `findings.json`, every charted player has a breakdown, and the page loads nothing from outside.
+
+**Fixed**
+- **`baseball/postseason.py`:** a Nov. 8 re-pull from Savant returned 557 pitch rows twice, verbatim (12,070 thrown pitches instead of 11,513). The pull now keeps one row per pitch, so a refresh reproduces the published numbers.
+
 ## 2026-11-08: 2026 postseason snippets
 **Built**
 - **`reports/2026-postseason-snippets/`:** ten charts on all 40 games of the 2026 postseason (World Series win probability pitch by pitch, team contact quality, hitter and pitcher WPA leaders, results vs. contact, swing decisions, whiffs vs. damage, velocity and exit-velocity leaders, starter depth), with a README written from `findings.json`.

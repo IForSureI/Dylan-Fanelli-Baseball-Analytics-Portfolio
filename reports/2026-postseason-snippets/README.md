@@ -2,6 +2,8 @@
 
 Ten quick charts on the 2026 postseason, the kind a front office passes around the morning after the World Series. Every pitch from the Wild Card Series through the World Series: 40 games, 11,513 thrown pitches and 2,928 plate appearances (2026-09-29 to 2026-10-28). Small samples by design: these describe October; they don't project 2027.
 
+**Interactive version:** [every chart on one page](https://iforsurei.github.io/Dylan-Fanelli-Baseball-Analytics-Portfolio/postseason.html), where hovering (or tapping) any player, club or pitch opens the breakdown: a hitter's line by round, his whiff rate by pitch group and his biggest swing; a pitcher's arsenal and biggest out; a club's path and every start; every pitch of the World Series.
+
 | | |
 |---|---|
 | <img src="world_series_wp.png" width="100%"> | <img src="team_contact.png" width="100%"> |
