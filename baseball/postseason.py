@@ -215,6 +215,32 @@ def save(fig, name):
     plt.close(fig)
 
 
+def badge(ax, x, y, abbr, c1, c2, s=900, fs=8.2, z=5, text=True):
+    """Team badge: soft shadow, outer ring in the second color, a white gap, the main color, the abbreviation.
+    Sizes are in points, so the badge stays round whatever the axes' aspect."""
+    import matplotlib.transforms as mt
+    sh = mt.offset_copy(ax.transData, fig=ax.figure, x=1.2, y=-1.6, units="points")
+    ax.scatter([x], [y], s=s * 1.02, color="black", alpha=0.18, lw=0, transform=sh, zorder=z, clip_on=False)
+    ax.scatter([x], [y], s=s, color=c2, lw=0, zorder=z + 0.1, clip_on=False)
+    ax.scatter([x], [y], s=s * 0.74, color="white", lw=0, zorder=z + 0.2, clip_on=False)
+    ax.scatter([x], [y], s=s * 0.58, color=c1, lw=0, zorder=z + 0.3, clip_on=False)
+    if text:
+        ax.text(x, y, abbr, ha="center", va="center", fontsize=fs, fontweight="bold", zorder=z + 0.4,
+                color="white" if _lum(c1) < 0.55 else INK, clip_on=False)
+
+
+def cap(ax, x, y, abbr):
+    """Small badge at the end of a ranked bar."""
+    c1, c2 = TEAM[abbr]
+    badge(ax, x, y, abbr, c1, c2, s=380, fs=5.8, z=4)
+
+
+def side_text(ax, x, y, txt, right=True, pts=14, **kw):
+    """Text a fixed number of points beside (x, y), clear of a bar-end badge."""
+    ax.annotate(txt, (x, y), xytext=(pts if right else -pts, 0), textcoords="offset points", va="center",
+                ha="left" if right else "right", **kw)
+
+
 def team_dots(ax, t, xcol, ycol, size=520):
     xs, ys = t[xcol].to_numpy(float), t[ycol].to_numpy(float)
     xr, yr = (xs.max() - xs.min()) or 1, (ys.max() - ys.min()) or 1
@@ -242,9 +268,7 @@ def team_dots(ax, t, xcol, ycol, size=520):
         if np.hypot(pu[k] - u[k], pv[k] - v[k]) > 0.004:
             ax.plot([xs[k], px[k]], [ys[k], py[k]], color="#9ca3af", lw=0.8, zorder=4)
             ax.scatter([xs[k]], [ys[k]], s=10, color=c1, zorder=4)
-        ax.scatter([px[k]], [py[k]], s=size, color=c1, edgecolor=c2, linewidth=2.2, zorder=5)
-        ax.text(px[k], py[k], abbr, ha="center", va="center", fontsize=8, fontweight="bold",
-                color="white" if _lum(c1) < 0.55 else INK, zorder=6)
+        badge(ax, px[k], py[k], abbr, c1, c2)
 
 
 def player_points(ax, df, x, y, label, team, size_col=None):
@@ -288,21 +312,20 @@ def ranked_bars(rows, value, label, team, fmt, xlabel, title, sub, fname, right=
         c1, c2 = TEAM[r[team]]
         v = r[value]
         ax.barh(yi, v - base, left=base, color=c1, edgecolor=c2, lw=1.4, height=0.8, zorder=3)
+        cap(ax, v, yi, r[team])
         if diverging:
             ax.text(-0.01 * span if v >= 0 else 0.01 * span, yi, r[label], ha="right" if v >= 0 else "left", va="center",
                     fontsize=9.5, fontweight="bold", color=_readable(c1, c2), zorder=4)
-            ax.text(v + (0.02 * span if v >= 0 else -0.02 * span), yi, fmt(v), ha="left" if v >= 0 else "right",
-                    va="center", fontsize=10, fontweight="bold", color=INK, zorder=4)
+            side_text(ax, v, yi, fmt(v), right=v >= 0, fontsize=10, fontweight="bold", color=INK, zorder=4)
         elif names_left:
             ax.text(lo - (hi - lo) * 0.02, yi, r[label], ha="right", va="center", fontsize=10, fontweight="bold",
                     color=_readable(c1, c2), zorder=4)
-            ax.text(v + (hi - lo) * 0.006, yi, fmt(v), ha="left", va="center", fontsize=10, fontweight="bold",
-                    color=INK, zorder=4)
+            side_text(ax, v, yi, fmt(v), fontsize=10, fontweight="bold", color=INK, zorder=4)
         else:
-            ax.text(v - (hi - lo) * 0.006, yi, r[label], ha="right", va="center", fontsize=9.5, fontweight="bold",
-                    color="white" if _lum(c1) < 0.55 else INK, zorder=4)
-            ax.text(v + (hi - lo) * 0.006, yi, fmt(v), ha="left", va="center", fontsize=10, fontweight="bold",
-                    color=INK, zorder=4)
+            if r[label]:
+                side_text(ax, v, yi, r[label], right=False, pts=13, fontsize=9.5, fontweight="bold",
+                          color="white" if _lum(c1) < 0.55 else INK, zorder=4)
+            side_text(ax, v, yi, fmt(v), fontsize=10, fontweight="bold", color=INK, zorder=4)
         if right is not None:
             ax.text(1.005, yi, right(r), transform=ax.get_yaxis_transform(), va="center", ha="left", fontsize=9, color=MUTED)
     if right is not None:
@@ -433,7 +456,7 @@ def chart_hitter_xwoba(pa, people, f, min_pa=25):
     q = h[h.pa >= min_pa].copy()
     q["name"] = [nm(people, i) for i in q.batter]
     fig, ax = canvas()
-    player_points(ax, q, "xwoba", "woba", "name", "team", size_col="pa")
+    player_points(ax, q, "xwoba", "woba", "name", "team")
     lo = min(q.xwoba.min(), q.woba.min()) - 0.03
     hi = max(q.xwoba.max(), q.woba.max()) + 0.03
     ax.plot([lo, hi], [lo, hi], color="#9ca3af", ls="--", lw=1, zorder=1)
@@ -443,7 +466,7 @@ def chart_hitter_xwoba(pa, people, f, min_pa=25):
         axis.set_major_formatter(mtick.FormatStrFormatter("%.3f"))
     ax.set_xlabel("xwOBA (quality of contact, walks and strikeouts)", fontsize=12, fontweight="bold")
     ax.set_ylabel("wOBA (actual results)", fontsize=12, fontweight="bold")
-    header_footer(fig, "Hitters: Results vs. Quality of Contact", sub_line(f"Min. {min_pa} PA | Dashed line = results equal to contact | Bubble size = PA"))
+    header_footer(fig, "Hitters: Results vs. Quality of Contact", sub_line(f"Min. {min_pa} PA | Dashed line = results equal to contact"))
     save(fig, "hitter_xwoba_woba.png")
     q["gap"] = q.woba - q.xwoba
     f["hitter_xwoba_woba"] = {"n": int(len(q)), "min_pa": min_pa,
@@ -496,7 +519,7 @@ def chart_pitcher_whiff(a, pa, people, f, min_pitches=100):
     }).dropna().reset_index()
     g["name"] = [nm(people, i) for i in g.pitcher]
     fig, ax = canvas()
-    player_points(ax, g, "whiff", "xwoba", "name", "team", size_col="pitches")
+    player_points(ax, g, "whiff", "xwoba", "name", "team")
     ax.invert_yaxis()
     mean_lines(ax, float(a[a.swing].whiff.mean()), float(pa[pa.woba_denom == 1].x.mean()))
     corner(ax, "Missed bats, limited damage", "tr")
@@ -505,7 +528,7 @@ def chart_pitcher_whiff(a, pa, people, f, min_pitches=100):
     ax.yaxis.set_major_formatter(mtick.FormatStrFormatter("%.3f"))
     ax.set_xlabel("Whiff rate per swing", fontsize=12, fontweight="bold")
     ax.set_ylabel("xwOBA allowed (better is up)", fontsize=12, fontweight="bold")
-    header_footer(fig, "Pitchers: Whiffs vs. Damage", sub_line(f"Min. {min_pitches} pitches | Bubble size = pitches | Dotted lines = postseason average"))
+    header_footer(fig, "Pitchers: Whiffs vs. Damage", sub_line(f"Min. {min_pitches} pitches | Dotted lines = postseason average"))
     save(fig, "pitcher_whiff_xwoba.png")
     f["pitcher_whiff_xwoba"] = {"n": int(len(g)), "min_pitches": min_pitches,
                                 "top_whiff": g.nlargest(3, "whiff")[["name", "team", "pitches", "whiff", "xwoba"]].round(3).to_dict("records"),
@@ -547,7 +570,7 @@ def chart_starters(a, f):
     rows = starters()
     t = rows.groupby("team").agg(outs=("outs", "mean"), pitches=("pitches", "mean"), games=("outs", "size"))
     t = t.sort_values("outs", ascending=False).reset_index()
-    t["lab"] = t.team
+    t["lab"] = ""  # the bar-end badge names the club
     t["ip"] = t.outs / 3
     ranked_bars(t, "ip", "lab", "team", lambda v: f"{v:.1f}",
                 "Average innings per start (outs recorded / 3)",
