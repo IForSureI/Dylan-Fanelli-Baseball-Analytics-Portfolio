@@ -91,7 +91,8 @@ def pull(refresh: bool = False) -> tuple[pd.DataFrame, dict]:
             d += dt.timedelta(days=1)
             time.sleep(0.5)
         pd.concat(frames, ignore_index=True).to_parquet(pq)
-    a = pd.read_parquet(pq)
+    # Savant's CSV can repeat a pitch row verbatim (557 exact copies in a Nov. 8, 2026 re-pull); keep one of each.
+    a = pd.read_parquet(pq).drop_duplicates(["game_pk", "at_bat_number", "pitch_number"]).reset_index(drop=True)
     if refresh or not ppl.exists():
         ids = sorted(set(a.batter.dropna().astype(int)) | set(a.pitcher.dropna().astype(int)))
         people = {}
@@ -593,6 +594,8 @@ def write_readme(f: dict) -> None:
     md = f"""# 2026 Postseason Snippets
 
 Ten quick charts on the 2026 postseason, the kind a front office passes around the morning after the World Series. Every pitch from the Wild Card Series through the World Series: {f['games']} games, {f['pitches']:,} thrown pitches and {f['plate_appearances']:,} plate appearances ({f['first_date']} to {f['last_date']}). Small samples by design: these describe October; they don't project 2027.
+
+**Interactive version:** [every chart on one page](https://iforsurei.github.io/Dylan-Fanelli-Baseball-Analytics-Portfolio/postseason.html), where hovering (or tapping) any player, club or pitch opens the breakdown: a hitter's line by round, his whiff rate by pitch group and his biggest swing; a pitcher's arsenal and biggest out; a club's path and every start; every pitch of the World Series.
 
 | | |
 |---|---|
