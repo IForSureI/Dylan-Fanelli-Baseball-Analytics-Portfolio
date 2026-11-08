@@ -5,101 +5,153 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>2026 Postseason Snippets</title>
 <meta name="description" content="Ten interactive charts on the 2026 MLB postseason. Hover any player, club or pitch for the breakdown. Dylan Fanelli.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;800&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600&display=swap">
 <style>
-  :root {
-    --paper: #f6f3ec; --card: #ffffff; --ink: #1f1f1f; --muted: #6b6b6b; --line: #e3ded3; --grid: #ece8df;
-    --green: #1d5c3f; --clay: #b4532a; --tip: #1f1f1f; --tip-ink: #f6f3ec; --tip-muted: #b9b4aa;
-  }
-  * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
-  body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-  a { color: var(--green); }
-  header.top { max-width: 1180px; margin: 0 auto; padding: 36px 16px 8px; }
-  .eyebrow { text-transform: uppercase; letter-spacing: .08em; font-size: 12px; font-weight: 700; color: var(--clay); margin: 0 0 6px; }
-  h1 { font-size: clamp(28px, 4.5vw, 44px); line-height: 1.1; margin: 0 0 10px; font-weight: 800; }
-  .lede { max-width: 760px; color: #3a3a3a; margin: 0 0 14px; }
-  .facts { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--muted); margin: 0 0 6px; }
-  .facts b { color: var(--ink); }
-  .crumbs { font-size: 13px; display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 14px; color: var(--muted); }
-  .crumbs a { text-decoration: none; font-weight: 600; }
-  .badges { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 16px; }
-  .badge { display: inline-flex; font: 600 11.5px/1 "Verdana", "DejaVu Sans", sans-serif; border-radius: 3px; overflow: hidden; }
-  .badge span { padding: 4px 7px; color: #fff; white-space: nowrap; }
-  .badge .k { background: #555; }
-  .glance { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--clay); border-radius: 6px; padding: 12px 16px; margin: 0 0 14px; max-width: 900px; }
-  .glance b { font-size: 14px; }
-  .glance ul { margin: 6px 0 0; padding-left: 18px; }
-  .glance li { margin: 4px 0; }
-  .hint { display: inline-block; margin-top: 8px; font-size: 13px; background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; color: var(--muted); }
-  main { max-width: 1180px; margin: 0 auto; padding: 12px 16px 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 540px), 1fr)); gap: 18px; }
-  section.chart { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 16px 10px; min-width: 0; }
-  section.chart.wide { grid-column: 1 / -1; }
-  .num-badge { display: inline-block; font-size: 12px; font-weight: 700; color: #fff; background: var(--ink); border-radius: 4px; padding: 1px 7px; margin-right: 8px; vertical-align: 2px; }
-  h2 { font-size: 20px; margin: 0 0 2px; font-weight: 800; }
-  .sub { font-size: 13px; color: var(--muted); margin: 0 0 8px; }
-  .says { font-size: 13.5px; margin: 8px 0 4px; color: #333; }
-  svg { display: block; width: 100%; height: auto; overflow: visible; }
-  svg text { font-family: inherit; }
-  .axis text { font-size: 11px; fill: var(--muted); }
-  .axis-title { font-size: 12px; font-weight: 700; fill: var(--ink); }
-  .gridline { stroke: var(--grid); stroke-width: 1; }
-  .ref { stroke: var(--clay); stroke-width: 1.2; stroke-dasharray: 3 3; }
-  .ref-label { font-size: 11px; font-weight: 700; fill: var(--clay); }
-  .corner { font-size: 11px; font-weight: 700; fill: var(--clay); }
-  .hit { cursor: pointer; outline: none; }
-  .hit:focus-visible .mark, .hit.active .mark { stroke: var(--ink) !important; stroke-width: 3 !important; }
-  .hit .mark { transition: opacity .12s; }
-  svg.dim .hit:not(.active) .mark { opacity: .28; }
-  svg.dim .hit:not(.active) text { opacity: .35; }
-  .pt-label { font-size: 10.5px; font-weight: 700; pointer-events: none; paint-order: stroke; stroke: #fff; stroke-width: 3px; stroke-linejoin: round; }
-  .bar-label { font-size: 12px; font-weight: 700; }
-  .bar-val { font-size: 12px; font-weight: 700; fill: var(--ink); }
-  .bar-right { font-size: 11.5px; fill: var(--muted); }
-  .ws-title { font-size: 12.5px; font-weight: 700; fill: var(--ink); }
-  .ws-cursor { stroke: var(--ink); stroke-width: 1; }
-  footer { max-width: 1180px; margin: 0 auto; padding: 0 16px 40px; font-size: 13px; color: var(--muted); }
-  footer h3 { color: var(--ink); font-size: 15px; margin: 18px 0 6px; }
-  footer ul { padding-left: 18px; margin: 0; }
-  /* hover card */
-  #tip { position: fixed; z-index: 10; pointer-events: none; opacity: 0; transform: translateY(4px); transition: opacity .1s, transform .1s;
-         width: min(340px, calc(100vw - 24px)); background: var(--tip); color: var(--tip-ink); border-radius: 10px; padding: 12px 14px;
-         box-shadow: 0 10px 30px rgba(0,0,0,.28); font-size: 12.5px; line-height: 1.4; }
-  #tip.on { opacity: 1; transform: none; }
-  #tip .t-head { display: flex; align-items: center; gap: 8px; margin-bottom: 2px; }
-  #tip .chip { font-size: 11px; font-weight: 800; border-radius: 4px; padding: 1px 6px; border: 2px solid; }
-  #tip .t-name { font-size: 15px; font-weight: 800; }
-  #tip .t-sub { color: var(--tip-muted); margin-bottom: 8px; }
-  #tip .big { display: flex; gap: 14px; margin: 6px 0 8px; }
-  #tip .big div { display: flex; flex-direction: column; }
-  #tip .big b { font-size: 18px; line-height: 1.1; }
-  #tip .big span { font-size: 11px; color: var(--tip-muted); }
-  #tip table { width: 100%; border-collapse: collapse; margin: 4px 0 6px; }
-  #tip th { text-align: left; font-weight: 600; color: var(--tip-muted); font-size: 11px; padding: 2px 4px 2px 0; border-bottom: 1px solid #3a3a3a; }
-  #tip td { padding: 2px 4px 2px 0; font-variant-numeric: tabular-nums; }
-  #tip td.r, #tip th.r { text-align: right; }
-  #tip .sec { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: #f4b183; font-weight: 700; margin: 8px 0 2px; }
-  #tip .note { color: var(--tip-muted); font-size: 11px; margin-top: 6px; }
-  #tip .pos { color: #9fd8b3; } #tip .neg { color: #f4a3a3; }
-  @media (max-width: 640px) {
-    #tip { left: 12px !important; right: 12px; top: auto !important; bottom: 12px; width: auto; }
-    #tip.on { pointer-events: auto; }
-    .pt-label { font-size: 9.5px; }
-  }
-  @media (prefers-reduced-motion: reduce) { #tip, .hit .mark { transition: none; } }
+/* Direction: a long-form essay on October, printed like a risograph: fluorescent pink and blue inks on off-white,
+   a slight misregistration on the one oversized numeral that carries the page (the 4-1 series). Display: Syne.
+   Text: Bricolage Grotesque. Scale 1.25. Square everywhere except the one hero panel. Margin notes beside each figure. */
+:root {
+  --paper: #f4f0f0; --plate: #fffdfd; --ink: #1d1a24; --muted: #5a5563; --soft: #8b8592; --rule: #ddd6d6; --grid: #ebe5e5;
+  --pink: #fa3899; --pink-ink: #c0136c; --blue: #1162d4; --tint: #fde3ef;
+  --tip: #1d1a24; --tip-ink: #f4f0f0; --tip-muted: #b8b2bf; --tip-rule: #3a3542; --pos: #6fd39b; --neg: #ff8aa8;
+  --display: "Syne", "Arial Black", sans-serif; --text: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #17141c; --plate: #1f1b25; --ink: #f2eef3; --muted: #b6afbd; --soft: #8a8391; --rule: #352f3c; --grid: #2a2530;
+  --pink: #ff5fae; --pink-ink: #ff7dbd; --blue: #6aa3ff; --tint: #3a1d2d;
+  --tip: #f2eef3; --tip-ink: #1d1a24; --tip-muted: #5a5563; --tip-rule: #d6d0db; --pos: #1d7a46; --neg: #c0136c; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #17141c; --plate: #1f1b25; --ink: #f2eef3; --muted: #b6afbd; --soft: #8a8391; --rule: #352f3c; --grid: #2a2530;
+  --pink: #ff5fae; --pink-ink: #ff7dbd; --blue: #6aa3ff; --tint: #3a1d2d;
+  --tip: #f2eef3; --tip-ink: #1d1a24; --tip-muted: #5a5563; --tip-rule: #d6d0db; --pos: #1d7a46; --neg: #c0136c; color-scheme: dark }
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.6 var(--text); font-variant-numeric: tabular-nums; }
+a { color: var(--blue); text-underline-offset: 3px; }
+a:focus-visible, .hit:focus-visible, summary:focus-visible { outline: 2px solid var(--pink-ink); outline-offset: 2px; }
+.col { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+
+/* opening */
+header.top { padding-top: 40px; padding-bottom: 10px; }
+.crumbs { font-size: 15px; display: flex; gap: 18px; flex-wrap: wrap; margin: 0 0 36px; }
+h1 { font: 800 clamp(34px, 6vw, 56px)/1.02 var(--display); margin: 0 0 22px; letter-spacing: -.01em; }
+.hero { position: relative; border-radius: 40px; background: var(--tint); padding: 26px 30px 24px; margin: 0 0 26px; overflow: hidden; }
+.hero .num { position: relative; display: inline-block; white-space: nowrap; padding-bottom: .06em; font: 800 clamp(96px, 22vw, 200px)/1 var(--display); letter-spacing: -.04em; color: var(--pink); }
+.hero .num::after { content: attr(data-n); position: absolute; left: 5px; top: 4px; white-space: nowrap; color: var(--blue); mix-blend-mode: multiply; opacity: .85; }
+:root:not([data-theme="light"]) .hero .num::after { mix-blend-mode: normal; }
+@media (prefers-color-scheme: light) { .hero .num::after { mix-blend-mode: multiply; } }
+.hero .cap { font-size: 16px; margin: 22px 0 0; max-width: 40ch; }
+.hero .cap b { font-family: var(--display); font-weight: 800; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0 0 22px; font-size: 14px; color: var(--muted); }
+.tags span b { color: var(--ink); font-weight: 600; }
+.glance { margin: 0 0 18px; }
+.glance h2 { font: 800 15px/1.2 var(--display); margin: 0 0 10px; color: var(--pink-ink); }
+.glance dl { margin: 0; display: grid; grid-template-columns: 9.5em 1fr; gap: 10px 18px; }
+.glance dt { font-weight: 600; } .glance dd { margin: 0; }
+.facts { font-size: 15px; color: var(--muted); margin: 18px 0 0; padding-top: 14px; border-top: 1px solid var(--rule); }
+.facts b { color: var(--ink); font-weight: 600; white-space: nowrap; }
+.hint { display: block; font-size: 15px; color: var(--muted); margin: 8px 0 0; }
+
+/* the essay: each figure in the reading column, its note in the margin */
+main { padding: 10px 16px 40px; }
+section.chart { max-width: 1060px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) 250px; column-gap: 36px; padding: 40px 0 0; }
+section.chart .meta { display: contents; }
+.meta .lot { grid-column: 1; font: 800 15px/1 var(--display); color: var(--pink-ink); }
+.meta h2 { grid-column: 1; font: 800 clamp(22px, 3vw, 28px)/1.15 var(--display); margin: 8px 0 6px; }
+.meta .sub { grid-column: 1; font-size: 15px; color: var(--muted); margin: 0 0 12px; }
+.meta .says { grid-column: 2; grid-row: 4; align-self: start; margin: 0; font-size: 15px; border-left: 3px solid var(--pink); padding: 2px 0 2px 14px; }
+.plate { grid-column: 1; grid-row: 4; background: var(--plate); padding: 14px 12px 10px; min-width: 0; }
+.plate > .cm { display: none; }
+section.chart.wide { grid-template-columns: minmax(0, 1fr); }
+section.chart.wide .meta .says { grid-column: 1; grid-row: auto; margin-top: 12px; }
+details.tbl { margin-top: 8px; font-size: 15px; }
+details.tbl summary { cursor: pointer; color: var(--blue); font-weight: 600; }
+details.tbl table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 14px; }
+details.tbl th { text-align: left; font-weight: 600; color: var(--muted); border-bottom: 1px solid var(--rule); padding: 4px 6px 4px 0; }
+details.tbl td { border-bottom: 1px solid var(--grid); padding: 3px 6px 3px 0; }
+details.tbl .r { text-align: right; }
+details.tbl .scroll { max-height: 320px; overflow: auto; }
+
+/* chart marks: text in ink tokens; the club colour lives on the mark */
+svg { display: block; width: 100%; height: auto; overflow: visible; }
+svg text { font-family: var(--text); }
+.axis text { font-size: 11px; fill: var(--muted); }
+.axis-title { font-size: 12px; font-weight: 600; fill: var(--ink); }
+.gridline { stroke: var(--grid); stroke-width: 1; }
+.gridline.mid { stroke: var(--soft); }
+.ref { stroke: var(--pink-ink); stroke-width: 1.2; stroke-dasharray: 3 3; }
+.ref-label { font-size: 11px; font-weight: 600; fill: var(--pink-ink); }
+.corner { font-size: 11px; font-weight: 600; fill: var(--pink-ink); }
+.diag { stroke: var(--soft); stroke-dasharray: 5 4; }
+.hit { cursor: pointer; outline: none; }
+.hit:focus-visible .mark, .hit.active .mark { stroke: var(--ink) !important; stroke-width: 3 !important; }
+.hit .mark { transition: opacity 120ms ease-out; }
+svg.dim .hit:not(.active) .mark { opacity: .28; }
+svg.dim .hit:not(.active) text { opacity: .35; }
+.pt-label { font-size: 10.5px; font-weight: 600; fill: var(--ink); pointer-events: none; paint-order: stroke; stroke: var(--plate); stroke-width: 3px; stroke-linejoin: round; }
+.bar-label { font-size: 12px; font-weight: 600; fill: var(--ink); }
+.bar-val { font-size: 12px; font-weight: 600; fill: var(--ink); }
+.bar-right { font-size: 11.5px; fill: var(--muted); }
+.ws-title { font-size: 12.5px; font-weight: 600; fill: var(--ink); }
+.ws-line { fill: none; stroke: var(--ink); stroke-width: 1.8; }
+.ws-big { fill: var(--pink); }
+.ws-dot { fill: var(--ink); }
+.ws-cursor { stroke: var(--ink); stroke-width: 1; }
+
+footer { padding-top: 30px; padding-bottom: 48px; font-size: 15px; color: var(--muted); }
+footer h2 { font: 800 15px/1.2 var(--display); color: var(--pink-ink); margin: 0 0 8px; }
+footer ul { padding-left: 18px; margin: 0; }
+
+/* hover card */
+#tip { position: fixed; z-index: 10; pointer-events: none; opacity: 0; transform: translateY(4px); transition: opacity 120ms ease-out, transform 120ms ease-out;
+       width: min(340px, calc(100vw - 24px)); background: var(--tip); color: var(--tip-ink); padding: 12px 14px;
+       border: 1px solid var(--tip-rule); font: 13px/1.4 var(--text); font-variant-numeric: tabular-nums; }
+#tip.on { opacity: 1; transform: none; }
+#tip .t-head { display: flex; align-items: center; gap: 8px; margin-bottom: 2px; }
+#tip .chip { font: 800 10px/1.2 var(--display); padding: 2px 5px; border: 2px solid; }
+#tip .t-name { font: 800 15px/1.2 var(--display); }
+#tip .t-sub { color: var(--tip-muted); margin-bottom: 8px; }
+#tip .big { display: flex; gap: 16px; margin: 6px 0 8px; }
+#tip .big div { display: flex; flex-direction: column; }
+#tip .big b { font: 600 20px/1.1 var(--text); }
+#tip .big span { font-size: 11.5px; color: var(--tip-muted); }
+#tip table { width: 100%; border-collapse: collapse; margin: 4px 0 6px; }
+#tip th { text-align: left; font-weight: 600; color: var(--tip-muted); font-size: 11.5px; padding: 2px 4px 2px 0; border-bottom: 1px solid var(--tip-rule); }
+#tip td { padding: 2px 4px 2px 0; }
+#tip td.r, #tip th.r { text-align: right; }
+#tip .sec { font: 800 11px/1.3 var(--display); color: var(--tip-muted); margin: 8px 0 2px; }
+#tip .note { color: var(--tip-muted); font-size: 11.5px; margin-top: 6px; }
+#tip .pos { color: var(--pos); } #tip .neg { color: var(--neg); }
+@media (max-width: 900px) {
+  section.chart { grid-template-columns: minmax(0, 1fr); }
+  .meta .says { grid-column: 1; grid-row: auto; margin: 0 0 14px; }
+  .plate { grid-row: auto; }
+}
+@media (max-width: 640px) {
+  .hero { padding: 20px 20px 18px; border-radius: 28px; }
+  .glance dl { grid-template-columns: 1fr; gap: 2px; } .glance dd { margin-bottom: 10px; }
+  #tip { left: 12px !important; right: 12px; top: auto !important; bottom: 12px; width: auto; }
+  #tip.on { pointer-events: auto; }
+}
+@media (prefers-reduced-motion: reduce) { #tip, .hit .mark { transition: none; } }
 </style>
 </head>
 <body>
-<header class="top">
-  <nav class="crumbs"><a href="portfolio.html">← Portfolio</a><span>|</span><a href="https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/tree/main/reports/2026-postseason-snippets">Static charts and write-up →</a></nav>
+<header class="top col">
+  <nav class="crumbs" aria-label="Navigation"><a href="portfolio.html">Portfolio</a><a href="https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/tree/main/reports/2026-postseason-snippets">Static charts and write-up</a></nav>
   <h1>2026 Postseason Snippets</h1>
-  <div class="badges" id="badges"></div>
-  <section class="glance" aria-label="At a glance"><b>At a glance</b><ul id="glance"></ul></section>
+  <div class="hero" id="hero"></div>
+  <div class="tags" id="badges"></div>
+  <section class="glance" aria-label="At a glance"><h2>At a glance</h2><dl id="glance"></dl></section>
   <p class="facts" id="facts"></p>
-  <span class="hint" id="hint">Hover any player, club or pitch for the breakdown. On a phone, tap.</span>
+  <p class="hint" id="hint">Hover any player, club or pitch for the breakdown. On a phone, tap. Every chart also has a table.</p>
 </header>
 <main id="charts"></main>
-<footer>
-  <h3>Method</h3>
+<footer class="col">
+  <h2>Method</h2>
   <ul>
     <li>Data: Baseball Savant pitch-level search for 2026 game types F, D, L and W, pulled one day at a time; names, the schedule and starters' lines from the MLB Stats API and the official box scores.</li>
     <li>WPA is Savant's win expectancy, summed over a plate appearance's pitches and credited to the batter and to the pitcher who threw the last pitch. Changes between pitches (pickoffs, caught stealings) aren't credited to anyone.</li>
@@ -177,7 +229,7 @@ const slashTxt = h => `${f3(h.avg)}/${f3(h.obp)}/${f3(h.slg)}`;
 
 function hitterCard(id, focus) {
   const h = H[id];
-  const sub = `${h.pa} PA in ${h.games} games · ${slashTxt(h)} · ${h.hr} HR, ${h.bb} BB, ${h.k} K`;
+  const sub = `${h.pa} PA in ${h.games} games; ${slashTxt(h)}; ${h.hr} HR, ${h.bb} BB, ${h.k} K`;
   let body = "";
   if (focus === "wpa") {
     body = big([[sg(h.wpa), "WPA", cls(h.wpa)], [f3(h.woba), "wOBA"], [f3(h.xwoba), "xwOBA"]]) + rounds(h.rounds, "WPA") + bestH(h.best);
@@ -200,7 +252,7 @@ function hitterCard(id, focus) {
 function pitcherCard(id, focus) {
   const p = P[id];
   const role = p.starts ? `${p.starts} start${p.starts > 1 ? "s" : ""}, ${p.games - p.starts} relief` : `${p.games} relief appearances`;
-  const sub = `${p.bf} batters · ${p.pitches} pitches · ${role} · ${p.k} K, ${p.bb} BB, ${p.hr} HR`;
+  const sub = `${p.bf} batters; ${p.pitches} pitches; ${role}; ${p.k} K, ${p.bb} BB, ${p.hr} HR`;
   const ars = `<div class="sec">Arsenal</div>` + table([["Pitch"], ["Use", 1], ["mph", 1], ["Whiff", 1]], p.arsenal.map(a => [esc(a.pitch), pc(a.usage), a.velo ?? "–", a.swings ? pc(a.whiff) : "–"]));
   let body = "";
   if (focus === "wpa") {
@@ -216,7 +268,7 @@ function pitcherCard(id, focus) {
 function teamCard(t, focus) {
   const m = T[t];
   const path = m.rounds.map(r => `${r.round} vs ${r.opp}: ${r.w}-${r.l}`).join("<br>");
-  const sub = `${m.w}-${m.l} in ${m.games} games · ${m.rf} runs scored, ${m.ra} allowed`;
+  const sub = `${m.w}-${m.l} in ${m.games} games; ${m.rf} runs scored, ${m.ra} allowed`;
   if (focus === "starters") {
     return head(t, t, sub) + table([["Date"], ["Starter"], ["Opp"], ["Outs", 1], ["P", 1]], m.starts.map(s => [s.date, esc(s.pitcher), s.opp, s.outs, s.pitches])) +
       `<div class="note">Official box-score lines. Innings = outs ÷ 3.</div>`;
@@ -231,12 +283,18 @@ function teamCard(t, focus) {
 const charts = document.getElementById("charts");
 function card(n, title, sub, says, wide) {
   const s = document.createElement("section"); s.className = "chart" + (wide ? " wide" : "");
-  s.innerHTML = `<h2><span class="num-badge">${n}</span>${title}</h2><p class="sub">${sub}</p>`;
+  s.innerHTML = `<div class="meta"><span class="lot">${String(n).padStart(2, "0")}</span><h2>${title}</h2><p class="sub">${sub}</p>${says ? `<p class="says">${says}</p>` : ""}</div>` +
+    `<div class="plate"><span class="cm" aria-hidden="true"></span><div class="svgwrap"></div><details class="tbl"><summary>Table</summary><div class="scroll"></div></details></div>`;
   charts.appendChild(s);
-  const svgWrap = document.createElement("div"); s.appendChild(svgWrap);
-  if (says) { const p = document.createElement("p"); p.className = "says"; p.innerHTML = says; s.appendChild(p); }
-  return svgWrap;
+  const w = s.querySelector(".svgwrap"); w.tableEl = s.querySelector("details.tbl .scroll");
+  return w;
 }
+function fillTable(wrap, cols, rows) {
+  if (!wrap.tableEl) return;
+  wrap.tableEl.innerHTML = `<table><thead><tr>${cols.map(([c, r]) => `<th class="${r ? "r" : ""}">${c}</th>`).join("")}</tr></thead><tbody>` +
+    rows.map(row => `<tr>${row.map((v, k) => `<td class="${cols[k][1] ? "r" : ""}">${v}</td>`).join("")}</tr>`).join("") + "</tbody></table>";
+}
+const fitW = (wrap, max = 640) => Math.round(Math.max(320, Math.min(max, wrap.clientWidth || 560)));
 const scale = (d0, d1, r0, r1) => v => r0 + (v - d0) / (d1 - d0) * (r1 - r0);
 function nice(lo, hi, n = 5) {
   const span = hi - lo, step0 = span / n, mag = 10 ** Math.floor(Math.log10(step0)), err = step0 / mag;
@@ -246,7 +304,7 @@ function nice(lo, hi, n = 5) {
 
 // ---------------------------------------------------------------- scatter
 function scatter(wrap, pts, o) {
-  const W = 560, Hh = 470, m = {l: 58, r: 16, t: 14, b: 48};
+  const W = fitW(wrap), Hh = Math.round(W * .84), m = {l: 58, r: 16, t: 14, b: 48};
   const svg = el("svg", {viewBox: `0 0 ${W} ${Hh}`, role: "img", "aria-label": o.aria}, null); wrap.appendChild(svg);
   const xs = pts.map(p => p.x), ys = pts.map(p => p.y);
   let [x0, x1] = [Math.min(...xs, o.xref ?? Infinity), Math.max(...xs, o.xref ?? -Infinity)];
@@ -259,7 +317,7 @@ function scatter(wrap, pts, o) {
   for (const v of nice(y0, y1)) { el("line", {x1: m.l, x2: W - m.r, y1: sy(v), y2: sy(v), class: "gridline"}, ax); el("text", {x: m.l - 6, y: sy(v) + 4, "text-anchor": "end"}, ax).textContent = o.fy(v); }
   el("text", {x: (m.l + W - m.r) / 2, y: Hh - 8, "text-anchor": "middle", class: "axis-title"}, svg).textContent = o.xt;
   el("text", {x: 14, y: (m.t + Hh - m.b) / 2, "text-anchor": "middle", class: "axis-title", transform: `rotate(-90 14 ${(m.t + Hh - m.b) / 2})`}, svg).textContent = o.yt;
-  if (o.diag) el("line", {x1: sx(x0), y1: sy(x0), x2: sx(x1), y2: sy(x1), stroke: "#9ca3af", "stroke-dasharray": "5 4"}, svg);
+  if (o.diag) el("line", {x1: sx(x0), y1: sy(x0), x2: sx(x1), y2: sy(x1), class: "diag"}, svg);
   if (o.xref != null) el("line", {x1: sx(o.xref), x2: sx(o.xref), y1: m.t, y2: Hh - m.b, class: "ref"}, svg);
   if (o.yref != null) el("line", {x1: m.l, x2: W - m.r, y1: sy(o.yref), y2: sy(o.yref), class: "ref"}, svg);
   for (const [txt, where] of o.corners || []) {
@@ -268,14 +326,15 @@ function scatter(wrap, pts, o) {
   }
   const placed = [];
   const boxHit = b => placed.some(p => !(b.x2 < p.x1 || b.x1 > p.x2 || b.y2 < p.y1 || b.y1 > p.y2));
-  const marks = pts.map(p => ({p, x: sx(p.x), y: sy(p.y), r: o.r || 7}));
+  const narrow = W < 480, br = o.badge && narrow ? 10.5 : (o.r || 7);
+  const marks = pts.map(p => ({p, x: sx(p.x), y: sy(p.y), r: br}));
   marks.forEach(k => placed.push({x1: k.x - k.r, x2: k.x + k.r, y1: k.y - k.r, y2: k.y + k.r}));
   for (const k of marks) {
     const g = el("g", {}, svg);
     const team = o.team ? o.team(k.p) : k.p.team, [c1, c2] = C[team];
     if (o.badge) {
       el("circle", {cx: k.x, cy: k.y, r: k.r, fill: c1, stroke: c2, "stroke-width": 3, class: "mark"}, g);
-      el("text", {x: k.x, y: k.y + 3.8, "text-anchor": "middle", "font-size": 10.5, "font-weight": 800, fill: lum(c1) < .5 ? "#fff" : "#111", "pointer-events": "none"}, g).textContent = team;
+      el("text", {x: k.x, y: k.y + (narrow ? 2.7 : 3.8), "text-anchor": "middle", "font-size": narrow ? 7.5 : 10.5, "font-weight": 800, fill: lum(c1) < .5 ? "#fff" : "#111", "pointer-events": "none"}, g).textContent = team;
     } else {
       el("circle", {cx: k.x, cy: k.y, r: k.r, fill: c1, stroke: c2, "stroke-width": 2, class: "mark"}, g);
       el("circle", {cx: k.x, cy: k.y, r: 14, fill: "transparent"}, g);
@@ -284,17 +343,21 @@ function scatter(wrap, pts, o) {
         const x1 = anchor === "start" ? k.x + dx : anchor === "end" ? k.x + dx - w : k.x - w / 2, b = {x1, x2: x1 + w, y1: k.y + dy - 10, y2: k.y + dy + 2};
         if (b.x1 < m.l || b.x2 > W - m.r || b.y1 < m.t || b.y2 > Hh - m.b || boxHit(b)) continue;
         placed.push(b);
-        el("text", {x: k.x + dx, y: k.y + dy, "text-anchor": anchor, class: "pt-label", fill: readable(team)}, g).textContent = name;
+        el("text", {x: k.x + dx, y: k.y + dy, "text-anchor": anchor, class: "pt-label"}, g).textContent = name;
         break;
       }
     }
     bind(g, () => o.card(k.p), o.label(k.p));
   }
+  const tx = o.tx || o.fx, ty = o.ty || o.fy;
+  fillTable(wrap, [[o.badge ? "Team" : "Name"], ...(o.badge ? [] : [["Team"]]), [o.xt, 1], [o.yt, 1]],
+    pts.map(p => [o.badge ? p.team : esc(o.name(p)), ...(o.badge ? [] : [o.team ? o.team(p) : p.team]), tx(p.x), ty(p.y)])
+       .sort((a, b) => String(a[0]).localeCompare(String(b[0]))));
 }
 
 // ---------------------------------------------------------------- ranked bars
 function bars(wrap, rows, o) {
-  const rowH = 22, W = 560, m = {l: o.labelW || 150, r: 74, t: 22, b: 40}, Hh = m.t + m.b + rows.length * rowH;
+  const rowH = 22, W = fitW(wrap), m = {l: Math.min(o.labelW || 150, Math.round(W * .3)), r: 74, t: 22, b: 40}, Hh = m.t + m.b + rows.length * rowH;
   const svg = el("svg", {viewBox: `0 0 ${W} ${Hh}`, role: "img", "aria-label": o.aria}, null); wrap.appendChild(svg);
   const vals = rows.map(r => r.v);
   let lo = o.lo ?? Math.min(0, ...vals), hi = Math.max(...vals, o.ref ?? -Infinity);
@@ -310,27 +373,29 @@ function bars(wrap, rows, o) {
     const y = m.t + i * rowH, g = el("g", {}, svg), team = o.team(r), [c1, c2] = C[team];
     el("rect", {x: 0, y, width: W, height: rowH, fill: "transparent"}, g);
     el("text", {x: 4, y: y + 15, class: "bar-right"}, g).textContent = i + 1;
-    el("text", {x: m.l - 6, y: y + 15, "text-anchor": "end", class: "bar-label", fill: readable(team)}, g).textContent = o.name(r);
+    el("text", {x: m.l - 6, y: y + 15, "text-anchor": "end", class: "bar-label"}, g).textContent = o.name(r);
     const x0 = sx(Math.max(lo, 0 > lo ? 0 : lo)), x1 = sx(r.v);
     el("rect", {x: Math.min(x0, x1), y: y + 3, width: Math.max(1, Math.abs(x1 - x0)), height: rowH - 6, rx: 2, fill: c1, stroke: c2, "stroke-width": 1.5, class: "mark"}, g);
     el("text", {x: x1 + 5, y: y + 15, class: "bar-val"}, g).textContent = o.fv(r.v);
     el("text", {x: W - 4, y: y + 15, "text-anchor": "end", class: "bar-right"}, g).textContent = o.right(r);
     bind(g, () => o.card(r), `${o.name(r)}: ${o.fv(r.v)}`);
   });
+  fillTable(wrap, [["#", 1], ["Name"], ["Team"], [o.xt, 1], [o.rightHead, 1]],
+    rows.map((r, i) => [i + 1, esc(o.name(r)), o.team(r), o.fv(r.v), o.right(r)]));
 }
 
 // ---------------------------------------------------------------- 1. World Series
 function worldSeries(wrap, games) {
-  const W = 1100, panelH = 92, gap = 34, m = {l: 46, r: 12, t: 24}, Hh = m.t + games.length * (panelH + gap);
+  const W = fitW(wrap, 1000), panelH = W < 600 ? 80 : 92, gap = 34, m = {l: 46, r: 12, t: 24}, Hh = m.t + games.length * (panelH + gap);
   const svg = el("svg", {viewBox: `0 0 ${W} ${Hh}`, role: "img", "aria-label": "Brewers win probability after every pitch of the 2026 World Series"}, null);
   wrap.appendChild(svg);
   games.forEach((g, gi) => {
     const top = m.t + gi * (panelH + gap), n = g.pts.length;
     const sx = scale(0, n, m.l, W - m.r), sy = scale(0, 1, top + panelH, top);
-    el("text", {x: m.l, y: top - 8, class: "ws-title"}, svg).textContent = `Game ${g.game} · ${g.date} · ${g.away} ${g.as}, ${g.home} ${g.hs}${g.innings > 9 ? ` (${g.innings} inn.)` : ""}`;
+    el("text", {x: m.l, y: top - 8, class: "ws-title"}, svg).textContent = `Game ${g.game}; ${g.date}; ${g.away} ${g.as}, ${g.home} ${g.hs}${g.innings > 9 ? ` (${g.innings} inn.)` : ""}`;
     el("text", {x: W - m.r, y: top - 8, "text-anchor": "end", class: "ws-title", fill: C[g.winner][0]}, svg).textContent = `${g.winner} wins`;
     const ax = el("g", {class: "axis"}, svg);
-    for (const v of [0, .5, 1]) { el("line", {x1: m.l, x2: W - m.r, y1: sy(v), y2: sy(v), class: "gridline", stroke: v === .5 ? "#bbb" : null}, ax); el("text", {x: m.l - 6, y: sy(v) + 4, "text-anchor": "end"}, ax).textContent = (100 * v) + "%"; }
+    for (const v of [0, .5, 1]) { el("line", {x1: m.l, x2: W - m.r, y1: sy(v), y2: sy(v), class: v === .5 ? "gridline mid" : "gridline"}, ax); el("text", {x: m.l - 6, y: sy(v) + 4, "text-anchor": "end"}, ax).textContent = (100 * v) + "%"; }
     const pts = [[sx(0), sy(.5)], ...g.pts.map((p, i) => [sx(i + 1), sy(p[0])])];
     const line = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join("");
     const mid = sy(.5);
@@ -341,14 +406,14 @@ function worldSeries(wrap, games) {
     const area = line + `L${pts[pts.length - 1][0]} ${mid}L${pts[0][0]} ${mid}Z`;
     el("path", {d: area, fill: C.MIL[1], opacity: .55, "clip-path": `url(#${clipA})`}, svg);
     el("path", {d: area, fill: C.TB[1], opacity: .55, "clip-path": `url(#${clipB})`}, svg);
-    el("path", {d: line, fill: "none", stroke: C.MIL[0], "stroke-width": 1.8}, svg);
+    el("path", {d: line, class: "ws-line"}, svg);
     // innings ticks
     let last = "";
     g.pts.forEach((p, i) => { const inn = p[1].slice(1); if (inn !== last && p[1][0] === "T") { last = inn; el("text", {x: sx(i + 1), y: top + panelH + 13, class: "bar-right", "text-anchor": "middle", "font-size": 10}, svg).textContent = inn; } });
-    const bp = pts[g.big + 1]; el("circle", {cx: bp[0], cy: bp[1], r: 4.5, fill: "#b4532a"}, svg);
+    const bp = pts[g.big + 1]; el("circle", {cx: bp[0], cy: bp[1], r: 4.5, class: "ws-big"}, svg);
     // hover layer
     const cur = el("line", {class: "ws-cursor", y1: top, y2: top + panelH, x1: -10, x2: -10, opacity: 0}, svg);
-    const dot = el("circle", {r: 4, fill: "#1f1f1f", cx: -10, cy: -10, opacity: 0}, svg);
+    const dot = el("circle", {r: 4, class: "ws-dot", cx: -10, cy: -10, opacity: 0}, svg);
     const hit = el("rect", {x: m.l, y: top, width: W - m.l - m.r, height: panelH, fill: "transparent"}, svg);
     hit.classList.add("hit"); hit.setAttribute("tabindex", "0"); hit.setAttribute("role", "slider");
     hit.setAttribute("aria-label", `Game ${g.game} win probability. Use the arrow keys to step through pitches.`);
@@ -357,7 +422,7 @@ function worldSeries(wrap, games) {
       const p = g.pts[i], [wp, inn, bat, pit, cnt, pitch, mph, what, score, d] = p;
       const half = inn[0] === "T" ? "Top" : "Bottom";
       return `<div class="t-head">${chip("MIL")}<span class="t-name">Game ${g.game}, ${half} ${inn.slice(1)}</span></div>
-        <div class="t-sub">Pitch ${i + 1} of ${g.pts.length} · ${score}</div>
+        <div class="t-sub">Pitch ${i + 1} of ${g.pts.length}; ${score}</div>
         ${big([[pc(wp), "Brewers win prob."], [sg(100 * d, 1), "pts this pitch (MIL)", cls(d)]])}
         <table><tr><th>Batter</th><td>${esc(bat)}</td></tr><tr><th>Pitcher</th><td>${esc(pit)}</td></tr>
         <tr><th>Count</th><td>${cnt}</td></tr><tr><th>Pitch</th><td>${esc(pitch)}${mph ? `, ${mph} mph` : ""}</td></tr><tr><th>Result</th><td>${esc(what)}</td></tr></table>
@@ -382,88 +447,101 @@ function worldSeries(wrap, games) {
       if (e.key === "ArrowLeft") { go(idx - step); e.preventDefault(); }
     });
   });
+  fillTable(wrap, [["Game"], ["Date"], ["Score"], ["Winner"], ["Biggest swing"], ["MIL win prob. change", 1]],
+    games.map(g => { const p = g.pts[g.big]; return [g.game, g.date, `${g.away} ${g.as}, ${g.home} ${g.hs}${g.innings > 9 ? ` (${g.innings})` : ""}`, g.winner,
+      `${p[1][0] === "T" ? "Top" : "Bottom"} ${p[1].slice(1)}: ${esc(p[2])}, ${esc(p[7])}`, sg(100 * p[9], 1) + " pts"]; }));
   const lg = el("text", {x: m.l, y: Hh - 4, class: "bar-right"}, svg);
   lg.textContent = "Line = Brewers' win probability after every pitch. Gold = Brewers favored, light blue = Rays favored. Dot = the game's biggest single swing. Numbers under each game = inning.";
 }
 
 // ---------------------------------------------------------------- the ten charts
+function drawAll() {
+charts.innerHTML = "";
+
 const M = DATA.meta, CH = DATA.charts;
 // header: badges and at a glance, every number from findings.json (docs/report-standard.md)
 const F = DATA.findings;
-const badge = (k, v, c) => `<span class="badge"><span class="k">${k}</span><span style="background:${c}">${v}</span></span>`;
-document.getElementById("badges").innerHTML = [badge("status", "reviewed", "#1d5c3f"), badge("data", "public", "#1f1f1f"),
-  badge("for", "Pro scouting and front office", "#6b6b6b"), ...["win probability added", "xwOBA", "plate discipline", "Statcast"].map(m => badge("method", m, "#b4532a"))].join(" ");
 const wsG = F.world_series.games, tc0 = F.team_contact.teams[0], hw0 = F.hitter_wpa.top5[0], pw0 = F.pitcher_wpa.top5[0];
+const milWins = F.world_series.mil_wins, tbWins = wsG.length - milWins;
+document.getElementById("hero").innerHTML = `<div class="num" data-n="${milWins}–${tbWins}" aria-hidden="true">${milWins}–${tbWins}</div>` +
+  `<p class="cap"><b>Brewers over Rays.</b> Milwaukee won the World Series in ${wsG.length}; Tampa Bay's only win took 12 innings.</p>`;
+document.getElementById("badges").innerHTML = [["Status", "reviewed"], ["Data", "public"], ["For", "pro scouting and the front office"],
+  ["Methods", "win probability added, xwOBA, plate discipline, Statcast"]].map(([k, v]) => `<span><b>${k}:</b> ${v}</span>`).join("");
 document.getElementById("glance").innerHTML = [
-  `<b>The question:</b> Who decided October, and how?`,
-  `<b>The answer:</b> The Brewers, in ${wsG.length}: they beat the Rays ${F.world_series.mil_wins} games to ${wsG.length - F.world_series.mil_wins} and had the best contact gap of any club (${f3(tc0.x_for)} xwOBA on offense, ${f3(tc0.x_against)} allowed). ${pw0.lab} led every pitcher at ${sg(pw0.wpa)} WPA in relief; ${hw0.lab} led hitters at ${sg(hw0.wpa)}.`,
-  `<b>For a club:</b> A morning-after read of October for pro scouting and the front office: who performed, how they did it, and which numbers are small-sample noise rather than a projection for ${F.season + 1}.`
-].map(t => `<li>${t}</li>`).join("");
-document.getElementById("facts").innerHTML = `<span><b>${M.games}</b> games</span><span><b>${M.pitches.toLocaleString()}</b> pitches</span><span><b>${M.plate_appearances.toLocaleString()}</b> plate appearances</span><span>Sept. 29 to Oct. 28, 2026</span><span>Data: Baseball Savant, MLB Stats API</span>`;
+  ["The question", "Who decided October, and how?"],
+  ["The answer", `The Brewers, in ${wsG.length}. They beat the Rays ${milWins} games to ${tbWins} and had the best contact gap of any club (${f3(tc0.x_for)} xwOBA on offense, ${f3(tc0.x_against)} allowed). ${pw0.lab} led every pitcher at ${sg(pw0.wpa)} WPA in relief; ${hw0.lab} led hitters at ${sg(hw0.wpa)}.`],
+  ["For a club", `A morning-after read of October for pro scouting and the front office: who performed, how they did it, and which numbers are small-sample noise rather than a projection for ${F.season + 1}.`]
+].map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("");
+document.getElementById("facts").innerHTML = `<b>${M.games}</b> games, <b>${M.pitches.toLocaleString()}</b> pitches and <b>${M.plate_appearances.toLocaleString()}</b> plate appearances, Wild Card Series through World Series (<b>Sept. 29 to Oct. 28, 2026</b>). Data: Baseball Savant and the MLB Stats API. Built ${M.built}.`;
 document.getElementById("built").textContent = `Numbers as of the ${M.built} build.`;
 if (matchMedia("(hover: none)").matches) document.getElementById("hint").textContent = "Tap any player, club or pitch for the breakdown. Tap again to close.";
 
 const ws = CH.ws, milW = ws.filter(g => g.winner === "MIL").length;
-worldSeries(card(1, "The World Series in Five", `Brewers ${milW}, Rays ${ws.length - milW} · Brewers win probability after every pitch. Hover the line for any pitch; focus a game and use ← → to step.`,
+worldSeries(card(1, "The World Series in Five", `Brewers ${milW}, Rays ${ws.length - milW}; Brewers win probability after every pitch. Hover the line for any pitch, or focus a game and step with the arrow keys.`,
   "The Brewers won in five. Tampa Bay's only win was Game 4, which went 12 innings.", true), ws);
 
 const tc = CH.team_contact.slice().sort((a, b) => (b.x - b.y) - (a.x - a.y));
-scatter(card(2, "Teams: Contact Quality", "xwOBA on offense vs. xwOBA allowed · dotted lines = postseason average",
+scatter(card(2, "Teams: Contact Quality", "xwOBA on offense vs. xwOBA allowed; dotted lines = postseason average",
   `${tc[0].team} had the best gap: ${f3(tc[0].x)} xwOBA on offense, ${f3(tc[0].y)} allowed. Hover a club for its path, starters and top performers.`),
   CH.team_contact, {aria: "Teams: xwOBA for vs against", badge: true, r: 15, invertY: true, xref: L.xwoba, yref: L.xwoba,
   fx: f3, fy: f3, xt: "Offense: xwOBA", yt: "xwOBA allowed (better is up)", corners: [["Hit hard, allowed little", "tr"], ["Outplayed on contact", "bl"]],
   card: p => teamCard(p.team, "contact"), label: p => `${p.team}: ${f3(p.x)} for, ${f3(p.y)} against`});
 
 const hw = CH.hitter_wpa;
-bars(card(3, "October's Biggest Bats: WPA", "Top 20 hitters · win probability added on their plate appearances",
+bars(card(3, "October's Biggest Bats: WPA", "Top 20 hitters; win probability added on their plate appearances",
   `${H[hw[0].id].short} (${H[hw[0].id].team}) added ${sg(hw[0].v)} WPA over ${hw[0].right} PA.`), hw,
   {aria: "Top 20 hitters by WPA", team: r => H[r.id].team, name: r => H[r.id].short, fv: v => sg(v), fx: v => sg(v, 1), right: r => r.right,
    rightHead: "PA", xt: "Win probability added", card: r => hitterCard(r.id, "wpa"), labelW: 130});
 
 const pw = CH.pitcher_wpa;
-bars(card(4, "October's Biggest Arms: WPA", "Top 20 pitchers · win probability added on the batters they faced",
+bars(card(4, "October's Biggest Arms: WPA", "Top 20 pitchers; win probability added on the batters they faced",
   `${P[pw[0].id].short} (${P[pw[0].id].team}) led every pitcher at ${sg(pw[0].v)} over ${pw[0].right} batters.`), pw,
   {aria: "Top 20 pitchers by WPA", team: r => P[r.id].team, name: r => P[r.id].short, fv: v => sg(v), fx: v => sg(v, 1), right: r => r.right,
    rightHead: "BF", xt: "Win probability added", card: r => pitcherCard(r.id, "wpa"), labelW: 130});
 
-scatter(card(5, "Hitters: Results vs. Quality of Contact", "Min. 25 PA · dashed line = results equal to contact",
+scatter(card(5, "Hitters: Results vs. Quality of Contact", "Min. 25 PA; dashed line = results equal to contact",
   "Above the line, results ran ahead of the contact; below it, the hitter made better contact than his line shows."),
   CH.hitter_x, {aria: "Hitters: wOBA vs xwOBA", diag: true, fx: f3, fy: f3, xt: "xwOBA (quality of contact, walks, strikeouts)", yt: "wOBA (actual results)",
   corners: [["Results ran ahead of contact", "tl"], ["Hit it well, little to show", "br"]], name: p => H[p.id].short, team: p => H[p.id].team,
   card: p => hitterCard(p.id, "x"), label: p => `${H[p.id].short}: xwOBA ${f3(p.x)}, wOBA ${f3(p.y)}`});
 
-scatter(card(6, "Hitters: Swing Decisions", "Min. 25 PA · zone = Savant zones 1-9 · dotted lines = postseason average",
+scatter(card(6, "Hitters: Swing Decisions", "Min. 25 PA; zone = Savant zones 1-9; dotted lines = postseason average",
   "Hover a hitter for his chase, zone-swing and whiff rates by pitch group."),
   CH.swing, {aria: "Hitters: chase rate vs whiff rate", invertY: true, xref: L.chase, yref: L.whiff, fx: v => (100 * v).toFixed(0) + "%", fy: v => (100 * v).toFixed(0) + "%",
   xt: "Chase rate (swings at pitches outside the zone)", yt: "Whiff rate per swing (better is up)",
   corners: [["Disciplined and hard to miss", "tl"], ["Chased and missed", "br"]], name: p => H[p.id].short, team: p => H[p.id].team,
-  card: p => hitterCard(p.id, "swing"), label: p => `${H[p.id].short}: chase ${pc(p.x)}, whiff ${pc(p.y)}`});
+  tx: pc, ty: pc, card: p => hitterCard(p.id, "swing"), label: p => `${H[p.id].short}: chase ${pc(p.x)}, whiff ${pc(p.y)}`});
 
-scatter(card(7, "Pitchers: Whiffs vs. Damage", "Min. 100 pitches · dotted lines = postseason average",
+scatter(card(7, "Pitchers: Whiffs vs. Damage", "Min. 100 pitches; dotted lines = postseason average",
   "Hover a pitcher for his arsenal: usage, velocity and whiff rate on each pitch."),
   CH.pitcher_x, {aria: "Pitchers: whiff rate vs xwOBA allowed", invertY: true, xref: L.whiff, yref: L.xwoba, fx: v => (100 * v).toFixed(0) + "%", fy: f3,
   xt: "Whiff rate per swing", yt: "xwOBA allowed (better is up)", corners: [["Missed bats, limited damage", "tr"], ["Hittable", "bl"]],
-  name: p => P[p.id].short, team: p => P[p.id].team, card: p => pitcherCard(p.id, "x"), label: p => `${P[p.id].short}: whiff ${pc(p.x)}, xwOBA ${f3(p.y)}`});
+  name: p => P[p.id].short, team: p => P[p.id].team, tx: pc, ty: f3, card: p => pitcherCard(p.id, "x"), label: p => `${P[p.id].short}: whiff ${pc(p.x)}, xwOBA ${f3(p.y)}`});
 
 const vl = CH.velo;
-bars(card(8, "October Velocity Leaders", "Top 20, min. 15 four-seamers or sinkers · fastest pitch at right",
+bars(card(8, "October Velocity Leaders", "Top 20, min. 15 four-seamers or sinkers; fastest pitch at right",
   `${P[vl[0].id].short} averaged ${vl[0].v} mph. Bars start near the leaders' range, not at zero.`), vl,
   {aria: "Top 20 by fastball velocity", zoom: true, ref: L.fb_velo, refLabel: `avg ${L.fb_velo}`, team: r => P[r.id].team, name: r => P[r.id].short,
    fv: v => v.toFixed(1), fx: v => v.toFixed(0), right: r => r.right, rightHead: "Max", xt: "Average four-seam and sinker velocity (mph)",
    card: r => pitcherCard(r.id, "velo"), labelW: 130});
 
 const evl = CH.ev;
-bars(card(9, "October's Hardest Hitters", "Top 20, min. 15 batted balls · hardest-hit ball at right",
+bars(card(9, "October's Hardest Hitters", "Top 20, min. 15 batted balls; hardest-hit ball at right",
   `${H[evl[0].id].short} averaged ${evl[0].v} mph on ${evl[0].n} batted balls. Bars start near the leaders' range, not at zero.`), evl,
   {aria: "Top 20 by exit velocity", zoom: true, ref: L.ev, refLabel: `avg ${L.ev}`, team: r => H[r.id].team, name: r => H[r.id].short,
    fv: v => v.toFixed(1), fx: v => v.toFixed(0), right: r => r.right, rightHead: "Max", xt: "Average exit velocity (mph)",
    card: r => hitterCard(r.id, "ev"), labelW: 130});
 
 const st = CH.starters;
-bars(card(10, "How Deep the Starters Went", "Official box-score starter lines · innings = outs ÷ 3",
+bars(card(10, "How Deep the Starters Went", "Official box-score starter lines; innings = outs ÷ 3",
   `${st[0].team} starters averaged ${st[0].v.toFixed(1)} innings a start; ${st[st.length - 1].team} averaged ${st[st.length - 1].v.toFixed(1)}. Hover a club for every start.`), st,
   {aria: "Average innings per start by club", lo: 0, team: r => r.team, name: r => r.team, fv: v => v.toFixed(1), fx: v => v.toFixed(0),
    right: r => `${Math.round(r.pitches)} p, ${r.games} g`, rightHead: "Per start", xt: "Average innings per start", card: r => teamCard(r.team, "starters"), labelW: 60});
+}
+drawAll();
+let lastW = innerWidth;
+addEventListener("resize", () => { clearTimeout(window.__rt); window.__rt = setTimeout(() => {
+  if (Math.abs(innerWidth - lastW) > 40) { lastW = innerWidth; hide(); drawAll(); } }, 200); });
 })();
 </script>
 </body>

@@ -76,4 +76,6 @@ def test_every_point_has_a_breakdown(page):
 
 def test_page_is_self_contained(page):
     html, _, _ = page
-    assert not re.search(r"<script[^>]+src=|<link[^>]+href=|@import|url\(http", html)
+    assert not re.search(r"<script[^>]+src=|@import|url\(http", html)  # no outside code or styles
+    links = re.findall(r'<link[^>]+href="([^"]+)"', html)
+    assert all(h.startswith(("https://fonts.googleapis.com", "https://fonts.gstatic.com")) for h in links)  # fonts only
