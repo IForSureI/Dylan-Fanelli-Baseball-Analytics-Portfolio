@@ -71,7 +71,8 @@
   #tip .note { color: var(--tip-muted); font-size: 11px; margin-top: 6px; }
   #tip .pos { color: #9fd8b3; } #tip .neg { color: #f4a3a3; }
   @media (max-width: 640px) {
-    #tip { left: 12px !important; right: 12px; top: auto !important; bottom: 12px; width: auto; pointer-events: auto; }
+    #tip { left: 12px !important; right: 12px; top: auto !important; bottom: 12px; width: auto; }
+    #tip.on { pointer-events: auto; }
     .pt-label { font-size: 9.5px; }
   }
   @media (prefers-reduced-motion: reduce) { #tip, .hit .mark { transition: none; } }
@@ -343,7 +344,7 @@ function worldSeries(wrap, games) {
       const half = inn[0] === "T" ? "Top" : "Bottom";
       return `<div class="t-head">${chip("MIL")}<span class="t-name">Game ${g.game}, ${half} ${inn.slice(1)}</span></div>
         <div class="t-sub">Pitch ${i + 1} of ${g.pts.length} · ${score}</div>
-        ${big([[pc(wp), "Brewers win prob."], [`<span class="${cls(d)}">${sg(100 * d, 1)}</span>`, "pts this pitch (MIL)"]])}
+        ${big([[pc(wp), "Brewers win prob."], [sg(100 * d, 1), "pts this pitch (MIL)", cls(d)]])}
         <table><tr><th>Batter</th><td>${esc(bat)}</td></tr><tr><th>Pitcher</th><td>${esc(pit)}</td></tr>
         <tr><th>Count</th><td>${cnt}</td></tr><tr><th>Pitch</th><td>${esc(pitch)}${mph ? `, ${mph} mph` : ""}</td></tr><tr><th>Result</th><td>${esc(what)}</td></tr></table>
         ${i === g.big ? `<div class="note">The biggest single swing of the game.</div>` : ""}`;
