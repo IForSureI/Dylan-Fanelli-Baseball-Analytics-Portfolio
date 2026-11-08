@@ -695,7 +695,8 @@ def figure(path: str | None = None, t: Target = SMITH_CASE) -> str:
     fig, (a, b) = plt.subplots(1, 2, figsize=(10.5, 4.4), dpi=150, gridspec_kw={"width_ratios": [1.15, 1]})
     for ax in (a, b):
         _style(ax)
-    blue, orange, green = "#2a78d6", "#eb6834", "#008300"
+    from baseball.house import SERIES
+    blue, orange, green = SERIES[0], SERIES[2], SERIES[3]  # house series: blue, orange, teal
     chosen = {n for n, _ in cs["chosen"]}
     offsets = {"Osuna": (-5, 3, "right"), "Colomé": (5, 3, "left"), "Giles": (-6, 2, "right"),
                "Rondón": (-5, 4, "right"), "Hader": (-6, 3, "right"), "Duran": (-5, 0, "right"),

@@ -9,3 +9,7 @@ Organized around the jobs of a front office:
 - roster/       building the club: service time, arbitration, contracts, pref lists
 - business/     the revenue side: partnerships, attendance, pricing
 """
+
+from baseball import house as _house  # noqa: E402
+
+_house.apply()  # every chart in the package uses the house style (baseball/house.py)

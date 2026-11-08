@@ -23,11 +23,11 @@ PITCH_COLORS = {
     "SV": "#d55181",  # slurve
 }
 OTHER = "#8a8a8a"
-INK, MUTED, GRID = "#1f1f1f", "#6b6b6b", "#e6e6e4"
+from baseball.house import GRID, INK, MUTED, PLATE  # noqa: E402  (one source for the house tokens)
 
 
 def _style(ax: plt.Axes) -> None:
-    ax.set_facecolor("#fcfcfb")
+    ax.set_facecolor(PLATE)
     for side in ("top", "right"):
         ax.spines[side].set_visible(False)
     for side in ("left", "bottom"):

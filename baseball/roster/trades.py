@@ -439,7 +439,8 @@ def report_figure(graph: Path = OUT, out: Path = Path("reports/figures/2026-trad
 
     from baseball.viz import GRID, INK, MUTED, OTHER, _style
 
-    accent = "#2a78d6"
+    from baseball.house import PLATE, SERIES
+    accent = SERIES[0]
     b = breakdown(graph)
     rows = []
     order = b["by_division"].sort_values("rate_ratio", ascending=False)
@@ -455,7 +456,7 @@ def report_figure(graph: Path = OUT, out: Path = Path("reports/figures/2026-trad
     for i, (label, r, g) in enumerate(rows):
         c = OTHER if g == "other" else accent
         a1.plot([r.ci_low, r.ci_high], [i, i], color=c, lw=2, solid_capstyle="round")
-        a1.scatter([r.rate_ratio], [i], s=80 if g == "rival" else 46, color=c, edgecolors="#fcfcfb", linewidths=2, zorder=3)
+        a1.scatter([r.rate_ratio], [i], s=80 if g == "rival" else 46, color=c, edgecolors=PLATE, linewidths=2, zorder=3)
         a1.text(1.36, i, f"{r.rate_ratio:.2f}", va="center", ha="right", fontsize=8.5, color=INK, fontweight="bold" if g == "rival" else "normal")
         a1.text(1.40, i, f"{int(r.observed):,} vs {r.expected:,.0f}", va="center", fontsize=8.5, color=MUTED)
     a1.axvline(1, color=MUTED, lw=1, ls=(0, (3, 3)))
@@ -493,7 +494,7 @@ def report_figure(graph: Path = OUT, out: Path = Path("reports/figures/2026-trad
              "Code: baseball/roster/trades.py.", fontsize=7.5, color=MUTED)
     fig.tight_layout(rect=(0, 0.025, 1, 1))
     out.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(out, facecolor="white")
+    fig.savefig(out)
     plt.close(fig)
     return out
 

@@ -191,6 +191,7 @@ def band_figure(path: str = "reports/figures/2026-skenes-extension-band.png") ->
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
+    from baseball.house import SERIES
     from baseball.viz import INK, MUTED, _style
 
     e = skenes_extension()
@@ -206,14 +207,14 @@ def band_figure(path: str = "reports/figures/2026-skenes-extension-band.png") ->
     for i, k in enumerate(order):
         b = e["bands"][k]
         y = len(order) - 1 - i
-        ax.plot([b["player_floor_pv"], b["club_ceiling_pv"]], [y, y], color="#2a78d6", lw=7, solid_capstyle="butt")
+        ax.plot([b["player_floor_pv"], b["club_ceiling_pv"]], [y, y], color=SERIES[0], lw=7, solid_capstyle="butt")
         ax.text(b["player_floor_pv"] - 2, y, f"{b['player_floor_pv']:.0f}", ha="right", va="center", fontsize=8, color=MUTED)
         ax.text(b["club_ceiling_pv"] + 2, y, f"{b['club_ceiling_pv']:.0f}", ha="left", va="center", fontsize=8, color=MUTED)
         if k in adj:
             ax.plot(adj[k], y, marker="v", ms=7, color=INK, zorder=3)
     walk = structure_pv(WALK_AWAY["signing_bonus"], WALK_AWAY["salaries"])["pv"]
-    ax.axvline(offer, color="#eb6834", lw=1.5, ls="--")
-    ax.text(offer - 1, len(order) - 0.45, f"opening offer {offer:.0f}", color="#eb6834", fontsize=8, ha="right")
+    ax.axvline(offer, color=SERIES[1], lw=1.5, ls="--")
+    ax.text(offer - 1, len(order) - 0.45, f"opening offer {offer:.0f}", color=SERIES[1], fontsize=8, ha="right")
     ax.axvline(walk, color=MUTED, lw=1.2, ls=":")
     ax.text(walk + 1, len(order) - 0.45, f"walk-away {walk:.0f}", color=MUTED, fontsize=8, ha="left")
     ax.set_yticks(range(len(order)))
