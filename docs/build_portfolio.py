@@ -7,6 +7,7 @@ Figures from reports/figures/ are inlined as data URIs so the page is one self-c
 from __future__ import annotations
 
 import base64
+import json
 import re
 from datetime import date
 from pathlib import Path
@@ -23,6 +24,8 @@ def build(out: Path = ROOT / "docs" / "portfolio.html") -> Path:
         return "data:image/png;base64," + base64.b64encode(data).decode()
 
     html = re.sub(r"\{\{IMG:([^}]+)\}\}", img, html)
+    details = json.loads((ROOT / "docs" / "num-details.json").read_text())
+    html = html.replace("{{NUM_DETAILS}}", json.dumps(details, ensure_ascii=False).replace("</", "<\\/"))
     html = html.replace("{{REPO}}", REPO).replace("{{DATE}}", date.today().strftime("%B %-d, %Y"))
     out.write_text(html)
     return out
