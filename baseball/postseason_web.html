@@ -348,7 +348,9 @@ function scatter(wrap, pts, o) {
   let [y0, y1] = [Math.min(...ys, o.yref ?? Infinity), Math.max(...ys, o.yref ?? -Infinity)];
   if (o.diag) { x0 = y0 = Math.min(x0, y0); x1 = y1 = Math.max(x1, y1); }
   const padf = o.badge ? .13 : .08, px = (x1 - x0) * padf, py = (y1 - y0) * padf; x0 -= px; x1 += px; y0 -= py; y1 += py;
-  const sx = scale(x0, x1, m.l, W - m.r), sy = o.invertY ? scale(y0, y1, m.t, Hh - m.b) : scale(y0, y1, Hh - m.b, m.t);
+  // the corner captions get their own strip, so no mark sits on them
+  const ct = (o.corners || []).some(c => c[1].includes("t")) ? 18 : 0, cb = (o.corners || []).some(c => c[1].includes("b")) ? 16 : 0;
+  const sx = scale(x0, x1, m.l, W - m.r), sy = o.invertY ? scale(y0, y1, m.t + ct, Hh - m.b - cb) : scale(y0, y1, Hh - m.b - cb, m.t + ct);
   const ax = el("g", {class: "axis"}, svg);
   for (const v of nice(x0, x1)) { el("line", {x1: sx(v), x2: sx(v), y1: m.t, y2: Hh - m.b, class: "gridline"}, ax); el("text", {x: sx(v), y: Hh - m.b + 16, "text-anchor": "middle"}, ax).textContent = o.fx(v); }
   for (const v of nice(y0, y1)) { el("line", {x1: m.l, x2: W - m.r, y1: sy(v), y2: sy(v), class: "gridline"}, ax); el("text", {x: m.l - 6, y: sy(v) + 4, "text-anchor": "end"}, ax).textContent = o.fy(v); }
@@ -362,6 +364,9 @@ function scatter(wrap, pts, o) {
     el("text", {x, y, "text-anchor": where.includes("r") ? "end" : "start", class: "corner"}, svg).textContent = txt;
   }
   const placed = [];
+  for (const t of svg.querySelectorAll("text.corner")) {  // point labels keep clear of the corner captions
+    const b = t.getBBox(); placed.push({x1: b.x - 2, x2: b.x + b.width + 2, y1: b.y - 1, y2: b.y + b.height + 1});
+  }
   const boxHit = b => placed.some(p => !(b.x2 < p.x1 || b.x1 > p.x2 || b.y2 < p.y1 || b.y1 > p.y2));
   const narrow = W < 480, br = o.badge && narrow ? 10.5 : (o.r || 7);
   const marks = pts.map(p => ({p, x: sx(p.x), y: sy(p.y), r: br}));
