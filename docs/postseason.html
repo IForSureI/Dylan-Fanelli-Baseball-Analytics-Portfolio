@@ -84,6 +84,7 @@ svg text { font-family: var(--text); }
 .hit { cursor: pointer; outline: none; }
 .track { stroke: var(--grid); stroke-width: 2; }
 .baseline { stroke: var(--soft); stroke-width: 1; }
+svg.dim .hit:not(.active) image { opacity: .3; }
 .hit:focus-visible .mark, .hit.active .mark { stroke: var(--ink) !important; stroke-width: 2 !important; }
 .hit .mark { transition: opacity 120ms ease-out; }
 svg.dim .hit:not(.active) .mark { opacity: .28; }
@@ -368,26 +369,59 @@ function scatter(wrap, pts, o) {
     const b = t.getBBox(); placed.push({x1: b.x - 2, x2: b.x + b.width + 2, y1: b.y - 1, y2: b.y + b.height + 1});
   }
   const boxHit = b => placed.some(p => !(b.x2 < p.x1 || b.x1 > p.x2 || b.y2 < p.y1 || b.y1 > p.y2));
-  const narrow = W < 480, br = o.badge && narrow ? 10.5 : (o.r || 7);
-  const marks = pts.map(p => ({p, x: sx(p.x), y: sy(p.y), r: br}));
-  marks.forEach(k => placed.push({x1: k.x - k.r, x2: k.x + k.r, y1: k.y - k.r, y2: k.y + k.r}));
+  const narrow = W < 480, br = o.badge && narrow ? 10.5 : (o.r || 7), HR = narrow ? 9 : 12;  // HR: headshot radius
+  // headshots only where they fit: their discs may cover at most 30% of the plot, or they would have to be pushed
+  // so far apart that the chart stops showing where each player sits; otherwise the club-colour dots stay
+  const roomy = pts.length * (2 * HR + 3) ** 2 <= .3 * (W - m.l - m.r) * (Hh - m.t - m.b);
+  const marks = pts.map(p => { const h = !o.badge && o.head && roomy ? o.head(p) : null;
+    return {p, h, x: sx(p.x), y: sy(p.y), x0: sx(p.x), y0: sy(p.y), r: h ? HR : br}; });
+  if (o.badge || marks.some(k => k.h)) {  // big markers: nudge overlapping ones apart; a hairline and a small dot keep the true spot
+    for (let it = 0; it < 120; it++) {
+      let moved = false;
+      for (let i = 0; i < marks.length; i++) for (let j = i + 1; j < marks.length; j++) {
+        const a = marks[i], b = marks[j], dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || .01, need = a.r + b.r + 2;
+        if (d < need) { const q = (need - d) / 2, ux = dx / d, uy = dy / d; a.x -= ux * q; a.y -= uy * q; b.x += ux * q; b.y += uy * q; moved = true; }
+      }
+      for (const k of marks) { k.x = Math.min(W - m.r - k.r, Math.max(m.l + k.r, k.x)); k.y = Math.min(Hh - m.b - cb - k.r, Math.max(m.t + ct + k.r, k.y)); }
+      if (!moved) break;
+    }
+  }
+  marks.forEach(k => placed.push({x1: k.x - k.r - 1, x2: k.x + k.r + 1, y1: k.y - k.r - 1, y2: k.y + k.r + 1}));
+  // names: the three best on the x measure first, then the outliers, then wherever there is room
+  const mean = a => a.reduce((t, v) => t + v, 0) / a.length, cx = mean(marks.map(k => k.x)), cy = mean(marks.map(k => k.y));
+  const sxr = Math.max(1, ...marks.map(k => Math.abs(k.x - cx))), syr = Math.max(1, ...marks.map(k => Math.abs(k.y - cy)));
+  const lead = new Set(marks.slice().sort((a, b) => b.p.x - a.p.x).slice(0, 3)), labelFor = new Map();
+  if (!o.badge) for (const k of marks.slice().sort((a, b) => (lead.has(b) - lead.has(a)) || (Math.hypot((b.x - cx) / sxr, (b.y - cy) / syr) - Math.hypot((a.x - cx) / sxr, (a.y - cy) / syr)))) {
+    const name = o.name(k.p), w = name.length * 6.3 + 4, q = k.r + 4;
+    for (const [dx, dy, anchor] of [[q, 4, "start"], [-q, 4, "end"], [0, -q - 2, "middle"], [0, q + 10, "middle"], [q, -q + 1, "start"], [-q, -q + 1, "end"], [q, q + 6, "start"], [-q, q + 6, "end"]]) {
+      const x1 = anchor === "start" ? k.x + dx : anchor === "end" ? k.x + dx - w : k.x - w / 2, b = {x1, x2: x1 + w, y1: k.y + dy - 10, y2: k.y + dy + 2};
+      if (b.x1 < m.l || b.x2 > W - 2 || b.y1 < m.t || b.y2 > Hh - m.b || boxHit(b)) continue;
+      placed.push(b); labelFor.set(k, [k.x + dx, k.y + dy, anchor]); break;
+    }
+  }
   for (const k of marks) {
     const g = el("g", {}, svg);
     const team = o.team ? o.team(k.p) : k.p.team, [c1, c2] = C[team];
+    if (Math.hypot(k.x - k.x0, k.y - k.y0) > 3) {
+      el("line", {x1: k.x0, y1: k.y0, x2: k.x, y2: k.y, style: "stroke: var(--soft); stroke-width: 1"}, g);
+      el("circle", {cx: k.x0, cy: k.y0, r: 2, style: "fill: var(--ink)"}, g);
+    }
     if (o.badge) {
       el("circle", {cx: k.x, cy: k.y, r: k.r, fill: c1, stroke: c2, "stroke-width": 2.5, class: "mark"}, g);
       el("text", {x: k.x, y: k.y + (narrow ? 2.7 : 3.8), "text-anchor": "middle", "font-size": narrow ? 7.5 : 10.5, "font-weight": 800, fill: lum(c1) < .5 ? "#fff" : "#111", "pointer-events": "none"}, g).textContent = team;
     } else {
-      el("circle", {cx: k.x, cy: k.y, r: k.r, fill: c1, stroke: c2, "stroke-width": 1.5, class: "mark"}, g);
-      el("circle", {cx: k.x, cy: k.y, r: 13, fill: "transparent"}, g);
-      const name = o.name(k.p), w = name.length * 5.9 + 2;
-      for (const [dx, dy, anchor] of [[10, 4, "start"], [-10, 4, "end"], [0, -11, "middle"], [0, 18, "middle"], [10, -9, "start"], [-10, -9, "end"], [10, 15, "start"], [-10, 15, "end"]]) {
-        const x1 = anchor === "start" ? k.x + dx : anchor === "end" ? k.x + dx - w : k.x - w / 2, b = {x1, x2: x1 + w, y1: k.y + dy - 10, y2: k.y + dy + 2};
-        if (b.x1 < m.l || b.x2 > W - m.r || b.y1 < m.t || b.y2 > Hh - m.b || boxHit(b)) continue;
-        placed.push(b);
-        el("text", {x: k.x + dx, y: k.y + dy, "text-anchor": anchor, class: "pt-label"}, g).textContent = name;
-        break;
-      }
+      if (k.h) {  // headshot in a club-colour ring with the second colour outside it; the ring shows alone if the image fails
+        const cid = "hc" + (++HEADN);
+        el("circle", {cx: k.x, cy: k.y, r: k.r + 2.5, fill: c2}, g);
+        el("circle", {cx: k.x, cy: k.y, r: k.r + 1, fill: c1, class: "mark"}, g);
+        const cp = el("clipPath", {id: cid}, g); el("circle", {cx: k.x, cy: k.y, r: k.r - 1}, cp);
+        el("circle", {cx: k.x, cy: k.y, r: k.r - 1, style: "fill: var(--grid)"}, g);
+        const im = el("image", {href: k.h, x: k.x - k.r + 1, y: k.y - k.r + 1, width: 2 * k.r - 2, height: 2 * k.r - 2, "clip-path": `url(#${cid})`, preserveAspectRatio: "xMidYMin slice", decoding: "async", loading: "lazy"}, g);
+        im.addEventListener("error", () => im.remove(), {once: true});
+      } else el("circle", {cx: k.x, cy: k.y, r: k.r, fill: c1, stroke: c2, "stroke-width": 1.5, class: "mark"}, g);
+      el("circle", {cx: k.x, cy: k.y, r: Math.max(13, k.r + 4), fill: "transparent"}, g);
+      const at = labelFor.get(k);
+      if (at) el("text", {x: at[0], y: at[1], "text-anchor": at[2], class: "pt-label"}, g).textContent = o.name(k.p);
     }
     bind(g, () => o.card(k.p), o.label(k.p));
   }
@@ -569,6 +603,8 @@ const byIdThen = f => (a, b) => (f(b) - f(a)) || (+a.id - +b.id);
 let SL = null;  // slice block for the hover card while a chart is cut
 const sliceBlock = (st, items) => active(st) ? `<div class="slice"><div class="sec">${describe(st)}</div>${big(items)}</div>` : null;
 function withSlice(html, fn) { SL = html; try { return fn(); } finally { SL = null; } }
+let HEADN = 0;
+const headURL = id => `https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_96,q_auto:best/v1/people/${id}/headshot/67/current`;
 const hName = id => H[id] ? H[id].short : (NM.h[id] || [id])[0], hTeam = id => H[id] ? H[id].team : (NM.h[id] || [, "MIL"])[1];
 const pName = id => P[id] ? P[id].short : (NM.p[id] || [id])[0], pTeam = id => P[id] ? P[id].team : (NM.p[id] || [, "MIL"])[1];
 const minimal = (name, team) => `<div class="t-head">${chip(team)}<span class="t-name">${esc(name)}</span></div>${SL || ""}` +
@@ -724,7 +760,7 @@ chart(5, "Hitters: Results vs. Quality of Contact", ["round", "inning"], false, 
   const cut = describe(st), sub = `Min. ${need} PA${need !== base ? ` (${base} for the full postseason, scaled to this cut)` : ""}; dashed line = results equal to contact${cut ? `. ${cut}` : ""}`;
   if (pts.length < 2) return {sub, says: "", empty: "Too few hitters meet the minimum in this cut."};
   scatter(wrap, pts, {aria: "Hitters: wOBA vs xwOBA", diag: true, fx: f3, fy: f3, xt: "xwOBA (quality of contact, walks, strikeouts)", yt: "wOBA (actual results)",
-    corners: [["Results ran ahead of contact", "tl"], ["Hit it well, little to show", "br"]], name: p => hName(p.id), team: p => hTeam(p.id),
+    corners: [["Results ran ahead of contact", "tl"], ["Hit it well, little to show", "br"]], head: p => headURL(p.id), name: p => hName(p.id), team: p => hTeam(p.id),
     card: p => withSlice(sliceBlock(st, [[f3(p.y), "wOBA"], [f3(p.x), "xwOBA"], [p.n, "PA"]]), () => H[p.id] ? hitterCard(p.id, "x") : minimal(hName(p.id), hTeam(p.id))),
     label: p => `${hName(p.id)}: xwOBA ${f3(p.x)}, wOBA ${f3(p.y)}`});
   return {sub, says: "Above the line, results ran ahead of the contact; below it, the hitter made better contact than his line shows."};
@@ -741,7 +777,7 @@ chart(6, "Hitters: Swing Decisions", ["round", "inning", "count"], false, "", (s
   if (pts.length < 2) return {sub, says: "", empty: "Too few hitters meet the minimum in this cut."};
   scatter(wrap, pts, {aria: "Hitters: chase rate vs whiff rate", invertY: true, xref: lc, yref: lw, fx: v => (100 * v).toFixed(0) + "%", fy: v => (100 * v).toFixed(0) + "%",
     xt: "Chase rate (swings at pitches outside the zone)", yt: "Whiff rate per swing (better is up)",
-    corners: [["Disciplined and hard to miss", "tl"], ["Chased and missed", "br"]], name: p => hName(p.id), team: p => hTeam(p.id),
+    corners: [["Disciplined and hard to miss", "tl"], ["Chased and missed", "br"]], head: p => headURL(p.id), name: p => hName(p.id), team: p => hTeam(p.id),
     tx: pc, ty: pc, card: p => withSlice(sliceBlock(st, [[pc(p.x), `chase (avg ${pc(lc)})`], [pc(p.y), `whiff/swing (avg ${pc(lw)})`], [p.sw, "swings"]]),
       () => H[p.id] ? hitterCard(p.id, "swing") : minimal(hName(p.id), hTeam(p.id))), label: p => `${hName(p.id)}: chase ${pc(p.x)}, whiff ${pc(p.y)}`});
   return {sub, says: `Hover a hitter for his chase, zone-swing and whiff rates by pitch group.${cut ? ` Average in this cut: chase ${pc(lc)}, whiff ${pc(lw)}.` : ""}`};
@@ -758,7 +794,7 @@ chart(7, "Pitchers: Whiffs vs. Damage", ["round", "inning", "count"], false, "",
   if (pts.length < 2) return {sub, says: "", empty: "Too few pitchers meet the minimum in this cut."};
   scatter(wrap, pts, {aria: "Pitchers: whiff rate vs xwOBA allowed", invertY: true, xref: lw, yref: lx, fx: v => (100 * v).toFixed(0) + "%", fy: f3,
     xt: "Whiff rate per swing", yt: "xwOBA allowed (better is up)", corners: [["Missed bats, limited damage", "tr"], ["Hittable", "bl"]],
-    name: p => pName(p.id), team: p => pTeam(p.id), tx: pc, ty: f3,
+    head: p => headURL(p.id), name: p => pName(p.id), team: p => pTeam(p.id), tx: pc, ty: f3,
     card: p => withSlice(sliceBlock(st, [[pc(p.x), "whiff/swing"], [f3(p.y), "xwOBA allowed"], [p.n, "pitches"]]), () => P[p.id] ? pitcherCard(p.id, "x") : minimal(pName(p.id), pTeam(p.id))),
     label: p => `${pName(p.id)}: whiff ${pc(p.x)}, xwOBA ${f3(p.y)}`});
   return {sub, says: "Hover a pitcher for his arsenal: usage, velocity and whiff rate on each pitch."};

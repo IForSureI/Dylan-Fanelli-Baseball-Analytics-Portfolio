@@ -500,3 +500,4 @@ Each study was built and integrated, then put through a separate review pass aga
 - Pandas rounds a trailing 5 to the even digit (33.25 → 33.2) while DuckDB rounds it up (33.3). Compare the two with a tolerance, not exact equality.
 - Statcast's `delta_run_exp` is from the offense's point of view, so a pitcher's runs saved is its negative.
 - Skubal's changeup gets whiffs on 46.8% of swings (95% interval 42.7–51.1%) against about 31% for changeups overall. The postseason rate of 70.5% came on only 44 swings.
+- 2026-11-09: Postseason page: player headshots on the three player scatters (linked from MLB's image server, with MLB's generic silhouette when a player has none), shown only where the faces fit without pushing players off their spots; on a phone the club-colour dots stay.
