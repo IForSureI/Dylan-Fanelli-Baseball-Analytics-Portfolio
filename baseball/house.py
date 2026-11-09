@@ -1,8 +1,8 @@
 """House style for every chart this package draws, matching the interactive pages.
 
-Paper and plate surfaces, Syne for titles and Bricolage Grotesque for everything else (both in assets/fonts, OFL),
-words in ink, and a four-colour series order checked with the dataviz validator (lightness band, chroma, colour-blind
-and normal-vision separation, contrast against the plate): blue, magenta, orange, teal. Loaded with the package, so a
+Warm paper and plate surfaces, Be Vietnam Pro for titles and Bricolage Grotesque for everything else (both in
+assets/fonts, OFL), words in ink, and a four-colour series order checked with the dataviz validator (lightness band,
+chroma, colour-blind and normal-vision separation, contrast against the plate): blue, stitch red, green, ochre. Loaded with the package, so a
 study picks it up the next time it runs; a chart that sets its own colours keeps them.
 """
 from __future__ import annotations
@@ -15,10 +15,10 @@ from matplotlib import font_manager
 from matplotlib.figure import Figure
 
 FONTS = Path(__file__).resolve().parents[1] / "assets" / "fonts"
-DISPLAY, TEXT = "Syne", "Bricolage Grotesque"
-PAPER, PLATE = "#f4f0f0", "#fffdfd"
-INK, MUTED, SOFT, GRID = "#1d1a24", "#5a5563", "#8b8592", "#ebe5e5"
-SERIES = ["#1162d4", "#c0136c", "#d1700f", "#2a9d8f"]
+DISPLAY, TEXT = "Be Vietnam Pro", "Bricolage Grotesque"
+PAPER, PLATE = "#f7f4ec", "#fffdf8"
+INK, MUTED, SOFT, GRID = "#1a1a1a", "#5b5a55", "#8e8c85", "#e8e4da"
+SERIES = ["#285d9e", "#c8392b", "#2a8a6a", "#b5811a"]
 ACCENT = SERIES[1]
 
 _applied = False

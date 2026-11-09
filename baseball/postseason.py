@@ -53,11 +53,11 @@ FIRST, LAST = dt.date(2026, 9, 29), dt.date(2026, 10, 28)
 from matplotlib import font_manager as _fm  # noqa: E402
 import matplotlib.patheffects as _pe  # noqa: E402
 
-for _f in "Syne-SemiBold Syne-ExtraBold BricolageGrotesque-Regular BricolageGrotesque-SemiBold".split():
+for _f in "BeVietnamPro-Bold BeVietnamPro-ExtraBold BricolageGrotesque-Regular BricolageGrotesque-SemiBold".split():
     _fm.fontManager.addfont(str(ROOT / "assets" / "fonts" / f"{_f}.ttf"))
-DISPLAY, TEXT = "Syne", "Bricolage Grotesque"
-PAPER, PLATE, INK, MUTED, SOFT, GRID = "#f4f0f0", "#fffdfd", "#1d1a24", "#5a5563", "#8b8592", "#ebe5e5"
-ACCENT, LOT, LOT2 = "#c0136c", "#fa3899", '#1162d4'
+DISPLAY, TEXT = "Be Vietnam Pro", "Bricolage Grotesque"
+PAPER, PLATE, INK, MUTED, SOFT, GRID = "#f7f4ec", "#fffdf8", "#1a1a1a", "#5b5a55", "#8e8c85", "#e8e4da"
+ACCENT, LOT, LOT2 = "#c8392b", "#1a1a1a", "#c8392b"  # stitch red for marks and notes; the plate number in ink over a red offset
 HALO = [_pe.withStroke(linewidth=3, foreground=PLATE)]
 HANDLE = "Dylan Fanelli, github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio"
 SOURCE = "Data: Baseball Savant, MLB Stats API"
@@ -488,7 +488,7 @@ def chart_hitter_xwoba(pa, people, f, min_pa=25):
     player_points(ax, q, "xwoba", "woba", "name", "team")
     lo = min(q.xwoba.min(), q.woba.min()) - 0.03
     hi = max(q.xwoba.max(), q.woba.max()) + 0.03
-    ax.plot([lo, hi], [lo, hi], color="#9ca3af", ls="--", lw=1, zorder=1)
+    ax.plot([lo, hi], [lo, hi], color=SOFT, ls="--", lw=1, zorder=1)
     corner(ax, "Results ran ahead of contact", "tl")
     corner(ax, "Hit it well, little to show", "br")
     for axis in (ax.xaxis, ax.yaxis):

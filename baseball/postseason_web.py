@@ -205,6 +205,107 @@ def world_series(a, people) -> list[dict]:
     return out
 
 
+# ---------------------------------------------------------------- filter cubes
+# Each chart on the page can be re-cut by the reader. Rather than precompute every combination, the page gets additive
+# cells (sums and counts) per player or club x round x inning group x count, and its script re-aggregates, re-ranks and
+# redraws. Means are sums over counts, so the "all" setting reproduces the published numbers exactly.
+#   round:  index into ROUND_ORDER (Wild Card, Division Series, LCS, World Series), a range slider on every chart
+#   inning: 0 = 1st-3rd, 1 = 4th-6th, 2 = 7th-9th, 3 = extras
+#   count:  balls * 3 + strikes before the pitch (0-0 .. 3-2); for a plate appearance, the count on its last pitch
+INNING_GROUPS = ["1–3", "4–6", "7–9", "Extras"]
+
+
+def _dims(df: pd.DataFrame) -> pd.DataFrame:
+    return df.assign(_r=df.game_type.map({g: i for i, g in enumerate(ROUND_ORDER)}).astype(int),
+                     _i=np.select([df.inning <= 3, df.inning <= 6, df.inning <= 9], [0, 1, 2], 3),
+                     _c=(df.balls.clip(upper=3) * 3 + df.strikes.clip(upper=2)).astype(int))
+
+
+def _cube(df: pd.DataFrame, key: str, dims: list[str], aggs: dict) -> dict:
+    """Group df by entity and the filter dimensions; aggs maps column -> (series, 'sum' | 'max')."""
+    work = pd.DataFrame({k: v for k, (v, _) in aggs.items()}, index=df.index)
+    work["_k"] = df[key].astype(str).str.replace(r"\.0$", "", regex=True)
+    for d in dims:
+        work[d] = df[d]
+    g = work.groupby(["_k"] + dims)
+    out = pd.concat([getattr(g[k], how)() for k, (_, how) in aggs.items()], axis=1).reset_index()
+    keys = sorted(out._k.unique(), key=lambda k: (len(k), k))
+    idx = {k: i for i, k in enumerate(keys)}
+    rows = []
+    for r in out.to_dict("records"):
+        vals = []
+        for k in aggs:
+            v = r[k]
+            vals.append(None if pd.isna(v) else (int(v) if float(v).is_integer() else round(float(v), 6)))
+        rows.append([idx[r["_k"]]] + [int(r[d]) for d in dims] + vals)
+    return {"keys": keys, "dims": [d.strip("_") for d in dims], "cols": list(aggs), "rows": rows}
+
+
+def cubes(a: pd.DataFrame, pa: pd.DataFrame) -> dict:
+    a, pa = _dims(a), _dims(pa)
+    den = pa.woba_denom == 1
+    one = lambda df: pd.Series(1, index=df.index)  # noqa: E731
+    z = lambda m: m.astype(int)  # noqa: E731
+    # hitters, plate-appearance level (charts 3 and 5; PA counts also decide who qualifies for chart 6)
+    hpa = _cube(pa, "batter", ["_r", "_i"], {
+        "pa": (one(pa), "sum"), "wpa": (pa.bat_wpa, "sum"), "dn": (z(den), "sum"),
+        "woba": (pa.woba_value.where(den, 0.0), "sum"), "x": (pa.x.where(den, 0.0), "sum")})
+    # pitchers, plate-appearance level (charts 4 and 7); count = the count on the PA's last pitch
+    ppa = _cube(pa, "pitcher", ["_r", "_i", "_c"], {
+        "bf": (one(pa), "sum"), "wpa": (-pa.bat_wpa, "sum"), "dn": (z(den), "sum"), "x": (pa.x.where(den, 0.0), "sum")})
+    # clubs (chart 2): xwOBA for and against
+    tf = _cube(pa[den], "bat_team", ["_r", "_i"], {"n": (one(pa[den]), "sum"), "x": (pa.x[den], "sum")})
+    ta = _cube(pa[den], "fld_team", ["_r", "_i"], {"n": (one(pa[den]), "sum"), "x": (pa.x[den], "sum")})
+    # hitters, pitch level (charts 6 and 9): every pitch, as the published chart reads it
+    out = ~a.in_zone & a.zone.notna()
+    bip = a.type.eq("X") & a.launch_speed.notna()
+    hp = _cube(a, "batter", ["_r", "_i", "_c"], {
+        "o": (z(out), "sum"), "osw": (z(out & a.swing), "sum"), "sw": (z(a.swing), "sum"), "wh": (z(a.swing & a.whiff), "sum"),
+        "bip": (z(bip), "sum"), "ev": (a.launch_speed.where(bip, 0.0), "sum"), "evmax": (a.launch_speed.where(bip), "max")})
+    # pitchers, pitch level (charts 7 and 8): thrown pitches; four-seamers and sinkers for velocity
+    th = a[a.thrown]
+    fb = th.pitch_type.isin(ps.FASTBALLS - {"FC"}) & th.release_speed.notna()
+    pp = _cube(th, "pitcher", ["_r", "_i", "_c"], {
+        "n": (one(th), "sum"), "sw": (z(th.swing), "sum"), "wh": (z(th.swing & th.whiff), "sum"),
+        "fb": (z(fb), "sum"), "v": (th.release_speed.where(fb, 0.0), "sum"), "vmax": (th.release_speed.where(fb), "max")})
+    # starters (chart 10): official box-score lines by round
+    st = ps.starters().merge(a.drop_duplicates("game_pk")[["game_pk", "_r"]], on="game_pk")
+    sc = _cube(st, "team", ["_r"], {"g": (one(st), "sum"), "outs": (st.outs, "sum"), "p": (st.pitches, "sum")})
+    return {"hpa": hpa, "ppa": ppa, "tfor": tf, "tagainst": ta, "hp": hp, "pp": pp, "starters": sc}
+
+
+def names(a: pd.DataFrame, pa: pd.DataFrame, people: dict) -> dict:
+    """Short name and club for every batter and pitcher, so a player who qualifies only under a filter can be labelled."""
+    h = pa.groupby("batter").bat_team.agg(lambda s: s.mode().iat[0])
+    p = pa.groupby("pitcher").fld_team.agg(lambda s: s.mode().iat[0])
+    hh = {str(int(i)): [ps.nm(people, i), t] for i, t in h.items()}
+    for i, t in a.groupby("batter").bat_team.agg(lambda s: s.mode().iat[0]).items():
+        hh.setdefault(str(int(i)), [ps.nm(people, i), t])
+    pp_ = {str(int(i)): [ps.nm(people, i), t] for i, t in p.items()}
+    for i, t in a.groupby("pitcher").fld_team.agg(lambda s: s.mode().iat[0]).items():
+        pp_.setdefault(str(int(i)), [ps.nm(people, i), t])
+    return {"h": hh, "p": pp_}
+
+
+def aggregate(cube: dict, keep=lambda r: True) -> dict:
+    """Sum a cube's cells per entity (the page's script does the same); used by the tests."""
+    nd = len(cube["dims"])
+    out: dict = {}
+    for row in cube["rows"]:
+        if not keep(dict(zip(cube["dims"], row[1:1 + nd]))):
+            continue
+        k = cube["keys"][row[0]]
+        acc = out.setdefault(k, {c: None for c in cube["cols"]})
+        for c, v in zip(cube["cols"], row[1 + nd:]):
+            if v is None:
+                continue
+            if c.endswith("max"):
+                acc[c] = v if acc[c] is None else max(acc[c], v)
+            else:
+                acc[c] = (acc[c] or 0) + v
+    return out
+
+
 def build() -> dict:
     a, people = ps.pull(False)
     a = ps.prep(a)
@@ -308,7 +409,8 @@ def build() -> dict:
         "colors": ps.TEAM,
         "league": {"xwoba": r3(den.x.mean()), "chase": r3(lg_chase), "whiff": r3(lg_whiff),
                    "fb_velo": r1(fb.release_speed.mean()), "ev": r1(bb.launch_speed.mean())},
-        "hitters": H, "pitchers": P, "teams": teams,
+        "hitters": H, "pitchers": P, "teams": teams, "cubes": cubes(a, pa), "names": names(a, pa, people),
+        "filters": {"rounds": [ROUND[g] for g in ROUND_ORDER], "innings": INNING_GROUPS},
         "charts": {"ws": ws, "team_contact": [{"team": t, "x": v_["x_for"], "y": v_["x_against"]} for t, v_ in teams.items()],
                    "hitter_wpa": hit_wpa, "pitcher_wpa": pit_wpa, "hitter_x": hit_x, "swing": swing, "pitcher_x": pit_x,
                    "velo": velo, "ev": evl, "starters": sd},

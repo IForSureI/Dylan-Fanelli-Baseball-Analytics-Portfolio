@@ -2,6 +2,11 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-09: Postseason page filters, new palette and display face
+**Built**
+- **`docs/postseason.html`:** one filter row above every chart (round range, inning, count, reset; sticky, and one line on a phone), so all ten charts re-cut to the same slice. The page carries additive cells per player or club, round, inning group and count, and re-ranks from them; with every filter on "All" it matches the published charts exactly (tested in Python and in the browser). Minimum samples scale with the cut. Charts a filter can't apply to say so. Marks keep the club colours (main colour fill, second colour border); bars rounded at the data end with value labels measured clear of the right-hand column; velocity and exit velocity as dots, since their axis can't start at zero. New palette on warm paper (ink, blue #285d9e, stitch red #c8392b; checked for colour-blind separation and contrast), light only; Be Vietnam Pro for headings in place of Syne.
+- **`baseball/house.py`, `baseball/postseason.py`:** the same palette and display face for the static charts and report figures (series: blue, red, green, ochre, validated); the ten postseason charts and the Skenes, Smith and Varland figures redrawn (same numbers).
+
 ## 2026-11-08: House chart style for the whole package
 **Built**
 - **`baseball/house.py`:** one chart style loaded with the package, matching the interactive pages: Syne titles where they fit their panels (one title face per figure), Bricolage Grotesque text, paper and plate surfaces, and a blue, magenta, orange, teal series order checked with the dataviz validator. `baseball/viz.py` takes its tokens from it. Every study picks it up the next time it runs.

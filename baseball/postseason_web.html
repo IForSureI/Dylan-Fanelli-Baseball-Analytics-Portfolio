@@ -3,35 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
 <title>2026 Postseason Snippets</title>
 <meta name="description" content="Ten interactive charts on the 2026 MLB postseason. Hover any player, club or pitch for the breakdown. Dylan Fanelli.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;800&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@700;800&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&display=swap">
 <style>
-/* Direction: a long-form essay on October, printed like a risograph: fluorescent pink and blue inks on off-white,
-   a slight misregistration on the one oversized numeral that carries the page (the 4-1 series). Display: Syne.
-   Text: Bricolage Grotesque. Scale 1.25. Square everywhere except the one hero panel. Margin notes beside each figure. */
+/* Direction: a long-form essay on October, printed on warm scorebook paper: black ink, a stitch red and a deep blue,
+   both checked with the dataviz validator for colour-blind separation and contrast; no tints of purple or neon.
+   Light only, by design: the page is read like paper. The
+   one oversized numeral (the 4-1 series) is set in the text face, bold, proportional figures. Display: Be Vietnam Pro. Text:
+   Bricolage Grotesque. Scale 1.25. Square everywhere except the one hero panel. Margin notes beside each figure.
+   Every chart can be re-cut by round, and where it means something by inning and count (filters above each plate). */
 :root {
-  --paper: #f4f0f0; --plate: #fffdfd; --ink: #1d1a24; --muted: #5a5563; --soft: #8b8592; --rule: #ddd6d6; --grid: #ebe5e5;
-  --pink: #fa3899; --pink-ink: #c0136c; --blue: #1162d4; --tint: #fde3ef;
-  --tip: #1d1a24; --tip-ink: #f4f0f0; --tip-muted: #b8b2bf; --tip-rule: #3a3542; --pos: #6fd39b; --neg: #ff8aa8;
-  --display: "Syne", "Arial Black", sans-serif; --text: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --paper: #f7f4ec; --plate: #fffdf8; --ink: #1a1a1a; --muted: #5b5a55; --soft: #8e8c85; --rule: #ddd8cc; --grid: #ebe7dd;
+  --red: #c8392b; --red-ink: #a8301f; --blue: #285d9e; --tint: #efe9dc;
+  --tip: #1a1a1a; --tip-ink: #f7f4ec; --tip-muted: #b5b2a9; --tip-rule: #3a3936; --pos: #7fcf9b; --neg: #f29a8c;
+  --display: "Be Vietnam Pro", "Arial Black", sans-serif; --text: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --paper: #17141c; --plate: #1f1b25; --ink: #f2eef3; --muted: #b6afbd; --soft: #8a8391; --rule: #352f3c; --grid: #2a2530;
-  --pink: #ff5fae; --pink-ink: #ff7dbd; --blue: #6aa3ff; --tint: #3a1d2d;
-  --tip: #f2eef3; --tip-ink: #1d1a24; --tip-muted: #5a5563; --tip-rule: #d6d0db; --pos: #1d7a46; --neg: #c0136c; color-scheme: dark } }
-:root[data-theme="dark"] {
-  --paper: #17141c; --plate: #1f1b25; --ink: #f2eef3; --muted: #b6afbd; --soft: #8a8391; --rule: #352f3c; --grid: #2a2530;
-  --pink: #ff5fae; --pink-ink: #ff7dbd; --blue: #6aa3ff; --tint: #3a1d2d;
-  --tip: #f2eef3; --tip-ink: #1d1a24; --tip-muted: #5a5563; --tip-rule: #d6d0db; --pos: #1d7a46; --neg: #c0136c; color-scheme: dark }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.6 var(--text); font-variant-numeric: tabular-nums; }
+body { margin: 0; background: #f7f4ec; background: var(--paper); color: var(--ink); font: 400 17px/1.6 var(--text); }
+table, .axis text, .bar-val, .bar-right, .rlabel, .tags { font-variant-numeric: tabular-nums; }
 a { color: var(--blue); text-underline-offset: 3px; }
-a:focus-visible, .hit:focus-visible, summary:focus-visible { outline: 2px solid var(--pink-ink); outline-offset: 2px; }
+a:focus-visible, .hit:focus-visible, summary:focus-visible { outline: 2px solid var(--red-ink); outline-offset: 2px; }
 .col { max-width: 720px; margin: 0 auto; padding: 0 16px; }
 
 /* opening */
@@ -39,16 +36,13 @@ header.top { padding-top: 40px; padding-bottom: 10px; }
 .crumbs { font-size: 15px; display: flex; gap: 18px; flex-wrap: wrap; margin: 0 0 36px; }
 h1 { font: 800 clamp(34px, 6vw, 56px)/1.02 var(--display); margin: 0 0 22px; letter-spacing: -.01em; }
 .hero { position: relative; border-radius: 40px; background: var(--tint); padding: 26px 30px 24px; margin: 0 0 26px; overflow: hidden; }
-.hero .num { position: relative; display: inline-block; white-space: nowrap; padding-bottom: .06em; font: 800 clamp(96px, 22vw, 200px)/1 var(--display); letter-spacing: -.04em; color: var(--pink); }
-.hero .num::after { content: attr(data-n); position: absolute; left: 5px; top: 4px; white-space: nowrap; color: var(--blue); mix-blend-mode: multiply; opacity: .85; }
-:root:not([data-theme="light"]) .hero .num::after { mix-blend-mode: normal; }
-@media (prefers-color-scheme: light) { .hero .num::after { mix-blend-mode: multiply; } }
+.hero .num { display: inline-block; white-space: nowrap; font: 700 clamp(88px, 20vw, 180px)/1 var(--text); font-variant-numeric: proportional-nums; letter-spacing: -.01em; color: var(--ink); }
 .hero .cap { font-size: 16px; margin: 22px 0 0; max-width: 40ch; }
 .hero .cap b { font-family: var(--display); font-weight: 800; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0 0 22px; font-size: 14px; color: var(--muted); }
 .tags span b { color: var(--ink); font-weight: 600; }
 .glance { margin: 0 0 18px; }
-.glance h2 { font: 800 15px/1.2 var(--display); margin: 0 0 10px; color: var(--pink-ink); }
+.glance h2 { font: 800 15px/1.2 var(--display); margin: 0 0 10px; color: var(--red-ink); }
 .glance dl { margin: 0; display: grid; grid-template-columns: 9.5em 1fr; gap: 10px 18px; }
 .glance dt { font-weight: 600; } .glance dd { margin: 0; }
 .facts { font-size: 15px; color: var(--muted); margin: 18px 0 0; padding-top: 14px; border-top: 1px solid var(--rule); }
@@ -59,10 +53,11 @@ h1 { font: 800 clamp(34px, 6vw, 56px)/1.02 var(--display); margin: 0 0 22px; let
 main { padding: 10px 16px 40px; }
 section.chart { max-width: 1060px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) 250px; column-gap: 36px; padding: 40px 0 0; }
 section.chart .meta { display: contents; }
-.meta .lot { grid-column: 1; font: 800 15px/1 var(--display); color: var(--pink-ink); }
+.meta .lot { grid-column: 1; font: 800 15px/1 var(--display); color: var(--red-ink); }
 .meta h2 { grid-column: 1; font: 800 clamp(22px, 3vw, 28px)/1.15 var(--display); margin: 8px 0 6px; }
 .meta .sub { grid-column: 1; font-size: 15px; color: var(--muted); margin: 0 0 12px; }
-.meta .says { grid-column: 2; grid-row: 4; align-self: start; margin: 0; font-size: 15px; border-left: 3px solid var(--pink); padding: 2px 0 2px 14px; }
+.meta .says { grid-column: 2; grid-row: 4; align-self: start; margin: 0; font-size: 15px; border-left: 3px solid var(--red); padding: 2px 0 2px 14px; }
+.meta .says:empty { display: none; }
 .plate { grid-column: 1; grid-row: 4; background: var(--plate); padding: 14px 12px 10px; min-width: 0; }
 .plate > .cm { display: none; }
 section.chart.wide { grid-template-columns: minmax(0, 1fr); }
@@ -82,12 +77,14 @@ svg text { font-family: var(--text); }
 .axis-title { font-size: 12px; font-weight: 600; fill: var(--ink); }
 .gridline { stroke: var(--grid); stroke-width: 1; }
 .gridline.mid { stroke: var(--soft); }
-.ref { stroke: var(--pink-ink); stroke-width: 1.2; stroke-dasharray: 3 3; }
-.ref-label { font-size: 11px; font-weight: 600; fill: var(--pink-ink); }
-.corner { font-size: 11px; font-weight: 600; fill: var(--pink-ink); }
+.ref { stroke: var(--red-ink); stroke-width: 1.2; stroke-dasharray: 3 3; }
+.ref-label { font-size: 11px; font-weight: 600; fill: var(--red-ink); }
+.corner { font-size: 11px; font-weight: 600; fill: var(--red-ink); }
 .diag { stroke: var(--soft); stroke-dasharray: 5 4; }
 .hit { cursor: pointer; outline: none; }
-.hit:focus-visible .mark, .hit.active .mark { stroke: var(--ink) !important; stroke-width: 3 !important; }
+.track { stroke: var(--grid); stroke-width: 2; }
+.baseline { stroke: var(--soft); stroke-width: 1; }
+.hit:focus-visible .mark, .hit.active .mark { stroke: var(--ink) !important; stroke-width: 2 !important; }
 .hit .mark { transition: opacity 120ms ease-out; }
 svg.dim .hit:not(.active) .mark { opacity: .28; }
 svg.dim .hit:not(.active) text { opacity: .35; }
@@ -97,18 +94,57 @@ svg.dim .hit:not(.active) text { opacity: .35; }
 .bar-right { font-size: 11.5px; fill: var(--muted); }
 .ws-title { font-size: 12.5px; font-weight: 600; fill: var(--ink); }
 .ws-line { fill: none; stroke: var(--ink); stroke-width: 1.8; }
-.ws-big { fill: var(--pink); }
+.ws-big { fill: var(--red); }
 .ws-dot { fill: var(--ink); }
 .ws-cursor { stroke: var(--ink); stroke-width: 1; }
 
+/* filters: one bar per plate (same classes on the NFL page) */
+.filterbar { position: sticky; top: 0; z-index: 5; background: var(--paper); border-bottom: 1px solid var(--rule); }
+.filters { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; font-size: 13px; margin: 0 auto; max-width: 1060px; padding: 10px 16px; }
+.ftoggle { display: none; font: 600 14px/1.2 var(--text); color: var(--ink); background: var(--plate); border: 1px solid var(--rule); border-radius: 6px; padding: 8px 10px; text-align: left; width: 100%; cursor: pointer; }
+.ftoggle::after { content: " ▾"; color: var(--muted); }
+.ftoggle:focus-visible { outline: 2px solid var(--blue); outline-offset: 1px; }
+@media (max-width: 640px) {
+  .ftoggle { display: block; }
+  .filters { padding: 8px 16px; }
+  .filters:not(.open) .fgroup, .filters:not(.open) .reset { display: none; }
+  .filters.open .ftoggle::after { content: " ▴"; }
+}
+.na { display: block; color: var(--red-ink); font-size: 14px; margin-top: 4px; }
+.glance h2 .whole { font: 400 13px/1.2 var(--text); color: var(--muted); }
+.fgroup { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.flabel { font-weight: 600; color: var(--muted); }
+.range { position: relative; width: 150px; height: 22px; }
+.range input { position: absolute; left: 0; top: 0; width: 100%; height: 22px; margin: 0; background: none; pointer-events: none; -webkit-appearance: none; appearance: none; }
+.range input::-webkit-slider-thumb { pointer-events: auto; -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--blue); border: 2px solid var(--plate); box-shadow: 0 0 0 1px var(--blue); cursor: pointer; }
+.range input::-moz-range-thumb { pointer-events: auto; width: 12px; height: 12px; border-radius: 50%; background: var(--blue); border: 2px solid var(--plate); box-shadow: 0 0 0 1px var(--blue); cursor: pointer; }
+.range input::-moz-range-track { background: none; }
+.range input:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--ink); outline-offset: 2px; }
+.range input:focus-visible::-moz-range-thumb { outline: 2px solid var(--ink); outline-offset: 2px; }
+.range .track { position: absolute; left: 8px; right: 8px; top: 10px; height: 2px; background: var(--rule); }
+.range .fill { position: absolute; top: 10px; height: 2px; background: var(--blue); }
+.range .ticks { position: absolute; left: 8px; right: 8px; top: 7px; height: 8px; display: flex; justify-content: space-between; pointer-events: none; }
+.range .ticks i { width: 1px; height: 8px; background: var(--soft); }
+.rlabel { font-weight: 600; color: var(--ink); white-space: nowrap; min-width: 6.5em; }
+.seg { display: inline-flex; flex-wrap: wrap; }
+.seg button { font: 500 12.5px/1 var(--text); color: var(--ink); background: var(--plate); border: 1px solid var(--rule); padding: 6px 8px; margin-left: -1px; cursor: pointer; border-radius: 0; }
+.seg button:first-child { border-radius: 6px 0 0 6px; margin-left: 0; } .seg button:last-child { border-radius: 0 6px 6px 0; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); position: relative; }
+.seg button:focus-visible, .reset:focus-visible { outline: 2px solid var(--blue); outline-offset: 1px; position: relative; z-index: 1; }
+.reset { font: 600 13px/1 var(--text); color: var(--blue); background: none; border: 0; padding: 4px 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.reset[hidden] { display: none; }
+.empty { font-size: 14px; color: var(--muted); padding: 30px 8px; text-align: center; }
+#tip .slice { border-left: 3px solid var(--red); padding: 2px 0 2px 10px; margin: 6px 0 4px; }
+#tip .slice .sec { margin-top: 0; }
+
 footer { padding-top: 30px; padding-bottom: 48px; font-size: 15px; color: var(--muted); }
-footer h2 { font: 800 15px/1.2 var(--display); color: var(--pink-ink); margin: 0 0 8px; }
+footer h2 { font: 800 15px/1.2 var(--display); color: var(--red-ink); margin: 0 0 8px; }
 footer ul { padding-left: 18px; margin: 0; }
 
 /* hover card */
 #tip { position: fixed; z-index: 10; pointer-events: none; opacity: 0; transform: translateY(4px); transition: opacity 120ms ease-out, transform 120ms ease-out;
        width: min(340px, calc(100vw - 24px)); background: var(--tip); color: var(--tip-ink); padding: 12px 14px;
-       border: 1px solid var(--tip-rule); font: 13px/1.4 var(--text); font-variant-numeric: tabular-nums; }
+       border: 1px solid var(--tip-rule); font: 13px/1.4 var(--text); }
 #tip.on { opacity: 1; transform: none; }
 #tip .t-head { display: flex; align-items: center; gap: 8px; margin-bottom: 2px; }
 #tip .chip { font: 800 10px/1.2 var(--display); padding: 2px 5px; border: 2px solid; }
@@ -145,10 +181,11 @@ footer ul { padding-left: 18px; margin: 0; }
   <h1>2026 Postseason Snippets</h1>
   <div class="hero" id="hero"></div>
   <div class="tags" id="badges"></div>
-  <section class="glance" aria-label="At a glance"><h2>At a glance</h2><dl id="glance"></dl></section>
+  <section class="glance" aria-label="At a glance"><h2>At a glance <span class="whole">(the whole postseason; the filters re-cut the charts below)</span></h2><dl id="glance"></dl></section>
   <p class="facts" id="facts"></p>
   <p class="hint" id="hint">Hover any player, club or pitch for the breakdown. On a phone, tap. Every chart also has a table.</p>
 </header>
+<div class="filterbar" id="filterbar" role="region" aria-label="Filters for every chart"></div>
 <main id="charts"></main>
 <footer class="col">
   <h2>Method</h2>
@@ -219,7 +256,7 @@ document.addEventListener("click", e => { if (!tip.contains(e.target)) hide(); }
 document.addEventListener("keydown", e => { if (e.key === "Escape") hide(); });
 
 // ---------------------------------------------------------------- card contents
-const head = (name, team, sub) => `<div class="t-head">${chip(team)}<span class="t-name">${esc(name)}</span></div><div class="t-sub">${sub}</div>`;
+const head = (name, team, sub) => `<div class="t-head">${chip(team)}<span class="t-name">${esc(name)}</span></div>${SL ? SL + `<div class="sec">Full postseason</div>` : ""}<div class="t-sub">${sub}</div>`;
 const big = items => `<div class="big">${items.map(([v, l, c]) => `<div><b class="${c || ""}">${v}</b><span>${l}</span></div>`).join("")}</div>`;
 const table = (cols, rows) => `<table><tr>${cols.map(([l, r]) => `<th class="${r ? "r" : ""}">${l}</th>`).join("")}</tr>${rows.map(rw => `<tr>${rw.map((v, i) => `<td class="${cols[i][1] ? "r" : ""}">${v}</td>`).join("")}</tr>`).join("")}</table>`;
 const rounds = (rs, wlabel) => table([["Round"], ["PA", 1], ["wOBA", 1], [wlabel, 1]], rs.map(r => [r.round, r.pa, f3(r.woba), `<span class="${cls(r.wpa)}">${sg(r.wpa)}</span>`]));
@@ -333,11 +370,11 @@ function scatter(wrap, pts, o) {
     const g = el("g", {}, svg);
     const team = o.team ? o.team(k.p) : k.p.team, [c1, c2] = C[team];
     if (o.badge) {
-      el("circle", {cx: k.x, cy: k.y, r: k.r, fill: c1, stroke: c2, "stroke-width": 3, class: "mark"}, g);
+      el("circle", {cx: k.x, cy: k.y, r: k.r, fill: c1, stroke: c2, "stroke-width": 2.5, class: "mark"}, g);
       el("text", {x: k.x, y: k.y + (narrow ? 2.7 : 3.8), "text-anchor": "middle", "font-size": narrow ? 7.5 : 10.5, "font-weight": 800, fill: lum(c1) < .5 ? "#fff" : "#111", "pointer-events": "none"}, g).textContent = team;
     } else {
-      el("circle", {cx: k.x, cy: k.y, r: k.r, fill: c1, stroke: c2, "stroke-width": 2, class: "mark"}, g);
-      el("circle", {cx: k.x, cy: k.y, r: 14, fill: "transparent"}, g);
+      el("circle", {cx: k.x, cy: k.y, r: k.r, fill: c1, stroke: c2, "stroke-width": 1.5, class: "mark"}, g);
+      el("circle", {cx: k.x, cy: k.y, r: 13, fill: "transparent"}, g);
       const name = o.name(k.p), w = name.length * 5.9 + 2;
       for (const [dx, dy, anchor] of [[10, 4, "start"], [-10, 4, "end"], [0, -11, "middle"], [0, 18, "middle"], [10, -9, "start"], [-10, -9, "end"], [10, 15, "start"], [-10, 15, "end"]]) {
         const x1 = anchor === "start" ? k.x + dx : anchor === "end" ? k.x + dx - w : k.x - w / 2, b = {x1, x2: x1 + w, y1: k.y + dy - 10, y2: k.y + dy + 2};
@@ -356,29 +393,47 @@ function scatter(wrap, pts, o) {
 }
 
 // ---------------------------------------------------------------- ranked bars
+// Marks wear the club: fill = its main colour, border = its second colour. Words stay in ink. Bars are 4px rounded at
+// the data end and square at the baseline. A chart whose axis can't start at zero (velocity, exit velocity) is drawn
+// as dots, not bars.
+function barPath(x0, x1, y, h) {
+  const w = Math.abs(x1 - x0), r = Math.min(4, w / 2, h / 2), d = x1 >= x0 ? 1 : -1;
+  if (w < .5) return `M${x0} ${y}h${d * .5}v${h}h${-d * .5}Z`;
+  return `M${x0} ${y}H${x1 - d * r}a${r} ${r} 0 0 ${d > 0 ? 1 : 0} ${d * r} ${r}V${y + h - r}a${r} ${r} 0 0 ${d > 0 ? 1 : 0} ${-d * r} ${r}H${x0}Z`;
+}
 function bars(wrap, rows, o) {
-  const rowH = 22, W = fitW(wrap), m = {l: Math.min(o.labelW || 150, Math.round(W * .3)), r: 74, t: 22, b: 40}, Hh = m.t + m.b + rows.length * rowH;
+  const rowH = 24, barH = 16, W = fitW(wrap), narrow = W < 480, m = {l: Math.min((o.labelW || 150) - (narrow ? 22 : 0), Math.round(W * (narrow ? .34 : .32))), r: narrow ? 44 : 64, t: 22, b: 40}, Hh = m.t + m.b + rows.length * rowH;
   const svg = el("svg", {viewBox: `0 0 ${W} ${Hh}`, role: "img", "aria-label": o.aria}, null); wrap.appendChild(svg);
-  const vals = rows.map(r => r.v);
-  let lo = o.lo ?? Math.min(0, ...vals), hi = Math.max(...vals, o.ref ?? -Infinity);
-  if (o.lo == null && Math.min(...vals) > 0 && o.zoom) lo = Math.min(...vals, o.ref ?? Infinity) - (hi - Math.min(...vals)) * .6;
-  hi += (hi - lo) * .04;
+  const vals = rows.map(r => r.v), dots = !!o.zoom;
+  let lo = o.lo ?? Math.min(0, ...vals), hi = Math.max(...vals, o.ref ?? -Infinity, 0);
+  if (dots) { const mn = Math.min(...vals, o.ref ?? Infinity); lo = mn - Math.max(.5, (hi - mn) * .25); }
+  // room for the value label past the longest bar (about 44px), so it never meets the right-hand column
+  const plotW = W - m.r - m.l, pad = (hi - lo) * 46 / Math.max(80, plotW - 92);
+  hi += pad; if (!dots && Math.min(...vals) < 0) lo -= pad;
   const sx = scale(lo, hi, m.l, W - m.r);
   const ax = el("g", {class: "axis"}, svg);
   for (const v of nice(lo, hi, 4)) { el("line", {x1: sx(v), x2: sx(v), y1: m.t, y2: Hh - m.b, class: "gridline"}, ax); el("text", {x: sx(v), y: Hh - m.b + 15, "text-anchor": "middle"}, ax).textContent = o.fx(v); }
+  if (!dots && lo < 0) el("line", {x1: sx(0), x2: sx(0), y1: m.t - 2, y2: Hh - m.b, class: "baseline"}, svg);
   el("text", {x: (m.l + W - m.r) / 2, y: Hh - 6, "text-anchor": "middle", class: "axis-title"}, svg).textContent = o.xt;
   el("text", {x: W - 4, y: m.t - 8, "text-anchor": "end", class: "bar-right", "font-weight": 700}, svg).textContent = o.rightHead;
   if (o.ref != null) { el("line", {x1: sx(o.ref), x2: sx(o.ref), y1: m.t - 4, y2: Hh - m.b, class: "ref"}, svg); el("text", {x: sx(o.ref) + 4, y: m.t - 8, class: "ref-label"}, svg).textContent = o.refLabel; }
   rows.forEach((r, i) => {
     const y = m.t + i * rowH, g = el("g", {}, svg), team = o.team(r), [c1, c2] = C[team];
     el("rect", {x: 0, y, width: W, height: rowH, fill: "transparent"}, g);
-    el("text", {x: 4, y: y + 15, class: "bar-right"}, g).textContent = i + 1;
-    el("text", {x: m.l - 6, y: y + 15, "text-anchor": "end", class: "bar-label"}, g).textContent = o.name(r);
-    const x0 = sx(Math.max(lo, 0 > lo ? 0 : lo)), x1 = sx(r.v);
-    el("rect", {x: Math.min(x0, x1), y: y + 3, width: Math.max(1, Math.abs(x1 - x0)), height: rowH - 6, rx: 2, fill: c1, stroke: c2, "stroke-width": 1.5, class: "mark"}, g);
-    el("text", {x: x1 + 5, y: y + 15, class: "bar-val"}, g).textContent = o.fv(r.v);
-    el("text", {x: W - 4, y: y + 15, "text-anchor": "end", class: "bar-right"}, g).textContent = o.right(r);
-    bind(g, () => o.card(r), `${o.name(r)}: ${o.fv(r.v)}`);
+    if (!narrow) el("text", {x: 4, y: y + 16, class: "bar-right"}, g).textContent = i + 1;
+    const nameEl = el("text", {x: m.l - 8, y: y + 16, "text-anchor": "end", class: "bar-label"}, g); nameEl.textContent = o.name(r);
+    const x1 = sx(r.v);
+    if (dots) {
+      el("line", {x1: m.l, x2: x1, y1: y + rowH / 2, y2: y + rowH / 2, class: "track"}, g);
+      el("circle", {cx: x1, cy: y + rowH / 2, r: 6.5, fill: c1, stroke: c2, "stroke-width": 1.5, class: "mark"}, g);
+      el("text", {x: x1 + 11, y: y + 16, class: "bar-val"}, g).textContent = o.fv(r.v);
+    } else {
+      const x0 = sx(Math.max(lo, 0));
+      el("path", {d: barPath(x0, x1, y + (rowH - barH) / 2, barH), fill: c1, stroke: c2, "stroke-width": 1.5, class: "mark"}, g);
+      el("text", {x: r.v < 0 ? x1 - 5 : x1 + 5, y: y + 16, "text-anchor": r.v < 0 ? "end" : "start", class: "bar-val"}, g).textContent = o.fv(r.v);
+    }
+    el("text", {x: W - 4, y: y + 16, "text-anchor": "end", class: "bar-right"}, g).textContent = o.right(r);
+    bind(g, () => o.card(r), `${o.name(r)} (${team}): ${o.fv(r.v)}`);
   });
   fillTable(wrap, [["#", 1], ["Name"], ["Team"], [o.xt, 1], [o.rightHead, 1]],
     rows.map((r, i) => [i + 1, esc(o.name(r)), o.team(r), o.fv(r.v), o.right(r)]));
@@ -454,16 +509,151 @@ function worldSeries(wrap, games) {
   lg.textContent = "Line = Brewers' win probability after every pitch. Gold = Brewers favored, light blue = Rays favored. Dot = the game's biggest single swing. Numbers under each game = inning.";
 }
 
+// ---------------------------------------------------------------- filters
+// Every chart can be re-cut: round (a range slider), and where it means something, inning and count. The page carries
+// additive cells (sums and counts) per player or club x round x inning group x count (DATA.cubes); a cut sums the cells
+// that pass, then the chart recomputes its rates, re-ranks, and redraws. With every filter on "All" the numbers are the
+// published ones. Minimum samples shrink with the cut: the published minimum times the cut's share of the sample, with a floor.
+const CU = DATA.cubes, NM = DATA.names, FL = DATA.filters;
+const RSHORT = ["WC", "DS", "LCS", "WS"];
+const COUNTS = {  // count index = balls * 3 + strikes, before the pitch
+  first: {label: "0-0", long: "first pitch", set: [0]},
+  hitter: {label: "Hitter's count", long: "hitter's counts (1-0, 2-0, 3-0, 2-1, 3-1)", set: [3, 6, 9, 7, 10]},
+  even: {label: "Even", long: "even counts (0-0, 1-1, 2-2)", set: [0, 4, 8]},
+  pitcher: {label: "Pitcher's count", long: "pitcher's counts (0-1, 0-2, 1-2)", set: [1, 2, 5]},
+  two: {label: "Two strikes", long: "two-strike counts", set: [2, 5, 8, 11]},
+};
+for (const k in COUNTS) COUNTS[k].has = new Set(COUNTS[k].set);
+const fresh = () => ({r0: 0, r1: 3, inn: "all", cnt: "all"});
+// a chart sees the shared filter through a view that knows which filters apply to it (st.dims)
+const has = (st, d) => !st.dims || st.dims.includes(d);
+const active = st => ((st.r0 > 0 || st.r1 < 3) && has(st, "round")) || (st.inn !== "all" && has(st, "inning")) || (st.cnt !== "all" && has(st, "count"));
+function describe(st) {
+  const p = [];
+  if ((st.r0 > 0 || st.r1 < 3) && has(st, "round")) p.push(st.r0 === st.r1 ? FL.rounds[st.r0] : `${RSHORT[st.r0]} through ${RSHORT[st.r1]}`);
+  if (st.inn !== "all" && has(st, "inning")) p.push(st.inn === 3 ? "extra innings" : `innings ${FL.innings[st.inn]}`);
+  if (st.cnt !== "all" && has(st, "count")) p.push(COUNTS[st.cnt].long);
+  const s = p.join(", "); return s ? s[0].toUpperCase() + s.slice(1) : "";
+}
+function agg(cube, st, opts = {}) {
+  const nd = cube.dims.length, ri = cube.dims.indexOf("r"), ii = cube.dims.indexOf("i"), ci = cube.dims.indexOf("c");
+  const useI = opts.inning !== false && ii >= 0 && st.inn !== "all" && has(st, "inning"), useC = opts.count !== false && ci >= 0 && st.cnt !== "all" && has(st, "count");
+  const out = new Map(), tot = {};
+  for (const c of cube.cols) tot[c] = c.endsWith("max") ? null : 0;
+  for (const row of cube.rows) {
+    if (ri >= 0 && has(st, "round")) { const r = row[1 + ri]; if (r < st.r0 || r > st.r1) continue; }
+    if (useI && row[1 + ii] !== st.inn) continue;
+    if (useC && !COUNTS[st.cnt].has.has(row[1 + ci])) continue;
+    const k = cube.keys[row[0]];
+    let acc = out.get(k);
+    if (!acc) { acc = {}; for (const c of cube.cols) acc[c] = c.endsWith("max") ? null : 0; out.set(k, acc); }
+    cube.cols.forEach((c, j) => {
+      const v = row[1 + nd + j]; if (v == null) return;
+      if (c.endsWith("max")) { acc[c] = acc[c] == null ? v : Math.max(acc[c], v); tot[c] = tot[c] == null ? v : Math.max(tot[c], v); }
+      else { acc[c] += v; tot[c] += v; }
+    });
+  }
+  out.total = tot; return out;
+}
+const R3 = v => Math.round(v * 1000) / 1000, R1 = v => Math.round(v * 10) / 10, R2 = v => Math.round(v * 100) / 100;
+const FULL = fresh();
+// the published minimum, scaled to the cut's share of the sample (never below the floor)
+const minFor = (n, share, floor, st) => active(st) ? Math.max(floor, Math.round(n * share)) : n;
+const byIdThen = f => (a, b) => (f(b) - f(a)) || (+a.id - +b.id);
+
+let SL = null;  // slice block for the hover card while a chart is cut
+const sliceBlock = (st, items) => active(st) ? `<div class="slice"><div class="sec">${describe(st)}</div>${big(items)}</div>` : null;
+function withSlice(html, fn) { SL = html; try { return fn(); } finally { SL = null; } }
+const hName = id => H[id] ? H[id].short : (NM.h[id] || [id])[0], hTeam = id => H[id] ? H[id].team : (NM.h[id] || [, "MIL"])[1];
+const pName = id => P[id] ? P[id].short : (NM.p[id] || [id])[0], pTeam = id => P[id] ? P[id].team : (NM.p[id] || [, "MIL"])[1];
+const minimal = (name, team) => `<div class="t-head">${chip(team)}<span class="t-name">${esc(name)}</span></div>${SL || ""}` +
+  `<div class="note">Qualifies only in this cut, so there is no full-postseason breakdown here.</div>`;
+
+function filterBar(container, st, redraw) {
+  const bar = document.createElement("div"); bar.className = "filters";
+  const reset = document.createElement("button"); reset.type = "button"; reset.className = "reset"; reset.textContent = "Reset"; reset.hidden = true;
+  const tog = document.createElement("button"); tog.type = "button"; tog.className = "ftoggle"; tog.setAttribute("aria-expanded", "false");
+  tog.addEventListener("click", e => { e.stopPropagation(); const open = bar.classList.toggle("open"); tog.setAttribute("aria-expanded", String(open)); });
+  bar.appendChild(tog);
+  const sync = () => { reset.hidden = !active(st); tog.textContent = `Filters: ${describe(st) || "whole postseason"}`; };
+  sync();
+  {
+    const g = document.createElement("div"); g.className = "fgroup";
+    g.innerHTML = `<span class="flabel">Rounds</span><div class="range"><span class="track"></span><span class="fill"></span><span class="ticks"><i></i><i></i><i></i><i></i></span>` +
+      `<input type="range" min="0" max="3" step="1" value="${st.r0}" aria-label="First round"><input type="range" min="0" max="3" step="1" value="${st.r1}" aria-label="Last round"></div><span class="rlabel"></span>`;
+    const [a, b] = g.querySelectorAll("input"), lab = g.querySelector(".rlabel"), fill = g.querySelector(".fill"), box = g.querySelector(".range");
+    const paint = () => {
+      lab.textContent = st.r0 === st.r1 ? RSHORT[st.r0] : `${RSHORT[st.r0]}–${RSHORT[st.r1]}`;
+      const w = box.clientWidth || 150, x = v => 8 + v / 3 * (w - 16);
+      fill.style.left = x(st.r0) + "px"; fill.style.width = (x(st.r1) - x(st.r0)) + "px";
+      a.setAttribute("aria-valuetext", FL.rounds[st.r0]); b.setAttribute("aria-valuetext", FL.rounds[st.r1]);
+      a.style.zIndex = st.r0 === 3 ? 3 : 1; b.style.zIndex = 2;
+    };
+    a.addEventListener("input", () => { st.r0 = Math.min(+a.value, st.r1); a.value = st.r0; paint(); sync(); redraw(); });
+    b.addEventListener("input", () => { st.r1 = Math.max(+b.value, st.r0); b.value = st.r1; paint(); sync(); redraw(); });
+    g.paint = () => { a.value = st.r0; b.value = st.r1; paint(); };
+    bar.appendChild(g); requestAnimationFrame(paint); bar.round = g;
+  }
+  const seg = (label, key, opts) => {
+    const g = document.createElement("div"); g.className = "fgroup";
+    g.innerHTML = `<span class="flabel">${label}</span><div class="seg" role="group" aria-label="${label}"></div>`;
+    const box = g.querySelector(".seg");
+    for (const [v, t] of opts) {
+      const btn = document.createElement("button"); btn.type = "button"; btn.textContent = t; btn.dataset.v = v;
+      btn.setAttribute("aria-pressed", String(st[key] === v));
+      btn.addEventListener("click", e => { e.stopPropagation(); st[key] = v; box.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.v === String(v)))); sync(); redraw(); });
+      box.appendChild(btn);
+    }
+    g.sync = () => box.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.v === String(st[key]))));
+    bar.appendChild(g); return g;
+  };
+  const segs = [];
+  segs.push(seg("Innings", "inn", [["all", "All"], ...FL.innings.map((t, i) => [i, t])]));
+  segs.push(seg("Count", "cnt", [["all", "All"], ...Object.entries(COUNTS).map(([k, c]) => [k, c.label])]));
+  reset.addEventListener("click", e => { e.stopPropagation(); Object.assign(st, fresh()); bar.round && bar.round.paint(); segs.forEach(s => s.sync()); sync(); redraw(); });
+  bar.appendChild(reset);
+  container.appendChild(bar);
+}
+
+// One filter row scopes every chart (dataviz: one control row above everything it scopes, never per chart).
+// A chart a filter can't apply to says so in its subtitle while that filter is set.
+window.__ps = {};
+const ST = fresh(), REDRAW = [];
+const FNAME = {round: "Round", inning: "Inning", count: "Count"};
+function notApplied(dims, why) {
+  const off = [];
+  if ((ST.r0 > 0 || ST.r1 < 3) && !dims.includes("round")) off.push("round");
+  if (ST.inn !== "all" && !dims.includes("inning")) off.push("inning");
+  if (ST.cnt !== "all" && !dims.includes("count")) off.push("count");
+  if (!off.length) return "";
+  const names = off.map((k, i) => i ? FNAME[k].toLowerCase() : FNAME[k]);
+  return ` <span class="na">${names.join(" and ")} filter${off.length > 1 ? "s don't" : " doesn't"} apply: ${why}.</span>`;
+}
+function chart(n, title, dims, wide, why, draw) {
+  const wrap = card(n, title, "", "", wide), sec = wrap.closest("section"), view = Object.assign(Object.create(ST), {dims});
+  const subEl = sec.querySelector(".sub");
+  let saysEl = sec.querySelector(".says");
+  if (!saysEl) { saysEl = document.createElement("p"); saysEl.className = "says"; sec.querySelector(".meta").appendChild(saysEl); }
+  const redraw = () => {
+    wrap.innerHTML = "";
+    const t = draw(view, wrap); subEl.innerHTML = t.sub + notApplied(dims, why); saysEl.innerHTML = t.says;
+    if (t.empty) { wrap.innerHTML = `<p class="empty">${t.empty}</p>`; fillTable(wrap, [["—"]], []); }
+  };
+  REDRAW.push(redraw); redraw();
+}
+
 // ---------------------------------------------------------------- the ten charts
 function drawAll() {
-charts.innerHTML = "";
+charts.innerHTML = ""; REDRAW.length = 0;
+const fb = document.getElementById("filterbar"); fb.innerHTML = "";
+filterBar(fb, ST, () => { hide(); REDRAW.forEach(f => f()); });
 
-const M = DATA.meta, CH = DATA.charts;
+const M = DATA.meta;
 // header: badges and at a glance, every number from findings.json (docs/report-standard.md)
 const F = DATA.findings;
 const wsG = F.world_series.games, tc0 = F.team_contact.teams[0], hw0 = F.hitter_wpa.top5[0], pw0 = F.pitcher_wpa.top5[0];
 const milWins = F.world_series.mil_wins, tbWins = wsG.length - milWins;
-document.getElementById("hero").innerHTML = `<div class="num" data-n="${milWins}–${tbWins}" aria-hidden="true">${milWins}–${tbWins}</div>` +
+document.getElementById("hero").innerHTML = `<div class="num" aria-hidden="true">${milWins}\u2009–\u2009${tbWins}</div>` +
   `<p class="cap"><b>Brewers over Rays.</b> Milwaukee won the World Series in ${wsG.length}; Tampa Bay's only win took 12 innings.</p>`;
 document.getElementById("badges").innerHTML = [["Status", "reviewed"], ["Data", "public"], ["For", "pro scouting and the front office"],
   ["Methods", "win probability added, xwOBA, plate discipline, Statcast"]].map(([k, v]) => `<span><b>${k}:</b> ${v}</span>`).join("");
@@ -474,69 +664,137 @@ document.getElementById("glance").innerHTML = [
 ].map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("");
 document.getElementById("facts").innerHTML = `<b>${M.games}</b> games, <b>${M.pitches.toLocaleString()}</b> pitches and <b>${M.plate_appearances.toLocaleString()}</b> plate appearances, Wild Card Series through World Series (<b>Sept. 29 to Oct. 28, 2026</b>). Data: Baseball Savant and the MLB Stats API. Built ${M.built}.`;
 document.getElementById("built").textContent = `Numbers as of the ${M.built} build.`;
-if (matchMedia("(hover: none)").matches) document.getElementById("hint").textContent = "Tap any player, club or pitch for the breakdown. Tap again to close.";
+if (matchMedia("(hover: none)").matches) document.getElementById("hint").textContent = "Tap any player, club or pitch for the breakdown. Tap again to close. The filter bar re-cuts every chart by round, inning and count.";
+else document.getElementById("hint").textContent = "Hover any player, club or pitch for the breakdown. The filter bar re-cuts every chart by round, inning and count. Every chart also has a table.";
 
-const ws = CH.ws, milW = ws.filter(g => g.winner === "MIL").length;
-worldSeries(card(1, "The World Series in Five", `Brewers ${milW}, Rays ${ws.length - milW}; Brewers win probability after every pitch. Hover the line for any pitch, or focus a game and step with the arrow keys.`,
-  "The Brewers won in five. Tampa Bay's only win was Game 4, which went 12 innings.", true), ws);
+// 1. World Series: round only (inning and count would cut a game line into pieces)
+const WS = DATA.charts.ws;
+chart(1, "The World Series in Five", ["round"], true, "the line is game-level win probability, pitch by pitch", (st, wrap) => {
+  const milW = WS.filter(g => g.winner === "MIL").length;
+  const sub = `Brewers ${milW}, Rays ${WS.length - milW}; Brewers win probability after every pitch. Hover the line for any pitch, or focus a game and step with the arrow keys.`;
+  if (st.r1 < 3) { window.__ps[1] = []; return {sub, says: "", empty: "The World Series isn't in the selected rounds."}; }
+  worldSeries(wrap, WS); window.__ps[1] = WS.map(g => g.game);
+  return {sub, says: "The Brewers won in five. Tampa Bay's only win was Game 4, which went 12 innings."};
+});
 
-const tc = CH.team_contact.slice().sort((a, b) => (b.x - b.y) - (a.x - a.y));
-scatter(card(2, "Teams: Contact Quality", "xwOBA on offense vs. xwOBA allowed; dotted lines = postseason average",
-  `${tc[0].team} had the best gap: ${f3(tc[0].x)} xwOBA on offense, ${f3(tc[0].y)} allowed. Hover a club for its path, starters and top performers.`),
-  CH.team_contact, {aria: "Teams: xwOBA for vs against", badge: true, r: 15, invertY: true, xref: L.xwoba, yref: L.xwoba,
-  fx: f3, fy: f3, xt: "Offense: xwOBA", yt: "xwOBA allowed (better is up)", corners: [["Hit hard, allowed little", "tr"], ["Outplayed on contact", "bl"]],
-  card: p => teamCard(p.team, "contact"), label: p => `${p.team}: ${f3(p.x)} for, ${f3(p.y)} against`});
+// 2. clubs: round and inning (a club's contact by inning group is a real split; count isn't, for a whole lineup or staff)
+chart(2, "Teams: Contact Quality", ["round", "inning"], false, "a club's xwOBA is a plate-appearance outcome", (st, wrap) => {
+  const f = agg(CU.tfor, st), a = agg(CU.tagainst, st);
+  const pts = [...f.keys()].filter(t => f.get(t).n && a.get(t) && a.get(t).n).map(t => ({team: t, x: R3(f.get(t).x / f.get(t).n), y: R3(a.get(t).x / a.get(t).n), nf: f.get(t).n, na: a.get(t).n}));
+  const lg = R3(f.total.x / f.total.n); window.__ps[2] = pts;
+  const s = pts.slice().sort((p, q) => (q.x - q.y) - (p.x - p.y)), cut = describe(st);
+  if (pts.length < 2) return {sub: `xwOBA on offense vs. xwOBA allowed. ${cut}`, says: "", empty: "Fewer than two clubs batted in this cut."};
+  scatter(wrap, pts, {aria: "Teams: xwOBA for vs against", badge: true, r: 15, invertY: true, xref: lg, yref: lg,
+    fx: f3, fy: f3, xt: "Offense: xwOBA", yt: "xwOBA allowed (better is up)", corners: [["Hit hard, allowed little", "tr"], ["Outplayed on contact", "bl"]],
+    card: p => withSlice(sliceBlock(st, [[f3(p.x), "xwOBA for"], [f3(p.y), "xwOBA against"], [`${p.nf} / ${p.na}`, "PA for / against"]]), () => teamCard(p.team, "contact")),
+    label: p => `${p.team}: ${f3(p.x)} for, ${f3(p.y)} against`});
+  return {sub: `xwOBA on offense vs. xwOBA allowed; dotted lines = average${cut ? ` in this cut (${f3(lg)})` : ""}${cut ? `. ${cut}` : ""}`,
+    says: `${s[0].team} had the best gap${cut ? " in this cut" : ""}: ${f3(s[0].x)} xwOBA on offense, ${f3(s[0].y)} allowed. Hover a club for its path, starters and top performers.`};
+});
 
-const hw = CH.hitter_wpa;
-bars(card(3, "October's Biggest Bats: WPA", "Top 20 hitters; win probability added on their plate appearances",
-  `${H[hw[0].id].short} (${H[hw[0].id].team}) added ${sg(hw[0].v)} WPA over ${hw[0].right} PA.`), hw,
-  {aria: "Top 20 hitters by WPA", team: r => H[r.id].team, name: r => H[r.id].short, fv: v => sg(v), fx: v => sg(v, 1), right: r => r.right,
-   rightHead: "PA", xt: "Win probability added", card: r => hitterCard(r.id, "wpa"), labelW: 130});
+// 3 and 4. WPA leaders: round and inning (late-inning leverage is the point of WPA); no count, since WPA belongs to the whole plate appearance
+const wpaChart = (n, who) => chart(n, who === "h" ? "October's Biggest Bats: WPA" : "October's Biggest Arms: WPA", ["round", "inning"], false, "WPA belongs to the whole plate appearance", (st, wrap) => {
+  const m = agg(who === "h" ? CU.hpa : CU.ppa, st, {count: false}), cnt = who === "h" ? "pa" : "bf";
+  const rows = [...m.entries()].map(([id, v]) => ({id, v: R3(v.wpa), right: v[cnt]})).sort(byIdThen(r => r.v)).slice(0, 20);
+  window.__ps[n] = rows;
+  if (!rows.length) return {sub: "", says: "", empty: "No plate appearances in this cut."};
+  const nmf = who === "h" ? hName : pName, tmf = who === "h" ? hTeam : pTeam, cut = describe(st);
+  bars(wrap, rows, {aria: `Top 20 ${who === "h" ? "hitters" : "pitchers"} by WPA`, team: r => tmf(r.id), name: r => nmf(r.id), fv: v => sg(v), fx: v => sg(v, 2), right: r => r.right,
+    rightHead: who === "h" ? "PA" : "BF", xt: "Win probability added",
+    card: r => withSlice(sliceBlock(st, [[sg(r.v), "WPA", cls(r.v)], [r.right, who === "h" ? "PA" : "batters faced"]]),
+      () => (who === "h" ? H : P)[r.id] ? (who === "h" ? hitterCard(r.id, "wpa") : pitcherCard(r.id, "wpa")) : minimal(nmf(r.id), tmf(r.id))), labelW: 130});
+  const r0 = rows[0];
+  return {sub: `Top 20 ${who === "h" ? "hitters" : "pitchers"}; win probability added on ${who === "h" ? "their plate appearances" : "the batters they faced"}${cut ? `. ${cut}` : ""}`,
+    says: who === "h" ? `${nmf(r0.id)} (${tmf(r0.id)}) added ${sg(r0.v)} WPA over ${r0.right} PA${cut ? " in this cut" : ""}.`
+                      : `${nmf(r0.id)} (${tmf(r0.id)}) led every pitcher${cut ? " in this cut" : ""} at ${sg(r0.v)} over ${r0.right} batters.`};
+});
+wpaChart(3, "h"); wpaChart(4, "p");
 
-const pw = CH.pitcher_wpa;
-bars(card(4, "October's Biggest Arms: WPA", "Top 20 pitchers; win probability added on the batters they faced",
-  `${P[pw[0].id].short} (${P[pw[0].id].team}) led every pitcher at ${sg(pw[0].v)} over ${pw[0].right} batters.`), pw,
-  {aria: "Top 20 pitchers by WPA", team: r => P[r.id].team, name: r => P[r.id].short, fv: v => sg(v), fx: v => sg(v, 1), right: r => r.right,
-   rightHead: "BF", xt: "Win probability added", card: r => pitcherCard(r.id, "wpa"), labelW: 130});
+// 5. results vs contact: round and inning; no count (wOBA and xwOBA are plate-appearance outcomes)
+chart(5, "Hitters: Results vs. Quality of Contact", ["round", "inning"], false, "wOBA and xwOBA are plate-appearance outcomes", (st, wrap) => {
+  const m = agg(CU.hpa, st, {count: false}), base = F.hitter_xwoba_woba.min_pa;
+  const fullDn = agg(CU.hpa, FULL).total.dn, need = minFor(base, m.total.dn / fullDn, 5, st);
+  const pts = [...m.entries()].filter(([, v]) => v.dn >= need).map(([id, v]) => ({id, x: R3(v.x / v.dn), y: R3(v.woba / v.dn), n: v.dn}));
+  window.__ps[5] = pts;
+  const cut = describe(st), sub = `Min. ${need} PA${need !== base ? ` (${base} for the full postseason, scaled to this cut)` : ""}; dashed line = results equal to contact${cut ? `. ${cut}` : ""}`;
+  if (pts.length < 2) return {sub, says: "", empty: "Too few hitters meet the minimum in this cut."};
+  scatter(wrap, pts, {aria: "Hitters: wOBA vs xwOBA", diag: true, fx: f3, fy: f3, xt: "xwOBA (quality of contact, walks, strikeouts)", yt: "wOBA (actual results)",
+    corners: [["Results ran ahead of contact", "tl"], ["Hit it well, little to show", "br"]], name: p => hName(p.id), team: p => hTeam(p.id),
+    card: p => withSlice(sliceBlock(st, [[f3(p.y), "wOBA"], [f3(p.x), "xwOBA"], [p.n, "PA"]]), () => H[p.id] ? hitterCard(p.id, "x") : minimal(hName(p.id), hTeam(p.id))),
+    label: p => `${hName(p.id)}: xwOBA ${f3(p.x)}, wOBA ${f3(p.y)}`});
+  return {sub, says: "Above the line, results ran ahead of the contact; below it, the hitter made better contact than his line shows."};
+});
 
-scatter(card(5, "Hitters: Results vs. Quality of Contact", "Min. 25 PA; dashed line = results equal to contact",
-  "Above the line, results ran ahead of the contact; below it, the hitter made better contact than his line shows."),
-  CH.hitter_x, {aria: "Hitters: wOBA vs xwOBA", diag: true, fx: f3, fy: f3, xt: "xwOBA (quality of contact, walks, strikeouts)", yt: "wOBA (actual results)",
-  corners: [["Results ran ahead of contact", "tl"], ["Hit it well, little to show", "br"]], name: p => H[p.id].short, team: p => H[p.id].team,
-  card: p => hitterCard(p.id, "x"), label: p => `${H[p.id].short}: xwOBA ${f3(p.x)}, wOBA ${f3(p.y)}`});
+// 6. swing decisions: round, inning and count (chase and whiff move most with the count)
+chart(6, "Hitters: Swing Decisions", ["round", "inning", "count"], false, "", (st, wrap) => {
+  const pa = agg(CU.hpa, st, {count: false}), m = agg(CU.hp, st);
+  const fullPa = agg(CU.hpa, FULL).total.pa, need = minFor(25, pa.total.pa / fullPa, 5, st);
+  const pts = [...m.entries()].filter(([id, v]) => (pa.get(id) || {pa: 0}).pa >= need && v.o && v.sw)
+    .map(([id, v]) => ({id, x: R3(v.osw / v.o), y: R3(v.wh / v.sw), o: v.o, sw: v.sw}));
+  const lc = R3(m.total.osw / m.total.o), lw = R3(m.total.wh / m.total.sw); window.__ps[6] = pts;
+  const cut = describe(st), sub = `Min. ${need} PA${need !== 25 ? " (25 for the full postseason, scaled to this cut)" : ""}; zone = Savant zones 1-9; dotted lines = average${cut ? ` in this cut. ${cut}` : ""}`;
+  if (pts.length < 2) return {sub, says: "", empty: "Too few hitters meet the minimum in this cut."};
+  scatter(wrap, pts, {aria: "Hitters: chase rate vs whiff rate", invertY: true, xref: lc, yref: lw, fx: v => (100 * v).toFixed(0) + "%", fy: v => (100 * v).toFixed(0) + "%",
+    xt: "Chase rate (swings at pitches outside the zone)", yt: "Whiff rate per swing (better is up)",
+    corners: [["Disciplined and hard to miss", "tl"], ["Chased and missed", "br"]], name: p => hName(p.id), team: p => hTeam(p.id),
+    tx: pc, ty: pc, card: p => withSlice(sliceBlock(st, [[pc(p.x), `chase (avg ${pc(lc)})`], [pc(p.y), `whiff/swing (avg ${pc(lw)})`], [p.sw, "swings"]]),
+      () => H[p.id] ? hitterCard(p.id, "swing") : minimal(hName(p.id), hTeam(p.id))), label: p => `${hName(p.id)}: chase ${pc(p.x)}, whiff ${pc(p.y)}`});
+  return {sub, says: `Hover a hitter for his chase, zone-swing and whiff rates by pitch group.${cut ? ` Average in this cut: chase ${pc(lc)}, whiff ${pc(lw)}.` : ""}`};
+});
 
-scatter(card(6, "Hitters: Swing Decisions", "Min. 25 PA; zone = Savant zones 1-9; dotted lines = postseason average",
-  "Hover a hitter for his chase, zone-swing and whiff rates by pitch group."),
-  CH.swing, {aria: "Hitters: chase rate vs whiff rate", invertY: true, xref: L.chase, yref: L.whiff, fx: v => (100 * v).toFixed(0) + "%", fy: v => (100 * v).toFixed(0) + "%",
-  xt: "Chase rate (swings at pitches outside the zone)", yt: "Whiff rate per swing (better is up)",
-  corners: [["Disciplined and hard to miss", "tl"], ["Chased and missed", "br"]], name: p => H[p.id].short, team: p => H[p.id].team,
-  tx: pc, ty: pc, card: p => hitterCard(p.id, "swing"), label: p => `${H[p.id].short}: chase ${pc(p.x)}, whiff ${pc(p.y)}`});
+// 7. pitchers: round, inning and count (whiffs by count; xwOBA on plate appearances that ended in that count)
+chart(7, "Pitchers: Whiffs vs. Damage", ["round", "inning", "count"], false, "", (st, wrap) => {
+  const m = agg(CU.pp, st), x = agg(CU.ppa, st), base = F.pitcher_whiff_xwoba.min_pitches;
+  const fullN = agg(CU.pp, FULL).total.n, need = minFor(base, m.total.n / fullN, 20, st);
+  const pts = [...m.entries()].filter(([id, v]) => v.n >= need && v.sw && x.get(id) && x.get(id).dn)
+    .map(([id, v]) => ({id, x: R3(v.wh / v.sw), y: R3(x.get(id).x / x.get(id).dn), n: v.n}));
+  const lw = R3(m.total.wh / m.total.sw), lx = R3(x.total.x / x.total.dn); window.__ps[7] = pts;
+  const cut = describe(st), sub = `Min. ${need} pitches${need !== base ? ` (${base} for the full postseason, scaled to this cut)` : ""}; dotted lines = average${cut ? ` in this cut. ${cut}` : ""}${st.cnt !== "all" ? "; xwOBA on plate appearances that ended in that count" : ""}`;
+  if (pts.length < 2) return {sub, says: "", empty: "Too few pitchers meet the minimum in this cut."};
+  scatter(wrap, pts, {aria: "Pitchers: whiff rate vs xwOBA allowed", invertY: true, xref: lw, yref: lx, fx: v => (100 * v).toFixed(0) + "%", fy: f3,
+    xt: "Whiff rate per swing", yt: "xwOBA allowed (better is up)", corners: [["Missed bats, limited damage", "tr"], ["Hittable", "bl"]],
+    name: p => pName(p.id), team: p => pTeam(p.id), tx: pc, ty: f3,
+    card: p => withSlice(sliceBlock(st, [[pc(p.x), "whiff/swing"], [f3(p.y), "xwOBA allowed"], [p.n, "pitches"]]), () => P[p.id] ? pitcherCard(p.id, "x") : minimal(pName(p.id), pTeam(p.id))),
+    label: p => `${pName(p.id)}: whiff ${pc(p.x)}, xwOBA ${f3(p.y)}`});
+  return {sub, says: "Hover a pitcher for his arsenal: usage, velocity and whiff rate on each pitch."};
+});
 
-scatter(card(7, "Pitchers: Whiffs vs. Damage", "Min. 100 pitches; dotted lines = postseason average",
-  "Hover a pitcher for his arsenal: usage, velocity and whiff rate on each pitch."),
-  CH.pitcher_x, {aria: "Pitchers: whiff rate vs xwOBA allowed", invertY: true, xref: L.whiff, yref: L.xwoba, fx: v => (100 * v).toFixed(0) + "%", fy: f3,
-  xt: "Whiff rate per swing", yt: "xwOBA allowed (better is up)", corners: [["Missed bats, limited damage", "tr"], ["Hittable", "bl"]],
-  name: p => P[p.id].short, team: p => P[p.id].team, tx: pc, ty: f3, card: p => pitcherCard(p.id, "x"), label: p => `${P[p.id].short}: whiff ${pc(p.x)}, xwOBA ${f3(p.y)}`});
+// 8 and 9. velocity and exit velocity: round, inning and count (velocity climbs late and with two strikes)
+const veloChart = (n, who) => chart(n, who === "p" ? "October Velocity Leaders" : "October's Hardest Hitters", ["round", "inning", "count"], false, "", (st, wrap) => {
+  const m = agg(who === "p" ? CU.pp : CU.hp, st), [nc, sc, mc] = who === "p" ? ["fb", "v", "vmax"] : ["bip", "ev", "evmax"];
+  const full = agg(who === "p" ? CU.pp : CU.hp, FULL).total[nc], need = minFor(15, m.total[nc] / full, 4, st);
+  const rows = [...m.entries()].filter(([, v]) => v[nc] >= need).map(([id, v]) => ({id, v: R1(v[sc] / v[nc]), raw: v[sc] / v[nc], right: R1(v[mc]), n: v[nc]}))
+    .sort(byIdThen(r => r.raw)).slice(0, 20);
+  const ref = m.total[nc] ? R1(m.total[sc] / m.total[nc]) : null; window.__ps[n] = rows;
+  const cut = describe(st), what = who === "p" ? "four-seamers or sinkers" : "batted balls";
+  const sub = `Top 20, min. ${need} ${what}${need !== 15 ? " (15 for the full postseason, scaled to this cut)" : ""}; ${who === "p" ? "fastest pitch" : "hardest-hit ball"} at right${cut ? `. ${cut}` : ""}`;
+  if (!rows.length) return {sub, says: "", empty: `No one has ${need} ${what} in this cut.`};
+  const nmf = who === "p" ? pName : hName, tmf = who === "p" ? pTeam : hTeam;
+  bars(wrap, rows, {aria: who === "p" ? "Top 20 by fastball velocity" : "Top 20 by exit velocity", zoom: true, ref, refLabel: `avg ${ref}`, team: r => tmf(r.id), name: r => nmf(r.id),
+    fv: v => v.toFixed(1), fx: v => v.toFixed(0), right: r => r.right, rightHead: "Max", xt: who === "p" ? "Average four-seam and sinker velocity (mph)" : "Average exit velocity (mph)",
+    card: r => withSlice(sliceBlock(st, [[r.v.toFixed(1), "avg mph"], [r.right, "max"], [r.n, who === "p" ? "fastballs" : "batted balls"]]),
+      () => who === "p" ? (P[r.id] ? pitcherCard(r.id, "velo") : minimal(nmf(r.id), tmf(r.id))) : (H[r.id] ? hitterCard(r.id, "ev") : minimal(nmf(r.id), tmf(r.id)))), labelW: 130});
+  const r0 = rows[0];
+  return {sub, says: who === "p" ? `${nmf(r0.id)} averaged ${r0.v.toFixed(1)} mph${cut ? " in this cut" : ""}. Dots, not bars: the axis starts near the leaders' range.`
+                                 : `${nmf(r0.id)} averaged ${r0.v.toFixed(1)} mph on ${r0.n} batted balls${cut ? " in this cut" : ""}. Dots, not bars: the axis starts near the leaders' range.`};
+});
+veloChart(8, "p"); veloChart(9, "h");
 
-const vl = CH.velo;
-bars(card(8, "October Velocity Leaders", "Top 20, min. 15 four-seamers or sinkers; fastest pitch at right",
-  `${P[vl[0].id].short} averaged ${vl[0].v} mph. Bars start near the leaders' range, not at zero.`), vl,
-  {aria: "Top 20 by fastball velocity", zoom: true, ref: L.fb_velo, refLabel: `avg ${L.fb_velo}`, team: r => P[r.id].team, name: r => P[r.id].short,
-   fv: v => v.toFixed(1), fx: v => v.toFixed(0), right: r => r.right, rightHead: "Max", xt: "Average four-seam and sinker velocity (mph)",
-   card: r => pitcherCard(r.id, "velo"), labelW: 130});
-
-const evl = CH.ev;
-bars(card(9, "October's Hardest Hitters", "Top 20, min. 15 batted balls; hardest-hit ball at right",
-  `${H[evl[0].id].short} averaged ${evl[0].v} mph on ${evl[0].n} batted balls. Bars start near the leaders' range, not at zero.`), evl,
-  {aria: "Top 20 by exit velocity", zoom: true, ref: L.ev, refLabel: `avg ${L.ev}`, team: r => H[r.id].team, name: r => H[r.id].short,
-   fv: v => v.toFixed(1), fx: v => v.toFixed(0), right: r => r.right, rightHead: "Max", xt: "Average exit velocity (mph)",
-   card: r => hitterCard(r.id, "ev"), labelW: 130});
-
-const st = CH.starters;
-bars(card(10, "How Deep the Starters Went", "Official box-score starter lines; innings = outs ÷ 3",
-  `${st[0].team} starters averaged ${st[0].v.toFixed(1)} innings a start; ${st[st.length - 1].team} averaged ${st[st.length - 1].v.toFixed(1)}. Hover a club for every start.`), st,
-  {aria: "Average innings per start by club", lo: 0, team: r => r.team, name: r => r.team, fv: v => v.toFixed(1), fx: v => v.toFixed(0),
-   right: r => `${Math.round(r.pitches)} p, ${r.games} g`, rightHead: "Per start", xt: "Average innings per start", card: r => teamCard(r.team, "starters"), labelW: 60});
+// 10. starters: round only (a start is one line per game; innings and counts don't divide it)
+chart(10, "How Deep the Starters Went", ["round"], false, "a start is one box-score line per game", (st, wrap) => {
+  const m = agg(CU.starters, st);
+  const rows = [...m.entries()].filter(([, v]) => v.g).map(([team, v]) => ({team, v: R2(v.outs / v.g / 3), pitches: v.p / v.g, games: v.g}))
+    .sort((a, b) => (b.v - a.v) || a.team.localeCompare(b.team));
+  window.__ps[10] = rows;
+  const cut = describe(st);
+  if (!rows.length) return {sub: "", says: "", empty: "No starts in this cut."};
+  bars(wrap, rows, {aria: "Average innings per start by club", lo: 0, team: r => r.team, name: r => r.team, fv: v => v.toFixed(1), fx: v => v.toFixed(0),
+    right: r => `${Math.round(r.pitches)} p, ${r.games} g`, rightHead: "Per start", xt: "Average innings per start",
+    card: r => withSlice(sliceBlock(st, [[r.v.toFixed(1), "innings/start"], [Math.round(r.pitches), "pitches/start"], [r.games, "starts"]]), () => teamCard(r.team, "starters")), labelW: 60});
+  const a = rows[0], z = rows[rows.length - 1];
+  return {sub: `Official box-score starter lines; innings = outs ÷ 3${cut ? `. ${cut}` : ""}`,
+    says: `${a.team} starters averaged ${a.v.toFixed(1)} innings a start${cut ? " in this cut" : ""}; ${z.team} averaged ${z.v.toFixed(1)}. Hover a club for every start.`};
+});
 }
 drawAll();
 let lastW = innerWidth;
