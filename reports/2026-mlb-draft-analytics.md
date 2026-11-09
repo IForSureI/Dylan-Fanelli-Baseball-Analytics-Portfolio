@@ -7,10 +7,11 @@
 <!-- portfolio:glance -->
 <p><img src="https://img.shields.io/badge/status-summary-1d5c3f" alt="status: summary"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Amateur%20scouting-6b6b6b" alt="for: Amateur scouting"> <img src="https://img.shields.io/badge/method-pick%20values-b4532a" alt="method: pick values"> <img src="https://img.shields.io/badge/method-out--of--sample-b4532a" alt="method: out-of-sample"> <img src="https://img.shields.io/badge/method-bonus%20pools-b4532a" alt="method: bonus pools"></p>
 
-> **At a glance**
-> - **The question:** What is a draft pick worth, and does a college stat line still beat the pick?
-> - **The answer:** Pick 1 is worth about \$75M before the bonus; from the second round on, the typical player returns nothing. A college-stat model no longer adds to the pick on 2020-2023 classes.
-> - **For a club:** Pick values and bonus-pool math for the draft room, and an honest read on what public college lines still add.
+**At a glance**
+
+- **The question:** What is a draft pick worth, and does a college stat line still beat the pick?
+- **The answer:** Pick 1 is worth about \$75M before the bonus; from the second round on, the typical player returns nothing. A college-stat model no longer adds to the pick on 2020-2023 classes.
+- **For a club:** Pick values and bonus-pool math for the draft room, and an honest read on what public college lines still add.
 <!-- /portfolio:glance -->
 
 By Dylan Fanelli, October 2026. I used public data only. My code lives in a separate repository, `IForSureI/Dylan-Fanelli-Draft-Analytics`. If any club would like to view it, I will gladly share it.

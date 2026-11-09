@@ -7,10 +7,11 @@
 <!-- portfolio:glance -->
 <p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Player%20development-6b6b6b" alt="for: Player development"> <img src="https://img.shields.io/badge/method-development-b4532a" alt="method: development"> <img src="https://img.shields.io/badge/method-placebo%20test-b4532a" alt="method: placebo test"> <img src="https://img.shields.io/badge/method-IDP-b4532a" alt="method: IDP"></p>
 
-> **At a glance**
-> - **The question:** Which pitch-design changes stick and pay?
-> - **The answer:** Four-seam ride is the best-supported lever (+1.62 whiff points per 2 in). Velocity's payoff fails a placebo, so selection or recovery isn't ruled out.
-> - **For a club:** Points a pitching lab at the shape changes most likely to pay, and comes with an individual development plan format that tracks them.
+**At a glance**
+
+- **The question:** Which pitch-design changes stick and pay?
+- **The answer:** Four-seam ride is the best-supported lever (+1.62 whiff points per 2 in). Velocity's payoff fails a placebo, so selection or recovery isn't ruled out.
+- **For a club:** Points a pitching lab at the shape changes most likely to pay, and comes with an individual development plan format that tracks them.
 <!-- /portfolio:glance -->
 
 **League study from public pitch data.** Every regular-season pitch of 2024, 2025 and 2026 (Statcast), not a scouting look and not any club's data. It is observational: pitchers chose these changes, so every number below is an association with controls, matching and a placebo, not the result of a randomized pitch-design program.
@@ -305,10 +306,11 @@ Plans are YAML (`examples/`), validated before anything runs, and checked for po
 ![Logan Gilbert, 2026: the hypothetical plan's three priorities to date](figures/2026-pitch-design-levers-idp.png)
 
 **The front-office note the engine wrote** (season's end, trimmed to the priorities and the call):
-> **Priority 1: Four-seam velocity.** 95.4 (2025) → 96.4 (95% interval 96.1 to 96.7; n = 1,187 pitches, 32 games). Target 96.4 by 2026-05-15. Trend up (z = 5.6); 97% of the gap closed. **On track. Keep.** Guard: four-seam zone% 61.8 (58.9 to 64.6), limit 60: ok.
-> **Priority 2: Slider depth.** 0.8 → −2.0 in (−2.2 to −1.8; n = 746). **On track. Keep.** Guard: slider zone% 47.9 (43.1 to 52.6), limit 45: ok.
-> **Priority 3: Slider whiffs.** 34.5% → 37.5% (32.4 to 42.6; n = 403 swings). The point estimate is past the target but not distinguishable from the baseline; at this sample only a change of 7.9 or more is detectable. **Inconclusive. Hold.** Guard: slider usage 25.0% (22.6 to 27.4), limit above 28: breached.
-> **Recommendation:** review priority 3 with the coach: its guard is breached, so the risk the plan named is showing.
+
+- **Priority 1: Four-seam velocity.** 95.4 (2025) → 96.4 (95% interval 96.1 to 96.7; n = 1,187 pitches, 32 games). Target 96.4 by 2026-05-15. Trend up (z = 5.6); 97% of the gap closed. **On track. Keep.** Guard: four-seam zone% 61.8 (58.9 to 64.6), limit 60: ok.
+- **Priority 2: Slider depth.** 0.8 → −2.0 in (−2.2 to −1.8; n = 746). **On track. Keep.** Guard: slider zone% 47.9 (43.1 to 52.6), limit 45: ok.
+- **Priority 3: Slider whiffs.** 34.5% → 37.5% (32.4 to 42.6; n = 403 swings). The point estimate is past the target but not distinguishable from the baseline; at this sample only a change of 7.9 or more is detectable. **Inconclusive. Hold.** Guard: slider usage 25.0% (22.6 to 27.4), limit above 28: breached.
+- **Recommendation:** review priority 3 with the coach: its guard is breached, so the risk the plan named is showing.
 
 **What an analyst adds to the engine's call:**
 - **Both shape priorities landed; velocity landed late.** It sat at 95.3 in mid-May and climbed all summer (figure), so the "step" assumption was wrong for this pitcher. A real plan would have moved the date at the July checkpoint.

@@ -7,10 +7,11 @@
 <!-- portfolio:glance -->
 <p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Front%20office%20and%20payroll-6b6b6b" alt="for: Front office and payroll"> <img src="https://img.shields.io/badge/method-CBA-b4532a" alt="method: CBA"> <img src="https://img.shields.io/badge/method-luxury%20tax-b4532a" alt="method: luxury tax"> <img src="https://img.shields.io/badge/method-extension%20pricing-b4532a" alt="method: extension pricing"></p>
 
-> **At a glance**
-> - **The question:** Should the Pirates extend Paul Skenes before the CBA expires on Dec. 1?
-> - **The answer:** Open at about \$200M in present value and walk away above about \$215M, priced under both possible rule sets. The tax engine reproduces 2025 luxury-tax bills within \$1 for eight of nine clubs.
-> - **For a club:** A payroll and service-time engine checked against real tax bills, and an extension price that holds up under the next agreement.
+**At a glance**
+
+- **The question:** Should the Pirates extend Paul Skenes before the CBA expires on Dec. 1?
+- **The answer:** Open at about \$200M in present value and walk away above about \$215M, priced under both possible rule sets. The tax engine reproduces 2025 luxury-tax bills within \$1 for eight of nine clubs.
+- **For a club:** A payroll and service-time engine checked against real tax bills, and an extension price that holds up under the next agreement.
 <!-- /portfolio:glance -->
 
 **Decision memo from public data.** It covers:

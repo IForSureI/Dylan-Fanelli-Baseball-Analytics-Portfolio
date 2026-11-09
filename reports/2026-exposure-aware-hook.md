@@ -7,10 +7,11 @@
 <!-- portfolio:glance -->
 <p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Manager%20and%20in--game%20strategy-6b6b6b" alt="for: Manager and in-game strategy"> <img src="https://img.shields.io/badge/method-out--of--sample-b4532a" alt="method: out-of-sample"> <img src="https://img.shields.io/badge/method-calibration-b4532a" alt="method: calibration"> <img src="https://img.shields.io/badge/method-decision%20rule-b4532a" alt="method: decision rule"></p>
 
-> **At a glance**
-> - **The question:** Should what a hitter has seen change when the starter comes out?
-> - **The answer:** No. The per-pitch cost replicates out of sample but does not reach plate-appearance run value, and managers show no response to it either.
-> - **For a club:** Saves a staff from adding a hook rule that would not win runs, with the calibration to show why.
+**At a glance**
+
+- **The question:** Should what a hitter has seen change when the starter comes out?
+- **The answer:** No. The per-pitch cost replicates out of sample but does not reach plate-appearance run value, and managers show no response to it either.
+- **For a club:** Saves a staff from adding a hook rule that would not win runs, with the calibration to show why.
 <!-- /portfolio:glance -->
 
 **League study from public pitch data.**
@@ -276,7 +277,9 @@ At each decision point, the card shows the next three hitters by lineup slot, ea
 
 **The exposure index**, built before each PA:
 
-> index = 3.83 × Σ over pitch types T of usage_T × seen_T × cost_T
+```text
+index = 3.83 × Σ over pitch types T of usage_T × seen_T × cost_T
+```
 
 - **seen_T:** pitches of type T the hitter saw from this pitcher in earlier PAs today.
 - **usage_T:** the pitcher's share of type T to this hitter's batting side in his earlier games this season.

@@ -7,10 +7,11 @@
 <!-- portfolio:glance -->
 <p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Pro%20scouting%20and%20trades-6b6b6b" alt="for: Pro scouting and trades"> <img src="https://img.shields.io/badge/method-Poisson%20models-b4532a" alt="method: Poisson models"> <img src="https://img.shields.io/badge/method-permutation%20test-b4532a" alt="method: permutation test"> <img src="https://img.shields.io/badge/method-Neo4j-b4532a" alt="method: Neo4j"></p>
 
-> **At a glance**
-> - **The question:** Do front-office ties predict trade partners?
-> - **The answer:** Yes, modestly: about 14-18% more trades in seasons when decision-makers share front-office history (1.18, 1.04-1.34). For scale, division rivalry is -45%.
-> - **For a club:** Adds one more input to a trade-partner list: whose decision-makers have worked together.
+**At a glance**
+
+- **The question:** Do front-office ties predict trade partners?
+- **The answer:** Yes, modestly: about 14-18% more trades in seasons when decision-makers share front-office history (1.18, 1.04-1.34). For scale, division rivalry is -45%.
+- **For a club:** Adds one more input to a trade-partner list: whose decision-makers have worked together.
 <!-- /portfolio:glance -->
 
 **League study from public data, a follow-up to [Who trades with whom](2026-trade-network-rivals.md).** That study found that the Angels' share of trades made with the Braves tripled after Perry Minasian, Alex Anthopoulos's former assistant GM, took over the Angels. This one tests whether ties like that predict trading across all 30 clubs. It is observational: it counts completed trades, and the main test compares each pair of clubs with itself across seasons.

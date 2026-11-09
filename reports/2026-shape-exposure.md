@@ -7,10 +7,11 @@
 <!-- portfolio:glance -->
 <p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-R&D-6b6b6b" alt="for: R&D"> <img src="https://img.shields.io/badge/method-pre--registered-b4532a" alt="method: pre-registered"> <img src="https://img.shields.io/badge/method-placebo%20test-b4532a" alt="method: placebo test"> <img src="https://img.shields.io/badge/method-honest%20null-b4532a" alt="method: honest null"></p>
 
-> **At a glance**
-> - **The question:** Do hitters adapt to pitch shapes they have seen from other pitchers?
-> - **The answer:** The planned test can't say: the raw association replicated, then failed its own placebo. An exploratory follow-up finds a small recent effect, at most about 2 runs a club-season.
-> - **For a club:** Shows how the department should handle a tempting result: write the test down first, run the placebo, and report what survives.
+**At a glance**
+
+- **The question:** Do hitters adapt to pitch shapes they have seen from other pitchers?
+- **The answer:** The planned test can't say: the raw association replicated, then failed its own placebo. An exploratory follow-up finds a small recent effect, at most about 2 runs a club-season.
+- **For a club:** Shows how the department should handle a tempting result: write the test down first, run the placebo, and report what survives.
 <!-- /portfolio:glance -->
 
 **League study from public pitch data.** Every regular-season pitch of 2024–2026 (Statcast). The analysis plan was committed before any outcome was fit, the 2026 season was held out, and the planned test failed its own placebo. This report says so first, then shows the follow-up designs that were also written down before they were run.

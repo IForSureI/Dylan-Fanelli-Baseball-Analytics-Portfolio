@@ -7,10 +7,11 @@
 <!-- portfolio:glance -->
 <p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-GM%20and%20pro%20personnel-6b6b6b" alt="for: GM and pro personnel"> <img src="https://img.shields.io/badge/method-decision%20memo-b4532a" alt="method: decision memo"> <img src="https://img.shields.io/badge/method-contract%20pricing-b4532a" alt="method: contract pricing"> <img src="https://img.shields.io/badge/method-20--80%20scouting-b4532a" alt="method: 20-80 scouting"></p>
 
-> **At a glance**
-> - **The question:** Which reliever should the Rangers sign this winter, and at what price?
-> - **The answer:** Adrián Morejón. Open at 4 years, \$60M; walk away above \$72M, which lands him a little less than half the time. Bryan Abreu is the plan above that.
-> - **For a club:** One real offseason decision made the way a front office makes it: the target, the opening offer, the walk-away and the plan if he goes elsewhere. The [one-page version](2026-bullpen-one-page.md) is what a GM reads.
+**At a glance**
+
+- **The question:** Which reliever should the Rangers sign this winter, and at what price?
+- **The answer:** Adrián Morejón. Open at 4 years, \$60M; walk away above \$72M, which lands him a little less than half the time. Bryan Abreu is the plan above that.
+- **For a club:** One real offseason decision made the way a front office makes it: the target, the opening offer, the walk-away and the plan if he goes elsewhere. The [one-page version](2026-bullpen-one-page.md) is what a GM reads.
 <!-- /portfolio:glance -->
 
 **Decision memo from public data.** One real offseason decision, made the way a front office makes it: the club's need, three relievers it could sign this winter, a data-informed scouting report on each, what each costs and is worth under the 2022-26 agreement and its December 1 expiration, and a ranked recommendation with a price.
@@ -22,7 +23,7 @@
 
 ## Decision summary
 
-> **Update, Oct. 18, 2026: the qualifying-offer case.** The first version priced the pick a QO would cost the Rangers (a second-rounder near No. 55) at $5.3M, a 2019 public estimate. My own draft-pick backtest (the values are in `baseball/roster/acquisition.py`, `PICK_VALUE_OWN`) puts that pick at about $10.1M after its 2026 slot, from what picks 45-60 returned in the 2000-2016 drafts. On that value the pick and pool cost $10.6M in present value, and **the walk-away with a QO falls from about $66M to about $60M, the opening offer**: if the Padres attach a QO, open at $60M and don't go higher. The 2027 QO is $23.15M (reported Oct. 8, 2026). Everything else below is unchanged; the QO figures are updated in place and marked.
+**Update, Oct. 18, 2026: the qualifying-offer case.** The first version priced the pick a QO would cost the Rangers (a second-rounder near No. 55) at $5.3M, a 2019 public estimate. My own draft-pick backtest (the values are in `baseball/roster/acquisition.py`, `PICK_VALUE_OWN`) puts that pick at about $10.1M after its 2026 slot, from what picks 45-60 returned in the 2000-2016 drafts. On that value the pick and pool cost $10.6M in present value, and **the walk-away with a QO falls from about $66M to about $60M, the opening offer**: if the Padres attach a QO, open at $60M and don't go higher. The 2027 QO is $23.15M (reported Oct. 8, 2026). Everything else below is unchanged; the QO figures are updated in place and marked.
 
 **Compiled:** 2026-10-13; **On:** Bid on Adrián Morejón to his value; expect Abreu about half the time
 

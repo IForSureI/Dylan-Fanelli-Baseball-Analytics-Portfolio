@@ -7,10 +7,11 @@
 <!-- portfolio:glance -->
 <p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Front%20office%20and%20arbitration-6b6b6b" alt="for: Front office and arbitration"> <img src="https://img.shields.io/badge/method-arbitration-b4532a" alt="method: arbitration"> <img src="https://img.shields.io/badge/method-comp%20pool-b4532a" alt="method: comp pool"> <img src="https://img.shields.io/badge/method-win%20odds-b4532a" alt="method: win odds"></p>
 
-> **At a glance**
-> - **The question:** What should a club file in Cade Smith's first arbitration case?
-> - **The answer:** \$4.65M, settle at \$5.0-5.1M, and go to a hearing above \$5.1M. The club wins at a \$5.275M midpoint about 60% of the time.
-> - **For a club:** The club-side case from the comp pool to the walk point, under the CBA's criteria and what a panel can't hear.
+**At a glance**
+
+- **The question:** What should a club file in Cade Smith's first arbitration case?
+- **The answer:** \$4.65M, settle at \$5.0-5.1M, and go to a hearing above \$5.1M. The club wins at a \$5.275M midpoint about 60% of the time.
+- **For a club:** The club-side case from the comp pool to the walk point, under the CBA's criteria and what a panel can't hear.
 <!-- /portfolio:glance -->
 
 **An arbitration exercise built from public data.** Cleveland's closer is arbitration-eligible for the first time this winter, after a platform year in which he tied for the major-league lead in saves. This brief works his case the way a club's arbitration group would: the record as a panel reads it, the comparable salaries, the club's filing number, the player's likely number, the midpoint and the odds of winning a hearing there, what losing costs, and whether to settle or try the case.

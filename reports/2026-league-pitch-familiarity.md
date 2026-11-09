@@ -7,10 +7,11 @@
 <!-- portfolio:glance -->
 <p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Advance%20scouting%20and%20in--game%20strategy-6b6b6b" alt="for: Advance scouting and in-game strategy"> <img src="https://img.shields.io/badge/method-mixed%20models-b4532a" alt="method: mixed models"> <img src="https://img.shields.io/badge/method-Statcast-b4532a" alt="method: Statcast"> <img src="https://img.shields.io/badge/method-original%20question-b4532a" alt="method: original question"></p>
 
-> **At a glance**
-> - **The question:** Does a pitch lose effectiveness on a hitter the more of it he has seen?
-> - **The answer:** Yes, and it is specific to the pitch type: an earlier changeup or splitter in his earlier plate appearances today, in place of a pitch of another type, goes with 1.87 fewer whiff points on the next one.
-> - **For a club:** Tells a pitching coach which pitches spend down over a game and a series, and which ones keep their bite on the second and third look.
+**At a glance**
+
+- **The question:** Does a pitch lose effectiveness on a hitter the more of it he has seen?
+- **The answer:** Yes, and it is specific to the pitch type: an earlier changeup or splitter in his earlier plate appearances today, in place of a pitch of another type, goes with 1.87 fewer whiff points on the next one.
+- **For a club:** Tells a pitching coach which pitches spend down over a game and a series, and which ones keep their bite on the second and third look.
 <!-- /portfolio:glance -->
 
 **League study from public pitch data.** Every regular-season pitch of 2024, 2025 and 2026 (Statcast), not a scouting look. It is observational: every effect below is an association with fixed effects and controls, not a randomized test.
@@ -188,7 +189,9 @@ Change in whiff% per swing against a hitter who has seen none of this pitch type
 ### 7. Usage: when does wear-out outweigh a better pitch?
 **The setup:** each pitch of type T carries an expected exposure of usage(T) × pitches already seen. Shifting usage from pitch A to pitch B pays when B's observed run value beats A's by more than:
 
-> Σ over windows: pitches seen in the window × (cost_B × use_B − cost_A × use_A)
+```text
+Σ over windows: pitches seen in the window × (cost_B × use_B − cost_A × use_A)
+```
 
 **Windows and inputs:**
 - **The three windows:**

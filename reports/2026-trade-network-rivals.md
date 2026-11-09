@@ -7,10 +7,11 @@
 <!-- portfolio:glance -->
 <p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Pro%20scouting%20and%20trades-6b6b6b" alt="for: Pro scouting and trades"> <img src="https://img.shields.io/badge/method-Neo4j-b4532a" alt="method: Neo4j"> <img src="https://img.shields.io/badge/method-network%20analysis-b4532a" alt="method: network analysis"> <img src="https://img.shields.io/badge/method-rate%20ratios-b4532a" alt="method: rate ratios"></p>
 
-> **At a glance**
-> - **The question:** Who trades with whom?
-> - **The answer:** Division rivals trade at 0.56 times the rate of other pairs (0.49-0.65), and 52 of 60 rival pairs fall below expectation. The deadline is the one window where they come closer to normal.
-> - **For a club:** Tells a trade desk which partners are realistic and when rivals are most willing to deal.
+**At a glance**
+
+- **The question:** Who trades with whom?
+- **The answer:** Division rivals trade at 0.56 times the rate of other pairs (0.49-0.65), and 52 of 60 rival pairs fall below expectation. The deadline is the one window where they come closer to normal.
+- **For a club:** Tells a trade desk which partners are realistic and when rivals are most willing to deal.
 <!-- /portfolio:glance -->
 
 **League study from public transaction data.** Every MLB trade in the MLB Stats API from its first record (April 15, 2009) through October 13, 2026, loaded as a graph in Neo4j. It is observational: it counts trades that happened, not offers or prices, and the one front-office explanation below is a hypothesis the data fits, not a tested cause.

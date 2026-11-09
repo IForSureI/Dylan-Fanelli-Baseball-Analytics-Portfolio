@@ -194,8 +194,9 @@ def stamp_reports() -> None:
         header = f"{H0}\n{navline}\n{H1}\n\n"
         badges = " ".join([_badge("status", p["status"], "1d5c3f"), _badge("data", "public", "1f1f1f"),
                            _badge("for", p["dept"], "6b6b6b")] + [_badge("method", t, "b4532a") for t in p["tags"]])
-        glance = (f"{G0}\n<p>{badges}</p>\n\n> **At a glance**\n> - **The question:** {p['question']}\n"
-                  f"> - **The answer:** {_money(p['answer'])}\n> - **For a club:** {_money(p['club'])}\n{G1}\n\n")
+        # a bold heading and a plain list, never a quote block: GitHub draws quotes with a bar down the side
+        glance = (f"{G0}\n<p>{badges}</p>\n\n**At a glance**\n\n- **The question:** {p['question']}\n"
+                  f"- **The answer:** {_money(p['answer'])}\n- **For a club:** {_money(p['club'])}\n{G1}\n\n")
         footer = (f"\n{F0}\n---\n{navline}\n\n<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). "
                   f"*{title}*. Dylan Fanelli Baseball Analytics Portfolio. {REPO}/blob/main/reports/{p['slug']}.md</sub>\n{F1}\n")
         lines = text.split("\n")

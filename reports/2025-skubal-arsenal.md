@@ -7,10 +7,11 @@
 <!-- portfolio:glance -->
 <p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Pitching%20and%20pro%20scouting-6b6b6b" alt="for: Pitching and pro scouting"> <img src="https://img.shields.io/badge/method-arsenal%20analysis-b4532a" alt="method: arsenal analysis"> <img src="https://img.shields.io/badge/method-league%20context-b4532a" alt="method: league context"></p>
 
-> **At a glance**
-> - **The question:** Was Tarik Skubal's 2025 change real?
-> - **The answer:** Yes, and the change was his: he ranked at the 80th-98th percentile on the changes while the league did not move. His changeup's 46.6% whiff rate is his true level.
-> - **For a club:** Separates a pitcher's real change from a league-wide or measurement shift before anyone pays for it.
+**At a glance**
+
+- **The question:** Was Tarik Skubal's 2025 change real?
+- **The answer:** Yes, and the change was his: he ranked at the 80th-98th percentile on the changes while the league did not move. His changeup's 46.6% whiff rate is his true level.
+- **For a club:** Separates a pitcher's real change from a league-wide or measurement shift before anyone pays for it.
 <!-- /portfolio:glance -->
 
 **Data-only arsenal read.** Built from Statcast pitch data, not a live look; no 20-80 grades.

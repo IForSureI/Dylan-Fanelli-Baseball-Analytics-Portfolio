@@ -7,10 +7,11 @@
 <!-- portfolio:glance -->
 <p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Pro%20personnel-6b6b6b" alt="for: Pro personnel"> <img src="https://img.shields.io/badge/method-swing%20decisions-b4532a" alt="method: swing decisions"> <img src="https://img.shields.io/badge/method-bat%20tracking-b4532a" alt="method: bat tracking"> <img src="https://img.shields.io/badge/method-contract%20pricing-b4532a" alt="method: contract pricing"></p>
 
-> **At a glance**
-> - **The question:** Do good swing decisions last, and what is Gleyber Torres worth?
-> - **The answer:** Yes: decision value repeats year to year (r = 0.80). 1.50 WAR projected for 2027; sign at two years, \$28-32M, walk away above \$17M a year.
-> - **For a club:** A free-agent hitter priced from the skill that repeats, with the bat-speed decline weighed against it.
+**At a glance**
+
+- **The question:** Do good swing decisions last, and what is Gleyber Torres worth?
+- **The answer:** Yes: decision value repeats year to year (r = 0.80). 1.50 WAR projected for 2027; sign at two years, \$28-32M, walk away above \$17M a year.
+- **For a club:** A free-agent hitter priced from the skill that repeats, with the bat-speed decline weighed against it.
 <!-- /portfolio:glance -->
 
 **League study plus one decision, from public pitch data.** A swing-decision value model built on every regular-season pitch of 2024-26, tested for whether it holds from year to year and whether it predicts next season's results, then used to evaluate one hitter with a live 2026-27 decision.

@@ -7,10 +7,11 @@
 <!-- portfolio:glance -->
 <p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Front%20office%20and%20arbitration-6b6b6b" alt="for: Front office and arbitration"> <img src="https://img.shields.io/badge/method-arbitration-b4532a" alt="method: arbitration"> <img src="https://img.shields.io/badge/method-Super%20Two-b4532a" alt="method: Super Two"> <img src="https://img.shields.io/badge/method-win%20odds-b4532a" alt="method: win odds"></p>
 
-> **At a glance**
-> - **The question:** Does the same method hold for a Super Two on another club?
-> - **The answer:** Yes. File \$3.65M, settle between \$3.7M and \$3.8M (open at \$3.7M), and go to a hearing above \$3.8M; the club wins at a \$3.85M midpoint about 61% of the time.
-> - **For a club:** Shows the arbitration method travels: same rule, different club, a Super Two with four arbitration years.
+**At a glance**
+
+- **The question:** Does the same method hold for a Super Two on another club?
+- **The answer:** Yes. File \$3.65M, settle between \$3.7M and \$3.8M (open at \$3.7M), and go to a hearing above \$3.8M; the club wins at a \$3.85M midpoint about 61% of the time.
+- **For a club:** Shows the arbitration method travels: same rule, different club, a Super Two with four arbitration years.
 <!-- /portfolio:glance -->
 
 **A second arbitration exercise built from public data, with the same method as [Cade Smith's](2027-arbitration-brief-smith.md).** Toronto's closer goes to arbitration for the first time this winter as a Super Two, after a platform year with a 1.27 ERA, 35 saves and an All-Star selection, his first year as a closer. This brief works his case the way a club's arbitration group would: the record as a panel reads it, the comparable salaries, the club's filing number, the player's likely number, the midpoint and the odds of winning a hearing there, what losing costs, and whether to settle or try the case.

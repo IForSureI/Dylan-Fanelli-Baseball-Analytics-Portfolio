@@ -16,3 +16,18 @@ def test_pages_exist():
 def test_no_side_stripes():
     hits = [f"{p.relative_to(ROOT)}: {m.group(0)}" for p in PAGES for m in STRIPE.finditer(p.read_text())]
     assert not hits, "side-stripe accent bars are banned: " + "; ".join(hits)
+
+
+def test_no_quote_blocks_in_markdown():
+    """GitHub draws a markdown quote block (a line starting with ">") with a bar down its side, so the reports use a
+    bold heading and a plain list instead."""
+    mds = [p for p in ROOT.rglob("*.md") if ".venv" not in p.parts and "node_modules" not in p.parts]
+    hits = []
+    for p in mds:
+        fence = False
+        for i, ln in enumerate(p.read_text().split("\n"), 1):
+            if ln.lstrip().startswith("```"):
+                fence = not fence
+            elif not fence and ln.lstrip().startswith(">"):
+                hits.append(f"{p.relative_to(ROOT)}:{i}")
+    assert not hits, "quote blocks draw a side bar on GitHub: " + ", ".join(hits[:20])

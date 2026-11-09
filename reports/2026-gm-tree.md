@@ -7,10 +7,11 @@
 <!-- portfolio:glance -->
 <p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Front%20office-6b6b6b" alt="for: Front office"> <img src="https://img.shields.io/badge/method-Neo4j-b4532a" alt="method: Neo4j"> <img src="https://img.shields.io/badge/method-PageRank-b4532a" alt="method: PageRank"> <img src="https://img.shields.io/badge/method-career%20paths-b4532a" alt="method: career paths"></p>
 
-> **At a glance**
-> - **The question:** Whose front offices did today's heads of baseball operations come through?
-> - **The answer:** More came through Cleveland than any other club: 15 worked there before their first head job. Since 2009 the median head took 14 years from his first front-office job.
-> - **For a club:** A map of how front offices hire and promote, built as a graph a department can query.
+**At a glance**
+
+- **The question:** Whose front offices did today's heads of baseball operations come through?
+- **The answer:** More came through Cleveland than any other club: 15 worked there before their first head job. Since 2009 the median head took 14 years from his first front-office job.
+- **For a club:** A map of how front offices hire and promote, built as a graph a department can query.
 <!-- /portfolio:glance -->
 
 **League study from public data, built as a graph in Neo4j.** Every club decision-maker since 2009 has a sourced career history in this repo, and Baseball-Reference's team pages add each club's GM, scouting director and farm director from 1998. Together they show who worked under whom. This study asks three questions:
