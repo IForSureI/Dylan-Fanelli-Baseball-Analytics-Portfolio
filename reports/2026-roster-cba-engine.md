@@ -1,5 +1,5 @@
 <!-- portfolio:header -->
-<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Pitch-design levers](2026-pitch-design-levers.md) &nbsp;|&nbsp; [Trade network →](2026-trade-network-rivals.md)</sub>
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← IL early warning](2026-il-early-warning.md) &nbsp;|&nbsp; [Trade network →](2026-trade-network-rivals.md)</sub>
 <!-- /portfolio:header -->
 
 # The roster and CBA engine, and the Paul Skenes extension: a decision memo for the 2026-27 offseason
@@ -425,7 +425,7 @@ uv run pytest tests/test_roster_service.py tests/test_roster_money.py
 
 <!-- portfolio:footer -->
 ---
-<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Pitch-design levers](2026-pitch-design-levers.md) &nbsp;|&nbsp; [Trade network →](2026-trade-network-rivals.md)</sub>
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← IL early warning](2026-il-early-warning.md) &nbsp;|&nbsp; [Trade network →](2026-trade-network-rivals.md)</sub>
 
 <sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *The roster and CBA engine, and the Paul Skenes extension: a decision memo for the 2026-27 offseason*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-roster-cba-engine.md</sub>
 <!-- /portfolio:footer -->

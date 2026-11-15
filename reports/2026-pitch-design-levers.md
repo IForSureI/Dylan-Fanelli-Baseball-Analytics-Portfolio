@@ -1,5 +1,5 @@
 <!-- portfolio:header -->
-<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Reliability Atlas](2026-reliability-atlas.md) &nbsp;|&nbsp; [Roster and CBA engine →](2026-roster-cba-engine.md)</sub>
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Reliability Atlas](2026-reliability-atlas.md) &nbsp;|&nbsp; [IL early warning →](2026-il-early-warning.md)</sub>
 <!-- /portfolio:header -->
 
 # What pitch-design changes stick and pay, MLB 2024–26
@@ -357,7 +357,7 @@ uv run bb idp examples/idp-fictional.yaml                   # the fictional exam
 
 <!-- portfolio:footer -->
 ---
-<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Reliability Atlas](2026-reliability-atlas.md) &nbsp;|&nbsp; [Roster and CBA engine →](2026-roster-cba-engine.md)</sub>
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Reliability Atlas](2026-reliability-atlas.md) &nbsp;|&nbsp; [IL early warning →](2026-il-early-warning.md)</sub>
 
 <sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *What pitch-design changes stick and pay, MLB 2024–26*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-pitch-design-levers.md</sub>
 <!-- /portfolio:footer -->
