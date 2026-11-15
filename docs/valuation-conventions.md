@@ -23,7 +23,16 @@ One page for every price of a win and the discount rate used in this portfolio, 
   - **Skenes:** the walk-away is about $215M on the tiers and about $200M on the flat rate (the roster and CBA memo's Nov. 14 check).
   - **Torres:** two years are worth $29.6M at one rate and $22.2M on the tiers, because 1.50 WAR prices in the 1-2 band.
 - **The reliever slope is lower ($9.60M)** and has a wide error (standard error $3.58M, 21 signings). It is not evidence that a reliever's win is worth less. It is what that market paid.
-- **None of these is a club's own value of a win.** A club near a playoff spot should pay more than the market rate. No report here estimates that curve. Where a memo says "value," it means value at the market's price.
+- **None of these is a club's own value of a win.** Where a memo says "value," it means value at the market's price.
+
+## A club's own value of a win (added 2026-11-15)
+- **The published shape:** five more wins were worth $4.2M to the average club at 78 wins and $11.7M at 86 wins, 2.8 times as much (Vince Gennaro, The Hardball Times, Mar. 22, 2007; revenue regressions on 2006 curves). Revenue responds to wins between about 70 and 100 (Gennaro, Baseball Research Journal, Summer 2009).
+- **Where it is used:** one sensitivity, in the Skenes memo (`skenes_win_curve_check()` in `baseball/roster/cases.py`).
+- **The rule:** a club never pays more for a season than the season is worth to it. A club that values a win at or above the market price still walks away at the market number, because it can buy the same seasons at that price later.
+- **The assumption:** the market price is a contender's value of a win (a club at 86 to 91 wins). On it, a club at 78 to 83 wins values a win at 0.36 of the market price (0.53 if the market price is the mean of the two bands).
+- **The result for Skenes:** $218M for the contender, $109M to $144M for the club near .500 for all eight years.
+- **Why it stays a sensitivity:** the curve is from 2006, the dollar levels are revenue and sit far below any market price, and the anchor is my assumption.
+- **Still open:** a current curve. It needs marginal revenue per win at each win total from 70 to 100, for the average club and for one named club, under the current playoff format and in 2026 dollars.
 
 ## What would make this one number
 - A single price fit across all free agents with a term for projected WAR, tested for the star premium directly. Not done. It needs a contract table with projections at signing for every free agent of 2022-26, which this repo has only for the 21 relief signings and the 46 contracts behind the Torres rate.

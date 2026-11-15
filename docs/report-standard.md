@@ -18,6 +18,7 @@ The header, the at-a-glance box and the footer are stamped by `docs/build_pages.
 - **One evidence standard.** Confirmed means p < 0.05 with enough sample; many tests get a Benjamini-Hochberg correction; "no effect" is claimed only when the interval rules out effects that matter.
 - **Separate review.** Every finished report gets a review pass that checks each number against the saved outputs; [LOG.md](../LOG.md) records what each review changed.
 - **Public data only.** No club's data is in this repository.
+- **First person.** I am the author, so every page says I, my and me. No page refers to me in the third person, and none shows scratch paths or tool names. A byline with my full name is fine. `tests/test_voice.py` checks it.
 
 ## Adding a report
 1. Write `reports/<year>-<slug>.md` with its figure in `reports/figures/`.
