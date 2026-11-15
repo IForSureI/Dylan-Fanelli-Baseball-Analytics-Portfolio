@@ -1,0 +1,70 @@
+{
+ "type": "hitter",
+ "player": {
+  "name": "Gleyber Torres",
+  "position": "2B",
+  "bats": "R",
+  "throws": "R",
+  "dob": "1996-12-13",
+  "team": "Detroit Tigers (2026)",
+  "level": "MLB",
+  "class": "Free agent (no draft pick attached)"
+ },
+ "report_date": "2026-10-18",
+ "basis": "Statcast 2024-26 (1,774 pitches in 2026) + public reporting. No live or video look.",
+ "scout": "Dylan Fanelli",
+ "physical": "NG: no live or video look. Health (public): three left oblique strains in 15 months; sports hernia surgery Oct. 31, 2025.",
+ "tools": [
+  {
+   "name": "Hit",
+   "present": 55,
+   "future": 50,
+   "notes": ".260 AVG, .252 xBA in 2026 (league regulars .247); 19.3% K; squared-up 51.9% of contact (90th pct). Future 50: three-year xBA .253, and a 6th-percentile bat at 30-31 has less time to wait."
+  },
+  {
+   "name": "Raw power",
+   "present": 35,
+   "future": 40,
+   "notes": "90th-pct exit velocity 100.3 mph (7th pct), max 106.9 (5th). It was 104.6 and 110.9 in 2025, a 50. Future 40 is a partial return; the league's base rate says to expect less than a full one."
+  },
+  {
+   "name": "Game power",
+   "present": 40,
+   "future": 40,
+   "notes": ".103 ISO, 8 HR in 420 PA, 4.0% barrels per PA. The approach caps it: 28.7% pull rate, attack direction in the 4th percentile (opposite field)."
+  },
+  {
+   "name": "Swing decisions",
+   "present": 70,
+   "future": 70,
+   "notes": "Not a standard tool; graded the same way. +0.76 runs per 100 pitches (z +2.1): 99th, 99th and 94th percentile in 2026, 2025 and 2024. Regressed for 2027: +0.63."
+  },
+  {
+   "name": "Run",
+   "present": 35,
+   "future": 30,
+   "notes": "Sprint speed 25.3 ft/s, 7th percentile (26th in 2024, 20th in 2025). A published percentile, not a timing. Future 30: speed falls with age, and his already has."
+  },
+  {
+   "name": "Field",
+   "present": 40,
+   "future": 40,
+   "notes": "Data only: -5 outs above average at second base in each of 2024-26 (-3, -4, -3 fielding runs). Below-average range."
+  },
+  {
+   "name": "Arm",
+   "present": "NG",
+   "future": "NG",
+   "notes": "No public reading isolates it, and there has been no look. Needs a look."
+  }
+ ],
+ "swing": "The path is intact: attack angle 8.4 deg, 54% of swings in the ideal range (67th pct). The speed is gone: 68.1 mph on competitive swings (6th pct), from 70.2 in 2025, and he met the ball 1.6-2.1 in deeper. Selective outside the zone, aggressive in it: chase rate 18.9% (1st pct), and he swings at 77.8% of heart pitches (average hitter 73.8%). NG: load, timing, balance.",
+ "defense": "Second base. Statcast has him at -5 outs above average three years running, steady enough to grade from. NG: hands, first step and arm, which a scout grades and this page can't.",
+ "performance": "2026: 420 PA, .364 OBP (90th pct of regulars), 13.6% BB (94th), .727 OPS. Swing results trailed the league on the same pitches (-0.60 runs per 100, 16th pct). 2027 projection: .324 wOBA, 1.50 WAR.",
+ "ofp": 50,
+ "role": "2B regular (50) if the bat speed returns; part-time 2B and DH (45) if not",
+ "risk": "Moderate to high: health and bat speed",
+ "eta": "Established",
+ "summary": "Elite swing decisions on a bat that lost 2 mph in 2026. The decisions are the most stable thing on his card; the slugging is the open question. Biggest question: whether the 2 mph comes back after a winter without surgery. Across the league, drops this large have mostly stayed.",
+ "action": "Sign for two years, $28-32M guaranteed, with a 2029 club option near $16M ($2M buyout) and plate-appearance escalators. Walk away above $17M a year or at a third guaranteed year. Before the bid: the medical file on the core and oblique, and a winter session with a bat sensor. 70 mph or better is the base or high case; 68 or under is the low case."
+}
