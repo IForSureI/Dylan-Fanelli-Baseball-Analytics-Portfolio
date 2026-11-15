@@ -10,7 +10,7 @@
 **At a glance**
 
 - **The question:** What should a club file in Cade Smith's first arbitration case?
-- **The answer:** \$4.65M, settle at \$5.0-5.1M, and go to a hearing above \$5.1M. The club wins at a \$5.275M midpoint about 60% of the time.
+- **The answer:** \$4.65M, settle at \$5.0-5.1M, and go to a hearing above \$5.1M. The club wins at a \$5.275M midpoint about 60% of the time (49% to 71% across the assumptions tested).
 - **For a club:** The club-side case from the comp pool to the walk point, under the CBA's criteria and what a panel can't hear.
 <!-- /portfolio:glance -->
 
@@ -32,7 +32,7 @@
 - **The cost of being wrong:**
   - **Losing at $5.9M:** $1.25M more in 2027. Because later arbitration raises build on this salary, the gap repeats through 2029: about $3.4M in present value, or $2.3M if only half of it carries.
   - **Settling at the $5.275M midpoint:** about $0.13M a year above the hearing's average outcome, about $0.35M in present value.
-- **The labor clock matters more than usual.** The 2022-26 agreement expires December 1. A lockout ends all contact with 40-man players. In 2022, figures were exchanged March 22 and hearings ran into June. A one-year deal signed before the tender deadline (expected about November 20; not yet announced) removes the hearing and the rules risk together. Cleveland made three such November deals last year.
+- **The labor clock matters more than usual.** The 2022-26 agreement expires December 1. A lockout ends all contact with 40-man players. In 2022, figures were exchanged March 22 and hearings ran into June. A one-year deal signed before the tender deadline (November 20; NBC Sports calendar, Oct. 30, 2026) removes the hearing and the rules risk together. Cleveland made three such November deals last year.
 
 ## The case as a panel sees it
 
@@ -261,7 +261,8 @@ Reliever cases run on traditional numbers: saves first, then ERA, the default he
 - **Where talks stand (checked Oct. 18, 2026):**
   - **Expiration:** the agreement expires Dec. 1, 2026 at 11:59 p.m. ET.
   - **The latest proposal found:** MLB's of Oct. 8 (a 154-game season from 2029 and seeding changes), still tied to a salary cap. The union restated its opposition to a cap.
-  - **No agreement or extension of the deadline** was reported.
+  - **No agreement or extension of the deadline** was reported as of Nov. 14, 2026. MLB Trade Rumors (Nov. 12) reported essentially no chance of a deal before Dec. 1.
+  - **The odds are a range:** across the assumptions in the sensitivity table the club's chance runs from 49% to 71%. The 60% is the even-weight case.
 
 | Rule | 2022-26 | What could change | Effect on this case |
 |---|---|---|---|

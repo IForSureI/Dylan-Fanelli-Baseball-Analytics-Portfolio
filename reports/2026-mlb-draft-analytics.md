@@ -10,7 +10,7 @@
 **At a glance**
 
 - **The question:** What is a draft pick worth, and does a college stat line still beat the pick?
-- **The answer:** Pick 1 is worth about \$75M before the bonus; from the second round on, the typical player returns nothing. A college-stat model no longer adds to the pick on 2020-2023 classes.
+- **The answer:** Pick 1 is worth about \$75M on average before the bonus; from the second round on, the median player returns nothing. A college-stat model no longer adds to the pick on 2020-2023 classes.
 - **For a club:** Pick values and bonus-pool math for the draft room, and an honest read on what public college lines still add.
 <!-- /portfolio:glance -->
 
@@ -21,7 +21,7 @@ I asked four questions about the MLB draft. I answered each with public data and
 ## 1. What is a pick worth?
 I ran a pricing backtest on 17 drafts. I define value as a player's first six MLB seasons (WAR at $11.23M a win, minus the minimum salary in years 1-3 and arbitration in years 4-6, no season below zero, discounted 7% a year), in 2026 dollars, before the bonus.
 
-| Pick | Typical value before the bonus, 2000-16 drafts | 90% range | Hitters | Pitchers |
+| Pick | Average value before the bonus, 2000-16 drafts | 90% range | Hitters | Pitchers |
 |---|---|---|---|---|
 | 1 | $75.4M | $55.7M-$105.2M | $86.8M | $59.1M |
 | 4 | $45.0M | $38.1M-$54.2M | $59.0M | $36.9M |
@@ -30,7 +30,7 @@ I ran a pricing backtest on 17 drafts. I define value as a player's first six ML
 | 106 | $7.2M | $6.4M-$8.0M | $7.7M | $6.8M |
 
 - **Pitchers return about 72% of what hitters do at the same pick.**
-- **From the second round on, the typical player returns nothing.** The median is about $0; the average is a few players who hit.
+- **From the second round on, the median player returns nothing.** The table above is the average, which a few players who hit carry. The median is about $0. Both are true of the same picks, and a club buys the average.
 - **Public grades are worth less per step than the standard table says:** about 12% more value per FanGraphs FV point, against the 18% the table implies.
 - **A public grade adds almost nothing once you know the pick:** +1% per FV point at the same pick (95% range -5% to +7%).
 - **Over-slot money is inconclusive.** Twelve specifications ran from -$2.60 to +$5.60 back per dollar.

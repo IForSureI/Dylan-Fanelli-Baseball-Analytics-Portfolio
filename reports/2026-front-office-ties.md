@@ -10,7 +10,7 @@
 **At a glance**
 
 - **The question:** Do front-office ties predict trade partners?
-- **The answer:** Yes, modestly: about 14-18% more trades in seasons when decision-makers share front-office history (1.18, 1.04-1.34). For scale, division rivalry is -45%.
+- **The answer:** Probably, modestly: about 14-18% more trades in seasons when decision-makers share front-office history (1.18, 1.04-1.34; p = 0.009 on the main dating rule, 0.044 to 0.059 on the August rule). For scale, division rivalry is -45%.
 - **For a club:** Adds one more input to a trade-partner list: whose decision-makers have worked together.
 <!-- /portfolio:glance -->
 
@@ -20,7 +20,7 @@
 ![Trading between two clubs before and after one's decision-maker becomes the other's former protégé](figures/2026-front-office-ties.png)
 
 ## Summary
-- **Confirmed: front-office ties go with modestly more trading, about 14–18%.**
+- **Confirmed on the main dating rule, borderline on the strictest: front-office ties go with modestly more trading, about 14–18%.**
   - **The estimate:** a pair of clubs trades 1.18 times as often in seasons when their decision-makers share front-office history as in the same pair's other seasons (95% interval 1.04–1.34, p = 0.009).
   - **The comparison:** it holds each pair's own baseline and each club's trading volume that season fixed.
   - **Permutation check:** rotating each pair's tied seasons to other positions gives an effect at least this far from 1 in 14 of 1,000 draws (two-sided p = 0.015).
@@ -49,7 +49,7 @@
 
 | Tie (that season, from history before it) | Tied pair-seasons | Rate ratio (95% interval) | p | Reading | Without the Angels and Braves |
 |---|---|---|---|---|---|
-| **Any tie** | 1,454 | **1.18 (1.04–1.34)** | **0.009** | Confirmed | 1.16 (1.02–1.31), p = 0.020 |
+| **Any tie** | 1,454 | **1.18 (1.04–1.34)** | **0.009** | Confirmed on the main rule; 0.044 to 0.059 under the August rule | 1.16 (1.02–1.31), p = 0.020 |
 | Former employer | 1,025 | 1.18 (1.01–1.38) | 0.042 | Borderline (0.060 under the earlier dating rule; 0.057 with stricter standard errors) | — |
 | Former colleagues | 907 | 1.13 (0.996–1.29) | 0.058 | Borderline | — |
 | Protégé | 395 | 1.19 (0.997–1.42) | 0.054 | Borderline | 1.13 (0.96–1.33), p = 0.15 |

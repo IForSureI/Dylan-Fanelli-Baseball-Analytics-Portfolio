@@ -472,6 +472,10 @@ With the open population, the players measured change with n, because only regul
 - **The two-level model:** γ includes any in-season trend. Pitch-to-pitch noise is pooled across pitchers.
 - **xwOBA is Statcast's model**, so its reliability inherits that model's choices.
 - **Not tested:** whether reliability differs by player type.
+- **Gaps a user will hit first (added Nov. 14, 2026):**
+  - **No strikeout or walk rate per plate appearance.** The atlas covers pitch-level and batted-ball metrics. The two rates most people regress first are not in it.
+  - **One league mean per metric.** There is no prior by role, handedness or playing time (see above), so a reliever and a starter regress to the same number.
+  - **No park adjustment.** Home park is part of every player's number here, and part of what looks like signal for batted-ball metrics.
 
 ## What's new against prior public work
 | Metric | Prior public estimate (date) | How it was measured | This atlas |

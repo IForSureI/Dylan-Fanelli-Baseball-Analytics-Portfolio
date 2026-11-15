@@ -10,7 +10,7 @@
 **At a glance**
 
 - **The question:** Does the same method hold for a Super Two on another club?
-- **The answer:** Yes. File \$3.65M, settle between \$3.7M and \$3.8M (open at \$3.7M), and go to a hearing above \$3.8M; the club wins at a \$3.85M midpoint about 61% of the time.
+- **The answer:** Yes. File \$3.65M, settle between \$3.7M and \$3.8M (open at \$3.7M), and go to a hearing above \$3.8M; the club wins at a \$3.85M midpoint about 61% of the time (40% to 77% across the assumptions tested; 40% if the panel reads only the 2020-26 market).
 - **For a club:** Shows the arbitration method travels: same rule, different club, a Super Two with four arbitration years.
 <!-- /portfolio:glance -->
 
@@ -37,7 +37,7 @@
 ## Two cases, one method
 Both filings sit $0.07M above the comp line, for the same reason: a comp each player clearly matches sets the floor (Romano for Smith, A.J. Ramos for Varland). The difference is how far the market projection sits from the comps:
 - **Smith:** MLB Trade Rumors' $5.5M is $0.92M above his $4.58M line. A panel that reads the market wins his case, and the club is the favorite only until the panel leans about three-to-one toward the market view.
-- **Varland:** MLB Trade Rumors' $3.8M is $0.22M above his $3.58M line. The two views nearly agree, so the club is the favorite under every weighting, and losing costs $1.39M over four years against $3.42M over three for Smith.
+- **Varland:** MLB Trade Rumors' $3.8M is $0.22M above his $3.58M line. The two views nearly agree, so the club is the favorite under every weighting of them (57% to 65%). The exception is the era: on the 2020-26 market alone the club's chance is 40%. Across everything tested it runs 40% to 77%, and losing costs $1.39M over four years against $3.42M over three for Smith.
 - **The shared lesson:** the comp line and the market projection are two readings of the same salaries. A filing is safest when they agree, and the hearing question is whatever separates them. For Smith that is the ERA, strikeouts and All-Star selection the market prices; for Varland it is whether a panel pays the recent market's higher level for one season of closing.
 
 ## The case as a panel sees it
@@ -217,7 +217,7 @@ Sources: Baseball-Reference (read Oct. 20, 2026) for the season lines; Wikipedia
 ## The labor situation
 The same as in the Smith brief:
 - **Expiration:** the 2022-26 agreement expires Dec. 1, 2026.
-- **Talks:** no agreement or extension of the deadline was reported as of the latest check.
+- **Talks:** no agreement or extension of the deadline was reported as of Nov. 14, 2026. MLB Trade Rumors (Nov. 12) reported essentially no chance of a deal before Dec. 1 and that MLB would implement a lockout at once. The tender deadline is Nov. 20 (NBC Sports calendar, Oct. 30).
 - **A lockout:** it would end contact with 40-man players. In 2022, figures were exchanged March 22 and hearings ran into June.
 
 | Rule | 2022-26 | What could change | Effect on this case |

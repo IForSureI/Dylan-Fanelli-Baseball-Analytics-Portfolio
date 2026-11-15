@@ -6,12 +6,12 @@
 
 *Para los lanzadores y receptores. 18 de octubre de 2026. Dylan Fanelli. Datos: cada pitcheo de la temporada regular 2026 (Statcast); los números detrás de cada línea están en el [paquete completo](2026-advance-packet-tb.md), en inglés. Un ejercicio independiente con datos públicos; no fue preparado para los Cleveland Guardians ni con ellos.*
 
-*Traducción de Dylan Fanelli de la [versión en inglés](2026-advance-packet-tb-coach.md). Por revisar con un coach que hable español antes de entregarla al cuerpo técnico.*
+*Traducción de Dylan Fanelli de la [versión en inglés](2026-advance-packet-tb-coach.md). Por revisar con un coach que hable español antes de entregarla al cuerpo técnico. Corregida el 14 de noviembre de 2026: donde la frase describe al bateador, ahora lleva sujeto ("él deja pasar"), para que no se lea como una orden al lanzador.*
 
 **La alineación en una línea.** Ponen la bola en juego y no abanican el slider en la tierra como la mayoría de los equipos. Tírales strikes a los últimos cinco y que los tres primeros te ganen en las esquinas. Un zurdo tiene la ventaja normal contra sus bateadores zurdos; espera bateadores emergentes derechos cuando entre uno.
 
 **1. Junior Caminero (D): con una base abierta, no le des nada para batear**
-- **Atacar:** róbale el primer strike; deja pasar 3 de cada 4 primeros pitcheos. Rompimientos afuera, cambios abajo.
+- **Atacar:** róbale el primer strike; él deja pasar 3 de cada 4 primeros pitcheos. Rompimientos afuera, cambios abajo.
 - **Evitar:** rectas arriba o por el medio, sobre todo de menos de 96. Ahí está su poder.
 - **Con dos strikes:** pesca. Tira el rompimiento a la tierra o afuera del plato.
 
@@ -36,7 +36,7 @@
 - **Con dos strikes:** rompimiento en la tierra o recta por encima de la zona.
 
 **6. Taylor Walls (ambidiestro)**
-- **Atacar:** ataca la zona; deja pasar strikes. Cambio afuera, recta arriba.
+- **Atacar:** ataca la zona; él deja pasar strikes. Cambio afuera, recta arriba.
 - **Evitar:** darle boleto. No tiene una zona donde haga daño, y saca boleto 1 de cada 10 veces.
 - **Con dos strikes:** no le tira al rompimiento. Termínalo en la zona o cerca: cambio a las rodillas, recta justo por encima.
 

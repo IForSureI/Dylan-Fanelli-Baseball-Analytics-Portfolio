@@ -10,7 +10,7 @@
 **At a glance**
 
 - **The question:** Should the Pirates extend Paul Skenes before the CBA expires on Dec. 1?
-- **The answer:** Open at about \$200M in present value and walk away above about \$215M, priced under both possible rule sets. The tax engine reproduces 2025 luxury-tax bills within \$1 for eight of nine clubs.
+- **The answer:** Open at about \$200M in present value. Walk away above about \$215M on FanGraphs' tiered price of a win, or about \$200M on one flat price. Priced under both possible rule sets; the injury and cap odds are scenarios. The tax engine reproduces 2025 luxury-tax bills within \$1 for eight of nine clubs.
 - **For a club:** A payroll and service-time engine checked against real tax bills, and an extension price that holds up under the next agreement.
 <!-- /portfolio:glance -->
 
@@ -288,6 +288,22 @@
   - **For the club:** it clears the break-even unless q is above about 0.6 (20% stress) or 0.3 (35% stress).
   - **For the player:** it sits at his current-rules floor and $20-30M above his floor under MLB's plan.
 - **The walk-away, about $215M:** the club's break-even at 20% stress and q = 0.25. A club more confident that current rules survive, or in his arm, can go higher. The healthy, current-rules limit is about $255M.
+  - **The 20% and the 25% are scenarios, not estimates.** I found no sourced injury rate for a pitcher like him and no market price on the cap. The grid above is the sensitivity table: read the walk-away off the row and column you believe.
+
+**Check added Nov. 14, 2026: the same grid at one flat price of a win** (`skenes_flat_price_check()`).
+- **Why:** the [Torres evaluation](2026-hitter-evaluation-torres.md) prices wins at one rate because tiers put a cliff at 2.0 WAR. This memo uses FanGraphs' tiers ($12.84M at 2+ WAR). The two should be reconciled, so here is Skenes at FanGraphs' flat rate, $11.23M a win in 2026 dollars, with everything else the same.
+
+| q | Healthy | 20% stress chance | 35% stress chance | Player floor |
+|---|---|---|---|---|
+| 0 | $228M | $208M | $193M | $178M |
+| 0.25 | $220M | $202M | $188M | $176M |
+| 0.5 | $212M | $195M | $182M | $174M |
+| 1 | $196M | $182M | $172M | $171M |
+
+- **What it shows:** on the flat price the club's break-even at 20% stress and q = 0.25 is about $202M, not $218M. The opening offer of about $200M still clears it. The $215M walk-away does not.
+- **How to read the two:** the tiered price is the right one if the market pays more per win for stars, which is what FanGraphs' bands report. The flat price is the right one if a win is a win. About $15M of the walk-away rests on that choice. **A club that prices every player at one rate should walk away at about $200M.**
+- **Free-agent seasons on the flat price:** about $56M a year nominal for 2030-34, against $64M on the tiers.
+- **Every price of a win and the discount rate used in this portfolio** are in one table: [valuation conventions](../docs/valuation-conventions.md).
 - **Why the signing bonus:**
   - **It survives a stoppage.** Salaries are paid by games played and stop in a stoppage; a signing bonus is paid regardless. That is the structure the Blue Jays used with Guerrero's $325M bonus (CBS Sports, Matt Snyder, Apr. 9, 2025).
   - **What a stoppage would cost him otherwise:** canceling 60 games would cost him about $2.7M of a $7.2M arbitration salary (proportional approximation).
@@ -354,7 +370,8 @@ Fictional players in tests are labeled fictional.
 - **Assumptions:**
   - the 5/4/3 weights
   - the ×0.8 floor and ×0.6 stress
-  - the stress chances (no sourced injury rate is used)
+  - the stress chances (no sourced injury rate is used; they are scenarios)
+  - the tiered price of a win (the flat-price check moves the walk-away from about $215M to about $200M)
   - 3% growth and the 10% discount
   - 3% cap growth
   - retention at the own-club maximum

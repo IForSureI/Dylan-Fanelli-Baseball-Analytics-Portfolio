@@ -15,6 +15,13 @@
 - **Contract terms:** three contract calls resolve on average annual value on a deal of two or more years, because each threshold is my price per year at a set length; two resolve on total money, for reasons given in the log file. Player options and opt-outs count at face value; club and mutual options count only their buyouts.
 - **If there's a lockout:** the 2022-26 agreement expires Dec. 1. A contract call with no signing by April 30, 2027 is void. Performance calls carry sample minimums, so a season cut short voids them before it can bend them. Void calls are left out of the score.
 
+## Notes added after Oct. 18
+The calls, probabilities and bases below are not edited. These notes record facts that arrived later.
+- **Nov. 14, 2026, qualifying offers:** eight players got the $23.15M offer on Nov. 2 (AP). Three are in this log: Adrián Morejón (call 1), Trevor Rogers (call 3) and Randy Arozarena (call 4). Tarik Skubal (call 2) and Jazz Chisholm Jr. (call 5) are not among the eight. Players have until 4 p.m. ET on Nov. 17 to accept; none had been reported as of Nov. 14.
+- **What that does to call 1:** its basis used my walk-away without a qualifying offer, four years and $72M. With the offer, the bullpen memo's walk-away is $60M. The claim and its 0.55 stand as written on Oct. 18. If Morejón accepts the offer, he signs for one year, and the claim (two or more guaranteed years above $18.0M a year) resolves false.
+- **Calls 3 and 4:** the same holds. A player who accepts signs for one year at $23.15M, and a claim that needs two or more guaranteed years resolves false.
+- **Call 9, the changeup projection:** the whiff projection behind it was later scored on a season it never saw. It cut error 6.4% against a regressed baseline (4.9 to 8.0), a smaller edge than the 8.1% leave-one-out figure quoted when the call was made.
+
 <!-- calls:start -->
 ## Score
 

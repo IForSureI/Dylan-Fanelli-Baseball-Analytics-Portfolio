@@ -10,7 +10,7 @@
 **At a glance**
 
 - **The question:** Which reliever should the Rangers sign this winter, and at what price?
-- **The answer:** Adrián Morejón. Open at 4 years, \$60M; walk away above \$72M, which lands him a little less than half the time. Bryan Abreu is the plan above that.
+- **The answer:** Adrián Morejón, at no more than 4 years, \$60M now that he has a qualifying offer (Nov. 2). That lands him about one time in four, so Bryan Abreu, who costs no pick, is the likely signing.
 - **For a club:** One real offseason decision made the way a front office makes it: the target, the opening offer, the walk-away and the plan if he goes elsewhere. The [one-page version](2026-bullpen-one-page.md) is what a GM reads.
 <!-- /portfolio:glance -->
 
@@ -23,22 +23,32 @@
 
 ## Decision summary
 
+**Update, Nov. 14, 2026: Morejón has a qualifying offer, so the walk-away is $60M.**
+- **The facts:** the Padres made Morejón a $23.15M qualifying offer on Nov. 2, one of eight in the league (AP, Nov. 2, 2026). He has until 4 p.m. ET on Nov. 17 to accept (CBS Sports, Nov. 2, 2026). No decision was reported as of Nov. 14.
+- **What it does to the bid:** this memo's own rule applies. Signing him now costs the Rangers their second-highest pick and $0.5M of pool, worth about $10.6M. **The walk-away is four years, $60M, the same number as the opening offer.** At $60M the market line lands him about 26% of the time, down from 47% at $72M.
+- **If he accepts the offer:** he stays in San Diego for 2027 and this bid is off. Go to Abreu.
+- **Abreu has no qualifying offer.** He is not among the eight, so he costs no pick. His prices are unchanged: open at two years, $18M, walk away above $25M. With Morejón at about one chance in four, Abreu is now the likely outcome.
+- **Bednar did get one** (Yankees). He stays set aside.
+- **A second check added today, on availability:** relievers who threw 800 or more relief pitches in 2024 kept 63% of that workload in 2025 and 48% in 2026 (170 pitchers, this portfolio's relief-season table). The contract values below assume four full seasons. Section 4 now prices that: on the workload relievers kept, four years of Morejón are worth about $45M at the market line, not $63M.
+- **What didn't change:** the scouting reports, the projections and the market line. Everything dated Oct. 13 or Oct. 18 below is left as written and marked where the Nov. 2 facts overtake it.
+
 **Update, Oct. 18, 2026: the qualifying-offer case.** The first version priced the pick a QO would cost the Rangers (a second-rounder near No. 55) at $5.3M, a 2019 public estimate. My own draft-pick backtest (the values are in `baseball/roster/acquisition.py`, `PICK_VALUE_OWN`) puts that pick at about $10.1M after its 2026 slot, from what picks 45-60 returned in the 2000-2016 drafts. On that value the pick and pool cost $10.6M in present value, and **the walk-away with a QO falls from about $66M to about $60M, the opening offer**: if the Padres attach a QO, open at $60M and don't go higher. The 2027 QO is $23.15M (reported Oct. 8, 2026). Everything else below is unchanged; the QO figures are updated in place and marked.
 
-**Compiled:** 2026-10-13; **On:** Bid on Adrián Morejón to his value; expect Abreu about half the time
+**Compiled:** 2026-10-13; revised 2026-11-14 for the qualifying offer; **On:** Bid on Adrián Morejón up to $60M; expect Abreu about three times in four
 
 **Recommendation.**
-- **Bid on Adrián Morejón.** Open at four years, $60M with a 2031 club option. Walk away above four years, $72M ($18M a year), which is his value to us at the reliever market's own price of a win.
-  - **If the Padres make him a qualifying offer:** walk away above about $60M (updated Oct. 18; first version $66M).
-  - **The odds:** at $72M, we land him a little less than half the time. Paying more is a call on what 2027 wins are worth to this club.
+- **Bid on Adrián Morejón, up to four years, $60M** with a 2031 club option. He has a qualifying offer (Nov. 2), so $60M is both the opening offer and the walk-away.
+  - **Without the offer** the walk-away was four years, $72M ($18M a year). That is the market's expected price for his projection, not a surplus value: at $72M the contract's surplus is about zero by construction.
+  - **The odds:** at $60M, we land him about 26% of the time (47% at $72M). Paying more is a call on what 2027 wins are worth to this club.
 - **If he goes elsewhere, sign Bryan Abreu.** Open at two years, $18M, and walk away above $25M.
-- **Pete Fairbanks is no longer a 2027 option.** He is having thoracic outlet surgery with a typical recovery of nine to ten months (MLB.com, Sept. 19, 2026).
+- **Pete Fairbanks is not the 2027 answer.** He is having thoracic outlet surgery with a typical recovery of nine to ten months (MLB.com, Sept. 19, 2026). The memo assumes he pitches about a third of 2027.
 
 **Why.**
 1. **The need is late-inning run prevention, and most of the late innings are leaving.**
    - **The fall:** Texas relievers dropped from 4th in run value per 100 pitches in 2025 to 24th in 2026 (+0.42 to −0.26). In late, close spots (7th inning on, within three runs) they fell from 6th to 26th (Statcast, regular seasons; 1 = best).
    - **Who's leaving:** Jakob Junis (mutual option) and Tyler Alexander (free agent) threw 309 of the 1,140 late, close plate appearances (27%; MLB.com free-agent list, Oct. 8, 2026). Chris Martin and Jalen Beeks, also free agents, bring it to 400 (35%).
    - **Win probability added says less.** It moved the other way (23rd → 17th) because it depends on when runs scored.
+   - **The skill measures fell less than the results (added Nov. 14).** Strikeouts minus walks went from 14th to 23rd (13.9% to 11.4%) and xwOBA from 16th to 22nd (.311 to .316). The drop from 4th to 24th is in run value. So this was an average bullpen that got good results in 2025 and a below-average one in 2026. The need is real, and smaller than "4th to 24th" reads.
 2. **Morejón projects for the most 2027 wins of any free-agent reliever.**
    - **The projection:** about 2.3 wins in a closer/high-leverage role. That's derived from his run value only, so the interval understates the uncertainty (95% range on the rate alone: 1.3–3.2).
    - **Against the others:** Abreu projects 1.5 in a setup role, or 1.6 in the same job. Fairbanks projects 0.24 for the part of 2027 he's expected to pitch.
@@ -61,12 +71,13 @@
 - **Health:** he had Tommy John surgery in 2021 and a 60-day elbow sprain in 2023 (MLB.com, Apr. 21, 2021; CBS Sports, Mar. 30, 2023).
 
 **What would change the recommendation.**
-- **His price above $72M (or $60M with a QO), a fifth guaranteed year, or an opt-out:** switch to Abreu.
+- **His price above $60M (he has the QO; $72M was the number without it), a fifth guaranteed year, or an opt-out:** switch to Abreu.
+- **He accepts the qualifying offer by Nov. 17:** he is off the market. Sign Abreu.
 - **A relief budget under about $15M a year:** Abreu, or Iglesias on one year.
 - **A club decision that 2027 wins near the wild-card line are worth more than the market rate:** raise the walk-away. At $80M we'd land him about 62% of the time, at a market-rate cost of about $6.6M in present value.
 - **A club medical review of any of them** (not public, not in this memo).
 
-**Ask.** Approve the offer and the walk-away by the qualifying-offer deadline, a few days after the World Series. Sign before the agreement expires December 1 at 11:59 p.m. ET.
+**Ask.** Approve the offer and the walk-away before his Nov. 17 decision (the first version asked for approval by the qualifying-offer deadline, which passed Nov. 2). Sign before the agreement expires December 1 at 11:59 p.m. ET. A lockout is expected to start Dec. 2 (MLB Trade Rumors, Nov. 12, 2026).
 - **Why that date:** MLB's lockout memo ends free-agent negotiations and trades: "No free agent negotiations. No trades." (Bleacher Nation's summary of the memo, Brett Taylor, Oct. 8, 2026).
 - **Last winter's timing doesn't help:** the top relievers signed December 9-11 (Díaz: AP, Dec. 9, 2025; Suarez: amNY, Dec. 11, 2025), and a lockout would take that window away.
 
@@ -74,8 +85,8 @@
 
 | Rank (tier) | Player | B/T, 2027 age, 2026 club | OFP | Present role (2026) | 2027 role | Risk | Best pitch (present / 2027 grade) | Cost | Projected 2027 wins in his role |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 (A) | Adrián Morejón | L/L, 28, Padres | 60 | B1 (42.1 save-situation IP; Padres On SI, Oct. 10) | B1 | Moderate | Changeup / four-seamer (75 / 75) | Free agent. Expected market price $18.4M a year (95% band $7.4–29.3M). QO-eligible; the Padres pay the tax | 2.3 (B1; rate-only 95% range 1.3–3.2) |
-| 2 (B) | Bryan Abreu | R/R, 30, Astros | 50 | B2 setup (15% walks) | B2; B1 if his walk rate stays at or below about 11% | Moderate to high | Slider and four-seamer (60 / 60-65) | Free agent. Expected price $12.2M ($3.1–21.3M). No public projection found. QO-eligible | 1.5 (B2); 1.6 in the B1 job |
+| 1 (A) | Adrián Morejón | L/L, 28, Padres | 60 | B1 (42.1 save-situation IP; Padres On SI, Oct. 10) | B1 | Moderate | Changeup / four-seamer (75 / 75) | Free agent. Expected market price $18.4M a year (95% band $7.4–29.3M). Has a qualifying offer (Nov. 2); the Padres pay the tax | 2.3 (B1; rate-only 95% range 1.3–3.2) |
+| 2 (B) | Bryan Abreu | R/R, 30, Astros | 50 | B2 setup (15% walks) | B2; B1 if his walk rate stays at or below about 11% | Moderate to high | Slider and four-seamer (60 / 60-65) | Free agent. Expected price $12.2M ($3.1–21.3M). No public projection found. No qualifying offer (not among the eight, Nov. 2), so no pick cost | 1.5 (B2); 1.6 in the B1 job |
 | 3 (C) | Pete Fairbanks | R/R, 33, Marlins | 50 | B2 when active | Out about 9-10 months after surgery; B2 when back | High (health) | Cutter (65 / 75; 86 swings) | Free agent. 2026 deal 1 year, $13M. Rehab-deal value about $4.5M a year over two years | 0.24 in 2027 (about a third of a season) |
 
 - **Roles:** a reliever role scale (B1 closer or high leverage, OFP band 55-60; B2 setup, OFP 50).
@@ -514,7 +525,7 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 
 **Value and surplus.**
 - **Present value:** 10%. The market line and the price of a win grow 3% a year, and relief value falls 10% a year from age 31. All assumptions are in `acquisition.py`.
-- **"Value at the market line"** prices our three-season projection at the line's rate. The engine column is not on the same win scale, so it is shown as an order of magnitude only.
+- **"Value at the market line"** prices our three-season projection at the line's rate. It is a market price, not a club value: a contract at the break-even has zero surplus by construction, and the odds table follows from the same line. No club win curve is modeled. The engine column is not on the same win scale, so it is shown as an order of magnitude only.
 
 | Contract | PV of salary | Value at the market line | Surplus | Engine value (different scale) |
 |---|---|---|---|---|
@@ -538,7 +549,7 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 | Fairbanks (2-year rehab) | $4.5M | $4.0M |
 
 **The walk-away and the odds of landing him.**
-- **The walk-away is his value: $18.1M, so four years and $72M.** It is the market's expected price with no premium.
+- **The walk-away is the market line's price for his projection: $18.1M, so four years and $72M.** It is the market's expected price with no premium, and he sits above every comparable signing's projection (1.82 wins against a range of 0.45 to 1.42), so it is an extrapolation with a 95% band of $7.4M to $29.3M a year. With the qualifying offer it falls to $60M (see the Nov. 14 update).
 - **His expected price is $18.4M.** Reading the line's prediction interval as the distribution of his price (a rough guide, not a market model):
 
 | Walk-away (4 years) | Chance his price is at or below it |
@@ -549,15 +560,32 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 | $80M | 62% |
 | $88M | 75% |
 
-*Updated Oct. 18: the QO case is now $60M, below the lowest step in this table.*
+*Updated Oct. 18: the QO case is now $60M, below the lowest step in this table. Added Nov. 14: at $60M ($15.0M a year) the chance is 26%, from the same line (`chance_price_at_or_below`).*
 
-- **What the club gives up:** a walk-away at value lands him about half the time. The alternative, Abreu at his own value, carries about zero surplus, so losing Morejón costs his extra wins, not money.
+- **What the club gives up:** a walk-away at the market's expected price lands him about half the time; with the qualifying offer the walk-away is $60M and the chance is about one in four. The alternative, Abreu at his own value, carries about zero surplus, so losing Morejón costs his extra wins, not money.
 - **Raising the walk-away** is worth it only if 2027 wins are worth more to this club than the market rate. The Rangers missed the wild card by four games, and their win curve isn't modeled here, so it's the GM's call. The table gives the price of each step.
+
+**Availability: what the contract is worth if he keeps a typical reliever's workload (added Nov. 14).**
+- **Why this was missing:** the values above give Morejón his projected workload in every contract year and no decline until age 31. He had Tommy John surgery in 2021 and a 60-day elbow sprain in 2023.
+- **The rate, from this portfolio's own data:** the 170 relievers who threw 800 or more relief pitches in 2024 threw 63% as many in 2025 and 48% as many in 2026. The second season cost another 24% (0.76 of the first; bootstrap 95% range 0.68 to 0.84).
+- **How it is applied:** year one stays at his projection, which already uses his own three-season workload. Each later year keeps 0.76 of the year before (`availability_path`). Beyond two seasons the data can't say, so the same step is assumed.
+- **What it counts and misses:** relief pitches only, so a move to the rotation reads as lost work. All ages are pooled, and the group was picked on a heavy 2024.
+
+| Contract | Wins in role, full workload | Wins in role, typical workload | Break-even AAV at the market line | Total |
+|---|---|---|---|---|
+| Morejón, 4 years | 8.9 | 6.2 | $12.9M | $51.5M |
+| Morejón, 3 years | 6.8 | 5.3 | $14.3M | $43.0M |
+| Abreu, 2 years | 2.9 | 2.5 | $11.2M | $22.4M |
+
+- **Read with the qualifying offer:** four years at $60M buys about $44.9M of value on this reading, before the $10.6M of pick and pool. So $60M is a ceiling, not a target.
+- **Two readings, kept apart:** $72M (now $60M with the offer) is the market's expected price for his projection. The availability figure is what that money buys if he ages like the relievers in the data. The market pays the first; a club that believes the second should let another club pay it.
+- **Abreu holds up better:** two years lose less. His walk-away moves from $25M to about $22M on the same reading.
+- **Not done:** a survival curve by age and injury history, and more than two seasons of follow-up. Three seasons of pitch data can't support either.
 
 **The qualifying offer.**
 - **The rules:** a qualifying offer is the 2022-26 agreement's ($22.025M in 2026; $23.15M for 2027, reported Oct. 8, 2026).
-  - **Morejón:** eligible (see his report). The Padres paid tax in 2026, so losing him earns them only a pick after Round 4. Whether they make the offer is unknown. Padres On SI (Aug. 3) said he "could be a candidate."
-  - **Abreu:** eligible on the same facts, though an offer after his 2026 is less likely.
+  - **Morejón:** the Padres made the offer on Nov. 2 (AP). He decides by 4 p.m. ET on Nov. 17. The Padres paid tax in 2026, so losing him earns them only a pick after Round 4.
+  - **Abreu:** was eligible, and Houston did not make the offer (he is not among the eight). Signing him costs no pick.
 - **The Rangers' cost:** their 2nd-highest 2027 pick plus $0.5M of pool.
   - **The pick:** a 2nd-rounder near No. 55. That number is an estimate from their 80-82 finish.
   - **Its value (updated Oct. 18):** about $10.1M, from my 2000-2016 draft table (picks 45-60 average what they returned, less the 2026 slot), in place of the first version's $5.3M in 2019 dollars (Craig Edwards, FanGraphs, Apr. 5, 2019).
@@ -593,19 +621,20 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 
 1. **Bid on Morejón, to his value.**
    - **Open:** four years, $60M (2027-30), with a 2031 club option. Use part of it as a signing bonus paid before December 1 to win a close bid.
-   - **Walk away:** above four years and $72M, and above about $60M if he carries a qualifying offer (updated Oct. 18; first version $66M). No fifth guaranteed year, no opt-out.
-   - **The odds:** expect to land him about half the time.
+   - **Walk away:** above four years and $60M. He carries a qualifying offer as of Nov. 2 (without it the walk-away was $72M). No fifth guaranteed year, no opt-out.
+   - **The odds:** expect to land him about one time in four (26% at $60M).
+   - **If he accepts the offer by Nov. 17:** stop. He is not a free agent.
 2. **If his price passes the walk-away, sign Abreu.**
    - **Open:** two years, $18M, with a 2029 club option.
    - **Walk away:** above two years and $25M.
    - **The condition:** the second half of 2026 is the bet. It is borderline evidence (p = 0.058 on walks), so price it like one.
    - **If the club wants no 2028 money:** Iglesias on one year, up to about $13M, is the equivalent.
-3. **Fairbanks is not a 2027 answer.** If the club wants him for 2028, a two-year rehab contract up to about $9M total, with incentives, subject to its medical review.
+3. **Fairbanks is not the 2027 answer.** If the club wants him for 2028, a two-year rehab contract up to about $9M total, with incentives, subject to its medical review.
 
 **What changes the call.**
 - **Morejón's market:** any bid at starter money (five years, nine figures) puts him above his value by about $9M in present value.
 - **The budget:** under about $15M a year for relief means Abreu (or Iglesias) first.
-- **A qualifying offer:** it lowers Morejón's walk-away by about $12M nominal (updated Oct. 18; first version $6.7M).
+- **The qualifying offer (made Nov. 2):** it lowers Morejón's walk-away by about $12M nominal, to $60M (updated Oct. 18; first version $6.7M).
 - **The club's view of 2027 wins:** valuing them above the market raises the walk-away. Each step's price and odds are in section 4.
 - **New information:** a club medical review of any of the three, or a winter look at Abreu's delivery (team data, outside this public memo).
 - **The labor outcome:** if a lockout starts December 2 with Morejón unsigned, the decision moves to whenever free agency reopens, under rules nobody has yet.
@@ -674,8 +703,8 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 - **Unverified or estimated:**
   - the Rangers' 2027 payroll (derived; benefits excluded)
   - their 2nd-highest pick number (No. 55, estimated)
-  - pick value in 2019 dollars (not inflated)
-  - 2027 qualifying-offer amounts and decisions (not yet made)
+  - the pick's value (the house figure, about $10.1M, comes from my own draft backtest, which values a pick with a floor of zero on each season; without that floor it is lower, so the $60M walk-away would be somewhat higher)
+  - Morejón's decision on his qualifying offer (due Nov. 17; not reported as of Nov. 14)
   - whether any 2027 tax threshold exists
   - option decisions for the excluded relievers
   - Lin's quote (read secondhand)
@@ -688,7 +717,8 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 ```bash
 uv run python -m baseball.roster.bullpen_case        # every number in this memo, and the figure
 uv run pytest tests/test_reliever.py tests/test_acquisition.py
-# once integrated: uv run bb compare-relievers 2026 670970 650556 664126
+uv run bb bullpen-case                               # the same numbers through the CLI
+uv run bb compare-relievers 2026 670970 650556 664126   # needs the 2024-26 seasons pulled first (bb pull-league, bb seq)
 ```
 
 ## Sources

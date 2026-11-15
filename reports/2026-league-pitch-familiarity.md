@@ -10,7 +10,7 @@
 **At a glance**
 
 - **The question:** Does a pitch lose effectiveness on a hitter the more of it he has seen?
-- **The answer:** Yes, and it is specific to the pitch type: an earlier changeup or splitter in his earlier plate appearances today, in place of a pitch of another type, goes with 1.87 fewer whiff points on the next one.
+- **The answer:** In association, yes, and it is specific to the pitch type: an earlier changeup or splitter in his earlier plate appearances today, in place of a pitch of another type, goes with 1.87 fewer whiff points on the next one. It is observational, and its placebo on later pitches is larger than the effect.
 - **For a club:** Tells a pitching coach which pitches spend down over a game and a series, and which ones keep their bite on the second and third look.
 <!-- /portfolio:glance -->
 
@@ -37,6 +37,10 @@
   - **Across games:** a hitter who saw this pitcher's changeup 1–3 times in earlier games this season whiffs 3.5 points less on it.
   - **Across pitchers:** each changeup he saw from a same-handed pitcher earlier today goes with 0.79 fewer whiff points on the next pitcher's changeup. That is about 40% of the same-pitcher effect.
 - **Familiarity shows up as contact, not discipline.** Hitters chase familiar fastballs and breaking balls *more* (+0.75 and +0.61 points per earlier pitch), and the misses fall anyway.
+- **Read the sizes with care (added Nov. 14, 2026).**
+  - **The placebo is larger than the effect.** The same pitch type thrown to the hitter in later plate appearances, which he hasn't seen yet, carries +2.0 to +3.2 whiff points. The main estimates are −0.70 to −1.87. Selection by the pitcher is that strong in this data.
+  - **What holds:** the direction, in the three main pitch groups, and with the future terms in the model. Cutters are the weak group.
+  - **What doesn't follow:** a causal size. And the per-pitch cost does not reach plate-appearance run value in the [follow-up](2026-exposure-aware-hook.md).
 - **How fast an individual pitch wears out can't be measured reliably from a season of data.**
   - **Noise:** one pitch's season slope carries noise of 3.3–4.4 points, against average effects of 0.7–1.9.
   - **The one trait that predicts it:** fastball stuff. Fastballs with higher expected whiff lose more per look (q < 0.001).
@@ -278,6 +282,10 @@ Change in whiff% per swing against a hitter who has seen none of this pitch type
   - The fixed effects remove season-level hitter and pitcher quality, and the platoon split.
   - In-game selection remains (placebo).
   - Nothing here is a randomized pitch call, and "wear out" is shorthand for the association.
+- **Two checks are not done.**
+  - **A null simulation:** shuffle each hitter's exposure counts within game and rerun the model, to see what coefficient the design produces when there is no effect.
+  - **Leave-own-game-out fixed effects:** estimate each pitcher's and hitter's season level without the game being scored.
+  - **Why not:** both need the pitch-level table (2.14 million rows) and a full refit, a long run on the machine that holds the data. Until they exist, the placebo above is the only read on selection.
 - **Location and count are partly the pitcher's response to the hitter.** The main specification holds them fixed: the same pitch in the same spot. Letting location vary gives larger effects for every group except cutters.
 - **What it measures:** learning from pitches seen against this pitcher (today and earlier this season) and against other pitchers today. It doesn't capture what hitters know from scouting reports or prior seasons, so the usage thresholds price only part of the cost of predictability.
 - **Mechanism:**

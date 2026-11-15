@@ -156,7 +156,7 @@
 - **Wins:** batting runs at a .316 league and 1.238 wOBA scale (+3.6 in the base case), replacement at 0.030 runs per PA (570 position-player wins at 9.82 runs per win over 183,846 PA; +16.7), second base +2.5 runs per 650 PA (+2.1), fielding −3.3 runs, baserunning −4.3 runs, 9.82 runs per win.
   - **Fielding:** Statcast fielding runs prevented at second base, −3, −4 and −3 in 2024-26 (outs above average −5 each year; Baseball Savant leaderboard, read Oct. 18, 2026), weighted 5/4/3 like the bat: −3.3. Range −5.3 to −1.3, two runs either side, because one season of fielding runs is noisy.
   - **Baserunning:** FanGraphs' BsR of −4.6, −3.4 and −4.9 runs in 2024-26 (665, 628 and 420 PA), weighted 5/4/3 like the wOBA blend: −0.0079 runs per PA. His sprint speed fell from 26.6 to 25.3 ft/s over 2024-26, the 7th percentile in 2026. The first version of this report left baserunning out and had the base case at 1.98 WAR; baserunning costs him 0.44 wins.
-- **Value:** one price of a win, $11.66M in 2027 dollars (the rate I fit to 46 comparable free-agent contracts; FanGraphs' flat 2026 rate of $11.23M grown 3% gives $11.57M), rising 3% a year, discounted 10% a year, with the repo's aging path (−0.4 wins a year from 29; `baseball/roster/money.py`). One rate, with no tiers: FanGraphs' WAR bands describe average prices paid, and pricing on them puts a cliff at 2.0 WAR where one run of projection moves the value by millions.
+- **Value:** one price of a win, $11.66M in 2027 dollars (the rate I fit to 46 comparable free-agent contracts; FanGraphs' flat 2026 rate of $11.23M grown 3% gives $11.57M), rising 3% a year, discounted 10% a year (the repo's one convention, in [valuation conventions](../docs/valuation-conventions.md)), with the repo's aging path (−0.4 wins a year from 29; `baseball/roster/money.py`). One rate, with no tiers: FanGraphs' WAR bands describe average prices paid, and pricing on them puts a cliff at 2.0 WAR where one run of projection moves the value by millions.
 
 | Scenario | wOBA | PA | 2027 WAR | Value, 1 year | Value, 2 years (present value) |
 |---|---|---|---|---|---|
@@ -215,7 +215,7 @@
 - The base case is worth $29.6M over two years, and fielding alone moves that from $25.0M to $34.2M; the bat moves it from $12.0M to $51.2M. A third guaranteed year adds risk in the scenario we can't rule out. The option keeps the upside.
 
 **"Why one price of a win instead of FanGraphs' tiers?"**
-- The tiers are average prices paid by WAR band. Priced on them, a win below 2.0 WAR is worth $8.51M and a win from 2.0 up $12.84M (2026 dollars), so the first version of this report, at 1.98 WAR, was worth $30.3M over two years and the same player at 2.00 WAR $39.6M: a quarter of a run moved the value by $9M. One rate ($11.66M a 2027 win) moves smoothly, and the tiered answer is shown as a check ($22.8M).
+- The tiers are average prices paid by WAR band. Priced on them, a win below 2.0 WAR is worth $8.51M and a win from 2.0 up $12.84M (2026 dollars), so the first version of this report, at 1.98 WAR, was worth $30.3M over two years and the same player at 2.00 WAR $39.6M: a quarter of a run moved the value by $9M. One rate ($11.66M a 2027 win) moves smoothly, and the tiered answer is shown as a check ($22.2M).
 
 ## Method
 **Grain:** one row per pitch a hitter could decide on, regular season. Removed: automatic balls and strikes, pitchouts, bunts, and unlabeled or rare pitch types (eephus, knuckleball).

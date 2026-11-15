@@ -169,7 +169,8 @@
 
 **Preference statement:**
 - **The ranking:** I prefer Morejón to Bryan Abreu (#2, Tier B) for that job. He projects for more wins (2.3 vs. 1.6 at the same leverage) and has the higher floor (1.3 vs. 0.7 at the low end of the rate interval). Abreu misses bats as well; his 2026 walk rate is the question.
-- **The condition:** a contract at or under his value, which is four years and $72M. If the Padres make him a qualifying offer, the pick and pool cost lowers that to about $60M (the bullpen memo's Oct. 18 update; $66M on the 2019 pick value it first used).
+- **The condition:** a contract at or under four years and $60M. The Padres made him a qualifying offer on Nov. 2 (AP), and the pick and pool cost takes the memo's price from $72M to about $60M (the bullpen memo's Nov. 14 update). The $72M is the market's expected price for his projection, not a surplus.
+  - **Added Nov. 14:** the pitch grades here are built from one model of whiffs on swings. On a season it never saw, that model cut error 6.4% against a regressed baseline (see the [Edge Board](2026-edge-board.md)). Read each grade as a half-grade band, not a point.
 - **The alternative objective:** if the club wants the most wins per dollar with no commitment past 2028, Abreu at $25M or less ranks first instead (the memo's statement).
 - **What moves him below Abreu:**
   - a price above that line

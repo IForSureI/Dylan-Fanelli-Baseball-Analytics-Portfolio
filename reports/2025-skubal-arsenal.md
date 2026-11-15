@@ -10,7 +10,7 @@
 **At a glance**
 
 - **The question:** Was Tarik Skubal's 2025 change real?
-- **The answer:** Yes, and the change was his: he ranked at the 80th-98th percentile on the changes while the league did not move. His changeup's 46.6% whiff rate is his true level.
+- **The answer:** Yes, and the change was his: he ranked at the 80th-98th percentile on the changes while the league did not move. His changeup's 46.6% whiff rate (997 swings, 2024-25) is an observed rate, not a regressed one.
 - **For a club:** Separates a pitcher's real change from a league-wide or measurement shift before anyone pays for it.
 <!-- /portfolio:glance -->
 
@@ -21,11 +21,12 @@
 ![Skubal 2025 pitch movement](figures/2025-skubal-movement.png)
 
 ## Summary
-- **The changeup is the pitch the arsenal is built around, and its level is established.** He gets whiffs on 46.6% of swings against it across 2024–25 (997 swings; 95% interval 43.6–49.7%). The usual rate for changeups is about 31%.
+- **The changeup is the pitch the arsenal is built around, and its level is well measured.** He gets whiffs on 46.6% of swings against it across 2024–25 (997 swings; 95% interval 43.6–49.7%). The usual rate for changeups is about 31%.
 - **He leans on the changeup more each year.** Usage went from 27.0% to 31.4%, and it's his most-used pitch and his two-strike finisher.
 - **The 2025 jump in velocity and spin was his own.** Against every pitcher who threw the same pitch type in both seasons, his gains sat at the 80th-94th percentile on velocity and the 94th-98th on spin, while the league median barely moved (+21 rpm and -0.1 mph on four-seamers). The open question is the slider: its whiff rate fell from 34.4% to 25.5%, but that isn't confirmed (p = 0.07).
 
 **What to watch in 2026:** slider whiff rate, changeup use against left-handers, and whether the 2025 velocity holds.
+- **Note added Nov. 14, 2026:** this page was written on 2024-25 data and has not been updated with 2026. The three items above have not been scored here. The 46.6% is an observed rate with its interval, not a regressed estimate.
 
 ## The read
 - **Changeup:** the best of his four main pitches on every outcome measure (whiff, CSW, chase, xwOBA on contact, hard-hit, run value), and stable across two seasons.
