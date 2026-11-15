@@ -12,6 +12,7 @@
   uv run bb front-office                    front-office ties vs trade partners (Baseball-Reference pages, career histories)
   uv run bb delivery 2026 670970            delivery and release profile from tracking data (scouting-report support)
   uv run bb shape-exposure build            shape exposure study: build | fit-dev | fit-2026 | followup | figure
+  uv run bb il-warning 2026                 velocity and stuff drops as an injured-list early warning (fit 2024-25, scored on 2026)
   uv run bb grade velo 99.5 --hand L        20-80 velocity grade (vs 2026 starters, and the traditional anchors)
   uv run bb grade ofp SI=70 CH=70 FF=70 SL=55 command=60   pitcher OFP roll-up
   uv run bb db                              what is in the warehouse
@@ -254,6 +255,22 @@ def cmd_hook(a: argparse.Namespace) -> None:
     print(f"Pooled {min(pc['seasons'])}-{max(pc['seasons'])}: {pc['slope']:+.2f} (SE {pc['se']:.2f})")
     r = res["removal"].query("season == @a.season and spec == 'next hitter' and term == 'x0'").iloc[0]
     print(f"Removal on the next hitter's index: {r['coef']:+.2f} points per run/100 PAs (SE {r['se']:.2f}; {int(r['n']):,} decisions)")
+
+
+def cmd_il_warning(a: argparse.Namespace) -> None:
+    from baseball.health.il_warning import run
+
+    s = run(test=a.season, train=tuple(range(a.season - 2, a.season)), reps=a.reps)
+    r = s["specs"]["arm_14"]
+    tv = r["tracking_vs_naive"]["auc"]
+    print(f"Arm-injury IL within 14 days, {s['test']} (fit on {s['train'][0]}-{s['train'][-1]}): "
+          f"{r['test']['events']:,} of {r['test']['outings']:,} outings, {r['test']['stints']} stints")
+    print(f"AUC naive {r['auc']['naive']:.3f}, tracking {r['auc']['tracking']:.3f} "
+          f"(difference {tv['diff']:+.3f}, 95% interval {tv['lo']:+.3f} to {tv['hi']:+.3f})")
+    t = s["rules"][f"velo_drop_{s['chosen_threshold_mph']:.1f}"]["test"]
+    print(f"Rule: fastball {s['chosen_threshold_mph']:.1f}+ mph below his baseline: {t['alerts']} alerts, "
+          f"precision {100 * t['precision']:.1f}% (base {100 * t['base_rate']:.1f}%), "
+          f"{t['false_alarms_per_club_season']:.1f} false alarms per club-season, {t['stints_caught']} of {t['stints']} stints")
 
 
 def cmd_hook_card(a: argparse.Namespace) -> None:
@@ -672,6 +689,11 @@ def main(argv: list[str] | None = None) -> None:
     hk = sub.add_parser("hook", help="the exposure-aware hook: does what a hitter has seen predict the next PA, and do managers price it?")
     hk.add_argument("season", type=int)
     hk.set_defaults(func=cmd_hook)
+
+    iw = sub.add_parser("il-warning", help="velocity and stuff drops as an injured-list early warning (fit on the two seasons before, scored on this one)")
+    iw.add_argument("season", type=int)
+    iw.add_argument("--reps", type=int, default=1000, help="bootstrap resamples of pitchers (default 1000)")
+    iw.set_defaults(func=cmd_il_warning)
 
     hc = sub.add_parser("hook-card", help="the hook card for one start (run `bb hook <season>` first)")
     hc.add_argument("game_pk", type=int)
