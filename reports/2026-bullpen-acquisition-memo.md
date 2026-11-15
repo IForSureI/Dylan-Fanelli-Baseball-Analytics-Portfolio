@@ -21,6 +21,8 @@
 
 ![Pitch grades, the reliever market's price per projected win, and fastball velocity by month](figures/2026-bullpen-acquisition-memo.png)
 
+*Figure note (Nov. 15): the hollow stuff markers come from an earlier fit. Three sit 5 points from the tables below (Abreu's slider, Fairbanks's four-seamer and slider). The tables are the saved run.*
+
 ## Decision summary
 
 **Update, Nov. 14, 2026: Morejón has a qualifying offer, so the walk-away is $60M.**
@@ -60,14 +62,14 @@
    - **Two public guesses:** a rival executive's four years and $60M (FanSided, Sept. 9). Dennis Lin of The Athletic said Morejón "could attract nine-figure offers," which I read secondhand through Padres On SI (Oct. 10).
 
 **Alternatives.**
-- **Abreu (2nd):** the best 2027 whiff projection of the three (32.9%), on half the commitment.
+- **Abreu (2nd):** the best 2027 whiff projection of the three (33.1%), on half the commitment.
   - **The second half of 2026:** his fastball returned from 95.0 to 96.4 mph, and his walk rate fell from 19.7% to 11.3%. The walk-rate drop is borderline (p = 0.058).
 - **Raisel Iglesias:** a one-year alternative, about as many 2027 wins as Abreu (1.67 after one year's aging), at 37.
 - **Fairbanks (3rd):** at most a two-year rehab contract, about $3M a year.
 
 **Risk.** Morejón's 2026 rested on two new things.
 - **A velocity gain:** +1.8 mph on the sinker, net of the league. In the levers study, pitchers mostly kept velocity gains a year later, but the whiff gains from them were not shown to last.
-- **A changeup:** it went from 7% to 23% of his pitches and got whiffs 15 points above its physics. The edge engine expects about half of such a gap to carry over.
+- **A changeup:** it went from 7% to 23% of his pitches and got whiffs 13 points above its physics. The edge engine expects about half of such a gap to carry over.
 - **Health:** he had Tommy John surgery in 2021 and a 60-day elbow sprain in 2023 (MLB.com, Apr. 21, 2021; CBS Sports, Mar. 30, 2023).
 
 **What would change the recommendation.**
@@ -86,7 +88,7 @@
 | Rank (tier) | Player | B/T, 2027 age, 2026 club | OFP | Present role (2026) | 2027 role | Risk | Best pitch (present / 2027 grade) | Cost | Projected 2027 wins in his role |
 |---|---|---|---|---|---|---|---|---|---|
 | 1 (A) | Adrián Morejón | L/L, 28, Padres | 60 | B1 (42.1 save-situation IP; Padres On SI, Oct. 10) | B1 | Moderate | Changeup / four-seamer (75 / 75) | Free agent. Expected market price $18.4M a year (95% band $7.4–29.3M). Has a qualifying offer (Nov. 2); the Padres pay the tax | 2.3 (B1; rate-only 95% range 1.3–3.2) |
-| 2 (B) | Bryan Abreu | R/R, 30, Astros | 50 | B2 setup (15% walks) | B2; B1 if his walk rate stays at or below about 11% | Moderate to high | Slider and four-seamer (60 / 60-65) | Free agent. Expected price $12.2M ($3.1–21.3M). No public projection found. No qualifying offer (not among the eight, Nov. 2), so no pick cost | 1.5 (B2); 1.6 in the B1 job |
+| 2 (B) | Bryan Abreu | R/R, 30, Astros | 50 | B2 setup (15% walks) | B2; B1 if his walk rate stays at or below about 11% | Moderate to high | Slider and four-seamer (60 / 65) | Free agent. Expected price $12.2M ($3.1–21.3M). No public projection found. No qualifying offer (not among the eight, Nov. 2), so no pick cost | 1.5 (B2); 1.6 in the B1 job |
 | 3 (C) | Pete Fairbanks | R/R, 33, Marlins | 50 | B2 when active | Out about 9-10 months after surgery; B2 when back | High (health) | Cutter (65 / 75; 86 swings) | Free agent. 2026 deal 1 year, $13M. Rehab-deal value about $4.5M a year over two years | 0.24 in 2027 (about a third of a season) |
 
 - **Roles:** a reliever role scale (B1 closer or high leverage, OFP band 55-60; B2 setup, OFP 50).
@@ -111,11 +113,11 @@
 
 | Question | Tool A says | Tool B says | Weighed |
 |---|---|---|---|
-| Who misses the most bats next year? | **Edge engine** (validated two-season whiff projection, blends results and stuff): Abreu 32.9%, Morejón 30.9%, Fairbanks 29.9% | **The projection** (2024-26 relief run value, regressed; counts walks, contact and grounders): Morejón +0.83, Abreu +0.37, Fairbanks +0.18 | Both are right about different things. Abreu's gap is walks, which a whiff model can't see. Morejón's edge includes a 55% regressed ground-ball rate (Atlas year-to-year persistence 0.92). I rank on run value and use the whiff projection to establish that Abreu's swing-and-miss survived 2026 |
+| Who misses the most bats next year? | **Edge engine** (validated two-season whiff projection, blends results and stuff): Abreu 33.1%, Morejón 31.0%, Fairbanks 29.8% | **The projection** (2024-26 relief run value, regressed; counts walks, contact and grounders): Morejón +0.83, Abreu +0.37, Fairbanks +0.18 | Both are right about different things. Abreu's gap is walks, which a whiff model can't see. Morejón's edge includes a 55% regressed ground-ball rate (Atlas year-to-year persistence 0.92). I rank on run value and use the whiff projection to establish that Abreu's swing-and-miss survived 2026 |
 | What is Morejón worth? | **Roster engine** ($/WAR tiers): about $30.7M a year | **Reliever market line:** his value is $18.1M; his expected price is $18.4M | They are on different win scales. This memo's wins use a fringe-arm replacement level that isn't calibrated to fWAR, and FanGraphs' $/WAR is set in fWAR (and excludes relievers). The engine column is an order of magnitude, not a price. I price only with the market line, which uses the same projection on both sides |
 | Did Fairbanks's slider get better? | **Levers study:** every confirmed slider lever he moved (drop +3.1 in, speed gap +1.5 mph, slot −1.6°) implies about +2.9 whiff points | **The stuff model** (levers version, fixed hand mix): expected whiff on the slider fell 5.9 points | The levers study's own result is that the single expected-whiff change predicts better than lever lists (pooled +7.5 points of squared error). Its slider-drop and speed-gap gains are also "not shown to last." His slider whiff jump (30.8% → 40.5%, 79 swings) is treated as mostly noise. Usage fell from 40% to 26%, which by itself lowers hitters' familiarity |
-| Is Morejón's slider a weakness? | **Stuff grade:** 70 (expected whiff 42%, 98th percentile; 70 to 75 and 41.6% to 44.4% across ten refits) | **Present grade:** 50 (30% whiffs, 73 tracked swings) | Slider whiff reaches r = 0.5 at about 41 swings (Atlas), so the regressed rate already carries most of the weight, and it's average. Graded 50 now and 55 for 2027 (the engine's projection). A possible lever, not a flaw |
-| Abreu's cutter (new in 2026) | **Stuff:** 40 (35 to 40 across ten refits) | **Present:** 65 (36% whiffs, 61 swings) | Results beating stuff carries over between seasons (edge engine, r ≈ 0.55), but 61 swings in one season isn't a pattern. It's 11% of his mix and doesn't drive the grade |
+| Is Morejón's slider a weakness? | **Stuff grade:** 70 (expected whiff 41%, 97th percentile; ten refits gave 70 to 75 and 41.6% to 44.4%) | **Present grade:** 50 (30% whiffs, 73 tracked swings) | Slider whiff reaches r = 0.5 at about 41 swings (Atlas), so the regressed rate already carries most of the weight, and it's average. Graded 50 now and 50 for 2027 (the engine's projection). A possible lever, not a flaw |
+| Abreu's cutter (new in 2026) | **Stuff:** 40 (ten refits gave 35 to 40) | **Present:** 65 (36% whiffs, 61 swings) | Results beating stuff carries over between seasons (edge engine, r ≈ 0.55), but 61 swings in one season isn't a pattern. It's 11% of his mix and doesn't drive the grade |
 
 ## 1. The need: why the Rangers, why a reliever
 
@@ -174,19 +176,19 @@
 
 | Rank of 38 | Reliever | 2027 age | 2026 G | K-BB% | Run value /100 (2026) | Projection rate (2024-26) | Projected wins, B1 role | 2027 whiff% (engine) |
 |---|---|---|---|---|---|---|---|---|
-| 1 | **Adrián Morejón** | 28 | 76 | 22.4 | +1.39 | +0.83 | **2.28** | 30.9 |
-| 2 | Alex Vesia | 31 | 72 | 17.7 | +1.22 | +0.72 | 1.91 | 30.1 |
-| 3 | Raisel Iglesias | 37 | 59 | 19.7 | +1.21 | +0.83 | 1.86 | 27.5 |
+| 1 | **Adrián Morejón** | 28 | 76 | 22.4 | +1.39 | +0.83 | **2.28** | 31.0 |
+| 2 | Alex Vesia | 31 | 72 | 17.7 | +1.22 | +0.72 | 1.91 | 30.0 |
+| 3 | Raisel Iglesias | 37 | 59 | 19.7 | +1.21 | +0.83 | 1.86 | 27.4 |
 | 4 | David Bednar | 32 | 64 | 20.0 | +1.23 | +0.51 | 1.70 | 28.9 |
-| 5 | **Bryan Abreu** | 30 | 66 | 14.6 | +0.27 | +0.37 | **1.64** | **32.9** |
+| 5 | **Bryan Abreu** | 30 | 66 | 14.6 | +0.27 | +0.37 | **1.64** | **33.1** |
 | 6 | Steven Okert | 35 | 68 | 20.7 | +1.25 | +0.67 | 1.64 | 30.3 |
-| 7 | Taylor Clarke | 33 | 71 | 10.8 | +0.86 | +0.53 | 1.53 | 22.7 |
+| 7 | Taylor Clarke | 33 | 71 | 10.8 | +0.86 | +0.53 | 1.53 | 22.6 |
 | 8 | Dennis Santana | 31 | 57 | 9.6 | −0.65 | +0.35 | 1.36 | 25.0 |
 | 9 | Paul Blackburn | 33 | 62 | 10.7 | +1.35 | +0.52 | 1.31 | 21.7 |
-| 10 | Sean Newcomb | 34 | 60 | 13.4 | +0.80 | +0.35 | 1.30 | 23.4 |
-| 11 | JoJo Romero | 30 | 55 | 15.1 | +0.14 | +0.31 | 1.24 | 20.9 |
-| 12 | Tyler Kinley | 36 | 64 | 9.5 | +0.17 | +0.17 | 1.23 | 29.4 |
-| 25 | **Pete Fairbanks** | 33 | 46 | 19.7 | −0.54 | +0.18 | 0.93 (healthy) | 29.9 |
+| 10 | Sean Newcomb | 34 | 60 | 13.4 | +0.80 | +0.35 | 1.30 | 23.3 |
+| 11 | JoJo Romero | 30 | 55 | 15.1 | +0.14 | +0.31 | 1.24 | 21.0 |
+| 12 | Tyler Kinley | 36 | 64 | 9.5 | +0.17 | +0.17 | 1.23 | 29.5 |
+| 25 | **Pete Fairbanks** | 33 | 46 | 19.7 | −0.54 | +0.18 | 0.93 (healthy) | 29.8 |
 
 **Why these three.** They make the comparison hard in three different ways.
 - **Morejón** is the best and youngest arm in the pool, at the highest price.
@@ -218,7 +220,8 @@
 The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 - **Control:** graded from unintentional walk rate, as a stand-in for command.
 - **Health:** each report lists the same thing for every pitcher: public injured-list placements and surgeries since 2021, with sources. Nothing is inferred beyond them.
-- **Fit noise (added Nov. 15):** the stuff and 2027 grades below come from one fit of the expected-whiff model, and a refit moves them. I fit the same swings ten times in different row orders. Every stuff and 2027 grade printed for these three pitchers stayed within 5 points of the printed grade, with one exception: Fairbanks's slider stuff grade ran 35 to 50 and is printed as that range. No role, OFP or ranking here rests on it. The range for every pitch is in [`outputs/edge-grade-noise-2026.json`](outputs/edge-grade-noise-2026.json).
+- **Where the stuff and 2027 numbers come from (reset Nov. 15):** every stuff grade, 2027 grade, expected whiff, gap and engine whiff projection in this memo is the saved Nov. 14 run's value ([`outputs/bullpen-grades-2026.json`](outputs/bullpen-grades-2026.json), checked by a test). The Oct. 14 memo printed an earlier fit that was not saved; the reset moved four grades by 5 points and is listed in the change log below.
+- **Fit noise (added Nov. 15):** those numbers come from one fit of the expected-whiff model, and a refit moves them. I fit the same swings ten more times in different row orders. Every stuff and 2027 grade printed for these three pitchers stayed within 5 points of the printed grade, with one exception: Fairbanks's slider stuff grade, printed 45, ran 35 to 50. No role, OFP or ranking here rests on it. The range for every pitch is in [`outputs/edge-grade-noise-2026.json`](outputs/edge-grade-noise-2026.json).
 - **Limits:** whiff is one job of a pitch, so sinkers and strike-throwing cutters are undergraded, and they are compared only within their own type. The reference pool includes starters. These grades describe the pitch in a relief role.
 
 ---
@@ -243,7 +246,7 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 |---|---|---|---|---|---|---|---|---|
 | Sinker | 47.6% (55 / 43) | 99.5 | 9.2 / 16.0 | 19.3 (311) | 65 | 60 | 65 | His primary pitch. 58% ground balls overall |
 | Changeup | 23.1% (2 / 36) | 92.1 | −1.1 / 10.7 | 56.0 (182) | 75 | 75 | 70 | 7% of pitches in 2025, 23% in 2026; almost only to RHH |
-| Slider | 15.2% (27 / 8) | 89.4 | −0.5 / −5.7 | 29.9 (77; 73 tracked) | 50 | 55 | 70 | Results trail the physics (small sample) |
+| Slider | 15.2% (27 / 8) | 89.4 | −0.5 / −5.7 | 29.9 (77; 73 tracked) | 50 | 50 | 70 | Results trail the physics (small sample) |
 | Four-seamer | 14.2% (16 / 13) | 99.3 | 15.2 / 6.0 | 42.3 (123) | 75 | 75 | 70 | A carry four-seamer at 99 |
 | Control | uBB 6.0% (BB 8.0% with 7 intentional) | | | | 60 | 60 | | 2024-25 uBB 7.0% and 4.9% |
 
@@ -263,12 +266,12 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 - **xwOBA:** .238, then .236.
 
 **Stuff vs. results (edge engine; swing-weighted expected whiff, then the gap):**
-- 2024: 26.5% expected, −0.4 gap.
-- 2025: 24.2% expected, −2.5 gap.
-- 2026: 28.3% expected, +5.8 gap.
+- 2024: 26.1% expected, +0.0 gap.
+- 2025: 24.7% expected, −3.0 gap.
+- 2026: 28.6% expected, +5.6 gap.
 - **The read:** his physics rose in 2026 and his results rose more. Before 2026 his results matched or trailed his physics.
-- **Where the 2026 gap sits:** the changeup (+15.1) and four-seamer (+13.6) beat their physics, and the slider (−12.0) trailed it. Across ten refits the three gaps run +13.7 to +16.8, +13.7 to +16.2 and −14.2 to −11.5, so the signs hold.
-- **The changeup regressed:** 51.4% (45.2–57.6) for 2026 and 48.1% for next season. The engine projects 48.9% (48.2% to 49.4% across ten refits), still the 99th percentile of changeups.
+- **Where the 2026 gap sits:** the four-seamer (+15.2) and changeup (+12.9) beat their physics, and the slider (−11.1) trailed it. Ten refits gave +13.7 to +16.2, +13.7 to +16.8 and −14.2 to −11.5, so the signs hold.
+- **The changeup regressed:** 51.4% (45.2–57.6) for 2026 and 48.1% for next season. The engine projects 49.6% (ten refits gave 48.2% to 49.4%), still the 99th percentile of changeups.
 
 **Velocity (league baseline):**
 - **The gain:** sinker 97.4 (2024) → 97.7 (2025) → 99.5 (2026). The 2026 gain is +1.79, and the league's returning sinkers moved −0.05, so it's +1.85 net.
@@ -295,7 +298,7 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 | Slider slot | −2.2° (lower) | +1.22 per 3° higher | Confirmed | −0.9 | Year-two gain, borderline |
 | Sinker velocity | +1.85 mph | +0.18 per mph | Not detected (sinkers) | +0.3 | Not followed |
 
-- **The open lever is the slider.** Its physics grade (70; 70 to 75 across ten refits) is far ahead of its results (50), and the study can't say which change would close that gap.
+- **The open lever is the slider.** Its physics grade (70; ten refits gave 70 to 75) is far ahead of its results (50), and the study can't say which change would close that gap.
 
 **Familiarity:**
 - **Low exposure:** as a reliever, hitters had seen almost none of his pitches earlier in the game (0.00 same-type pitches in earlier PAs) and 0.30 changeups in earlier games per changeup.
@@ -331,7 +334,7 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 
 | Pitch | Usage (vs LHH / RHH) | Velo | IVB / arm-side HB (in) | Whiff% (swings) | Present | 2027 | Stuff | Notes |
 |---|---|---|---|---|---|---|---|---|
-| Slider | 44.5% (44 / 45) | 86.5 | −5.4 / −6.7 | 39.0 (205) | 60 | 60 | 60 | 46% whiffs in 2025 |
+| Slider | 44.5% (44 / 45) | 86.5 | −5.4 / −6.7 | 39.0 (205) | 60 | 65 | 65 | 46% whiffs in 2025 |
 | Four-seamer | 44.0% (40 / 49) | 95.7 | 16.7 / 6.1 | 27.8 (194) | 60 | 65 | 55 | 36% whiffs at 97.3 mph in 2025 |
 | Cutter | 11.4% (16 / 6) | 93.0 | 11.3 / −0.1 | 36.1 (61) | 65 | 65 | 40 | New in 2026; mostly to LHH |
 | Control | uBB 15.3% (first half 19.7%, second 11.3%) | | | | 20 | 40 | | 2024: 9.8%, 2025: 10.5% |
@@ -365,11 +368,11 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 - **Still short of 2025:** the second-half four-seamer was 0.9 mph below his 2025 level.
 
 **Stuff vs. results:**
-- 2024: 33.1% expected, +0.7 gap.
-- 2025: 33.0% expected, +8.4 gap.
-- 2026: 28.6% expected, +5.3 gap.
+- 2024: 33.5% expected, +0.3 gap.
+- 2025: 33.3% expected, +8.1 gap.
+- 2026: 29.2% expected, +4.7 gap.
 - **The read:** results beat his physics two years running, and that gap is a trait that carries over (edge engine, r ≈ 0.55).
-- **The engine's 2027 whiff projection, 32.9%,** is the best of the three.
+- **The engine's 2027 whiff projection, 33.1%,** is the best of the three.
 
 **Velocity (league baseline):** four-seamer 97.3 → 95.7 for the season, −1.49 net of the league (−0.10).
 
@@ -431,8 +434,8 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 
 | Pitch | Usage (vs LHH / RHH) | Velo | IVB / arm-side HB (in) | Whiff% (swings) | Present | 2027 | Stuff | Notes |
 |---|---|---|---|---|---|---|---|---|
-| Four-seamer | 48.7% (49 / 49) | 97.2 | 18.1 / 1.6 | 27.4 (175) | 60 | 60 | 65 | Ride +1.0 in net of the league |
-| Slider | 26.4% (32 / 19) | 83.7 | −8.5 / −6.0 | 40.5 (79) | 60 | 55 | 35-50 | The physics grade is not stable: 35 to 50 across ten refits (40 in the fit this memo used; expected whiff 27.7% to 32.7%). In every fit the results beat it (+7.8 to +12.8 points) |
+| Four-seamer | 48.7% (49 / 49) | 97.2 | 18.1 / 1.6 | 27.4 (175) | 60 | 60 | 60 | Ride +1.0 in net of the league |
+| Slider | 26.4% (32 / 19) | 83.7 | −8.5 / −6.0 | 40.5 (79) | 60 | 55 | 45 | The physics grade is not stable: ten refits gave 35 to 50 (expected whiff 27.7% to 32.7%). In every fit the results beat it (+7.8 to +12.8 points) |
 | Cutter | 23.1% (16 / 32) | 89.6 | 3.3 / −5.6 | 34.9 (86) | 65 | 75 | 75 | 4% of pitches in 2025 (41), 23% in 2026 |
 | Control | uBB 10.9% | | | | 35 | 40 | | 2024-25 uBB 8.1% and 7.4% |
 
@@ -453,10 +456,10 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
   - **What holds:** his swing-and-miss and 19.7% K-BB.
   - **Fly balls:** his 31% regressed ground-ball rate keeps hard contact costly.
 - **Stuff vs. results:**
-  - 2024: 26.8% expected, −6.0 gap.
-  - 2025: 27.8% expected, −2.2 gap.
-  - 2026: 30.8% expected, +1.6 gap.
-  - **The read:** his physics improved every year, mostly through the cutter.
+  - 2024: 28.3% expected, −7.4 gap.
+  - 2025: 26.6% expected, −1.1 gap.
+  - 2026: 30.8% expected, +1.5 gap.
+  - **The read:** his physics were at their best in 2026, after a dip in 2025. The cutter, 4% of his pitches in 2025 and 23% in 2026, carries the best physics grade he has.
 
 **Velocity:**
 - **Season:** four-seamer 97.2, unchanged net of the league.
@@ -647,6 +650,19 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
   - Abreu's walk-away rose from $24M to $25M.
 - **Fairbanks:** went from a one-year $5M bet to "not a 2027 option," after his Sept. 19 surgery announcement.
 - **OFPs:** Abreu's and Fairbanks's fell from 55 to 50, to match the role scale.
+
+**What changed on Nov. 15: the model numbers were reset to the saved run.**
+- **Why:** the Oct. 14 memo printed stuff and 2027 numbers from a fit of the expected-whiff model that was not saved. They now equal the saved Nov. 14 run and a test holds them there.
+- **Grades that moved, all by 5 points:**
+  - Abreu's slider: stuff 60 to 65 and 2027 60 to 65. The side-by-side table now reads "(60 / 65)".
+  - Fairbanks's four-seamer: stuff 65 to 60.
+  - Fairbanks's slider: stuff 40 to 45.
+  - Morejón's slider: 2027 grade 55 to 50. Its stuff grade stays 70 (expected whiff went from 42% to 41%, the 98th percentile to the 97th).
+- **Morejón's 2026 gaps:** changeup +15.1 to +12.9, four-seamer +13.6 to +15.2, slider −12.0 to −11.1. The changeup projection went from 48.9% to 49.6%.
+- **Expected whiff and gap by season:** all nine lines moved, by 1.5 points at most. One read changed: Fairbanks's physics no longer "improved every year" (28.3%, 26.6%, 30.8%). They were best in 2026.
+- **Engine whiff projections:** nine of the thirteen in the candidate table moved by 0.1 or 0.2 (Abreu 32.9% to 33.1%, Morejón 30.9% to 31.0%, Fairbanks 29.9% to 29.8%).
+- **What did not move:** the ranking, the roles, the OFPs (each formula value is still 60 before the overrides), the prices and the recommendation. Present grades do not use the model and are unchanged.
+- **The figure** was drawn from the earlier fit and has not been redrawn. Three of its hollow stuff markers sit 5 points from this table: Abreu's slider and Fairbanks's four-seamer and slider.
 
 ## Method
 

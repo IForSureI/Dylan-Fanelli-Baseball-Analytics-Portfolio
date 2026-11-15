@@ -17,7 +17,7 @@
 *Adrián Morejón; LHP; B/T L/L; 5'11", 224 lb (listed); born Feb. 27, 1999, Havana, Cuba (27.6 on the report date; 2027 age 28); San Diego Padres*
 *Report date 2026-10-14; Scout: Dylan Fanelli; Basis: data (Statcast, all 1,318 regular-season pitches of 2026, with 2024–25 for history and the 2026 postseason as a check) and public reporting. No live or video look: the delivery items that need eyes are NG (no grade).*
 
-**Status:** first free agency after 2026 ("set to become a free agent after the 2026 season," Matt Levine, Padres On SI, Aug. 3, 2026). He's qualifying-offer eligible: with San Diego all season, he can't have received a QO before. Whether the Padres make the offer is their call this offseason.
+**Status:** first free agency after 2026 ("set to become a free agent after the 2026 season," Matt Levine, Padres On SI, Aug. 3, 2026). He's qualifying-offer eligible: with San Diego all season, he can't have received a QO before. The Padres made the offer on Nov. 2 (AP).
 
 ![Morejón's movement and release point, 2026](figures/2026-morejon-pro-scouting-report.png)
 
@@ -195,7 +195,7 @@ The [bullpen memo](2026-bullpen-acquisition-memo.md) graded each pitch on whiffs
 | Sinker | 70 / 70 | 65 / 60 | The memo reports his 58% ground-ball rate but doesn't grade on it. Here velocity and ground balls count |
 | Changeup | 70 / 70 | 75 / 75 | This report docks it for being thrown to left-handers 2% of the time |
 | Four-seamer | 70 / 70 | 75 / 75 | Close. The memo called it "a carry four-seamer," but 15.2 in of IVB is about league average, so this report docks the shape and credits the results |
-| Slider | 50 / 55 | 50 / 55 | Same grades. This report adds the 2024–25 record and the shape change |
+| Slider | 50 / 55 | 50 / 50 | Same present grade. The memo's 2027 grade is the engine's projection, reset to the saved run on Nov. 15 (it was 55). This report keeps 55 on the 2024–25 record and the stuff grade |
 | Control | 60 / 60 | 60 / 60 | Same measure (unintentional walk rate) |
 | Command | NG | Not graded | Neither has a look |
 | OFP / role | 60, B1 | 60, B1 | Same conclusion |
