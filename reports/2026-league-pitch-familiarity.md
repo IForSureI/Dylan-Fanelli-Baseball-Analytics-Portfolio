@@ -39,7 +39,12 @@
 - **Familiarity shows up as contact, not discipline.** Hitters chase familiar fastballs and breaking balls *more* (+0.75 and +0.61 points per earlier pitch), and the misses fall anyway.
 - **Read the sizes with care (added Nov. 14, 2026).**
   - **The placebo is larger than the effect.** The same pitch type thrown to the hitter in later plate appearances, which he hasn't seen yet, carries +2.0 to +3.2 whiff points. The main estimates are −0.70 to −1.87. Selection by the pitcher is that strong in this data.
-  - **What holds:** the direction, in the three main pitch groups, and with the future terms in the model. Cutters are the weak group.
+  - **What holds:** the direction, in the three main pitch groups, and with the future terms in the model.
+  - **Two checks were run on the pitch data (Method):**
+    - **Shuffled counts.** With the pitch types of his earlier pitches scrambled inside the plate appearance, the coefficient falls to −0.08 / +0.07 / −0.13 (fastballs / breaking / changeups and splitters). The real ones are −0.70 / −0.91 / −1.87. None of 1,000 shuffles reached the real number in any of the three.
+    - **Own game left out of the fixed effects.** The estimates become −0.68 / −0.87 / −1.83, 3% to 4% smaller, all still p < 0.001.
+    - **A cruder version of the same check** (season levels as columns in place of fixed effects) gives −0.44 / −0.55 / −1.47. So the sizes are somewhere between 60% and 100% of the published ones, depending on how the season level is held fixed.
+  - **Cutters don't hold.** With the own game left out the cutter estimate is −0.41 (p = 0.09), and his own count can't be told from other hitters' counts against the same pitcher (p = 0.19).
   - **What doesn't follow:** a causal size. And the per-pitch cost does not reach plate-appearance run value in the [follow-up](2026-exposure-aware-hook.md).
 - **How fast an individual pitch wears out can't be measured reliably from a season of data.**
   - **Noise:** one pitch's season slope carries noise of 3.3–4.4 points, against average effects of 0.7–1.9.
@@ -76,10 +81,12 @@ Each cell is the estimated change associated with one more earlier pitch of the 
 | Fastballs (FF, SI) | **−0.70 (0.09)** | **+0.75 (0.09)** | **−0.15 (0.03)** | +3.9 (1.2), p = 0.001 |
 | Breaking balls | **−0.91 (0.12)** | **+0.61 (0.11)** | **−0.23 (0.04)** | **+7.3 (1.7)** |
 | Changeups / splitters | **−1.87 (0.16)** | −0.22 (0.15), p = 0.14 | **−0.45 (0.07)** | **+11.6 (2.3)** |
-| Cutters | −0.50 (0.23), p = 0.03 | +0.45 (0.23), p = 0.06 | **−0.31 (0.09)** | +7.1 (3.4), p = 0.03 |
+| Cutters | −0.49 (0.23), p = 0.03 | +0.46 (0.24), p = 0.05 | **−0.31 (0.09)** | +7.1 (3.4), p = 0.03 |
 | *Base rate* | *19.2% / 32.5% / 31.9% / 22.9%* | *25.2% / 31.5% / 34.7% / 27.8%* | | *.378 / .359 / .341 / .371* |
 
 **Sample:** 1,013,465 swings, 1,076,076 out-of-zone pitches, 2,120,134 pitches with a run value, and 366,793 balls in play.
+
+**Cutters (added Nov. 14, 2026):** the whiff estimate is p = 0.03 here and p = 0.09 once the own game is left out of the fixed effects (Method). Read the cutter whiff number as unconfirmed.
 
 **The other two windows:**
 - **Earlier in the same plate appearance:** the same direction (−0.44 / −0.63 / −0.85 / −1.13 whiff points). Smaller than across plate appearances, except for cutters.
@@ -100,10 +107,10 @@ Each cell is the estimated change associated with one more earlier pitch of the 
 | Sweeper | 31.4 | −1.10 (0.28) | −0.35 (0.10) |
 | Four-seamer | 21.8 | −1.01 (0.11) | −0.19 (0.04) |
 | Slider | 33.4 | −0.80 (0.16) | −0.17 (0.06) |
-| Cutter | 22.9 | −0.50 (0.23) | −0.31 (0.09) |
+| Cutter | 22.9 | −0.49 (0.23) | −0.31 (0.09) |
 | Sinker | 13.7 | −0.31 (0.11) | −0.24 (0.06) |
 
-- **Significance:** every whiff estimate is below zero at p < 0.05.
+- **Significance:** every whiff estimate is below zero at p < 0.05 in the main specification. The cutter estimate doesn't stay there with the own game left out (p = 0.09, Method).
 - **Knuckle-curves:** the estimate comes from only 79 pitchers, so read that row as a range.
 
 ### 3. Dose-response
@@ -254,7 +261,7 @@ Change in whiff% per swing against a hitter who has seen none of this pitch type
 
 | Specification | Fastballs | Breaking | Changeups / splitters | Cutters |
 |---|---|---|---|---|
-| Main | −0.70 | −0.91 | −1.87 | −0.50 |
+| Main | −0.70 | −0.91 | −1.87 | −0.49 |
 | Pitcher × type × **month** fixed effects (in-season trends) | −0.75 | −1.00 | −1.93 | −0.60 |
 | Pitcher × type × season × **batter side** fixed effects (platoon) | −0.69 | −0.99 | −1.87 | −0.50 |
 | Starters only | −0.72 | −0.94 | −1.96 | −0.66 |
@@ -267,6 +274,7 @@ Change in whiff% per swing against a hitter who has seen none of this pitch type
   - significant pooled (p = 0.03) and in 2024
   - not significant in 2025 (p = 0.80) or 2026 (p = 0.16)
   - borderline without location controls (p = 0.06)
+  - not significant with the own game left out of the fixed effects (p = 0.09), and not separable from other hitters' counts in the shuffle below (p = 0.19)
 
 **Placebo and selection:**
 - **The test:** the same type thrown to the hitter in *later* plate appearances today can't change the current pitch. Yet its coefficient is large and positive: +2.0 / +3.0 / +3.2 / +2.5 points. Pitchers go back to what is working on a hitter.
@@ -275,17 +283,65 @@ Change in whiff% per swing against a hitter who has seen none of this pitch type
   - The placebo only works on batters who come up again (176k / 100k / 58k / 31k swings).
   - In that sample, the estimates are −0.66 / −1.41 / −2.11 / −1.04 without the future terms and −0.75 / −1.53 / −2.12 / −1.04 with them.
   - The larger numbers than the main estimate come mostly from the sample, not the control.
-- **Direction of bias:** toward zero, by reasoning more than by measurement. Treat the main estimates as probably not overstated.
+- **Direction of bias:** two forces, pointing opposite ways.
+  - **Selection on the hitter** pushes toward zero, by reasoning more than by measurement.
+  - **The fixed effects** push the other way, and this one is measured: a whiff early in a game raises both the later counts and the season mean the fixed effect subtracts. Leaving the own game out removes it and moves the estimates 3% to 4% toward zero (15% for cutters). See the next two blocks.
+
+**Shuffle null (added Nov. 14, 2026).** What does the model return when the counts carry no information?
+- **The test:** shuffle the earlier-plate-appearance counts (same type, other type) between rows inside a small cell, refit, and repeat 1,000 times per design and pitch group (seed 20261114). Games, the counts themselves, fixed effects and every control stay as they are. Only which row holds which count changes.
+- **Three designs:**
+  - **Within the hitter's game:** his own counts against this pitcher today, in a random order across all his pitches from that pitcher. This also breaks the tie between the count and the time through the order.
+  - **Within the plate appearance:** the same, but only inside one plate appearance. The total he has seen stays exactly as it was. Only which pitch type the count belongs to is scrambled.
+  - **Across hitters:** hitters facing the same pitcher, same game, same time through, same pitch type swap counts. Only the hitter's own history changes.
+- **Sample:** the main model's swings (483,401 / 298,384 / 149,111 / 82,570).
+
+| Whiff contrast, earlier PAs today (pts) | Fastballs | Breaking | Changeups / splitters | Cutters |
+|---|---|---|---|---|
+| Real | −0.70 | −0.91 | −1.87 | −0.49 |
+| Shuffled within the hitter's game: mean (SD) | +0.46 (0.06) | +0.27 (0.09) | +0.15 (0.13) | +0.27 (0.18) |
+| Shuffled within the plate appearance: mean (SD) | −0.08 (0.05) | +0.07 (0.08) | −0.13 (0.11) | +0.23 (0.15) |
+| Shuffled across hitters: mean (SD) | −0.33 (0.05) | −0.48 (0.07) | −0.89 (0.11) | −0.38 (0.13) |
+| Shuffles at or below real, of 1,000: within the hitter's game | 0 | 0 | 0 | 0 |
+| Shuffles at or below real, of 1,000: within the plate appearance | 0 | 0 | 0 | 0 |
+| Shuffles at or below real, of 1,000: across hitters | 0 | 0 | 0 | 188 |
+
+- **The model doesn't make the effect on its own.** With pitch types scrambled inside the plate appearance, the coefficient sits between −0.13 and +0.23. No shuffle reached the real coefficient for fastballs, breaking balls or changeups and splitters in any design (p = 0.001, the smallest 1,000 shuffles can give).
+- **Reordering a hitter's counts within his game flips the sign** (+0.15 to +0.46). What survives this shuffle is the hitter's game as a whole: how many of each type he got. That part points the other way, the same direction as the placebo, where pitchers go back to what is working.
+- **About half survives the swap across hitters in the three main groups** (−0.33 / −0.48 / −0.89, which is 46% / 52% / 48% of the real coefficients).
+  - **Why it isn't zero:** a shuffle inside a cell keeps the cell's average. Where the hitters facing a pitcher had seen more of a pitch on average, the pitch still got fewer whiffs.
+  - **What that part is:** the hitters' own exposure, or something about the pitcher's day. The shuffle can't split the two. In the test simulation, part of a planted hitter-level effect survives the same shuffle.
+  - **No partner:** 5% to 11% of swings are alone in their cell and keep their own count.
+  - **What the test does show:** in the three main groups, the hitter's own count matters beyond his teammates' counts against the same pitcher that day.
+- **Cutters:** 188 of 1,000 across-hitter shuffles were at or below the real coefficient (p = 0.19). The hitter's own count can't be told from other hitters' counts.
+
+**Leave-own-game-out (added Nov. 14, 2026).** Each pitcher's and hitter's season level, estimated without the game being scored.
+- **Fixed-effect version:** each swing is scored against its pitcher × type × season and batter × group × season effects with the swing's own game taken out. The slopes and the other set of effects are not refit for each of the 7,288 games.
+- **Levels version:** no fixed effects. Two columns stand in: the pitcher's whiff rate on the pitch type and the hitter's against the pitch group, from every other game that season. It is shown with the own game included too, so the step from leaving it out can be read alone.
+- **Rows dropped:** a pitch or hitter group seen in one game only has no other game to use (1,331 / 1,119 / 519 / 444 swings).
+
+| Whiff contrast, earlier PAs today (pts, SE) | Fastballs | Breaking | Changeups / splitters | Cutters |
+|---|---|---|---|---|
+| Published (fixed effects) | −0.70 (0.09) | −0.91 (0.12) | −1.87 (0.16) | −0.49 (0.23) |
+| Fixed effects, rows with another game | −0.70 (0.09) | −0.91 (0.12) | −1.88 (0.16) | −0.48 (0.23) |
+| Fixed effects, own game left out | −0.68 (0.09) | −0.87 (0.12) | −1.83 (0.17) | −0.41 (0.24) |
+| Levels as columns, own game included | −0.55 (0.08) | −0.80 (0.12) | −1.89 (0.16) | −0.48 (0.22) |
+| Levels as columns, own game left out | −0.44 (0.09) | −0.55 (0.13) | −1.47 (0.17) | −0.42 (0.23) |
+
+- **Fixed effects:** leaving the own game out moves the estimate 3% to 4% toward zero in the three main groups, all still p < 0.001. Cutters move 15% and are no longer significant (p = 0.09).
+- **Levels:** smaller, at 63% / 60% / 79% / 85% of the published sizes. The three main groups stay p < 0.001; cutters are p = 0.07.
+- **Why the two differ:** a level from the other games is a noisier control than a fixed effect. Its slope is 0.26 to 0.46 for the pitcher column, where a clean level would be near 1. For fastballs, most of the gap is already there with the own game included (−0.55).
+- **Reading:** the direction holds in both versions for the three main groups. The size is 60% to 100% of the published number, and the published number is the top of that range.
 
 ## What this doesn't show
 - **It's observational.**
   - The fixed effects remove season-level hitter and pitcher quality, and the platoon split.
   - In-game selection remains (placebo).
   - Nothing here is a randomized pitch call, and "wear out" is shorthand for the association.
-- **Two checks are not done.**
-  - **A null simulation:** shuffle each hitter's exposure counts within game and rerun the model, to see what coefficient the design produces when there is no effect.
-  - **Leave-own-game-out fixed effects:** estimate each pitcher's and hitter's season level without the game being scored.
-  - **Why not:** both need the pitch-level table (2.14 million rows) and a full refit, a long run on the machine that holds the data. Until they exist, the placebo above is the only read on selection.
+- **The two checks that were open are done (Method), and they leave two limits.**
+  - **Sizes:** the published estimates are the top of a range. With the own game left out they are −0.68 / −0.87 / −1.83 under fixed effects and −0.44 / −0.55 / −1.47 under season levels.
+  - **Hitter or pitcher's day:** in the three main groups, about half of the coefficient is still there when hitters swap counts with others facing the same pitcher. That half can't be assigned to the hitter's own exposure.
+  - **Cutters:** not confirmed.
+  - **Neither check removes selection inside the game.** Both keep the real order of pitches within a plate appearance and the pitcher's real choices.
 - **Location and count are partly the pitcher's response to the hitter.** The main specification holds them fixed: the same pitch in the same spot. Letting location vary gives larger effects for every group except cutters.
 - **What it measures:** learning from pitches seen against this pitcher (today and earlier this season) and against other pitchers today. It doesn't capture what hitters know from scouting reports or prior seasons, so the usage thresholds price only part of the cost of predictability.
 - **Mechanism:**
@@ -300,6 +356,7 @@ Change in whiff% per swing against a hitter who has seen none of this pitch type
 ```bash
 uv run bb seq 2026          # on the Mac: sequence copy (batter ids, location) from the monthly league files -> data/seq/
 uv run bb familiarity 2026  # pools 2024-26; tables, page and figure -> data/edge/familiarity/ (this report keeps its reviewed figure)
+uv run python -m baseball.edge.familiarity_checks --jobs 2  # shuffle null and leave-own-game-out -> reports/outputs/familiarity-checks-2024-26.json (about an hour)
 ```
 
 ## Sources
