@@ -1,4 +1,4 @@
-"""Dylan's design rule (Nov. 9, 2026): no accent bars down the side of a block (a thick coloured left or right border
+"""House design rule (Nov. 9, 2026): no accent bars down the side of a block (a thick coloured left or right border
 on a quote, callout, card or tooltip). Hairline column dividers (1px) are fine. This scans every page and template."""
 import re
 from pathlib import Path
