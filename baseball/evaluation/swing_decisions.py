@@ -712,7 +712,10 @@ POS_2B_PER_650 = 2.5                                       # FanGraphs positiona
 # A cross-check from public numbers: FanGraphs' flat 2026 rate ($11.23M, Clemens, Feb. 24, 2026) grown 3%
 # is $11.57M. One rate for every player: FanGraphs' tiers describe average prices paid by WAR band, not a
 # marginal price, and pricing on them puts a cliff at 2.0 WAR. The tiered version is kept as a check.
-PRICE_OF_WIN_2027, PRICE_GROWTH, DISCOUNT_RATE = 11.66, 0.03, 0.10
+# Growth and discount are the repo's one convention (baseball/roster/money.py; docs/valuation-conventions.md).
+from baseball.roster.money import DISCOUNT as DISCOUNT_RATE, DPW_GROWTH as PRICE_GROWTH  # noqa: E402
+
+PRICE_OF_WIN_2027 = 11.66
 TORRES_MLBAM = 650402
 
 
