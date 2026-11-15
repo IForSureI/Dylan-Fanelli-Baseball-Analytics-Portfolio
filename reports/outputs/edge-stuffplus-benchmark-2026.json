@@ -2528,5 +2528,273 @@
    "folds": 5,
    "fold_seed": 7
   }
+ },
+ "location_aware": {
+  "what": "Extra rows for the location-aware expected whiff (stuff_location.py): physics plus plate location and count, from a fresh fit. Not a stuff measure. No row above is changed by it.",
+  "held_out_15_ip": {
+   "pitches": 963,
+   "pitchers": 388,
+   "rmse_raw_last_season": 5.98796293861987,
+   "models": {
+    "last_whiff": {
+     "rmse": 5.584211806290611,
+     "r": 0.8082313238139974,
+     "gain_vs_baseline_pct": 0.0,
+     "gain_lo": 0.0,
+     "gain_hi": 0.0
+    },
+    "location": {
+     "rmse": 5.641158751009454,
+     "r": 0.8108124379237189,
+     "gain_vs_baseline_pct": -1.0197848271924714,
+     "gain_lo": -5.562289982650174,
+     "gain_hi": 3.4886519461026615
+    },
+    "location+type": {
+     "rmse": 5.548016392648574,
+     "r": 0.8180070160411523,
+     "gain_vs_baseline_pct": 0.6481740825314497,
+     "gain_lo": -3.7980996652127095,
+     "gain_hi": 5.0030205763316715
+    },
+    "last+location": {
+     "rmse": 5.243499514516444,
+     "r": 0.8343436315592286,
+     "gain_vs_baseline_pct": 6.101349726569383,
+     "gain_lo": 4.621825700368144,
+     "gain_hi": 7.652163459597938
+    },
+    "last+location+type": {
+     "rmse": 5.159986533365487,
+     "r": 0.8410020036900541,
+     "gain_vs_baseline_pct": 7.596869310136745,
+     "gain_lo": 5.802949954786725,
+     "gain_hi": 9.337459502759204
+    },
+    "expected+type": {
+     "rmse": 6.045391409067019,
+     "r": 0.7816980709891099,
+     "gain_vs_baseline_pct": -8.258633783498137,
+     "gain_lo": -14.183035755076059,
+     "gain_hi": -2.7231829692499634
+    },
+    "stuff+type": {
+     "rmse": 5.838615534446877,
+     "r": 0.7967880673456347,
+     "gain_vs_baseline_pct": -4.555767885983131,
+     "gain_lo": -10.137378424141309,
+     "gain_hi": 0.5428214383408695
+    },
+    "miss+type": {
+     "rmse": 5.9405103025526005,
+     "r": 0.798074795796557,
+     "gain_vs_baseline_pct": -6.38046171279929,
+     "gain_lo": -12.086254244270448,
+     "gain_hi": -0.8093064720538511
+    },
+    "last+expected+type": {
+     "rmse": 5.1483626360160555,
+     "r": 0.8418801863148924,
+     "gain_vs_baseline_pct": 7.805025765383244,
+     "gain_lo": 5.96499965824579,
+     "gain_hi": 9.487471275317866
+    },
+    "last+stuff+type": {
+     "rmse": 5.1542584115528305,
+     "r": 0.8412299786757407,
+     "gain_vs_baseline_pct": 7.699446397313192,
+     "gain_lo": 5.741727479609157,
+     "gain_hi": 9.52723285935359
+    },
+    "last+stuff+location+type": {
+     "rmse": 5.099804046225642,
+     "r": 0.8447722026950467,
+     "gain_vs_baseline_pct": 8.674595034509336,
+     "gain_lo": 6.814678402872129,
+     "gain_hi": 10.541124050991275
+    }
+   },
+   "contrasts": {
+    "location+type minus stuff+type": {
+     "rmse_diff": -0.29059914179830315,
+     "lo": -0.5145589415562539,
+     "hi": -0.07455075807434158,
+     "share_of_resamples_first_is_better": 0.993
+    },
+    "location+type minus expected+type": {
+     "rmse_diff": -0.49737501641844517,
+     "lo": -0.6793963219138109,
+     "hi": -0.32390244365850357,
+     "share_of_resamples_first_is_better": 1.0
+    },
+    "location+type minus miss+type": {
+     "rmse_diff": -0.39249390990402677,
+     "lo": -0.6131525962993847,
+     "hi": -0.1727609562509707,
+     "share_of_resamples_first_is_better": 0.9995
+    },
+    "last+location+type minus last+stuff+type": {
+     "rmse_diff": 0.0057281218126563616,
+     "lo": -0.04606166002705634,
+     "hi": 0.05712256893854574,
+     "share_of_resamples_first_is_better": 0.436
+    },
+    "last+location+type minus last+expected+type": {
+     "rmse_diff": 0.011623897349431367,
+     "lo": -0.02328105319546616,
+     "hi": 0.043769654148456794,
+     "share_of_resamples_first_is_better": 0.262
+    },
+    "last+stuff+location+type minus last+stuff+type": {
+     "rmse_diff": -0.054454365327188725,
+     "lo": -0.08649736118207556,
+     "hi": -0.023097578406140754,
+     "share_of_resamples_first_is_better": 1.0
+    }
+   },
+   "train_pitches": 918,
+   "winner": {
+    "location+type vs stuff+type": "location+type",
+    "location+type vs expected+type": "location+type",
+    "location+type vs miss+type": "location+type",
+    "last+location+type vs last+stuff+type": "tie",
+    "last+location+type vs last+expected+type": "tie",
+    "last+stuff+location+type vs last+stuff+type": "last+stuff+location+type"
+   }
+  },
+  "pitches_missing_the_measure": {
+   "train": 0,
+   "test": 0
+  },
+  "same_season_vs_whiff_by_pitch_type": {
+   "CH": {
+    "n": 388,
+    "pitchers": 270,
+    "r": 0.6661128539474972,
+    "lo": 0.6042324391348382,
+    "hi": 0.7213660264780977
+   },
+   "CU": {
+    "n": 215,
+    "pitchers": 153,
+    "r": 0.7368446648286615,
+    "lo": 0.6509143203447096,
+    "hi": 0.8022445990920871
+   },
+   "FC": {
+    "n": 296,
+    "pitchers": 213,
+    "r": 0.6424599148979205,
+    "lo": 0.5446636434584531,
+    "hi": 0.7288616339542253
+   },
+   "FF": {
+    "n": 827,
+    "pitchers": 532,
+    "r": 0.588641581493935,
+    "lo": 0.5313148765426715,
+    "hi": 0.6409981213793153
+   },
+   "FS": {
+    "n": 115,
+    "pitchers": 80,
+    "r": 0.7068111799734194,
+    "lo": 0.605681148820403,
+    "hi": 0.7837569067876791
+   },
+   "KC": {
+    "n": 52,
+    "pitchers": 33,
+    "r": 0.8717105947023647,
+    "lo": 0.7744630550888286,
+    "hi": 0.9272650172497333
+   },
+   "SI": {
+    "n": 512,
+    "pitchers": 337,
+    "r": 0.6652428553080882,
+    "lo": 0.5846703514232734,
+    "hi": 0.7338925849594596
+   },
+   "SL": {
+    "n": 360,
+    "pitchers": 250,
+    "r": 0.7858460377473543,
+    "lo": 0.7424091686636389,
+    "hi": 0.8230007569401844
+   },
+   "ST": {
+    "n": 174,
+    "pitchers": 122,
+    "r": 0.6684964640443022,
+    "lo": 0.5289190693655476,
+    "hi": 0.7731380278179879
+   }
+  },
+  "same_season_vs_stuff_plus_by_pitch_type": {
+   "CH": {
+    "n": 388,
+    "pitchers": 270,
+    "r": 0.48708671988892627,
+    "lo": 0.39038065892996426,
+    "hi": 0.5719509476710328
+   },
+   "CU": {
+    "n": 215,
+    "pitchers": 153,
+    "r": 0.37014794555317315,
+    "lo": 0.26225074106035606,
+    "hi": 0.47659334096273104
+   },
+   "FC": {
+    "n": 296,
+    "pitchers": 213,
+    "r": 0.418135514453014,
+    "lo": 0.286187867617934,
+    "hi": 0.5414858374331204
+   },
+   "FF": {
+    "n": 827,
+    "pitchers": 532,
+    "r": 0.5718027373556787,
+    "lo": 0.5125138872495146,
+    "hi": 0.6288183741089378
+   },
+   "FS": {
+    "n": 115,
+    "pitchers": 80,
+    "r": 0.4163714046048117,
+    "lo": 0.1293714423306118,
+    "hi": 0.6358160309916038
+   },
+   "KC": {
+    "n": 52,
+    "pitchers": 33,
+    "r": 0.47562641050868876,
+    "lo": 0.0902001086171756,
+    "hi": 0.6979683816834115
+   },
+   "SI": {
+    "n": 512,
+    "pitchers": 337,
+    "r": 0.3730234341143724,
+    "lo": 0.2801350461284966,
+    "hi": 0.46043759522858085
+   },
+   "SL": {
+    "n": 360,
+    "pitchers": 250,
+    "r": 0.4451099539346603,
+    "lo": 0.32519868045390504,
+    "hi": 0.5496134046641252
+   },
+   "ST": {
+    "n": 174,
+    "pitchers": 122,
+    "r": 0.365128028168861,
+    "lo": 0.20327674908534085,
+    "hi": 0.5038597986183552
+   }
+  }
  }
 }

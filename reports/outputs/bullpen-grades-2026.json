@@ -1,0 +1,204 @@
+{
+ "source": "python -m baseball.edge.grade_noise 2026 --saved, read from the saved bb edge 2026 run (stuff_<season>.parquet and projection.parquet). No fit is made.",
+ "grading": "percentile among pitches of the same type group with 50+ tracked swings, grade = 50 + 10z to the nearest 5",
+ "pitches": {
+  "670970_SL": {
+   "pitcher": 670970,
+   "pitch_type": "SL",
+   "swings": 73,
+   "whiff_pct": 30.136986301369863,
+   "x_whiff_pct": 41.271163478824754,
+   "gap": -11.134177177454891,
+   "pct_stuff": 97.14285714285714,
+   "grade_stuff": 70,
+   "proj_whiff_pct": 33.91740698682363,
+   "pct_next": 59.285714285714285,
+   "grade_next": 50
+  },
+  "664126_FC": {
+   "pitcher": 664126,
+   "pitch_type": "FC",
+   "swings": 86,
+   "whiff_pct": 34.883720930232556,
+   "x_whiff_pct": 40.62609604060185,
+   "gap": -5.742375110369295,
+   "pct_stuff": 99.46236559139786,
+   "grade_stuff": 75,
+   "proj_whiff_pct": 36.14831343581281,
+   "pct_next": 98.9247311827957,
+   "grade_next": 75
+  },
+  "650556_SL": {
+   "pitcher": 650556,
+   "pitch_type": "SL",
+   "swings": 205,
+   "whiff_pct": 39.02439024390244,
+   "x_whiff_pct": 37.77606206543911,
+   "gap": 1.248328178463325,
+   "pct_stuff": 90.0,
+   "grade_stuff": 65,
+   "proj_whiff_pct": 39.17845320071074,
+   "pct_next": 89.64285714285714,
+   "grade_next": 65
+  },
+  "664126_FF": {
+   "pitcher": 664126,
+   "pitch_type": "FF",
+   "swings": 175,
+   "whiff_pct": 27.428571428571427,
+   "x_whiff_pct": 26.030514741660475,
+   "gap": 1.3980566869109516,
+   "pct_stuff": 88.84297520661157,
+   "grade_stuff": 60,
+   "proj_whiff_pct": 24.76561889066635,
+   "pct_next": 80.37190082644628,
+   "grade_next": 60
+  },
+  "670970_SI": {
+   "pitcher": 670970,
+   "pitch_type": "SI",
+   "swings": 302,
+   "whiff_pct": 18.211920529801326,
+   "x_whiff_pct": 16.774555306196795,
+   "gap": 1.4373652236045302,
+   "pct_stuff": 93.2475884244373,
+   "grade_stuff": 65,
+   "proj_whiff_pct": 16.552260009889444,
+   "pct_next": 86.49517684887459,
+   "grade_next": 60
+  },
+  "650556_FF": {
+   "pitcher": 650556,
+   "pitch_type": "FF",
+   "swings": 194,
+   "whiff_pct": 27.835051546391753,
+   "x_whiff_pct": 23.011135023490993,
+   "gap": 4.82391652290076,
+   "pct_stuff": 69.21487603305785,
+   "grade_stuff": 55,
+   "proj_whiff_pct": 27.84951078942542,
+   "pct_next": 93.59504132231405,
+   "grade_next": 65
+  },
+  "664126_SL": {
+   "pitcher": 664126,
+   "pitch_type": "SL",
+   "swings": 79,
+   "whiff_pct": 40.50632911392405,
+   "x_whiff_pct": 30.682886911113144,
+   "gap": 9.82344220281091,
+   "pct_stuff": 33.57142857142857,
+   "grade_stuff": 45,
+   "proj_whiff_pct": 34.23256738351178,
+   "pct_next": 61.785714285714285,
+   "grade_next": 55
+  },
+  "670970_CH": {
+   "pitcher": 670970,
+   "pitch_type": "CH",
+   "swings": 181,
+   "whiff_pct": 55.80110497237569,
+   "x_whiff_pct": 42.87739220876689,
+   "gap": 12.923712763608798,
+   "pct_stuff": 98.73949579831933,
+   "grade_stuff": 70,
+   "proj_whiff_pct": 49.58895078137053,
+   "pct_next": 99.5798319327731,
+   "grade_next": 75
+  },
+  "670970_FF": {
+   "pitcher": 670970,
+   "pitch_type": "FF",
+   "swings": 120,
+   "whiff_pct": 44.166666666666664,
+   "x_whiff_pct": 28.95293520143374,
+   "gap": 15.213731465232925,
+   "pct_stuff": 96.69421487603306,
+   "grade_stuff": 70,
+   "proj_whiff_pct": 37.50608715255649,
+   "pct_next": 99.3801652892562,
+   "grade_next": 75
+  },
+  "650556_FC": {
+   "pitcher": 650556,
+   "pitch_type": "FC",
+   "swings": 61,
+   "whiff_pct": 36.0655737704918,
+   "x_whiff_pct": 19.85997346135865,
+   "gap": 16.205600309133153,
+   "pct_stuff": 16.129032258064516,
+   "grade_stuff": 40,
+   "proj_whiff_pct": 29.311860642080536,
+   "pct_next": 89.78494623655914,
+   "grade_next": 65
+  }
+ },
+ "pitcher_by_season": {
+  "650556": {
+   "2024": {
+    "x_whiff_pct": 33.503559169554215,
+    "gap": 0.28954427872164956,
+    "swings": 580
+   },
+   "2025": {
+    "x_whiff_pct": 33.27421813848369,
+    "gap": 8.054195145649153,
+    "swings": 542
+   },
+   "2026": {
+    "x_whiff_pct": 29.17328543285902,
+    "gap": 4.739758045401846,
+    "swings": 460
+   }
+  },
+  "664126": {
+   "2024": {
+    "x_whiff_pct": 28.28212381958986,
+    "gap": -7.421196667271978,
+    "swings": 302
+   },
+   "2025": {
+    "x_whiff_pct": 26.621680586445024,
+    "gap": -1.1044392071346785,
+    "swings": 435
+   },
+   "2026": {
+    "x_whiff_pct": 30.80333060370671,
+    "gap": 1.5496105727638785,
+    "swings": 340
+   }
+  },
+  "670970": {
+   "2024": {
+    "x_whiff_pct": 26.05391911475759,
+    "gap": 0.04169841512288741,
+    "swings": 502
+   },
+   "2025": {
+    "x_whiff_pct": 24.743035182390454,
+    "gap": -3.0039047476078444,
+    "swings": 414
+   },
+   "2026": {
+    "x_whiff_pct": 28.570814867432684,
+    "gap": 5.600782765703411,
+    "swings": 676
+   }
+  }
+ },
+ "projected_whiff_next_season": {
+  "595345": 30.31240215130726,
+  "621112": 21.700551675972672,
+  "628452": 27.440656951534528,
+  "641755": 29.490076984322265,
+  "642701": 24.99905884964791,
+  "650556": 33.09219890969814,
+  "656794": 23.265688532773932,
+  "664126": 29.84444436659983,
+  "664199": 22.577217413457042,
+  "668941": 20.97959642979536,
+  "670280": 28.912021743705722,
+  "670970": 30.992727489289322,
+  "681911": 30.0212783227672
+ }
+}
