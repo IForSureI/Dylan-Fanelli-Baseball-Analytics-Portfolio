@@ -1,0 +1,116 @@
+{
+ "source": "Built 2026-11-15 by baseball.roster.cases.save_checks() from the public facts in baseball/roster/facts.py. Dollars are $M of present value at the start of 2027.",
+ "breakeven": {
+  "q=0.0, stress=0.0": 253.7964,
+  "q=0.0, stress=0.2": 229.3455,
+  "q=0.0, stress=0.35": 211.0073,
+  "q=0.25, stress=0.0": 239.8521,
+  "q=0.25, stress=0.2": 218.1752,
+  "q=0.25, stress=0.35": 201.9175,
+  "q=0.5, stress=0.0": 225.9077,
+  "q=0.5, stress=0.2": 207.0049,
+  "q=0.5, stress=0.35": 192.8277,
+  "q=1.0, stress=0.0": 198.019,
+  "q=1.0, stress=0.2": 184.6642,
+  "q=1.0, stress=0.35": 174.6482
+ },
+ "breakeven_flat_price": {
+  "q=0.0, stress=0.0": 228.356,
+  "q=0.0, stress=0.2": 208.1632,
+  "q=0.0, stress=0.35": 193.0187,
+  "q=0.25, stress=0.0": 220.2739,
+  "q=0.25, stress=0.2": 201.6976,
+  "q=0.25, stress=0.35": 187.7653,
+  "q=0.5, stress=0.0": 212.1918,
+  "q=0.5, stress=0.2": 195.2319,
+  "q=0.5, stress=0.35": 182.512,
+  "q=1.0, stress=0.0": 196.0277,
+  "q=1.0, stress=0.2": 182.3006,
+  "q=1.0, stress=0.35": 172.0053
+ },
+ "injury": {
+  "q": 0.25,
+  "war_share_lost_on_stress_path": 0.4445,
+  "days_out": 470,
+  "share_of_deal_missed": 0.161,
+  "rows": [
+   {
+    "population": "major league pitchers (Conte 2015)",
+    "n": 96,
+    "of": 382,
+    "share": 0.2513,
+    "stress_chance_time_only": 0.091,
+    "breakeven_time_only": 229.9895,
+    "breakeven_full_stress": 212.6141
+   },
+   {
+    "population": "top-five-round draftees, 2011-20 (Kriz 2026)",
+    "n": 281,
+    "of": 851,
+    "share": 0.3302,
+    "stress_chance_time_only": 0.1196,
+    "breakeven_time_only": 226.8934,
+    "breakeven_full_stress": 204.0636
+   }
+  ],
+  "headline_stress_chance": 0.2,
+  "headline_breakeven": 218.1752,
+  "grid": {
+   "q=0.0, stress=0.2": 229.3455,
+   "q=0.0, stress=0.25": 223.2328,
+   "q=0.0, stress=0.33": 213.4524,
+   "q=0.25, stress=0.2": 218.1752,
+   "q=0.25, stress=0.25": 212.756,
+   "q=0.25, stress=0.33": 204.0852,
+   "q=0.5, stress=0.2": 207.0049,
+   "q=0.5, stress=0.25": 202.2792,
+   "q=0.5, stress=0.33": 194.718,
+   "q=1.0, stress=0.2": 184.6642,
+   "q=1.0, stress=0.25": 181.3255,
+   "q=1.0, stress=0.33": 175.9836
+  }
+ },
+ "win_curve": {
+  "stress_prob": 0.2,
+  "q": 0.25,
+  "market_breakeven": 218.1752,
+  "ratio_86_91_to_78_83": 2.7857,
+  "pirates_ratio_86_91_to_78_83": 3.1739,
+  "pirates_share_of_average_86_91": 0.6239,
+  "rows": [
+   {
+    "band": "78 to 83 wins",
+    "value_of_five_wins_2006": 4.2,
+    "market price = value at 86 to 91 wins": {
+     "multiple": 0.359,
+     "breakeven": 108.8266
+    },
+    "market price = mean of the two bands": {
+     "multiple": 0.5283,
+     "breakeven": 143.5262
+    }
+   },
+   {
+    "band": "86 to 91 wins",
+    "value_of_five_wins_2006": 11.7,
+    "market price = value at 86 to 91 wins": {
+     "multiple": 1.0,
+     "breakeven": 218.1752
+    },
+    "market price = mean of the two bands": {
+     "multiple": 1.4717,
+     "breakeven": 218.1752
+    }
+   }
+  ]
+ },
+ "nov3_cap": {
+  "memo_cap_2028": 252.659,
+  "nov3_cap_2028": 258.2,
+  "ratio": 1.0219,
+  "own_club_max_2030_memo": 42.8873,
+  "own_club_max_2030_nov3": 43.8279,
+  "mlb_plan_ceiling_memo": 198.019,
+  "mlb_plan_ceiling_nov3": 201.2453
+ }
+}
