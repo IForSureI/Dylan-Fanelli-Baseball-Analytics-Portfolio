@@ -21,6 +21,8 @@
 *Gleyber Torres; 2B; B/T R/R; born Dec. 13, 1996 (29 on the report date; 2027 age 30); Detroit Tigers in 2026*
 *Written 2026-10-18; Dylan Fanelli; Data: Statcast via Baseball Savant, 2,122,518 regular-season pitches a hitter could decide on (2024-26), 905 batters; Outside facts: dated public reporting, listed under Sources; Code: `baseball/evaluation/swing_decisions.py`*
 
+**One page:** [the scouting-report version (PDF)](2026-hitter-evaluation-torres.pdf): the grades below on the 20-80 form, with the arm and everything that needs eyes marked NG. Its input is saved in [`reports/onepage/2026-hitter-evaluation-torres.json`](onepage/2026-hitter-evaluation-torres.json).
+
 **Status:** free agent. Torres played 2026 on Detroit's one-year qualifying offer of $22.025 million (MLB.com, Nov. 18, 2025). The Detroit Free Press (Sept. 27, 2026) reports him set to become a free agent, with the collective bargaining agreement expiring Dec. 1. A player who has received a qualifying offer can't receive another (MLB.com glossary), so signing him costs no draft pick.
 
 ![Torres's swing map against an average hitter, decision value year to year for every regular, and his bat speed by month](figures/2026-hitter-evaluation-torres.png)

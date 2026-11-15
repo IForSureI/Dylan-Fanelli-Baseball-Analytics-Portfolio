@@ -1,5 +1,5 @@
 <!-- portfolio:header -->
-<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Reliability Atlas](2026-reliability-atlas.md) &nbsp;|&nbsp; [IL early warning →](2026-il-early-warning.md)</sub>
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Reliability Atlas](2026-reliability-atlas.md) &nbsp;|&nbsp; [Development plan →](2026-development-plan.md)</sub>
 <!-- /portfolio:header -->
 
 # What pitch-design changes stick and pay, MLB 2024–26
@@ -266,6 +266,8 @@ Plans are YAML (`examples/`), validated before anything runs, and checked for po
 - **Fictional example:** `examples/idp-fictional.yaml` runs the whole flow on fictional pitches.
 
 ### Worked example: Logan Gilbert, 2026 (a hypothetical, retrospective plan)
+**The short version for a player-development reader:** [the plan, its verdicts and what I would do next, on one page](2026-development-plan.md).
+
 **This is my hypothetical plan written from public data. It is not my club's plan, and nothing here says what the club or the pitcher actually worked on.**
 
 **How the plan was built.** It is written as if in the 2025–26 offseason:
@@ -357,7 +359,7 @@ uv run bb idp examples/idp-fictional.yaml                   # the fictional exam
 
 <!-- portfolio:footer -->
 ---
-<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Reliability Atlas](2026-reliability-atlas.md) &nbsp;|&nbsp; [IL early warning →](2026-il-early-warning.md)</sub>
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Reliability Atlas](2026-reliability-atlas.md) &nbsp;|&nbsp; [Development plan →](2026-development-plan.md)</sub>
 
 <sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *What pitch-design changes stick and pay, MLB 2024–26*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-pitch-design-levers.md</sub>
 <!-- /portfolio:footer -->

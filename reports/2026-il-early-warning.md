@@ -1,5 +1,5 @@
 <!-- portfolio:header -->
-<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Pitch-design levers](2026-pitch-design-levers.md) &nbsp;|&nbsp; [Roster and CBA engine →](2026-roster-cba-engine.md)</sub>
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Development plan](2026-development-plan.md) &nbsp;|&nbsp; [Roster and CBA engine →](2026-roster-cba-engine.md)</sub>
 <!-- /portfolio:header -->
 
 # Velocity drops as an injured-list warning: what public pitch data can tell a medical staff (MLB 2024–26)
@@ -225,7 +225,7 @@ The study reads `data/seq/` (`bb seq` for 2024, 2025 and 2026) and pulls the Sta
 
 <!-- portfolio:footer -->
 ---
-<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Pitch-design levers](2026-pitch-design-levers.md) &nbsp;|&nbsp; [Roster and CBA engine →](2026-roster-cba-engine.md)</sub>
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Development plan](2026-development-plan.md) &nbsp;|&nbsp; [Roster and CBA engine →](2026-roster-cba-engine.md)</sub>
 
 <sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Velocity drops as an injured-list warning: what public pitch data can tell a medical staff (MLB 2024–26)*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-il-early-warning.md</sub>
 <!-- /portfolio:footer -->
