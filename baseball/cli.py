@@ -7,6 +7,7 @@
   uv run bb pull-league 2025                every pitch of a season, month by month (resumable)
   uv run bb edge 2026                       run the edge engine on 2026 (2024-25 for validation)
   uv run bb board 2026                      build the Edge Board page from the engine's outputs
+  uv run bb board-web 2026                  build the Edge Board dashboard (docs/edge-board.html) from the saved run
   uv run bb stuff-model 2026                train only the portable model (for TrackMan / Rapsodo data)
   uv run bb trades                          the MLB trade graph: pull trades + WAR, build data/graph/, who trades with whom
   uv run bb front-office                    front-office ties vs trade partners (Baseball-Reference pages, career histories)
@@ -131,6 +132,12 @@ def cmd_board(a: argparse.Namespace) -> None:
     print(f"Edge Board: {build(a.season)}")
 
 
+def cmd_board_web(a: argparse.Namespace) -> None:
+    from baseball.edge.board_web import main
+
+    main(a.season)
+
+
 def cmd_stuff_model(a: argparse.Namespace) -> None:
     from baseball.edge import stuff
     from baseball.edge.run import COLUMNS, OUT_DIR
@@ -238,6 +245,11 @@ def cmd_idp(a: argparse.Namespace) -> None:
     if a.out:
         Path(a.out).write_text(text + "\n")
         print(f"\nReview: {a.out}")
+    if a.json:
+        import json
+
+        Path(a.json).write_text(json.dumps(idp.summary(a.plan, a.as_of), indent=1, ensure_ascii=False) + "\n")
+        print(f"Table: {a.json}")
     if a.figure:
         plan = idp.load_plan(a.plan)
         print(f"Figure: {idp.progress_figure(plan, idp.pitches_for(plan), a.figure)}")
@@ -641,6 +653,10 @@ def main(argv: list[str] | None = None) -> None:
     bd.add_argument("season", type=int)
     bd.set_defaults(func=cmd_board)
 
+    bw = sub.add_parser("board-web", help="build the Edge Board dashboard from the saved run (docs/edge-board.html)")
+    bw.add_argument("season", type=int)
+    bw.set_defaults(func=cmd_board_web)
+
     sm = sub.add_parser("stuff-model", help="train the portable expected-whiff model used on TrackMan / Rapsodo data")
     sm.add_argument("season", type=int)
     sm.set_defaults(func=cmd_stuff_model)
@@ -684,6 +700,7 @@ def main(argv: list[str] | None = None) -> None:
     ip.add_argument("--as-of", default=None, help="review date (default: the plan's end)")
     ip.add_argument("--out", default=None, help="write the review markdown here")
     ip.add_argument("--figure", default=None, help="write the progress figure (PNG) here")
+    ip.add_argument("--json", default=None, help="write the checkpoint table (JSON, aggregates only) here")
     ip.set_defaults(func=cmd_idp)
 
     hk = sub.add_parser("hook", help="the exposure-aware hook: does what a hitter has seen predict the next PA, and do managers price it?")
