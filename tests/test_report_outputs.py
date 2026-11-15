@@ -166,7 +166,7 @@ def test_skenes_memo_matches_its_saved_table(tmp_path):
 def test_edge_board_savant_benchmark_matches_its_saved_table():
     b, board = _load("edge-savant-benchmark-2026.json"), _text("2026-edge-board.md")
     # what it is, and what is still open
-    assert "This is not a Stuff+ comparison." in board and "Still open: a Stuff+ benchmark." in board
+    assert "This is not a Stuff+ comparison." in board
     assert "No outside benchmark yet" not in board
     assert len(b["savant_files"]) == 6 and all(f["status"] == 200 and "baseballsavant.mlb.com" in f["url"] and "csv=true" in f["url"]
                                                for f in b["savant_files"].values())
@@ -230,3 +230,83 @@ def test_edge_board_savant_benchmark_matches_its_saved_table():
     k = rf["next_season"]["fit 2024->2025, scored 2025->2026"]
     assert f"moves expected whiff {rf['x_whiff_mean_abs_diff']:.1f} points per pitch on average (r = {rf['x_whiff_r_between_fits']:.3f} between fits)" in board
     assert k["winner"] == f["winner"] and f"the gain is {k['models']['last+expected']['gain_vs_baseline_pct']:.1f}%" in board
+
+
+def test_edge_board_stuffplus_benchmark_matches_its_saved_table():
+    b, board = _load("edge-stuffplus-benchmark-2026.json"), _text("2026-edge-board.md")
+    assert "Still open: a Stuff+ benchmark" not in board and "Stuff+ benchmark (added Nov. 15)" in board
+    z = lambda v: 0.0 if abs(v) < 0.005 else v
+    ci = lambda x: f"{z(x['r']):.2f} ({x['lo']:.2f} to {x['hi']:.2f})"
+    gain = lambda x: f"{x['gain_vs_baseline_pct']:.1f}% ({x['gain_lo']:.1f}% to {x['gain_hi']:.1f}%)"
+    size = lambda x: f"{abs(x['rmse_diff']):.2f} ({min(abs(x['lo']), abs(x['hi'])):.2f} to {max(abs(x['lo']), abs(x['hi'])):.2f})"
+    span = lambda x: f"{z(x['rmse_diff']):.2f}, interval {x['lo']:.2f} to {x['hi']:.2f}"
+    # the source and its limits, as the source note describes them
+    rows = b["fangraphs_table"]["rows"]
+    assert f"holds {rows['2025']} of 873 pitchers for 2025 (the 139 missing all threw under 15 innings) and {rows['2026']} of 868 for 2026" in board
+    assert 873 - rows["2025"] == 139 and "as shown on the public page on Nov. 15, 2026" in board
+    assert "One pair of seasons." in board and "There is no 2024 table." in board
+    # ids: no row is counted as mapped unless the register links it
+    ids = b["id_mapping"]["by_season"]
+    assert all(v["mapped"] + v["unmapped"] == v["rows"] == rows[s] for s, v in ids.items())
+    assert f"{ids['2025']['mapped']} of {ids['2025']['rows']} rows for 2025 and {ids['2026']['mapped']} of {ids['2026']['rows']} for 2026" in board
+    assert f"The {ids['2026']['unmapped']} without a link are left out" in board
+    # the pitch-type rule and the counts it rests on
+    rule, cov = b["pitch_type_rule"], b["coverage"]
+    assert rule["map"]["ST"] == "SL" and rule["map"]["SV"] == "CU" and rule["map"]["KC"] == "KC" and rule["map"]["FF"] == "FA"
+    e5, e6 = rule["evidence"]["2025"], rule["evidence"]["2026"]
+    for e in (e5, e6):   # the rule follows the counts: sweepers fill SL, slurves fill CU and not SL, pitchers with none leave SL blank
+        assert e["sweeper_no_slider"]["with_SL"] >= 0.95 * e["sweeper_no_slider"]["pitchers"]
+        assert e["no_slider_sweeper_or_slurve"]["with_SL"] <= 0.15 * e["no_slider_sweeper_or_slurve"]["pitchers"]
+        assert e["slurve_no_slider_or_sweeper"]["with_SL"] == 0 and e["slurve_no_slider_or_sweeper"]["with_CU"] == e["slurve_no_slider_or_sweeper"]["pitchers"]
+        assert e["knuckle_curve_no_curveball"]["with_KC"] > 0.9 * e["knuckle_curve_no_curveball"]["pitchers"]
+    assert f"SL column {e5['sweeper_no_slider']['with_SL']} times of {e5['sweeper_no_slider']['pitchers']} (2025) and {e6['sweeper_no_slider']['with_SL']} of {e6['sweeper_no_slider']['pitchers']} (2026)" in board
+    assert f"have one {e5['no_slider_sweeper_or_slurve']['with_SL']} times of {e5['no_slider_sweeper_or_slurve']['pitchers']} and {e6['no_slider_sweeper_or_slurve']['with_SL']} of {e6['no_slider_sweeper_or_slurve']['pitchers']}" in board
+    assert f"CU filled {e5['slurve_no_slider_or_sweeper']['with_CU']} of {e5['slurve_no_slider_or_sweeper']['pitchers']} and {e6['slurve_no_slider_or_sweeper']['with_CU']} of {e6['slurve_no_slider_or_sweeper']['pitchers']}" in board
+    assert f"KC: {e5['knuckle_curve_no_curveball']['with_KC']} of {e5['knuckle_curve_no_curveball']['pitchers']} and {e6['knuckle_curve_no_curveball']['with_KC']} of {e6['knuckle_curve_no_curveball']['pitchers']}" in board
+    assert f"drops {cov['2025']['dropped_by_shared_column_rule']} pitches in 2025 and {cov['2026']['dropped_by_shared_column_rule']} in 2026" in board
+    # 1. same season
+    pooled = b["same_season"]["pooled"]
+    xs = pooled["x_whiff_pct ~ stuff_plus"]
+    assert f"r = {ci(xs['raw'])} across all pitches and {ci(xs['within_pitch_type'])} within pitch type, on {xs['raw']['n']:,} pitches by {xs['raw']['pitchers']} pitchers" in board
+    assert len({v["raw"]["n"] for v in pooled.values()}) == 1   # the three measures are compared on one set of rows
+    bt = b["expected_vs_stuff_by_pitch_type"]
+    others = [v["r"] for k, v in bt.items() if k != "ST"]
+    assert f"runs {min(others):.2f} to {max(others):.2f}, except sweepers: r = {ci(bt['ST'])} on {bt['ST']['n']} sweepers" in board
+    assert bt["ST"]["lo"] < 0 < bt["ST"]["hi"] and min(v["lo"] for k, v in bt.items() if k != "ST") > 0
+    w = lambda k: pooled[k]["within_pitch_type"]
+    assert (f"Stuff+ {w('stuff_plus ~ whiff_pct')['r']:.2f}, Savant miss distance {w('sv_miss_in ~ whiff_pct')['r']:.2f}, "
+            f"my expected whiff {w('x_whiff_pct ~ whiff_pct')['r']:.2f}") in board
+    assert (f"Stuff+ {ci(w('stuff_plus ~ sv_rv100'))}, mine {ci(w('x_whiff_pct ~ sv_rv100'))}, "
+            f"miss distance {ci(w('sv_miss_in ~ sv_rv100'))}") in board
+    assert w("stuff_plus ~ sv_rv100")["r"] > w("x_whiff_pct ~ sv_rv100")["r"] and w("stuff_plus ~ whiff_pct")["r"] > w("x_whiff_pct ~ whiff_pct")["r"]
+    # 2. pitcher level
+    p = b["pitcher_level"]
+    assert f"r = {ci(p['x_whiff_pct ~ stuff_plus'])} on {p['pitcher_seasons']:,} pitcher-seasons ({p['pitchers']} pitchers)" in board
+    assert f"Stuff+ is {ci(p['stuff_plus ~ sv_rv100'])} and mine {ci(p['x_whiff_pct ~ sv_rv100'])}" in board
+    # 3. next season, cross-validated by pitcher inside the one pair
+    n = b["next_season"]
+    cv, ho = n["cross_validated_by_pitcher"], n["weights_from_earlier_pair"]
+    m, c = cv["models"], cv["contrasts"]
+    assert n["pair"] == "2025->2026" and cv["folds"] == 5 and "five-fold cross-validation by pitcher" in board
+    assert f"{cv['pitches']} pitches, {cv['pitchers']} pitchers, of the {n['pitches_in_savant_benchmark_test_set']:,} in the Savant test" in board
+    assert n["pitches_in_savant_benchmark_test_set"] == _load("edge-savant-benchmark-2026.json")["next_season"]["fit 2024->2025, scored 2025->2026"]["test_pitches"]
+    assert f"(RMSE {m['last_whiff']['rmse']:.2f})" in board and f"Raw Stuff+ scores {m['stuff']['rmse']:.2f}" in board
+    assert all(m["last_whiff"]["rmse"] < m[k]["rmse"] for k in ("expected", "stuff", "miss", "expected+type", "stuff+type", "miss+type"))
+    assert f"Stuff+ {m['stuff+type']['rmse']:.2f}, miss distance {m['miss+type']['rmse']:.2f}, mine {m['expected+type']['rmse']:.2f}" in board
+    assert f"ahead of mine by {size(c['expected+type minus stuff+type'])}" in board
+    assert f"tie (difference {span(c['stuff+type minus miss+type'])})" in board
+    assert (f"miss distance {gain(m['last+miss+type'])}, Stuff+ {gain(m['last+stuff+type'])}, mine {gain(m['last+expected+type'])}") in board
+    assert f"Mine against Stuff+: difference {span(c['last+expected+type minus last+stuff+type'])}" in board
+    assert f"moves RMSE by {span(c['last+expected+stuff+type minus last+expected+type'])}: not a clear gain" in board
+    assert f"cut {gain(m['last+expected+stuff+miss+type'])}" in board
+    assert f"cuts {ho['models']['last+expected']['gain_vs_baseline_pct']:.1f}% that way and {m['last+expected']['gain_vs_baseline_pct']:.1f}% cross-validated" in board
+    assert not any("stuff" in k for k in ho["models"])   # nothing with Stuff+ is scored on weights from a year that has no Stuff+
+    # the words follow the saved verdicts
+    assert cv["winner"]["alone_given_pitch_type"] == "stuff+type" and "Given the pitch type, Stuff+ beats my model." in board
+    assert cv["winner"]["with_last_season_given_pitch_type"] == "tie" and cv["winner"]["stuff_vs_miss_alone_given_pitch_type"] == "tie"
+    lo, hi = c["last+expected+stuff+type minus last+expected+type"]["lo"], c["last+expected+stuff+type minus last+expected+type"]["hi"]
+    assert lo < 0 < hi
+    # sweepers
+    xw, sw = b["expected_vs_whiff_by_pitch_type"]["ST"], b["stuff_vs_whiff_by_pitch_type"]["ST"]
+    assert f"On the {xw['n']} sweepers here" in board and f"(r = {ci(xw)})" in board and f"(r = {ci(sw)})" in board
+    assert xw["lo"] < 0 < xw["hi"] and sw["lo"] > xw["hi"]
