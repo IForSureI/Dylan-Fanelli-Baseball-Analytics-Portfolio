@@ -2,24 +2,6 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
-## 2026-11-15: Velocity drops as an injured-list warning
-**Built**
-- **`baseball/health/il_warning.py`, `bb il-warning 2026`:** every pitcher outing of 2024–26 with its fastball velocity, spin, ride, extension, release height and arm angle against his own regressed baseline (the Atlas's two-level noise model and a month-of-season curve, both re-fit on 2024–25), matched to every IL placement in the MLB Stats API transactions. A naive model (role, age, IL history, workload, rest, month) and a tracking model, both fit on 2024–25 and scored on 2026, plus alert rules with false alarms per club-season.
-- **`reports/2026-il-early-warning.md`** with its figure, a README row, a "What a club gets" row and a `Health` toolkit row. Status: awaiting its separate review.
-- **`reports/outputs/il-warning-2026.json`** and a check in `tests/test_report_outputs.py`; 30 hand-checked tests in `tests/test_il_warning.py`.
-
-**Decided**
-- **The alert threshold was set on 2024–25 by a stated rule** (the lowest on a 0.5 mph grid with at most 10 false alarms per club-season): 2.0 mph. 2026 kept the training numbers: 164 flags, 10.4% followed by an arm IL placement within 14 days (base rate 3.6%), 4.9 false alarms per club-season.
-- **The starter and reliever split is reported as exploratory.** It came after the first scoring of 2026 and rests on 24 starter flags.
-
-**Learned**
-- The association is real and replicates (odds ratio 1.18 per SD on 2026), but it lives in the last outing before the stint. With that outing left out, it is not detected in 2026 (1.02, 0.91 to 1.14).
-- Replicating an association is not the same as improving a forecast: the tracking model's AUC gain on 2026 is +0.005 (−0.022 to +0.031).
-- Spin, ride, extension, release height and arm angle add no confirmed signal once velocity is in.
-
-**Not done**
-- The separate review pass. In-game velocity paths, secondary-pitch velocity and pitch-mix changes as earlier signs. A second held-out season (2027).
-
 ## 2026-11-14: Audit fixes: qualifying offers, availability, one valuation table, held-out stuff test
 **Built**
 - **Bullpen memo and one-pager:** the Nov. 2 qualifying offers entered as facts (AP, CBS Sports): Morejón and Bednar have one, Abreu does not. The memo's own rule now sets the walk-away at four years, $60M, the same as the opening offer, and the landing odds there are 26% (47% at $72M). Abreu is the likely signing. The Fairbanks line now says he is priced for a third of 2027.
@@ -31,6 +13,8 @@ Newest first. One entry per working session: what was built, what was decided, w
 - **Wording and dates:** pitch familiarity is now "in association, yes" with its placebo stated up front; pitch changes on the Edge Board are candidates; arbitration odds carry their ranges (Smith 49% to 71%, Varland 40% to 77%); the tender deadline is Nov. 20; the draft table says average where it meant average; front-office ties say how the dating rule moves p; the Atlas lists three gaps; the Skubal page is marked as not updated for 2026; two ambiguous lines on the Spanish coach page now carry a subject.
 - **README:** the blanket claims are replaced with what was tested and how. The test count is no longer a hard number. "Run it" says what compare-relievers needs.
 
+- **Pitch familiarity, the two open checks:** Pitch familiarity: ran the two open checks on the 2024-26 pitch data (`baseball/edge/familiarity_checks.py`, results in `reports/outputs/familiarity-checks-2024-26.json`, 2,141,219 pitches). Shuffle null, 1,000 shuffles per design and pitch group, seed 20261114: with pitch types scrambled inside the plate appearance the whiff coefficient falls to −0.08 / +0.07 / −0.13 (fastballs / breaking / changeups and splitters) against −0.70 / −0.91 / −1.87 real, and no shuffle reached the real number; about half survives a swap of counts across hitters facing the same pitcher, so that half can't be assigned to the hitter's own exposure. Leave-own-game-out: −0.68 / −0.87 / −1.83 under fixed effects, −0.44 / −0.55 / −1.47 under season levels, all p < 0.001, so the published sizes are now stated as the top of a 60% to 100% range. Downgraded: cutters are unconfirmed (p = 0.09 with the own game left out, p = 0.19 across hitters), and "probably not overstated" is gone because the fixed effects tilt the estimate 3% to 4% away from zero. Fixed two cutter cells that didn't match the saved table (−0.50 to −0.49 whiff; +0.45 (0.23), p = 0.06 to +0.46 (0.24), p = 0.05 chase).
+- **The Edge Board's pitch-change detector has a measured chance rate.** `baseball/edge/shift_null.py` puts each pitcher's games in random order and reruns the detector (200 shuffled seasons, seed 20261114, 868 pitchers, 2,144 pitcher-pitch series): about 33 candidates per shuffled season against the 292 found (11%; range 20 to 50), saved in `reports/outputs/edge-shift-null-2026.json`. The report drops "has not been measured" and says about nine in ten are more than chance order. They stay leads: the shuffle cannot tell a deliberate change from drift, and a straight line fits 43 of the 292 as well as the step. The public Stuff+ comparison was tried Nov. 15 and is still not done (the pybaseball pull came back empty); it needs the FanGraphs Stuff+ CSV export for 2025 and 2026.
 **Decided**
 - **The prediction log's calls are not edited.** The qualifying offers and the held-out result are in a dated notes section above the calls.
 - **The Skenes headline keeps the tiered price,** because that is what the cited study reports, and shows the flat-price answer beside it. A club that prices every player at one rate should walk away at about $200M.
@@ -42,7 +26,7 @@ Newest first. One entry per working session: what was built, what was decided, w
 - Leave-one-out inside the fitting seasons is not a held-out season. The held-out gain is smaller (6.4% against 8.2%).
 
 **Not done**
-- A null simulation and leave-own-game-out fixed effects for pitch familiarity; a permutation null for the pitch-change detector; a Stuff+ benchmark; a sourced injury rate and cap probability for Skenes; a club win curve for any contract price. Each needs the pitch-level data or an outside table, and each report now says so.
+- A Stuff+ benchmark (the FanGraphs table would not load as data on Nov. 15; it needs a CSV export with player IDs); a sourced injury rate and cap probability for Skenes; a club win curve for any contract price. Each needs the pitch-level data or an outside table, and each report now says so.
 
 ## 2026-11-09: Postseason page filters, new palette and display face
 **Built**
