@@ -1,6 +1,7 @@
 """How much a quoted pitch grade moves when the expected-whiff model is fit again.
 
   uv run python -m baseball.edge.grade_noise 2026 --pitchers 670970 650556 664126
+  uv run python -m baseball.edge.grade_noise 2026 --pitchers 670970 650556 664126 --saved --list <ids>   (the saved run's values only)
 
 The model's cross-fit folds and binning follow the order of the swings (see `stuff_checks.py`), so two fits
 of the same data give slightly different expected whiffs. A report that quotes one pitch's expected whiff,
@@ -85,6 +86,35 @@ def pitcher_level(tables_by_fit: list[pd.DataFrame], ids) -> dict:
     return {str(p): {"lo": min(v), "hi": max(v)} for p, v in vals.items()}
 
 
+def saved_values(season: int, ids, list_ids=(), edge_dir: Path | None = None) -> dict:
+    """The numbers a report may print from the expected-whiff model, read from the saved run and nothing else:
+    per pitch (expected whiff, gap, stuff percentile and grade, projection, next-season percentile and grade),
+    per pitcher and season (swing-weighted expected whiff and gap, reliever.gap_history), and the swing-weighted
+    next-season whiff projection for every pitcher in `ids` and `list_ids`."""
+    from baseball.evaluation.reliever import gap_history
+
+    base = edge_dir or EDGE_DIR / str(season)
+    tables = {s: pd.read_parquet(base / f"stuff_{s}.parquet") for s in (season - 2, season - 1, season) if (base / f"stuff_{s}.parquet").exists()}
+    proj = pd.read_parquet(base / "projection.parquet")
+    pitches = {f"{r.pitcher}_{r.pitch_type}": {k: v for k, v in r._asdict().items() if k != "Index"}
+               for r in grade_rows(tables[season], proj, ids).itertuples()}
+    h = gap_history(tables, ids).set_index("pitcher")
+    by_season = {str(int(pid)): {str(s): {"x_whiff_pct": float(h.loc[pid, f"x_whiff_pct_{s}"]), "gap": float(h.loc[pid, f"gap_{s}"]),
+                                          "swings": int(h.loc[pid, f"swings_{s}"])}
+                                 for s in tables if f"gap_{s}" in h and np.isfinite(h.loc[pid, f"gap_{s}"])} for pid in h.index}
+    everyone = [int(i) for i in dict.fromkeys([*ids, *list_ids])]
+    pr = proj[proj["pitcher"].isin(everyone)]
+    whiff = pr.assign(pw=pr["proj_whiff_pct"] * pr["swings"]).groupby("pitcher").agg(pw=("pw", "sum"), sw=("swings", "sum"))
+    return {
+        "source": f"python -m baseball.edge.grade_noise {season} --saved, read from the saved bb edge {season} run "
+                  f"(stuff_<season>.parquet and projection.parquet). No fit is made.",
+        "grading": "percentile among pitches of the same type group with 50+ tracked swings, grade = 50 + 10z to the nearest 5",
+        "pitches": pitches,
+        "pitcher_by_season": by_season,
+        "projected_whiff_next_season": {str(int(pid)): float(r["pw"] / r["sw"]) for pid, r in whiff.iterrows()},
+    }
+
+
 def run(season: int, ids, n_orders: int = N_ORDERS, log=print) -> dict:
     from baseball.edge.run import COLUMNS
     from baseball.ingest.league import load_season
@@ -132,5 +162,11 @@ if __name__ == "__main__":
     ap.add_argument("season", type=int)
     ap.add_argument("--pitchers", type=int, nargs="+", required=True, help="MLBAM pitcher ids")
     ap.add_argument("--orders", type=int, default=N_ORDERS)
+    ap.add_argument("--saved", action="store_true", help="write only the saved run's values (bullpen-grades-<season>.json); no fits")
+    ap.add_argument("--list", type=int, nargs="*", default=[], help="more MLBAM ids whose projected whiff a report prints")
     a = ap.parse_args()
-    run(a.season, a.pitchers, a.orders)
+    if a.saved:
+        OUT.mkdir(parents=True, exist_ok=True)
+        (OUT / f"bullpen-grades-{a.season}.json").write_text(json.dumps(saved_values(a.season, a.pitchers, a.list), indent=1, default=float))
+    else:
+        run(a.season, a.pitchers, a.orders)

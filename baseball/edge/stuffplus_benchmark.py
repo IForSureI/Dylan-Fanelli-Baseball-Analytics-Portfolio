@@ -234,9 +234,10 @@ def pair(prev_frame: pd.DataFrame, curr_table: pd.DataFrame, min_swings: int = s
     p = prev_frame.dropna(subset=["stuff_plus", "sv_miss_in"])
     c = sb.savant_type(curr_table[curr_table["swings"] >= min_swings]).assign(pitcher=lambda d: d["pitcher"].astype("int64"))
     keep = ["pitcher", "sv_type", "pitch_type", "swings", "whiff_pct", "x_whiff_pct", "sv_miss_in", "stuff_plus", "ip"]
+    keep += ["x_loc_pct"] if "x_loc_pct" in p else []
     m = p[keep].merge(c[["pitcher", "sv_type", "swings", "whiff_pct"]], on=["pitcher", "sv_type"], suffixes=("_prev", "_curr"))
     return m.rename(columns={"x_whiff_pct": "x_whiff_pct_prev", "sv_miss_in": "sv_miss_in_prev", "stuff_plus": "stuff_plus_prev",
-                             "ip": "ip_prev"}).reset_index(drop=True)
+                             "ip": "ip_prev", "x_loc_pct": "x_loc_pct_prev"}).reset_index(drop=True)
 
 
 def folds(pitchers, k: int = 5, seed: int = 7) -> np.ndarray:
@@ -311,6 +312,27 @@ def held_out(train: pd.DataFrame, test: pd.DataFrame, n_boot: int = 2000, seed: 
     return out
 
 
+# The location-aware expected whiff (stuff_location.py) as extra rows. It is not a stuff measure: it also reads
+# where the pitch crossed the plate and the count. The rows above are left exactly as they were.
+LOCATION_MODELS = {"last_whiff": ["whiff_pct_prev"], "location": ["x_loc_pct_prev"], "location+type": ["x_loc_pct_prev", "TYPE"],
+                   "last+location": ["whiff_pct_prev", "x_loc_pct_prev"], "last+location+type": ["whiff_pct_prev", "x_loc_pct_prev", "TYPE"],
+                   "expected+type": MODELS["expected+type"], "stuff+type": MODELS["stuff+type"], "miss+type": MODELS["miss+type"],
+                   "last+expected+type": MODELS["last+expected+type"], "last+stuff+type": MODELS["last+stuff+type"],
+                   "last+stuff+location+type": ["whiff_pct_prev", "stuff_plus_prev", "x_loc_pct_prev", "TYPE"]}
+LOCATION_CONTRASTS = [("location+type", "stuff+type"), ("location+type", "expected+type"), ("location+type", "miss+type"),
+                      ("last+location+type", "last+stuff+type"), ("last+location+type", "last+expected+type"),
+                      ("last+stuff+location+type", "last+stuff+type")]
+
+
+def location_rows(train: pd.DataFrame, test: pd.DataFrame, n_boot: int = 2000, seed: int = 7) -> dict:
+    """Held-out scores for the location-aware measure beside Stuff+, my expected whiff and miss distance, on the
+    same pitches and with the same weights-from-the-earlier-pair design as `held_out()`."""
+    out = score(test, holdout_predictions(train, test, LOCATION_MODELS), LOCATION_CONTRASTS, n_boot, seed)
+    out["train_pitches"] = int(len(train))
+    out["winner"] = {f"{a} vs {b}": verdict(out, a, b) for a, b in LOCATION_CONTRASTS}
+    return out
+
+
 def next_season(test: pd.DataFrame, train_earlier: pd.DataFrame | None = None, k: int = 5, n_boot: int = 2000, seed: int = 7) -> dict:
     """Score every model on `test` (the one pair with Stuff+).
 
@@ -342,6 +364,11 @@ def run(season: int = 2026, n_boot: int = 2000, seed: int = 7, log=print) -> dic
 
     seasons = [season - 2, season - 1, season]
     tables = sb.load_tables(seasons, season)
+    loc_files = {s: sb.EDGE_DIR / str(season) / f"stuff_loc_{s}.parquet" for s in seasons}
+    has_location = all(f.exists() for f in loc_files.values())
+    if has_location:   # the location-aware measure, from stuff_location.py, joined to the saved tables by pitcher and pitch type
+        for s in seasons:
+            tables[s] = tables[s].merge(pd.read_parquet(loc_files[s])[["pitcher", "pitch_type", "x_loc_pct"]], on=["pitcher", "pitch_type"], how="left")
     savant = {s: sb.load_savant(s) for s in seasons}
     fg_all = load_fangraphs()
     fg, id_counts = map_ids(fg_all, people.load())
@@ -413,6 +440,17 @@ def run(season: int = 2026, n_boot: int = 2000, seed: int = 7, log=print) -> dic
                           "cross_validated_by_pitcher_15_ip": {k: v for k, v in next_season(ip15(test), None, n_boot=n_boot, seed=seed)
                                                                ["cross_validated_by_pitcher"].items()}},
     }
+    if has_location:
+        tr, te = ip15(train_stuff).dropna(subset=["x_loc_pct_prev"]), ip15(test).dropna(subset=["x_loc_pct_prev"])
+        loc_frame = pooled.dropna(subset=["x_loc_pct"])
+        result["location_aware"] = {
+            "what": "Extra rows for the location-aware expected whiff (stuff_location.py): physics plus plate location and count, from a fresh "
+                    "fit. Not a stuff measure. No row above is changed by it.",
+            "held_out_15_ip": location_rows(tr, te, n_boot, seed),
+            "pitches_missing_the_measure": {"train": int(len(ip15(train_stuff)) - len(tr)), "test": int(len(ip15(test)) - len(te))},
+            "same_season_vs_whiff_by_pitch_type": by_pitch_type(loc_frame, "x_loc_pct", "whiff_pct", n_boot=n_boot, seed=seed),
+            "same_season_vs_stuff_plus_by_pitch_type": by_pitch_type(loc_frame, "x_loc_pct", "stuff_plus", n_boot=n_boot, seed=seed),
+        }
     OUT.mkdir(parents=True, exist_ok=True)
     path = OUT / f"edge-stuffplus-benchmark-{season}.json"
     path.write_text(json.dumps(result, indent=1, default=float))
