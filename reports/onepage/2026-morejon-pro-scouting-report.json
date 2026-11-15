@@ -1,0 +1,79 @@
+{
+ "type": "pitcher",
+ "player": {
+  "name": "Adrián Morejón",
+  "position": "LHP",
+  "bats": "L",
+  "throws": "L",
+  "height": "5-11",
+  "weight": "224",
+  "dob": "1999-02-27",
+  "team": "San Diego Padres",
+  "level": "MLB",
+  "class": "Free agent (qualifying offer Nov. 2)"
+ },
+ "report_date": "2026-10-14",
+ "basis": "Statcast 2024-26 (1,318 pitches in 2026; postseason check) + public reporting. No live or video look.",
+ "scout": "Dylan Fanelli",
+ "physical": "Listed 5-11, 224; physically mature. Extension 6.23 ft (33rd pct LHP). Signed from Cuba in 2016 at 17.",
+ "tools": [
+  {
+   "name": "Sinker",
+   "velo": "98.5-100.5, T101.7",
+   "shape": "9.2 in IVB, 16.0 in arm-side, 2,404 rpm",
+   "usage": "48%",
+   "present": 70,
+   "future": 70,
+   "notes": "Base 75 (2026 starters), -5 for ride over sink (IVB 9.2 vs lg 7.6). 58% GB, 19% whiff/swing (lg 14%). In on LHH hands."
+  },
+  {
+   "name": "Changeup",
+   "velo": "91-93, T94",
+   "shape": "-1.1 in IVB, 10.7 in arm-side, 1,041 rpm",
+   "usage": "23%",
+   "present": 70,
+   "future": 70,
+   "notes": "Splitter-like tumble, 10.4 in under the SI. 56% whiff on 182 swings (lg 31%); RHH put-away. Matches his 2024 'KN' (86 mph, 843 rpm). 70, not 80: 7.4 mph off the SI; this 92-mph version is new."
+  },
+  {
+   "name": "4-Seam",
+   "velo": "98-100, T101",
+   "shape": "15.2 in IVB, 6.0 in arm-side",
+   "usage": "14%",
+   "present": 70,
+   "future": 70,
+   "notes": "Base 70, -5 for average ('dead zone') shape, +5 for results: 42% whiff on 123 swings (lg 22%) up in the zone off the SI. Small sample."
+  },
+  {
+   "name": "Slider",
+   "velo": "88-91, T92",
+   "shape": "-0.5 in IVB, 5.7 in glove-side, 2,892 rpm",
+   "usage": "15%",
+   "present": 50,
+   "future": 55,
+   "notes": "Whiffs 40% (2024), 38% (2025), 30% on 77 swings (2026). Now 3.3 mph harder with 2.7 in less drop, toward a cutter. Future on the record and a 70 stuff grade (70-75 on refits)."
+  },
+  {
+   "name": "Control",
+   "shape": "uBB 6.0%; 1st-pitch strike 65.4% (lg 61.3%)",
+   "present": 60,
+   "future": 60,
+   "notes": "Three-year level (7.0, 4.9, 6.0%); 2nd half 2026 ran 7.3%."
+  },
+  {
+   "name": "Command",
+   "shape": "Location only",
+   "present": "NG",
+   "future": "NG",
+   "notes": "Shows where pitches went, not where they were meant to go. Needs a look."
+  }
+ ],
+ "delivery": "Three-quarters, a bit above the LHP average (41.2 deg); release scatter under the league median on every pitch. Changeup leaves near the fastball slot (tell score 0.89, below the CH median). Slider leaves 4.6 in wider, 1.5 in lower (tell 0.997, top 4%), as much as in 2024, his best slider year: the shape change is the likelier cause. NG: time to plate, effort, landing, arm action, fielding.",
+ "performance": "2026: 76 G, 86.0 IP, 2.83 ERA (2.15 FIP; 2.37 as published), 30.4% K, 8.0% BB, 28 holds, 3 SV; xwOBA vs RHH .247, vs LHH .221. Atlas true level +0.56 runs/100 (-0.21 to +1.33). Health (public): TJ 2021; elbow sprain 2023; no IL 2024-26. Makeup (reported, one SI piece): Mason Miller credits his workload to \"what he does to prepare\".",
+ "ofp": 60,
+ "role": "B1 now and in 2027 (high-leverage, closer-capable)",
+ "risk": "Moderate: recent gains; elbow history",
+ "eta": "Established",
+ "summary": "Power sinker/changeup lefty: changeup for RHH, sinker and slider for LHH. Graded as the reliever (no CH to LHH, 40-pitch max, elbow). Needs the +1.8 mph, the 92-mph changeup and the elbow to hold. Biggest question: how much of the 56% changeup whiff rate survives a second year.",
+ "action": "Preferred to Abreu (#2) at or under 4/$60M ($72M less the pick cost of his Nov. 2 qualifying offer; updated Nov. 15). Before the bid, grade his 2026 video: time to plate, whether the harder slider still gets chased, effort on back-to-backs, changeup vs LHH. Elbow medical gates any multi-year deal."
+}
