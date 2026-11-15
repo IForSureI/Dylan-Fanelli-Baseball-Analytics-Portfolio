@@ -73,7 +73,7 @@ def test_mapping_evidence_counts_filled_columns():
 def test_season_frame_joins_stuff_and_savant_on_the_right_columns():
     counts = _counts([(1, "FF", 900), (1, "ST", 400), (2, "KC", 300)])
     table = _table([(1, "FF", 200, 22.0, 21.0), (1, "ST", 100, 35.0, 33.0), (2, "KC", 80, 30.0, 31.0), (2, "CH", 40, 30.0, 31.0)])
-    stuff = pd.DataFrame({"pitcher": [1, 1, 2, 2], "fg_col": ["FA", "SL", "KC", "CU"], "stuff_plus": [104.0, 118.0, 97.0, 50.0]})
+    stuff = pd.DataFrame({"pitcher": [1, 1, 2, 2], "fg_col": ["FA", "SL", "KC", "CU"], "stuff_plus": [104.0, 118.0, 97.0, 50.0], "ip": 50.0})
     savant = pd.DataFrame({"pitcher": [1, 1, 2], "pitch_type": ["FF", "ST", "CU"], "sv_whiff_pct": [22.0, 35.0, 30.0], "sv_rv100": [0.5, 1.0, -0.2],
                            "sv_put_away": np.nan, "sv_xwoba": np.nan, "sv_pitches": [900, 400, 300], "sv_miss_in": [1.0, 4.8, 4.4], "sv_swings": 100})
     f = sp.season_frame(table, counts, stuff, savant).set_index(["pitcher", "pitch_type"])
@@ -169,3 +169,40 @@ def test_pitcher_level_weights_by_swings():
     assert r.loc[1, "x_whiff_pct"] == pytest.approx(25.0) and r.loc[1, "whiff_pct"] == pytest.approx(26.0)   # (300 * 20 + 100 * 40) / 400
     assert r.loc[1, "sv_rv100"] == pytest.approx(0.5) and r.loc[1, "swings"] == 400                         # (900 * 1 - 300 * 1) / 1200
     assert np.isnan(sp.roll_up(frame.assign(sv_rv100=[1.0, np.nan, 0.5])).set_index("pitcher").loc[1, "sv_rv100"])
+
+
+def test_load_fangraphs_stacks_every_season(tmp_path):
+    a, b = tmp_path / "a.csv", tmp_path / "b.csv"
+    _fg([(2024, 1, {"FA": 99})]).to_csv(a, index=False)
+    _fg([(2025, 1, {"FA": 101}), (2026, 1, {"FA": 103})]).to_csv(b, index=False)
+    out = sp.load_fangraphs([a, b])
+    assert out["season"].tolist() == [2024, 2025, 2026] and out["FA"].tolist() == [99, 101, 103]
+
+
+def test_held_out_fits_stuff_weights_on_the_earlier_pair_only():
+    train, test = _pair(600, 11, "quality"), _pair(600, 12, "quality")
+    a = sp.held_out(train, test, n_boot=100, seed=1)
+    assert a["train_pitches"] == 600 and a["pitches"] == 600 and set(sp.NEEDS_STUFF) <= set(a["models"])
+    # the predictions for the test pair do not move when its outcomes do
+    moved = test.assign(whiff_pct_curr=test["whiff_pct_curr"] + 40)
+    p0, p1 = sp.holdout_predictions(train, test, sp.MODELS), sp.holdout_predictions(train, moved, sp.MODELS)
+    assert all(np.allclose(p0[k], p1[k]) for k in sp.MODELS)
+    # and they do move when the earlier pair's outcomes do
+    p2 = sp.holdout_predictions(train.assign(whiff_pct_curr=train["whiff_pct_curr"] + 40), test, sp.MODELS)
+    assert not np.allclose(p0["stuff+type"], p2["stuff+type"])
+    # the planted structure is found out of sample: Stuff+ with the pitch type beats expected whiff with it
+    assert a["winner"]["alone_given_pitch_type"] == "stuff+type" and a["winner"]["alone"] == "expected"
+    w = sb.weights(test)
+    assert a["models"]["stuff+type"]["rmse"] == pytest.approx(sb.rmse(test["whiff_pct_curr"], p0["stuff+type"], w))
+
+
+def test_pair_carries_innings_so_the_floor_can_be_applied():
+    counts = _counts([(1, "FF", 900), (2, "FF", 900)])
+    prev = _table([(1, "FF", 200, 22.0, 21.0), (2, "FF", 200, 25.0, 24.0)])
+    curr = _table([(1, "FF", 200, 23.0, 0.0), (2, "FF", 200, 24.0, 0.0)])
+    stuff = pd.DataFrame({"pitcher": [1, 2], "fg_col": ["FA", "FA"], "stuff_plus": [104.0, 96.0], "ip": [9.2, 60.0]})
+    savant = pd.DataFrame({"pitcher": [1, 2], "pitch_type": ["FF", "FF"], "sv_whiff_pct": [22.0, 25.0], "sv_rv100": [0.5, 0.1],
+                           "sv_put_away": np.nan, "sv_xwoba": np.nan, "sv_pitches": [900, 900], "sv_miss_in": [1.0, 1.1], "sv_swings": 200})
+    m = sp.pair(sp.season_frame(prev, counts, stuff, savant), curr)
+    assert sorted(m["ip_prev"]) == [9.2, 60.0]
+    assert m[m["ip_prev"] >= sp.MIN_IP]["pitcher"].tolist() == [2]
