@@ -1,4 +1,4 @@
-"""Dylan Fanelli's baseball operations library.
+"""Baseball operations library by Dylan Fanelli.
 
 Organized around the jobs of a front office:
 
