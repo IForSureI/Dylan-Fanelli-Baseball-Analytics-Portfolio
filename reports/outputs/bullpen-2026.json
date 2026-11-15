@@ -1,0 +1,226 @@
+{
+ "source": "Built 2026-11-14 from the relief-season tables (data/edge/backtest/relief_seasons_2024..2026.csv) with baseball.roster.bullpen_case.money().",
+ "line": {
+  "intercept": 0.9336,
+  "slope": 9.5994,
+  "resid_sd": 4.208,
+  "slope_se": 3.5772,
+  "cov": [
+   [
+    13.3728,
+    -12.6621
+   ],
+   [
+    -12.6621,
+    12.7961
+   ]
+  ],
+  "r2": 0.2748,
+  "n": 21,
+  "x_min": 0.4534,
+  "x_max": 1.4193,
+  "x_mean": 0.9895,
+  "median_aav_per_war": 10.9032
+ },
+ "price": {
+  "670970": {
+   "comps_way": {
+    "aav": 18.3647,
+    "se_fit": 3.0952,
+    "sd_pred": 5.2237,
+    "lo": 7.4312,
+    "hi": 29.2981,
+    "extrapolated": true
+   },
+   "three_season": {
+    "aav": 17.7454,
+    "se_fit": 2.8756,
+    "sd_pred": 5.0967,
+    "lo": 7.0778,
+    "hi": 28.4129,
+    "extrapolated": true
+   }
+  },
+  "650556": {
+   "comps_way": {
+    "aav": 12.1827,
+    "se_fit": 1.1263,
+    "sd_pred": 4.3561,
+    "lo": 3.0652,
+    "hi": 21.3002,
+    "extrapolated": false
+   },
+   "three_season": {
+    "aav": 13.0461,
+    "se_fit": 1.3386,
+    "sd_pred": 4.4158,
+    "lo": 3.8038,
+    "hi": 22.2885,
+    "extrapolated": false
+   }
+  },
+  "664126": {
+   "comps_way": {
+    "aav": 6.9175,
+    "se_fit": 1.5997,
+    "sd_pred": 4.5018,
+    "lo": -2.5049,
+    "hi": 16.3399,
+    "extrapolated": false
+   },
+   "three_season": {
+    "aav": 7.7724,
+    "se_fit": 1.3512,
+    "sd_pred": 4.4196,
+    "lo": -1.478,
+    "hi": 17.0227,
+    "extrapolated": false
+   }
+  },
+  "670280": {
+   "comps_way": {
+    "aav": 14.4593,
+    "se_fit": 1.7592,
+    "sd_pred": 4.5609,
+    "lo": 4.9132,
+    "hi": 24.0054,
+    "extrapolated": false
+   },
+   "three_season": {
+    "aav": 13.4742,
+    "se_fit": 1.4587,
+    "sd_pred": 4.4537,
+    "lo": 4.1525,
+    "hi": 22.7958,
+    "extrapolated": false
+   }
+  },
+  "628452": {
+   "comps_way": {
+    "aav": 12.0684,
+    "se_fit": 1.1022,
+    "sd_pred": 4.3499,
+    "lo": 2.9639,
+    "hi": 21.1729,
+    "extrapolated": false
+   },
+   "three_season": {
+    "aav": 14.6574,
+    "se_fit": 1.8226,
+    "sd_pred": 4.5857,
+    "lo": 5.0593,
+    "hi": 24.2555,
+    "extrapolated": true
+   }
+  }
+ },
+ "breakeven": {
+  "(670970, 4)": {
+   "market": 18.099,
+   "engine": 30.673,
+   "market_comps_way": 18.7299
+  },
+  "(670970, 5)": {
+   "market": 17.817,
+   "engine": 28.6289,
+   "market_comps_way": 18.437
+  },
+  "(650556, 2)": {
+   "market": 12.6384,
+   "engine": 12.8107,
+   "market_comps_way": 11.805
+  },
+  "(664126, 2)": {
+   "market": 4.4744,
+   "engine": 2.9199,
+   "market_comps_way": 3.9937
+  },
+  "(670280, 1)": {
+   "market": 12.2201,
+   "engine": 13.3975,
+   "market_comps_way": 13.1067
+  },
+  "(628452, 1)": {
+   "market": 13.285,
+   "engine": 14.6616,
+   "market_comps_way": 10.9549
+  }
+ },
+ "qo": {
+  "670970": {
+   "losing_club_gets": "pick after Round 4",
+   "signing_club_forfeits_picks": [
+    "2nd-highest"
+   ],
+   "signing_club_forfeits_pool": 0.5,
+   "note": null,
+   "pick_number": 55,
+   "pick_value": 10.09,
+   "total_value": 10.59
+  },
+  "650556": {
+   "losing_club_gets": "pick after Competitive Balance Round B",
+   "signing_club_forfeits_picks": [
+    "2nd-highest"
+   ],
+   "signing_club_forfeits_pool": 0.5,
+   "note": null,
+   "pick_number": 55,
+   "pick_value": 10.09,
+   "total_value": 10.59
+  }
+ },
+ "landing": [
+  {
+   "walk_away_aav": 16.4,
+   "total_4y": 65.6,
+   "chance_price_at_or_below": 0.3555
+  },
+  {
+   "walk_away_aav": 17.5,
+   "total_4y": 70.0,
+   "chance_price_at_or_below": 0.4351
+  },
+  {
+   "walk_away_aav": 18.0,
+   "total_4y": 72.0,
+   "chance_price_at_or_below": 0.4725
+  },
+  {
+   "walk_away_aav": 20.0,
+   "total_4y": 80.0,
+   "chance_price_at_or_below": 0.6212
+  },
+  {
+   "walk_away_aav": 22.0,
+   "total_4y": 88.0,
+   "chance_price_at_or_below": 0.7525
+  }
+ ],
+ "retention": {
+  "n": 170,
+  "one_season": 0.6282,
+  "two_seasons": 0.475,
+  "step": 0.7562
+ },
+ "availability_case": {
+  "(670970, 3)": {
+   "breakeven_aav": 14.332,
+   "total": 42.9959,
+   "role_wins_full": 6.8302,
+   "role_wins_kept": 5.3
+  },
+  "(670970, 4)": {
+   "breakeven_aav": 12.8791,
+   "total": 51.5165,
+   "role_wins_full": 8.8792,
+   "role_wins_kept": 6.1859
+  },
+  "(650556, 2)": {
+   "breakeven_aav": 11.223,
+   "total": 22.4459,
+   "role_wins_full": 2.8769,
+   "role_wins_kept": 2.5446
+  }
+ }
+}

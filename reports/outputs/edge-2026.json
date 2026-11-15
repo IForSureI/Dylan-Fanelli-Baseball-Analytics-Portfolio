@@ -1,0 +1,93 @@
+{
+ "source": "Built 2026-11-14 from data/edge/2026/summary.json (the bb edge 2026 run), stuff_2024..2026.parquet (validate_holdout) and shifts.parquet.",
+ "stuff_model_auc": {
+  "2024": 0.6306,
+  "2025": 0.6307,
+  "2026": 0.6332
+ },
+ "gap_persistence": {
+  "2024->2025": {
+   "pitches": 997,
+   "r_gap": 0.5619
+  },
+  "2025->2026": {
+   "pitches": 1040,
+   "r_gap": 0.5341
+  }
+ },
+ "projection_two_year": {
+  "matched_pitches": 659,
+  "rmse_raw_last_season": 5.4269,
+  "loo_rmse": {
+   "last_season": 5.0329,
+   "two_seasons": 4.747,
+   "last_plus_expected": 4.8087,
+   "two_seasons_plus_expected": 4.6205
+  },
+  "gain_vs_last_season_pct": 8.1941,
+  "gain_from_expected_pct": 2.663,
+  "weights": {
+   "intercept": 0.0995,
+   "actual_last": 0.4611,
+   "actual_prior": 0.2527,
+   "x_whiff_last": 0.2484
+  },
+  "rmse_weighting": "weighted by sqrt(min swings in the last season and the outcome season)"
+ },
+ "holdout_fit_2024_25_scored_2025_26": {
+  "train_pitches": 997,
+  "test_pitches": 1040,
+  "rmse_raw_last_season": 5.9618,
+  "rmse_regressed_baseline": 5.5609,
+  "rmse_blend": 5.2032,
+  "gain_pct": 6.4316,
+  "gain_pct_lo": 4.896,
+  "gain_pct_hi": 8.0345,
+  "small_sample": {
+   "max_prev_swings": 150,
+   "pitches": 450,
+   "rmse_regressed_baseline": 6.6132,
+   "rmse_blend": 6.0106
+  },
+  "blend": {
+   "intercept": 0.2472,
+   "actual": 0.6595,
+   "x_whiff": 0.3101
+  }
+ },
+ "tell_cost_pooled": {
+  "rows": 3169,
+  "pitchers": 830,
+  "raw": {
+   "slope": 0.454,
+   "se": 0.1853,
+   "lo": 0.0909,
+   "hi": 0.8171
+  },
+  "controlled": {
+   "slope": 0.189,
+   "se": 0.1599,
+   "lo": -0.1244,
+   "hi": 0.5024
+  }
+ },
+ "portable_model": {
+  "swings": 339804,
+  "auc": 0.6313,
+  "log_loss": 0.5429,
+  "log_loss_baseline": 0.5631
+ },
+ "shifts_rebuilt_from_saved_table": {
+  "candidates": 292,
+  "pitchers": 225,
+  "by_metric": {
+   "induced vertical break (in)": 109,
+   "arm-side break (in)": 95,
+   "velocity (mph)": 59,
+   "spin (rpm)": 29
+  },
+  "whiff_change_p_below_05": 28,
+  "whiff_change_q_below_10": 4,
+  "whiff_change_q_below_05": 0
+ }
+}
