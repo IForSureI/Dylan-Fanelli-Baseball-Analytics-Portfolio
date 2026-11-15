@@ -142,6 +142,22 @@ def skenes_extension() -> dict:
             "fa_aav_2026_dollars": sum(fa_2026_dollars) / FA_YEARS_BOUGHT, "qo_if_he_leaves": qo}
 
 
+def skenes_flat_price_check() -> dict:
+    """The same extension priced at one flat price of a win ($11.23M, FanGraphs' overall figure) in place of the
+    tiered price ($12.84M at 2+ WAR). The Torres evaluation rejects tiers; this shows how much of the Skenes price
+    rests on them. Returns the club's break-even grid and the player's floor on the flat price."""
+    from baseball.roster import money as _m
+
+    tiers = _m.DPW_TIERS_2026
+    _m.DPW_TIERS_2026 = ((0.0, _m.DPW_FLAT_2026),)
+    try:
+        e = skenes_extension()
+    finally:
+        _m.DPW_TIERS_2026 = tiers
+    return {"breakeven": e["breakeven"], "ceilings": e["ceilings"], "player_floor_by_q": e["player_floor_by_q"],
+            "fa_aav_nominal": e["fa_aav_nominal"]}
+
+
 def comps_check() -> pd.DataFrame:
     """Does the linear $/WAR price reproduce real pitcher contracts? FanGraphs' study method
     (`implied_dpw`): level pay deflated 5% a year over the aged projection. Grain: one contract."""
@@ -261,6 +277,11 @@ def main() -> None:
         print(f"   q={q:.2f}: " + "  ".join(f"{e['breakeven'][(q, sp)]:.1f}" for sp in STRESS_PROBS)
               + f"   | player floor {e['player_floor_by_q'][q]:.1f}")
     print(f"Ceiling if FanGraphs' $12.84M is a 2025 price: {e['ceiling_if_dpw_base_2025']:.1f}")
+    fl = skenes_flat_price_check()
+    print("Same grid at one flat price of a win ($11.23M, no tiers):")
+    for q in CAP_PROBS:
+        print(f"   q={q:.2f}: " + "  ".join(f"{fl['breakeven'][(q, sp)]:.1f}" for sp in STRESS_PROBS)
+              + f"   | player floor {fl['player_floor_by_q'][q]:.1f}")
     o = structure_pv(ILLUSTRATIVE_OFFER["signing_bonus"], ILLUSTRATIVE_OFFER["salaries"])
     print("\nOpening offer:", ILLUSTRATIVE_OFFER, {k: round(v, 1) for k, v in o.items()})
     w = structure_pv(WALK_AWAY["signing_bonus"], WALK_AWAY["salaries"])

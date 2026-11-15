@@ -209,10 +209,22 @@ def money(rs: pd.DataFrame) -> dict:
                              "chance_price_at_or_below": A.chance_price_at_or_below(w, proj2[670970].war_neutral, line)}
                             for w in WALK_AWAYS])
     iglesias_one_year = A.war_path(proj[628452].war_role, AGE_2027[628452], 1)[0]
+    # availability check (added Nov. 14, 2026): what the contracts are worth on the workload relievers kept
+    keep = A.workload_retention(rs, SEASON - 2)
+    avail_case = {}
+    for pid, yrs_list in ((670970, (3, 4)), (650556, (2,))):
+        for yrs in yrs_list:
+            av = A.availability_path(keep["step"], yrs)
+            pr = proj[pid]
+            be = A.breakeven_aav(yrs, pr.war_role, pr.war_neutral, AGE_2027[pid], SEASON + 1, line, availability=av)
+            wins_full = sum(A.war_path(pr.war_role, AGE_2027[pid], yrs))
+            wins_kept = sum(w * a for w, a in zip(A.war_path(pr.war_role, AGE_2027[pid], yrs), av))
+            avail_case[(pid, yrs)] = {"breakeven_aav": be, "total": be * yrs, "role_wins_full": wins_full,
+                                      "role_wins_kept": wins_kept}
     return {"replacement": repl, "replacement_comps": repl_c, "league_relief_mean": lm3, "comps": comps, "line": line,
             "projections": proj, "projections_comps_way": proj2, "price": price, "values": pd.DataFrame(values),
             "breakeven": breakeven, "payroll_2027": payroll, "tax": tax, "qo": qo, "landing": landing,
-            "iglesias_2027_role_wins": iglesias_one_year}
+            "iglesias_2027_role_wins": iglesias_one_year, "retention": keep, "availability_case": avail_case}
 
 
 def walk_away(m: dict) -> dict:
@@ -366,6 +378,8 @@ def main() -> None:
     print(mm["qo"])
     print(mm["landing"].round(3).to_string())
     print("Iglesias 2027 role wins, one year aged:", round(mm["iglesias_2027_role_wins"], 3))
+    print("workload retention:", {k: _r(v) for k, v in mm["retention"].items()})
+    print("availability case:", {k: {kk: round(float(vv), 2) for kk, vv in v.items()} for k, v in mm["availability_case"].items()})
     print("\n== Walk-away ==", {k: round(float(v), 3) for k, v in walk_away(mm).items()})
     from baseball.evaluation.reliability import regress
     h = halves(d, 650556)

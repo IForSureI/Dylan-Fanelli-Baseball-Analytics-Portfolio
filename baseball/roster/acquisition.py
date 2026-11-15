@@ -273,6 +273,28 @@ def breakeven_aav(years: int, war1_role: float, war1_neutral: float, first_age: 
     return pv_value / annuity
 
 
+# ------------------------------------------------------------------ availability: how much workload relievers keep
+
+def workload_retention(rs: pd.DataFrame, base_season: int, min_pitches: int = 800) -> dict:
+    """Share of relief workload kept one and two seasons later by relievers with min_pitches or more relief
+    pitches in base_season: total relief pitches in base_season + k over total in base_season (a pitcher who
+    throws none counts as zero). `step` is the two-season share over the one-season share, the extra loss in a
+    second season. Counts relief pitches only, so a move to the rotation reads as lost workload, and the first
+    year's loss includes regression from selecting on a high base year."""
+    w = rs.pivot_table(index="pitcher", columns="season", values="pitches", aggfunc="sum").fillna(0.0)
+    c = w[w[base_season] >= min_pitches]
+    base = float(c[base_season].sum())
+    one = float(c[base_season + 1].sum()) / base if base_season + 1 in c else float("nan")
+    two = float(c[base_season + 2].sum()) / base if base_season + 2 in c else float("nan")
+    return {"n": int(len(c)), "one_season": one, "two_seasons": two, "step": two / one}
+
+
+def availability_path(step: float, years: int) -> list[float]:
+    """Share of his projected workload in each contract year: 1.0 in year one (the projection already uses his own
+    recent workload), then `step` more lost each season. ASSUMPTION beyond year two: the same step repeats."""
+    return [step ** t for t in range(years)]
+
+
 # ------------------------------------------------------------------ the qualifying offer and the tax
 
 def qo_cost(signing_status: str, losing_status: str, contract_total: float, pick_number: int | None,
