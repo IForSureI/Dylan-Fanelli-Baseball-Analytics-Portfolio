@@ -1,6 +1,6 @@
 # Saved outputs
 
-Small tables behind six reports, so a reader can check the headline numbers without the pitch data. Added 2026-11-14.
+Small tables behind seven reports, so a reader can check the headline numbers without the pitch data. Added 2026-11-14.
 
 | File | Report | Built from |
 |---|---|---|
@@ -13,6 +13,7 @@ Small tables behind six reports, so a reader can check the headline numbers with
 | `edge-stuff-checks-2026.json` | [Edge Board](../2026-edge-board.md) | `python -m baseball.edge.stuff_checks 2026` (added 2026-11-15): why expected whiff is weak on sweepers (fit by pitch type, what sweeper whiffs follow, hitter side, carry-over), three candidate fixes scored held out against a rule set first (none adopted), and how far a refit in another row order moves a pitch's expected whiff |
 | `bullpen-grades-2026.json` | [Bullpen memo](../2026-bullpen-acquisition-memo.md), [Morejón report](../2026-morejon-pro-scouting-report.md) | `python -m baseball.edge.grade_noise 2026 --pitchers 670970 650556 664126 --saved --list 681911 628452 670280 595345 664199 642701 621112 656794 668941 641755` (added 2026-11-15): every stuff grade, 2027 grade, expected whiff, gap and engine whiff projection the memo prints, read from the saved `bb edge 2026` run with no fit. A test holds the memo to it |
 | `edge-grade-noise-2026.json` | [Bullpen memo](../2026-bullpen-acquisition-memo.md), [Morejón report](../2026-morejon-pro-scouting-report.md) | `python -m baseball.edge.grade_noise 2026 --pitchers 670970 650556 664126` (added 2026-11-15): for each pitch grade those reports quote from the expected-whiff model, the range of its expected whiff, stuff grade, gap, projection and 2027 grade across ten refits of the same swings in different row orders, with the saved run's values beside them |
+| `idp-gilbert-2026.json` | [Development plan](../2026-development-plan.md) | `bb idp examples/idp-gilbert-2026.yaml --json reports/outputs/idp-gilbert-2026.json` (added 2026-11-15): the plan's baselines, the power warning, and every priority's value, interval, n, verdict and guard at each checkpoint. Checked by `tests/test_development_plan.py` |
 | `familiarity-2024-26.json` | [Pitch familiarity](../2026-league-pitch-familiarity.md) | the `bb familiarity 2026` coefficient table and sample counts |
 | `familiarity-checks-2024-26.json` | [Pitch familiarity](../2026-league-pitch-familiarity.md) | `python -m baseball.edge.familiarity_checks`: the shuffle null (1,000 shuffles per design and pitch group) and the leave-own-game-out refits |
 | `il-warning-2026.json` | [IL early warning](../2026-il-early-warning.md) | the `bb il-warning 2026` summary (added 2026-11-15): sample counts, the noise model, every outcome row's scores and intervals, every alert rule, the velocity bins and the calibration deciles |
