@@ -1,4 +1,4 @@
-"""The headline numbers in three reports, checked against the small saved tables in reports/outputs/.
+"""The headline numbers in four reports, checked against the small saved tables in reports/outputs/.
 If a report and its table disagree, one of them is stale."""
 import json
 from pathlib import Path
@@ -71,3 +71,46 @@ def test_familiarity_report_matches_its_saved_table():
     assert f"{fb:.2f} points on fastballs, {br:.2f} on breaking balls and {off:.2f} on changeups and splitters" in rep
     assert all(main[k]["p"] < 0.001 for k in ("fastball", "breaking", "offspeed"))
     assert f"{f['sample']['pitches']:,} pitches" in rep and f"{f['sample']['games']:,} games" in rep
+
+
+def test_il_warning_report_matches_its_saved_table():
+    s, rep = _load("il-warning-2026.json"), _text("2026-il-early-warning.md")
+    readme = (ROOT / "README.md").read_text()
+    pct = lambda x: f"{100 * x:.1f}%"
+    m = s["specs"]["arm_14"]
+    assert s["train"] == [2024, 2025] and s["test"] == 2026
+    assert f"{s['sample']['pitches']:,} regular-season pitches" in rep and f"{s['sample']['outings']:,} pitcher outings" in rep
+    # the forecast: AUCs and the bootstrap difference
+    assert f"AUC of {m['auc']['naive']:.3f}" in rep and f"AUC {m['auc']['tracking']:.3f}" in rep
+    d = m["tracking_vs_naive"]["auc"]
+    gain = f"+{d['diff']:.3f}, 95% interval \u2212{abs(d['lo']):.3f} to +{d['hi']:.3f}"
+    assert gain in rep
+    assert f"AUC +{d['diff']:.3f}, \u2212{abs(d['lo']):.3f} to +{d['hi']:.3f}" in readme
+    v = m["velocity_vs_naive"]["auc"]
+    assert f"+{v['diff']:.3f} (\u2212{abs(v['lo']):.3f} to +{v['hi']:.3f})" in rep
+    # the association, refit on 2026, and without the stint's last outing
+    r, e = m["replication_in_test"], s["specs"]["arm_14_early"]["replication_in_test"]
+    assert f"{r['odds_ratio']:.2f} times the odds" in rep and f"({r['or_lo']:.2f} to {r['or_hi']:.2f}, p < 0.001)" in rep
+    assert r["p"] < 0.001
+    assert f"{e['odds_ratio']:.2f} ({e['or_lo']:.2f} to {e['or_hi']:.2f})" in rep and e["p"] > 0.05
+    # calibration slopes
+    c = m["calibration"]
+    assert f"calibration slopes {c['naive']['slope']:.2f} and {c['tracking']['slope']:.2f}" in rep
+    # the chosen rule: threshold set on 2024-25, scored on 2026
+    assert s["chosen_threshold_mph"] == 2.0
+    t = s["rules"]["velo_drop_2.0"]["test"]
+    assert f"2026:** {t['alerts']} flags, {t['alerts_per_club_season']:.1f} per club-season. {t['true_alerts']} were followed" in rep
+    assert f"{pct(t['precision'])} ({pct(t['precision_lo'])} to {pct(t['precision_hi'])}), {t['lift']:.1f} times the base rate" in rep
+    assert f"{t['false_alarms_per_club_season']:.1f} per club-season (0 to {s['false_alarms_by_club_test']['max']} by club, median {s['false_alarms_by_club_test']['median']:.0f})" in rep
+    assert f"caught {t['stints_caught']} of {t['stints']} arm IL stints ({pct(t['share_caught'])})" in rep
+    assert f"{t['true_alerts']} of {t['alerts']}; base rate {pct(t['base_rate'])}" in readme
+    # the 2-3 mph bin
+    b = next(x for x in s["velocity_bins"]["test"] if x["bin"] == "down 2-3")
+    assert f"{pct(b['rate'])} went on the IL for an arm injury within 14 days ({b['events']} of {b['n']}; 95% interval {pct(b['lo'])} to {pct(b['hi'])})" in rep
+    # starters vs relievers
+    st, rl = s["rules"]["chosen_starter"]["test"], s["rules"]["chosen_reliever"]["test"]
+    assert f"{st['true_alerts']} of {st['alerts']} flags ({pct(st['precision'])}; {pct(st['precision_lo'])} to {pct(st['precision_hi'])})" in rep
+    assert f"{rl['true_alerts']} of {rl['alerts']} for relievers ({pct(rl['precision'])}; {pct(rl['precision_lo'])} to {pct(rl['precision_hi'])})" in rep
+    # the multiple-test correction across the six outcome rows
+    q = min(x["tracking_vs_naive"]["log_loss"]["q_bh"] for x in s["specs"].values())
+    assert f"the smallest Benjamini\u2013Hochberg q is {q:.2f}" in rep
