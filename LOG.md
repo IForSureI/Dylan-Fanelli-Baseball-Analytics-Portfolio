@@ -2,6 +2,24 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-15: Velocity drops as an injured-list warning
+**Built**
+- **`baseball/health/il_warning.py`, `bb il-warning 2026`:** every pitcher outing of 2024–26 with its fastball velocity, spin, ride, extension, release height and arm angle against his own regressed baseline (the Atlas's two-level noise model and a month-of-season curve, both re-fit on 2024–25), matched to every IL placement in the MLB Stats API transactions. A naive model (role, age, IL history, workload, rest, month) and a tracking model, both fit on 2024–25 and scored on 2026, plus alert rules with false alarms per club-season.
+- **`reports/2026-il-early-warning.md`** with its figure, a README row, a "What a club gets" row and a `Health` toolkit row. Status: awaiting its separate review.
+- **`reports/outputs/il-warning-2026.json`** and a check in `tests/test_report_outputs.py`; 30 hand-checked tests in `tests/test_il_warning.py`.
+
+**Decided**
+- **The alert threshold was set on 2024–25 by a stated rule** (the lowest on a 0.5 mph grid with at most 10 false alarms per club-season): 2.0 mph. 2026 kept the training numbers: 164 flags, 10.4% followed by an arm IL placement within 14 days (base rate 3.6%), 4.9 false alarms per club-season.
+- **The starter and reliever split is reported as exploratory.** It came after the first scoring of 2026 and rests on 24 starter flags.
+
+**Learned**
+- The association is real and replicates (odds ratio 1.18 per SD on 2026), but it lives in the last outing before the stint. With that outing left out, it is not detected in 2026 (1.02, 0.91 to 1.14).
+- Replicating an association is not the same as improving a forecast: the tracking model's AUC gain on 2026 is +0.005 (−0.022 to +0.031).
+- Spin, ride, extension, release height and arm angle add no confirmed signal once velocity is in.
+
+**Not done**
+- The separate review pass. In-game velocity paths, secondary-pitch velocity and pitch-mix changes as earlier signs. A second held-out season (2027).
+
 ## 2026-11-14: Audit fixes: qualifying offers, availability, one valuation table, held-out stuff test
 **Built**
 - **Bullpen memo and one-pager:** the Nov. 2 qualifying offers entered as facts (AP, CBS Sports): Morejón and Bednar have one, Abreu does not. The memo's own rule now sets the walk-away at four years, $60M, the same as the opening offer, and the landing odds there are 26% (47% at $72M). Abreu is the likely signing. The Fairbanks line now says he is priced for a third of 2027.

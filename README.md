@@ -9,7 +9,7 @@
 My baseball-operations research and tools, built on every public pitch of 2024–2026 (2.14 million regular-season pitches) and every MLB trade since 2009. Each piece:
 - **Answers a question a club would want to know.**
 - **Says how it was tested.** Out of sample where the data allow, and labeled where it isn't.
-- **Gets a separate review pass** before it's final. For three studies, a test also checks the headline numbers against small saved tables in [`reports/outputs/`](reports/outputs/).
+- **Gets a separate review pass** before it's final. For four studies, a test also checks the headline numbers against small saved tables in [`reports/outputs/`](reports/outputs/).
 - **Comes with the code that produced it,** public to read (all rights reserved; see [License](#license)). Nulls are reported as nulls.
 
 <p align="center"><img src="assets/at-a-glance.png" alt="Selected studies at a glance" width="100%"></p>
@@ -34,6 +34,7 @@ My baseball-operations research and tools, built on every public pitch of 2024�
 | Should that change when the starter comes out? | No. The per-pitch cost replicates out of sample, but it doesn't reach plate-appearance run value (2026 calibration slope −0.28, SE 0.37). Managers show no response to it either. | [Report](reports/2026-exposure-aware-hook.md) |
 | Which numbers can you trust, and when? | Regressing beats raw numbers out of sample for 135 of 147 scored metric groups, confirmed on a clean 2024 → 2025 replication. That shrinkage helps is expected; the useful output is how far to regress each number, and after how many pitches, swings or batted balls. Bat speed is half signal after about 3 swings and reaches r = 0.7 after about 6; wOBA's fitted curve doesn't reach r = 0.5 until about 500 plate appearances (an extrapolation). Pitch physics regress by games, not pitches. | [Atlas](reports/2026-reliability-atlas.md) |
 | Which pitch-design changes stick and pay? | Four-seam ride is the best-supported lever (+1.62 whiff points per 2 in). Velocity's payoff fails a placebo, so recovery isn't ruled out. Given the shape change, the single change in expected whiff predicts next season's whiff change better than the full lever model, pooled across pitch types. | [Report](reports/2026-pitch-design-levers.md) |
+| Does a drop in a pitcher's velocity or stuff, against his own regressed baseline, warn of an injured-list stint? | Late, not early. Fit on 2024–25 and scored on 2026: after an outing with the fastball 2+ mph below his baseline, 10.4% of pitchers went on the IL for an arm injury within 14 days (17 of 164; base rate 3.6%), mostly from the last outing before the stint. Leave that outing out and no association is detected (odds ratio 1.02, 0.91 to 1.14). As a forecast, velocity, spin, shape and release drops add nothing detectable to role, workload and IL history (AUC +0.005, −0.022 to +0.031). | [Report](reports/2026-il-early-warning.md) |
 | Should the Pirates extend Paul Skenes before the CBA expires on Dec. 1? | Open at about $200M in present value. Walk away above about $215M on FanGraphs' tiered price of a win, or about $200M on one flat price (check added Nov. 14). The answer depends on the next agreement, and the memo prices both rule sets; its injury and cap odds are scenarios, not estimates. The tax engine reproduces the 2025 luxury-tax bills within $1 for eight of nine clubs. | [Memo](reports/2026-roster-cba-engine.md) |
 | Who trades with whom? | Division rivals trade at 0.56 times the rate of other pairs (0.49–0.65), and 52 of 60 rival pairs fall below expectation. The deadline is the one window where they come closer to normal. Dodgers–Giants, Guardians–Royals and Cubs–Cardinals haven't traded since 2009. | [Report](reports/2026-trade-network-rivals.md) |
 | Do front-office ties predict trade partners? | Probably, modestly. A pair of clubs trades about 14–18% more in seasons when their decision-makers share front-office history (1.18, 1.04–1.34, p = 0.009; permutation p = 0.015), and it holds without the Angels and Braves. How late-season hires are dated moves it: p runs from 0.009 to 0.059 across the rules tested. The narrower protégé-meets-old-boss tie is borderline at best. For scale, division rivalry is −45%. | [Report](reports/2026-front-office-ties.md) |
@@ -80,6 +81,7 @@ Ten quick charts on the 2026 postseason, from the Wild Card Series through the B
 | Pro scouting and trades | Who are the realistic trade partners, and what does a scout write before a bid? | [Trade network](reports/2026-trade-network-rivals.md), [front-office ties](reports/2026-front-office-ties.md), [pro scouting report](reports/2026-morejon-pro-scouting-report.md) |
 | Advance scouting and coaches | How do we pitch this lineup, in a page a coach will read (in English or Spanish)? | [Advance packet](reports/2026-advance-packet-tb.md) |
 | Player development | Which pitch-design changes stick and pay, and how is a plan tracked? | [Pitch-design levers](reports/2026-pitch-design-levers.md) |
+| Medical and performance | Does a velocity drop warn of an injury, and what alert can a trainer live with? | [IL early warning](reports/2026-il-early-warning.md) |
 | In-game strategy | Do pitches wear out, and should that change the hook? | [Pitch familiarity](reports/2026-league-pitch-familiarity.md), [exposure-aware hook](reports/2026-exposure-aware-hook.md) |
 | Amateur scouting | What is a pick worth, and what does a college line still add? | [Draft analytics](reports/2026-mlb-draft-analytics.md) |
 | R&D, every department | How much should we believe this number? | [Reliability Atlas](reports/2026-reliability-atlas.md), [shape exposure](reports/2026-shape-exposure.md) |
@@ -91,14 +93,14 @@ Every report page opens the same way: the question, the answer and what a club d
 
 ## How the work is held up
 - **Out of sample where three seasons allow.** The baseline is always a regressed one, never raw last season.
-  - **Scored on a season the parameters never saw:** the Atlas (2024 → 2025), the hook study and shape exposure (2026 held out), the pitch-design levers and, since Nov. 14, the whiff projection (both fit on 2024 → 2025 and scored on 2025 → 2026).
+  - **Scored on a season the parameters never saw:** the Atlas (2024 → 2025), the hook study and shape exposure (2026 held out), the pitch-design levers and, since Nov. 14, the whiff projection (both fit on 2024 → 2025 and scored on 2025 → 2026), and the IL early warning (fit on 2024–25, 2026 held out).
   - **Leave-one-out inside the fitting seasons, and labeled that way:** the two-season whiff projection, which has only one target year.
   - **Not forecasts at all:** the contract prices. They are market prices with intervals, and no report here has a club's own win curve.
 - **One evidence standard.**
   - Confirmed means p < 0.05 with enough sample; near 0.05 is borderline.
   - Many tests at once get a Benjamini–Hochberg correction.
   - "No sign of an effect" is claimed only when the interval rules out effects that matter. Otherwise the report says "not detected" and gives the bound.
-- **Separate review.** Every finished report gets a separate review pass that checks each number against the saved outputs. Most of those outputs stay on my machine with the data; small tables for the bullpen memo, the Edge Board and pitch familiarity are in [`reports/outputs/`](reports/outputs/), and `tests/test_report_outputs.py` checks the reports against them. The reviews changed real conclusions:
+- **Separate review.** Every finished report gets a separate review pass that checks each number against the saved outputs. Most of those outputs stay on my machine with the data; small tables for the bullpen memo, the Edge Board, pitch familiarity and the IL early warning are in [`reports/outputs/`](reports/outputs/), and `tests/test_report_outputs.py` checks the reports against them. The reviews changed real conclusions:
   - the Skenes price
   - the ranking of pitch-design levers
   - a noise model for pitch physics
@@ -118,6 +120,7 @@ Every report page opens the same way: the question, the answer and what a club d
 | **Evaluation** | `arsenal`, `compare` (two seasons, with significance), `reliability` and `regress` (regress any number, with an interval), `compare-relievers` (regressed results, stuff, velocity vs league, workload, platoon, 20-80 grades), `delivery` (slot, extension, release scatter, exact VAA, release offsets against each game's fastballs) |
 | **Edge** | `edge`, `board` (release tells, hidden changes, stuff vs results, projections), `familiarity`, `hook`, `hook-card` (one start, hitter by hitter) |
 | **Development** | `levers` (what shape changes pay), `idp` (individual development plans in YAML, with a progress engine that issues verdicts and checks statistical power) |
+| **Health** | `il-warning` (velocity, spin, shape and release drops against each pitcher's regressed baseline, scored as an injured-list warning on a held-out season, with an alert rule) |
 | **Roster** | `cbt` and `cbt-check` (luxury tax, checked against the real 2025 bills), `service` (control, Super Two, arbitration, free agency), `roster-cases`, `bullpen-case`, `trades` (the MLB trade graph in Neo4j, rival and burst analysis), `gm-tree` (whose front offices today's heads came through, in Neo4j), `front-office` (executive careers and the ties model) |
 | **Department work** | `advance` (an opponent's hitter cards, figures and plan), `arb-case` (an arbitration case from comps to walk point: `smith` or `varland`), `swing-decisions` (decision value and one hitter's card and price), `predictions` (check, score and render the prediction log), `sql` (twelve named DuckDB queries: `list`, `show`, `run`) |
 | **Tracking data** | A TrackMan/Rapsodo loader with sign checks and QC, a TrackMan session-PDF reader, and a portable expected-whiff model for device data |
