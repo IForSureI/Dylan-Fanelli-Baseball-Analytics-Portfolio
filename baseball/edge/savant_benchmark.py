@@ -5,8 +5,8 @@
   uv run python -m baseball.edge.savant_benchmark 2026 --refit    (also repeat it on a fresh fit of the model)
 
 What this is: a check against two public Savant tables, matched on MLBAM pitcher id and pitch type.
-What this is not: a comparison with Stuff+. Savant publishes no stuff grade. FanGraphs' Stuff+ by
-pitch type sits behind a members-only export and is not used here.
+What this is not: a comparison with Stuff+. Savant publishes no stuff grade. The comparison with
+FanGraphs' Stuff+ by pitch type is in `stuffplus_benchmark.py`.
 
 The two Savant tables (each page's own "Download CSV" link):
 
@@ -447,7 +447,7 @@ def run(season: int = 2026, do_pull: bool = False, n_boot: int = 2000, seed: int
         "source": f"python -m baseball.edge.savant_benchmark {season}, on the bb edge {season} pitch tables (stuff_<season>.parquet), "
                   "the regular-season pitch files, and Baseball Savant's leaderboard CSV downloads.",
         "what_this_is": "A benchmark against Baseball Savant's public leaderboards (Pitch Arsenal Stats, Swing Timing + Miss Distance). "
-                        "It is not a comparison with Stuff+, which needs the FanGraphs members-only export.",
+                        "It is not a comparison with Stuff+; that one is in edge-stuffplus-benchmark-<season>.json.",
         "savant_files": {name: manifest[name] for name in sorted(manifest)
                          if any(name == csv_path(k, s).name for k in URLS for s in seasons)},
         "savant_pages": PAGES,
