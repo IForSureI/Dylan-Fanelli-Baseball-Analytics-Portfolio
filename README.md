@@ -9,7 +9,7 @@
 My baseball-operations research and tools, built on every public pitch of 2024–2026 (2.14 million regular-season pitches) and every MLB trade since 2009. Each piece:
 - **Answers a question a club would want to know.**
 - **Says how it was tested.** Out of sample where the data allow, and labeled where it isn't.
-- **Gets a separate review pass** before it's final. For four studies, a test also checks the headline numbers against small saved tables in [`reports/outputs/`](reports/outputs/).
+- **Gets a separate review pass** before it's final. For five studies, a test also checks the headline numbers against small saved tables in [`reports/outputs/`](reports/outputs/).
 - **Comes with the code that produced it,** public to read (all rights reserved; see [License](#license)). Nulls are reported as nulls.
 
 <p align="center"><img src="assets/at-a-glance.png" alt="Selected studies at a glance" width="100%"></p>
@@ -95,12 +95,12 @@ Every report page opens the same way: the question, the answer and what a club d
 - **Out of sample where three seasons allow.** The baseline is always a regressed one, never raw last season.
   - **Scored on a season the parameters never saw:** the Atlas (2024 → 2025), the hook study and shape exposure (2026 held out), the pitch-design levers and, since Nov. 14, the whiff projection (both fit on 2024 → 2025 and scored on 2025 → 2026), and the IL early warning (fit on 2024–25, 2026 held out).
   - **Leave-one-out inside the fitting seasons, and labeled that way:** the two-season whiff projection, which has only one target year.
-  - **Not forecasts at all:** the contract prices. They are market prices with intervals, and no report here has a club's own win curve.
+  - **Not forecasts at all:** the contract prices. They are market prices with intervals. The one club win curve here is a 2006 shape, used as a labeled sensitivity in the Skenes memo; a current curve is still open.
 - **One evidence standard.**
   - Confirmed means p < 0.05 with enough sample; near 0.05 is borderline.
   - Many tests at once get a Benjamini–Hochberg correction.
   - "No sign of an effect" is claimed only when the interval rules out effects that matter. Otherwise the report says "not detected" and gives the bound.
-- **Separate review.** Every finished report gets a separate review pass that checks each number against the saved outputs. Most of those outputs stay on my machine with the data; small tables for the bullpen memo, the Edge Board, pitch familiarity and the IL early warning are in [`reports/outputs/`](reports/outputs/), and `tests/test_report_outputs.py` checks the reports against them. The reviews changed real conclusions:
+- **Separate review.** Every finished report gets a separate review pass that checks each number against the saved outputs. Most of those outputs stay on my machine with the data; small tables for the bullpen memo, the Edge Board, pitch familiarity, the IL early warning and the Skenes memo's Nov. 15 checks are in [`reports/outputs/`](reports/outputs/), and `tests/test_report_outputs.py` checks the reports against them. The reviews changed real conclusions:
   - the Skenes price
   - the ranking of pitch-design levers
   - a noise model for pitch physics
