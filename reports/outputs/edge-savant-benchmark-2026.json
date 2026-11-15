@@ -1,0 +1,1239 @@
+{
+ "source": "python -m baseball.edge.savant_benchmark 2026, on the bb edge 2026 pitch tables (stuff_<season>.parquet), the regular-season pitch files, and Baseball Savant's leaderboard CSV downloads.",
+ "what_this_is": "A benchmark against Baseball Savant's public leaderboards (Pitch Arsenal Stats, Swing Timing + Miss Distance). It is not a comparison with Stuff+, which needs the FanGraphs members-only export.",
+ "savant_files": {
+  "savant_arsenal_2024.csv": {
+   "url": "https://baseballsavant.mlb.com/leaderboard/pitch-arsenal-stats?type=pitcher&pitchType=&year=2024&team=&min=1&minPitches=50&csv=true",
+   "pulled": "2026-11-15",
+   "rows": 2394,
+   "status": 200
+  },
+  "savant_arsenal_2025.csv": {
+   "url": "https://baseballsavant.mlb.com/leaderboard/pitch-arsenal-stats?type=pitcher&pitchType=&year=2025&team=&min=1&minPitches=50&csv=true",
+   "pulled": "2026-11-15",
+   "rows": 2521,
+   "status": 200
+  },
+  "savant_arsenal_2026.csv": {
+   "url": "https://baseballsavant.mlb.com/leaderboard/pitch-arsenal-stats?type=pitcher&pitchType=&year=2026&team=&min=1&minPitches=50&csv=true",
+   "pulled": "2026-11-15",
+   "rows": 2575,
+   "status": 200
+  },
+  "savant_miss_2024.csv": {
+   "url": "https://baseballsavant.mlb.com/leaderboard/bat-tracking/swing-timing-miss-distance?type=pitcher&season%5B%5D=2024&split%5B%5D=api_pitch_type_group03&min=50&minSplit=50&csv=true",
+   "pulled": "2026-11-15",
+   "rows": 1727,
+   "status": 200
+  },
+  "savant_miss_2025.csv": {
+   "url": "https://baseballsavant.mlb.com/leaderboard/bat-tracking/swing-timing-miss-distance?type=pitcher&season%5B%5D=2025&split%5B%5D=api_pitch_type_group03&min=50&minSplit=50&csv=true",
+   "pulled": "2026-11-15",
+   "rows": 1811,
+   "status": 200
+  },
+  "savant_miss_2026.csv": {
+   "url": "https://baseballsavant.mlb.com/leaderboard/bat-tracking/swing-timing-miss-distance?type=pitcher&season%5B%5D=2026&split%5B%5D=api_pitch_type_group03&min=50&minSplit=50&csv=true",
+   "pulled": "2026-11-15",
+   "rows": 1854,
+   "status": 200
+  }
+ },
+ "savant_pages": {
+  "arsenal": "https://baseballsavant.mlb.com/leaderboard/pitch-arsenal-stats",
+  "miss": "https://baseballsavant.mlb.com/leaderboard/bat-tracking/swing-timing-miss-distance"
+ },
+ "matching": {
+  "key": "MLBAM pitcher id and pitch type",
+  "pitch_types": "Statcast codes as they are (FF SI FC SL ST SV CU CH FS FO SC KN). Savant files knuckle curves under curveball, so my KC rows match Savant's CU row; a pitcher with both KC and CU in a season is dropped. Other codes are dropped.",
+  "my_floor": "60 swings with complete tracking in each season used",
+  "savant_floor": "50 pitches (Pitch Arsenal Stats); 50 swings on the pitch type and 50 in total (Swing Timing + Miss Distance)"
+ },
+ "definitions": {
+  "my_whiff_pct": "swinging strikes, blocked swinging strikes, foul tips and missed bunts, over all swings (bunt attempts included)",
+  "sv_whiff_pct": "Savant whiff%, printed to one decimal",
+  "sv_miss_in": "Savant miss distance: average inches between ball and barrel half of the bat on swings and misses",
+  "sv_rv100": "Savant run value per 100 pitches; positive is good for the pitcher",
+  "x_whiff_pct": "my expected whiff rate from pitch physics, cross-fit by pitcher within the season"
+ },
+ "bootstrap": {
+  "resamples": 2000,
+  "seed": 7,
+  "unit": "pitcher",
+  "interval": "2.5th to 97.5th percentile"
+ },
+ "weighting": "RMSE and fits weighted by sqrt(min swings in the two seasons), as in stuff.validate_holdout()",
+ "pipeline": {
+  "2024": {
+   "model_table_vs_savant": {
+    "n": 1619,
+    "mean_abs_diff": 0.14003226401507163,
+    "max_abs_diff": 4.742105263157894,
+    "share_within_tol": 0.7313156269302038,
+    "tol": 0.0501,
+    "mean_diff": -0.009041206589327382,
+    "r": 0.999467367570868
+   },
+   "off_by_more_than_1_point": 38,
+   "pitch_files_vs_savant": {
+    "n": 1622,
+    "mean_abs_diff": 0.027067911042945602,
+    "max_abs_diff": 0.826373626373627,
+    "share_within_tol": 0.9919852034525277,
+    "tol": 0.0501,
+    "mean_diff": -0.0030426161908913164,
+    "r": 0.9999881494079006
+   },
+   "pitch_files_without_foul_tips_vs_savant": {
+    "n": 1622,
+    "mean_abs_diff": 2.0407576884784544,
+    "max_abs_diff": 8.08108108108108,
+    "share_within_tol": 0.11713933415536375,
+    "tol": 0.0501,
+    "mean_diff": -2.0378112250217066,
+    "r": 0.9910700624335869
+   },
+   "pitch_count_equal_share": 0.9969173859432799,
+   "miss_distance_pitch_files_vs_savant": {
+    "n": 1500,
+    "mean_abs_diff": 0.03769841347088298,
+    "max_abs_diff": 1.7815441147333333,
+    "share_within_tol": 0.926,
+    "tol": 0.1,
+    "mean_diff": 0.03714837776074269,
+    "r": 0.995979398193248
+   }
+  },
+  "2025": {
+   "model_table_vs_savant": {
+    "n": 1659,
+    "mean_abs_diff": 0.09598247908157857,
+    "max_abs_diff": 2.5451612903225787,
+    "share_within_tol": 0.8107293550331525,
+    "tol": 0.0501,
+    "mean_diff": 0.0016800049125507053,
+    "r": 0.9996900671091834
+   },
+   "off_by_more_than_1_point": 21,
+   "pitch_files_vs_savant": {
+    "n": 1662,
+    "mean_abs_diff": 0.03439241106072747,
+    "max_abs_diff": 2.3999999999999986,
+    "share_within_tol": 0.9777376654632972,
+    "tol": 0.0501,
+    "mean_diff": -0.007773983316798903,
+    "r": 0.9999480711598548
+   },
+   "pitch_files_without_foul_tips_vs_savant": {
+    "n": 1662,
+    "mean_abs_diff": 2.0852364807641495,
+    "max_abs_diff": 12.118181818181817,
+    "share_within_tol": 0.11853188929001203,
+    "tol": 0.0501,
+    "mean_diff": -2.080964103797838,
+    "r": 0.9892520825001759
+   },
+   "pitch_count_equal_share": 0.9957882069795427,
+   "miss_distance_pitch_files_vs_savant": {
+    "n": 1573,
+    "mean_abs_diff": 0.04376635744295461,
+    "max_abs_diff": 1.8631957463846156,
+    "share_within_tol": 0.9020979020979021,
+    "tol": 0.1,
+    "mean_diff": 0.04058753112831509,
+    "r": 0.9963683324666301
+   }
+  },
+  "2026": {
+   "model_table_vs_savant": {
+    "n": 1695,
+    "mean_abs_diff": 0.10038474047656755,
+    "max_abs_diff": 2.8247706422018375,
+    "share_within_tol": 0.8023598820058997,
+    "tol": 0.0501,
+    "mean_diff": -0.006734377244139479,
+    "r": 0.9996617281993907
+   },
+   "off_by_more_than_1_point": 20,
+   "pitch_files_vs_savant": {
+    "n": 1698,
+    "mean_abs_diff": 0.037173312807355356,
+    "max_abs_diff": 2.8878787878787904,
+    "share_within_tol": 0.9787985865724381,
+    "tol": 0.0501,
+    "mean_diff": -0.011650336709490268,
+    "r": 0.9999138105641547
+   },
+   "pitch_files_without_foul_tips_vs_savant": {
+    "n": 1698,
+    "mean_abs_diff": 2.1648249162649367,
+    "max_abs_diff": 8.864705882352943,
+    "share_within_tol": 0.10424028268551237,
+    "tol": 0.0501,
+    "mean_diff": -2.1621503997685503,
+    "r": 0.9896718810482593
+   },
+   "pitch_count_equal_share": 0.9729093050647821,
+   "miss_distance_pitch_files_vs_savant": {
+    "n": 1590,
+    "mean_abs_diff": 0.05349659145033252,
+    "max_abs_diff": 2.6667706855333337,
+    "share_within_tol": 0.9031446540880503,
+    "tol": 0.1,
+    "mean_diff": 0.05177447220352316,
+    "r": 0.9942908466756408
+   }
+  }
+ },
+ "same_season": {
+  "2024": {
+   "x_whiff_pct ~ sv_miss_in": {
+    "raw": {
+     "n": 1612,
+     "pitchers": 568,
+     "r": 0.7222083012526624,
+     "lo": 0.7042132836333879,
+     "hi": 0.7402865065677134
+    },
+    "within_pitch_type": {
+     "n": 1612,
+     "pitchers": 568,
+     "r": 0.2873059337118772,
+     "lo": 0.234146725275066,
+     "hi": 0.33666195093507645
+    }
+   },
+   "x_whiff_pct ~ sv_rv100": {
+    "raw": {
+     "n": 1619,
+     "pitchers": 570,
+     "r": 0.06374433881752016,
+     "lo": 0.014876664133706296,
+     "hi": 0.1112519625998674
+    },
+    "within_pitch_type": {
+     "n": 1619,
+     "pitchers": 570,
+     "r": 0.11826772752436007,
+     "lo": 0.07072598536338787,
+     "hi": 0.16584468066956035
+    }
+   },
+   "x_whiff_pct ~ sv_whiff_pct": {
+    "raw": {
+     "n": 1619,
+     "pitchers": 570,
+     "r": 0.7391591023640434,
+     "lo": 0.7185147753949771,
+     "hi": 0.760215125661973
+    },
+    "within_pitch_type": {
+     "n": 1619,
+     "pitchers": 570,
+     "r": 0.38746944527653754,
+     "lo": 0.3389081833543798,
+     "hi": 0.433824910382055
+    }
+   },
+   "whiff_pct ~ sv_miss_in": {
+    "raw": {
+     "n": 1612,
+     "pitchers": 568,
+     "r": 0.7034052533277848,
+     "lo": 0.6823221198347467,
+     "hi": 0.7244907245483121
+    },
+    "within_pitch_type": {
+     "n": 1612,
+     "pitchers": 568,
+     "r": 0.46170401389227544,
+     "lo": 0.41726927615108567,
+     "hi": 0.5061712513436792
+    }
+   },
+   "whiff_pct ~ sv_rv100": {
+    "raw": {
+     "n": 1619,
+     "pitchers": 570,
+     "r": 0.22158682873357508,
+     "lo": 0.17760498580715836,
+     "hi": 0.26241625533566876
+    },
+    "within_pitch_type": {
+     "n": 1619,
+     "pitchers": 570,
+     "r": 0.3079096326021426,
+     "lo": 0.2647799201035509,
+     "hi": 0.3515436198450525
+    }
+   },
+   "sv_miss_in ~ sv_rv100": {
+    "raw": {
+     "n": 1612,
+     "pitchers": 568,
+     "r": 0.049434244615321435,
+     "lo": 0.0015927312925414709,
+     "hi": 0.09423344381711392
+    },
+    "within_pitch_type": {
+     "n": 1612,
+     "pitchers": 568,
+     "r": 0.0709354271501815,
+     "lo": 0.0207058220487424,
+     "hi": 0.11811404491315798
+    }
+   }
+  },
+  "2025": {
+   "x_whiff_pct ~ sv_miss_in": {
+    "raw": {
+     "n": 1659,
+     "pitchers": 575,
+     "r": 0.7171573291613405,
+     "lo": 0.6972842229810244,
+     "hi": 0.7374326070839474
+    },
+    "within_pitch_type": {
+     "n": 1659,
+     "pitchers": 575,
+     "r": 0.258578707877862,
+     "lo": 0.20036473484086853,
+     "hi": 0.31389383414575767
+    }
+   },
+   "x_whiff_pct ~ sv_rv100": {
+    "raw": {
+     "n": 1659,
+     "pitchers": 575,
+     "r": 0.014532861712015559,
+     "lo": -0.03536638295899822,
+     "hi": 0.06428664358997976
+    },
+    "within_pitch_type": {
+     "n": 1659,
+     "pitchers": 575,
+     "r": 0.07727093505510138,
+     "lo": 0.027643356104722273,
+     "hi": 0.12916954172803533
+    }
+   },
+   "x_whiff_pct ~ sv_whiff_pct": {
+    "raw": {
+     "n": 1659,
+     "pitchers": 575,
+     "r": 0.721635530694714,
+     "lo": 0.7000857369776001,
+     "hi": 0.7425788954128748
+    },
+    "within_pitch_type": {
+     "n": 1659,
+     "pitchers": 575,
+     "r": 0.36640051771968163,
+     "lo": 0.3196791226208509,
+     "hi": 0.41108646816998595
+    }
+   },
+   "whiff_pct ~ sv_miss_in": {
+    "raw": {
+     "n": 1659,
+     "pitchers": 575,
+     "r": 0.6823571819876769,
+     "lo": 0.6564189301265302,
+     "hi": 0.7066366088576251
+    },
+    "within_pitch_type": {
+     "n": 1659,
+     "pitchers": 575,
+     "r": 0.4378528697680787,
+     "lo": 0.38663471683474787,
+     "hi": 0.483344413589442
+    }
+   },
+   "whiff_pct ~ sv_rv100": {
+    "raw": {
+     "n": 1659,
+     "pitchers": 575,
+     "r": 0.16215717341669741,
+     "lo": 0.11379026410305985,
+     "hi": 0.21133720941403342
+    },
+    "within_pitch_type": {
+     "n": 1659,
+     "pitchers": 575,
+     "r": 0.25008194012055884,
+     "lo": 0.20390295888287482,
+     "hi": 0.2953355773287384
+    }
+   },
+   "sv_miss_in ~ sv_rv100": {
+    "raw": {
+     "n": 1659,
+     "pitchers": 575,
+     "r": 0.046534893668429014,
+     "lo": -0.004991434420852069,
+     "hi": 0.09610562351288818
+    },
+    "within_pitch_type": {
+     "n": 1659,
+     "pitchers": 575,
+     "r": 0.0746970018402876,
+     "lo": 0.023574052275965304,
+     "hi": 0.1230919622739162
+    }
+   }
+  },
+  "2026": {
+   "x_whiff_pct ~ sv_miss_in": {
+    "raw": {
+     "n": 1693,
+     "pitchers": 566,
+     "r": 0.7039903735798748,
+     "lo": 0.6809382863788719,
+     "hi": 0.7246635704172989
+    },
+    "within_pitch_type": {
+     "n": 1693,
+     "pitchers": 566,
+     "r": 0.22123918937437673,
+     "lo": 0.1653285777835161,
+     "hi": 0.277710551669978
+    }
+   },
+   "x_whiff_pct ~ sv_rv100": {
+    "raw": {
+     "n": 1695,
+     "pitchers": 566,
+     "r": 0.038222330168176805,
+     "lo": -0.010513708891354782,
+     "hi": 0.08987801346721526
+    },
+    "within_pitch_type": {
+     "n": 1695,
+     "pitchers": 566,
+     "r": 0.1341553658221198,
+     "lo": 0.08723167971539986,
+     "hi": 0.18378308717722933
+    }
+   },
+   "x_whiff_pct ~ sv_whiff_pct": {
+    "raw": {
+     "n": 1695,
+     "pitchers": 566,
+     "r": 0.7500533507954161,
+     "lo": 0.7282144986352479,
+     "hi": 0.7691174128589128
+    },
+    "within_pitch_type": {
+     "n": 1695,
+     "pitchers": 566,
+     "r": 0.38442182077059905,
+     "lo": 0.3368780603205843,
+     "hi": 0.4308635084676401
+    }
+   },
+   "whiff_pct ~ sv_miss_in": {
+    "raw": {
+     "n": 1693,
+     "pitchers": 566,
+     "r": 0.6892559975134448,
+     "lo": 0.6631185878731567,
+     "hi": 0.7122108031165174
+    },
+    "within_pitch_type": {
+     "n": 1693,
+     "pitchers": 566,
+     "r": 0.43324256274309897,
+     "lo": 0.38345028470186815,
+     "hi": 0.4790718920342217
+    }
+   },
+   "whiff_pct ~ sv_rv100": {
+    "raw": {
+     "n": 1695,
+     "pitchers": 566,
+     "r": 0.21886409117164907,
+     "lo": 0.1730659746083466,
+     "hi": 0.2643389323266787
+    },
+    "within_pitch_type": {
+     "n": 1695,
+     "pitchers": 566,
+     "r": 0.3441634764884114,
+     "lo": 0.301166982165491,
+     "hi": 0.38552038942615546
+    }
+   },
+   "sv_miss_in ~ sv_rv100": {
+    "raw": {
+     "n": 1693,
+     "pitchers": 566,
+     "r": 0.04929095419338172,
+     "lo": 0.0031910723964406838,
+     "hi": 0.09846147203927207
+    },
+    "within_pitch_type": {
+     "n": 1693,
+     "pitchers": 566,
+     "r": 0.09554044450803525,
+     "lo": 0.0476169346158864,
+     "hi": 0.14598963592161437
+    }
+   }
+  },
+  "pooled": {
+   "x_whiff_pct ~ sv_miss_in": {
+    "raw": {
+     "n": 4964,
+     "pitchers": 888,
+     "r": 0.7133349152087712,
+     "lo": 0.699017483276585,
+     "hi": 0.7272457879079511
+    },
+    "within_pitch_type": {
+     "n": 4964,
+     "pitchers": 888,
+     "r": 0.2548427351927601,
+     "lo": 0.21461312573990945,
+     "hi": 0.29389106786392544
+    }
+   },
+   "x_whiff_pct ~ sv_rv100": {
+    "raw": {
+     "n": 4973,
+     "pitchers": 888,
+     "r": 0.03832388483604482,
+     "lo": 0.008119174957402954,
+     "hi": 0.06776116504387229
+    },
+    "within_pitch_type": {
+     "n": 4973,
+     "pitchers": 888,
+     "r": 0.10967219861903726,
+     "lo": 0.07897962644901535,
+     "hi": 0.1409808460335292
+    }
+   },
+   "x_whiff_pct ~ sv_whiff_pct": {
+    "raw": {
+     "n": 4973,
+     "pitchers": 888,
+     "r": 0.7371286246492675,
+     "lo": 0.72323612921029,
+     "hi": 0.7519886295634846
+    },
+    "within_pitch_type": {
+     "n": 4973,
+     "pitchers": 888,
+     "r": 0.379316355470949,
+     "lo": 0.3456798911193664,
+     "hi": 0.41280352940631876
+    }
+   },
+   "whiff_pct ~ sv_miss_in": {
+    "raw": {
+     "n": 4964,
+     "pitchers": 888,
+     "r": 0.6907297855960025,
+     "lo": 0.6739606964172201,
+     "hi": 0.7076555812387813
+    },
+    "within_pitch_type": {
+     "n": 4964,
+     "pitchers": 888,
+     "r": 0.44353346077668526,
+     "lo": 0.4128499193742739,
+     "hi": 0.4748991018964212
+    }
+   },
+   "whiff_pct ~ sv_rv100": {
+    "raw": {
+     "n": 4973,
+     "pitchers": 888,
+     "r": 0.20032727921582277,
+     "lo": 0.17004766479482675,
+     "hi": 0.22924615492536352
+    },
+    "within_pitch_type": {
+     "n": 4973,
+     "pitchers": 888,
+     "r": 0.29975693085461935,
+     "lo": 0.27176864680108864,
+     "hi": 0.32703178804609595
+    }
+   },
+   "sv_miss_in ~ sv_rv100": {
+    "raw": {
+     "n": 4964,
+     "pitchers": 888,
+     "r": 0.04849228908242218,
+     "lo": 0.018123807202245174,
+     "hi": 0.07772760286861123
+    },
+    "within_pitch_type": {
+     "n": 4964,
+     "pitchers": 888,
+     "r": 0.08058929608097785,
+     "lo": 0.049246850210744465,
+     "hi": 0.11223955539006822
+    }
+   }
+  }
+ },
+ "next_season": {
+  "fit 2024->2025, scored 2025->2026": {
+   "train_pitches": 994,
+   "test_pitches": 1040,
+   "test_pitchers": 395,
+   "rmse_raw_last_season": 5.960981882269456,
+   "models": {
+    "last_whiff": {
+     "rmse": 5.565616546258919,
+     "r": 0.8089864591175037,
+     "gain_vs_baseline_pct": 0.0,
+     "gain_lo": 0.0,
+     "gain_hi": 0.0,
+     "weights": {
+      "intercept": 3.264903356533478,
+      "whiff_pct_prev": 0.8451594590315332
+     }
+    },
+    "expected": {
+     "rmse": 6.366727601393644,
+     "r": 0.755753253216231,
+     "gain_vs_baseline_pct": -14.39393189373086,
+     "gain_lo": -21.07309623741056,
+     "gain_hi": -8.334383739353225,
+     "weights": {
+      "intercept": 0.5419071501108546,
+      "x_whiff_pct_prev": 0.9744715481528624
+     }
+    },
+    "miss": {
+     "rmse": 6.971973132742991,
+     "r": 0.7129821483267597,
+     "gain_vs_baseline_pct": -25.268657565519725,
+     "gain_lo": -31.92585680134611,
+     "gain_hi": -19.11369636935441,
+     "weights": {
+      "intercept": 14.937660421259071,
+      "sv_miss_in_prev": 4.304095814543831
+     }
+    },
+    "expected+type": {
+     "rmse": 6.1820960554672,
+     "r": 0.7722965341613581,
+     "gain_vs_baseline_pct": -11.07657173440495,
+     "gain_lo": -17.63825993460127,
+     "gain_hi": -5.010111064174261,
+     "weights": {
+      "intercept": 9.984819080281968,
+      "x_whiff_pct_prev": 0.6364231138860424
+     }
+    },
+    "miss+type": {
+     "rmse": 6.027532323747651,
+     "r": 0.791756132097217,
+     "gain_vs_baseline_pct": -8.299453863727301,
+     "gain_lo": -14.517498766338706,
+     "gain_hi": -2.601017309571785,
+     "weights": {
+      "intercept": 12.834110486118918,
+      "sv_miss_in_prev": 3.667571098228802
+     }
+    },
+    "expected+miss": {
+     "rmse": 6.051707007347638,
+     "r": 0.7876621909012927,
+     "gain_vs_baseline_pct": -8.733811556160065,
+     "gain_lo": -14.421806327830268,
+     "gain_hi": -3.2781871258479733,
+     "weights": {
+      "intercept": 3.787646832807468,
+      "x_whiff_pct_prev": 0.6540785447905741,
+      "sv_miss_in_prev": 2.049471552450193
+     }
+    },
+    "last+expected": {
+     "rmse": 5.204756881626493,
+     "r": 0.8370738141649963,
+     "gain_vs_baseline_pct": 6.483732065138181,
+     "gain_lo": 4.981533301120077,
+     "gain_hi": 8.069560348841064,
+     "weights": {
+      "intercept": 0.21411210819003323,
+      "whiff_pct_prev": 0.6593747078759123,
+      "x_whiff_pct_prev": 0.31179406621393824
+     }
+    },
+    "last+miss": {
+     "rmse": 5.332079878964633,
+     "r": 0.8303344108247367,
+     "gain_vs_baseline_pct": 4.196061035704379,
+     "gain_lo": 2.6135915026036507,
+     "gain_hi": 5.816548575707429,
+     "weights": {
+      "intercept": 4.121993245944334,
+      "whiff_pct_prev": 0.7037074681488559,
+      "sv_miss_in_prev": 1.1880213702937437
+     }
+    },
+    "last+expected+type": {
+     "rmse": 5.166182704768699,
+     "r": 0.840497255286877,
+     "gain_vs_baseline_pct": 7.176812095664609,
+     "gain_lo": 5.440214100765053,
+     "gain_hi": 8.995997526444002,
+     "weights": {
+      "intercept": 4.519453248777131,
+      "whiff_pct_prev": 0.6346811951732404,
+      "x_whiff_pct_prev": 0.18814430017576383
+     }
+    },
+    "last+miss+type": {
+     "rmse": 5.158049574584133,
+     "r": 0.8425228414446625,
+     "gain_vs_baseline_pct": 7.322943797641668,
+     "gain_lo": 5.458037712929187,
+     "gain_hi": 9.172738571597113,
+     "weights": {
+      "intercept": 6.2127840009587505,
+      "whiff_pct_prev": 0.6239962825399201,
+      "sv_miss_in_prev": 0.9666546709404416
+     }
+    },
+    "last+expected+miss": {
+     "rmse": 5.140328619820009,
+     "r": 0.8435401005905109,
+     "gain_vs_baseline_pct": 7.641344366865866,
+     "gain_lo": 5.839928712499063,
+     "gain_hi": 9.456134733968536,
+     "weights": {
+      "intercept": 1.468177479228277,
+      "whiff_pct_prev": 0.6092367436655785,
+      "x_whiff_pct_prev": 0.24085244505578088,
+      "sv_miss_in_prev": 0.7761214020730943
+     }
+    }
+   },
+   "contrasts": {
+    "expected minus miss": {
+     "rmse_diff": -0.6052455313493468,
+     "lo": -0.9248228181790153,
+     "hi": -0.2800861025644316,
+     "share_of_resamples_first_is_better": 1.0
+    },
+    "expected+type minus miss+type": {
+     "rmse_diff": 0.1545637317195494,
+     "lo": -0.07320067190676556,
+     "hi": 0.3915433259867914,
+     "share_of_resamples_first_is_better": 0.1035
+    },
+    "last+expected minus last+miss": {
+     "rmse_diff": -0.12732299733813957,
+     "lo": -0.22277236126393887,
+     "hi": -0.027731885848037947,
+     "share_of_resamples_first_is_better": 0.9945
+    },
+    "last+expected+type minus last+miss+type": {
+     "rmse_diff": 0.008133130184565296,
+     "lo": -0.05518150087520752,
+     "hi": 0.07012162590608731,
+     "share_of_resamples_first_is_better": 0.4015
+    },
+    "last+expected+miss minus last+expected": {
+     "rmse_diff": -0.06442826180648442,
+     "lo": -0.11789574044601492,
+     "hi": -0.01224230595043955,
+     "share_of_resamples_first_is_better": 0.9945
+    },
+    "last+expected+miss minus last+miss": {
+     "rmse_diff": -0.191751259144624,
+     "lo": -0.25857734837190816,
+     "hi": -0.12346637717814876,
+     "share_of_resamples_first_is_better": 1.0
+    }
+   },
+   "r_with_next_season_whiff": {
+    "x_whiff_pct_prev": {
+     "n": 1040,
+     "pitchers": 395,
+     "r": 0.7557532532162309,
+     "lo": 0.72972218086327,
+     "hi": 0.7804429328966067
+    },
+    "sv_miss_in_prev": {
+     "n": 1040,
+     "pitchers": 395,
+     "r": 0.7129821483267599,
+     "lo": 0.6852501513988769,
+     "hi": 0.7403648300294793
+    },
+    "whiff_pct_prev": {
+     "n": 1040,
+     "pitchers": 395,
+     "r": 0.8089864591175039,
+     "lo": 0.7853957747172347,
+     "hi": 0.8301257073096666
+    },
+    "sv_miss_in_prev, within pitch type": {
+     "n": 1040,
+     "pitchers": 395,
+     "r": 0.44999485376854986,
+     "lo": 0.3881698106971566,
+     "hi": 0.5096617216809373
+    },
+    "x_whiff_pct_prev, within pitch type": {
+     "n": 1040,
+     "pitchers": 395,
+     "r": 0.3589020007836272,
+     "lo": 0.29938394448548933,
+     "hi": 0.4199557972192314
+    }
+   },
+   "winner": {
+    "alone": "expected",
+    "alone_given_pitch_type": "tie",
+    "with_last_season": "last+expected",
+    "with_last_season_given_pitch_type": "tie"
+   }
+  },
+  "fit 2025->2026, scored 2024->2025": {
+   "train_pitches": 1040,
+   "test_pitches": 994,
+   "test_pitchers": 386,
+   "rmse_raw_last_season": 5.914574015729186,
+   "models": {
+    "last_whiff": {
+     "rmse": 5.6186982982004094,
+     "r": 0.8146669227519757,
+     "gain_vs_baseline_pct": 0.0,
+     "gain_lo": 0.0,
+     "gain_hi": 0.0,
+     "weights": {
+      "intercept": 3.949480829679698,
+      "whiff_pct_prev": 0.8158410365260134
+     }
+    },
+    "expected": {
+     "rmse": 6.826441499631528,
+     "r": 0.7196630923837545,
+     "gain_vs_baseline_pct": -21.495071230607653,
+     "gain_lo": -28.106957960884273,
+     "gain_hi": -15.114388343408683,
+     "weights": {
+      "intercept": 0.45894838126244963,
+      "x_whiff_pct_prev": 0.9801921344793147
+     }
+    },
+    "miss": {
+     "rmse": 7.2489548056900714,
+     "r": 0.6879644038515712,
+     "gain_vs_baseline_pct": -29.014843313651674,
+     "gain_lo": -35.29326133261228,
+     "gain_hi": -23.0371001130233,
+     "weights": {
+      "intercept": 15.47926062249759,
+      "sv_miss_in_prev": 3.863864987728615
+     }
+    },
+    "expected+type": {
+     "rmse": 6.645583811713993,
+     "r": 0.7360139176292133,
+     "gain_vs_baseline_pct": -18.276217355227644,
+     "gain_lo": -24.707375077255907,
+     "gain_hi": -11.932285988275968,
+     "weights": {
+      "intercept": 14.323323975146499,
+      "x_whiff_pct_prev": 0.6639085223424623
+     }
+    },
+    "miss+type": {
+     "rmse": 6.468253940563347,
+     "r": 0.7560729233636807,
+     "gain_vs_baseline_pct": -15.12015056289886,
+     "gain_lo": -20.746362843477833,
+     "gain_hi": -9.384091290995851,
+     "weights": {
+      "intercept": 16.328120615380655,
+      "sv_miss_in_prev": 3.4684596596663435
+     }
+    },
+    "expected+miss": {
+     "rmse": 6.4128949009725575,
+     "r": 0.75836083312519,
+     "gain_vs_baseline_pct": -14.134886064740627,
+     "gain_lo": -19.88879052181098,
+     "gain_hi": -8.45590583481046,
+     "weights": {
+      "intercept": 3.9304250572630743,
+      "x_whiff_pct_prev": 0.6733628989848457,
+      "sv_miss_in_prev": 1.7131060125195807
+     }
+    },
+    "last+expected": {
+     "rmse": 5.386142570662746,
+     "r": 0.8312394993560753,
+     "gain_vs_baseline_pct": 4.1389609335697575,
+     "gain_lo": 1.9561640665647075,
+     "gain_hi": 6.168462757407644,
+     "weights": {
+      "intercept": 0.29409889009960477,
+      "whiff_pct_prev": 0.6035374394083899,
+      "x_whiff_pct_prev": 0.36515571722545676
+     }
+    },
+    "last+miss": {
+     "rmse": 5.435960110429043,
+     "r": 0.8287297454010348,
+     "gain_vs_baseline_pct": 3.2523224788541194,
+     "gain_lo": 1.922261963229034,
+     "gain_hi": 4.571915607905635,
+     "weights": {
+      "intercept": 4.994265756784247,
+      "whiff_pct_prev": 0.6652293393210429,
+      "sv_miss_in_prev": 1.1568956610675134
+     }
+    },
+    "last+expected+type": {
+     "rmse": 5.358589504876008,
+     "r": 0.8331385056250411,
+     "gain_vs_baseline_pct": 4.629342590039243,
+     "gain_lo": 2.2580943054099425,
+     "gain_hi": 6.976705844333747,
+     "weights": {
+      "intercept": 6.381794027858207,
+      "whiff_pct_prev": 0.5759581910344143,
+      "x_whiff_pct_prev": 0.2566391638651021
+     }
+    },
+    "last+miss+type": {
+     "rmse": 5.353482478711877,
+     "r": 0.834972338701714,
+     "gain_vs_baseline_pct": 4.720235994402433,
+     "gain_lo": 2.5773435826986875,
+     "gain_hi": 6.921720333386117,
+     "weights": {
+      "intercept": 8.12043713191471,
+      "whiff_pct_prev": 0.5498196262917319,
+      "sv_miss_in_prev": 1.3385937223415507
+     }
+    },
+    "last+expected+miss": {
+     "rmse": 5.318385283107322,
+     "r": 0.8362206284161173,
+     "gain_vs_baseline_pct": 5.344885935400267,
+     "gain_lo": 3.2515596753888145,
+     "gain_hi": 7.3798242789031585,
+     "weights": {
+      "intercept": 1.6079128572599772,
+      "whiff_pct_prev": 0.562443549917764,
+      "x_whiff_pct_prev": 0.29190212977691177,
+      "sv_miss_in_prev": 0.6428025701809942
+     }
+    }
+   },
+   "contrasts": {
+    "expected minus miss": {
+     "rmse_diff": -0.4225133060585433,
+     "lo": -0.7381075010556514,
+     "hi": -0.11348218716513503,
+     "share_of_resamples_first_is_better": 0.996
+    },
+    "expected+type minus miss+type": {
+     "rmse_diff": 0.17732987115064613,
+     "lo": -0.061573969545144915,
+     "hi": 0.41418525660372957,
+     "share_of_resamples_first_is_better": 0.0765
+    },
+    "last+expected minus last+miss": {
+     "rmse_diff": -0.049817539766297436,
+     "lo": -0.16456314293850388,
+     "hi": 0.05753422150511861,
+     "share_of_resamples_first_is_better": 0.809
+    },
+    "last+expected+type minus last+miss+type": {
+     "rmse_diff": 0.005107026164131057,
+     "lo": -0.08651196740373505,
+     "hi": 0.0918324730102719,
+     "share_of_resamples_first_is_better": 0.4715
+    },
+    "last+expected+miss minus last+expected": {
+     "rmse_diff": -0.0677572875554242,
+     "lo": -0.1079823897602294,
+     "hi": -0.0257903707967215,
+     "share_of_resamples_first_is_better": 0.999
+    },
+    "last+expected+miss minus last+miss": {
+     "rmse_diff": -0.11757482732172164,
+     "lo": -0.20437080926491,
+     "hi": -0.030906413331455468,
+     "share_of_resamples_first_is_better": 0.997
+    }
+   },
+   "r_with_next_season_whiff": {
+    "x_whiff_pct_prev": {
+     "n": 994,
+     "pitchers": 386,
+     "r": 0.7196630923837541,
+     "lo": 0.690637983728066,
+     "hi": 0.7483125138023902
+    },
+    "sv_miss_in_prev": {
+     "n": 994,
+     "pitchers": 386,
+     "r": 0.6879644038515716,
+     "lo": 0.6570613118449662,
+     "hi": 0.7157364584409864
+    },
+    "whiff_pct_prev": {
+     "n": 994,
+     "pitchers": 386,
+     "r": 0.8146669227519757,
+     "lo": 0.7928561027328301,
+     "hi": 0.8349873013635521
+    },
+    "sv_miss_in_prev, within pitch type": {
+     "n": 994,
+     "pitchers": 386,
+     "r": 0.41060082839710044,
+     "lo": 0.34742208141073805,
+     "hi": 0.4669767961497644
+    },
+    "x_whiff_pct_prev, within pitch type": {
+     "n": 994,
+     "pitchers": 386,
+     "r": 0.33022772570782827,
+     "lo": 0.2627938998497241,
+     "hi": 0.39199027682773663
+    }
+   },
+   "winner": {
+    "alone": "expected",
+    "alone_given_pitch_type": "tie",
+    "with_last_season": "tie",
+    "with_last_season_given_pitch_type": "tie"
+   }
+  }
+ },
+ "matched_counts": {
+  "2024": {
+   "my_pitches_60_swings": 1620,
+   "after_type_rule": 1620,
+   "knuckle_curves_mapped_to_CU": 30,
+   "matched_to_savant": 1619,
+   "with_miss_distance": 1612,
+   "with_run_value": 1619
+  },
+  "2025": {
+   "my_pitches_60_swings": 1661,
+   "after_type_rule": 1660,
+   "knuckle_curves_mapped_to_CU": 29,
+   "matched_to_savant": 1659,
+   "with_miss_distance": 1659,
+   "with_run_value": 1659
+  },
+  "2026": {
+   "my_pitches_60_swings": 1697,
+   "after_type_rule": 1696,
+   "knuckle_curves_mapped_to_CU": 26,
+   "matched_to_savant": 1695,
+   "with_miss_distance": 1693,
+   "with_run_value": 1695
+  }
+ },
+ "miss_distance_by_type": {
+  "CH": {
+   "pitches": 586,
+   "mean_in": 3.504956659003413
+  },
+  "CU": {
+   "pitches": 412,
+   "mean_in": 4.625031640567961
+  },
+  "FC": {
+   "pitches": 445,
+   "mean_in": 2.000052933761798
+  },
+  "FF": {
+   "pitches": 1339,
+   "mean_in": 1.0241533231949216
+  },
+  "FO": {
+   "pitches": 4,
+   "mean_in": 5.87112826825
+  },
+  "FS": {
+   "pitches": 175,
+   "mean_in": 3.82233171888
+  },
+  "KN": {
+   "pitches": 2,
+   "mean_in": 2.350699014
+  },
+  "SI": {
+   "pitches": 777,
+   "mean_in": 1.3059612949819819
+  },
+  "SL": {
+   "pitches": 768,
+   "mean_in": 4.244150870018229
+  },
+  "ST": {
+   "pitches": 431,
+   "mean_in": 4.6352363865916475
+  },
+  "SV": {
+   "pitches": 25,
+   "mean_in": 4.51545649056
+  }
+ },
+ "refit_check": {
+  "what": "The same analysis on a second fit of the model from the same pitch files. Swing and whiff counts are identical; expected whiff differs a little by pitch because the fit is not bit-for-bit repeatable across machines.",
+  "x_whiff_r_between_fits": 0.9956055110993409,
+  "x_whiff_mean_abs_diff": 0.48142550247451804,
+  "same_season_pooled": {
+   "x_whiff_pct ~ sv_miss_in": {
+    "raw": {
+     "n": 4964,
+     "pitchers": 888,
+     "r": 0.7140290891865425,
+     "lo": 0.6997105238297479,
+     "hi": 0.728070865375429
+    },
+    "within_pitch_type": {
+     "n": 4964,
+     "pitchers": 888,
+     "r": 0.25701545077365157,
+     "lo": 0.21720396792776256,
+     "hi": 0.29576614804991136
+    }
+   },
+   "x_whiff_pct ~ sv_rv100": {
+    "raw": {
+     "n": 4973,
+     "pitchers": 888,
+     "r": 0.040041629838736395,
+     "lo": 0.009720044400027543,
+     "hi": 0.06922368322447044
+    },
+    "within_pitch_type": {
+     "n": 4973,
+     "pitchers": 888,
+     "r": 0.11294312227221429,
+     "lo": 0.08195915394651121,
+     "hi": 0.14429634590598356
+    }
+   },
+   "x_whiff_pct ~ sv_whiff_pct": {
+    "raw": {
+     "n": 4973,
+     "pitchers": 888,
+     "r": 0.7358273990628064,
+     "lo": 0.7215299253831187,
+     "hi": 0.750678948726558
+    },
+    "within_pitch_type": {
+     "n": 4973,
+     "pitchers": 888,
+     "r": 0.37567488925409875,
+     "lo": 0.342745299746032,
+     "hi": 0.4085155702966465
+    }
+   }
+  },
+  "next_season": {
+   "fit 2024->2025, scored 2025->2026": {
+    "models": {
+     "last_whiff": {
+      "rmse": 5.565616546258919,
+      "gain_vs_baseline_pct": 0.0
+     },
+     "expected": {
+      "rmse": 6.357161572705924,
+      "gain_vs_baseline_pct": -14.222054643327219
+     },
+     "miss": {
+      "rmse": 6.971973132742991,
+      "gain_vs_baseline_pct": -25.268657565519725
+     },
+     "expected+type": {
+      "rmse": 6.172828584119579,
+      "gain_vs_baseline_pct": -10.910058801460455
+     },
+     "miss+type": {
+      "rmse": 6.027532323747653,
+      "gain_vs_baseline_pct": -8.299453863727324
+     },
+     "expected+miss": {
+      "rmse": 6.042373762609696,
+      "gain_vs_baseline_pct": -8.566116842369276
+     },
+     "last+expected": {
+      "rmse": 5.202833649780177,
+      "gain_vs_baseline_pct": 6.5182876589404355
+     },
+     "last+miss": {
+      "rmse": 5.332079878964633,
+      "gain_vs_baseline_pct": 4.196061035704379
+     },
+     "last+expected+type": {
+      "rmse": 5.165338987075008,
+      "gain_vs_baseline_pct": 7.191971560688437
+     },
+     "last+miss+type": {
+      "rmse": 5.158049574584133,
+      "gain_vs_baseline_pct": 7.322943797641668
+     },
+     "last+expected+miss": {
+      "rmse": 5.139837598729907,
+      "gain_vs_baseline_pct": 7.6501667693080755
+     }
+    },
+    "contrasts": {
+     "expected minus miss": {
+      "rmse_diff": -0.6148115600370669,
+      "lo": -0.934508563730325,
+      "hi": -0.2877746302460372,
+      "share_of_resamples_first_is_better": 1.0
+     },
+     "expected+type minus miss+type": {
+      "rmse_diff": 0.14529626037192678,
+      "lo": -0.08886654195983199,
+      "hi": 0.38091972739072627,
+      "share_of_resamples_first_is_better": 0.118
+     },
+     "last+expected minus last+miss": {
+      "rmse_diff": -0.1292462291844556,
+      "lo": -0.22377272521552288,
+      "hi": -0.028949525123284872,
+      "share_of_resamples_first_is_better": 0.9955
+     },
+     "last+expected+type minus last+miss+type": {
+      "rmse_diff": 0.007289412490874447,
+      "lo": -0.05509557803025413,
+      "hi": 0.06889764591771258,
+      "share_of_resamples_first_is_better": 0.408
+     },
+     "last+expected+miss minus last+expected": {
+      "rmse_diff": -0.06299605105026984,
+      "lo": -0.11682209364797387,
+      "hi": -0.01164212759668943,
+      "share_of_resamples_first_is_better": 0.994
+     },
+     "last+expected+miss minus last+miss": {
+      "rmse_diff": -0.19224228023472545,
+      "lo": -0.26068371709684657,
+      "hi": -0.12636832084379607,
+      "share_of_resamples_first_is_better": 1.0
+     }
+    },
+    "winner": {
+     "alone": "expected",
+     "alone_given_pitch_type": "tie",
+     "with_last_season": "last+expected",
+     "with_last_season_given_pitch_type": "tie"
+    }
+   }
+  }
+ }
+}
