@@ -28,7 +28,9 @@
 - **Recommendation: open an eight-year extension (2027-34) before December 1 at about $200M in present value ($285M nominal, CBT AAV about $36M). Walk away above about $215M in present value ($308M nominal).**
   - **Opening offer:** a $25M signing bonus paid before December 1, then $8M, $17M and $25M for 2027-29 and $42M a year for 2030-34.
   - **Walk-away:** the same bonus, then $8M, $18M and $27M and $46M a year.
-  - **Where the walk-away comes from:** it is about the club's break-even under two illustrative assumptions, a 20% chance of a major arm injury and a 25% chance that MLB's proposed contract limits are adopted as proposed.
+  - **Where the walk-away comes from:** it is about the club's break-even under two scenarios, a 20% chance of the injury-stress path and a 25% chance that MLB's proposed contract limits are adopted as proposed.
+    - **The 20%** sits inside what published surgery rates support (a 9% to 33% bracket; Nov. 15 check below).
+    - **The 25%** has no source. Nobody publishes a probability that the next agreement has a cap, and I did not make one.
   - **If the club assumes his arm stays healthy and current rules:** its break-even is about $255M in present value. That's the most it could pay, not the price to aim for.
 - **The price depends on the next agreement, and the memo doesn't pretend otherwise.**
   - **Current rules:** the bargaining range runs from about $195M to $255M in present value (healthy path). With a 20% injury-stress chance on the club side, the top falls to about $230M.
@@ -110,6 +112,16 @@
   - the major-league phase of the Rule 5 Draft is postponed at minimum
   - the draft lottery is probably postponed
 - **No sign of a deal:** no reporting found a deal or a deadline extension in sight.
+
+**Update (checked 2026-11-15):**
+- **Nov. 3:** MLB proposed starting the cap and floor in 2028, not 2027, at a $258.2M cap and a $180.2M floor (MLB.com, Mark Feinsand, Nov. 4; AP, Nov. 4).
+- **The union's answer:** it criticized the offer, and AP reports the players' association says it will never accept a cap.
+- **The clock:** the agreement still expires Dec. 1, and AP reports management is expected to lock players out.
+- **What it changes here:** little, and nothing in the tables.
+  - **The MLB-plan rows use the May and June figures.** The new 2028 cap is 2.2% above this memo's path ($245.3M grown 3% is $252.7M).
+  - **If the 16% share is unchanged,** the own-club maximum in 2030 would be $43.8M, not $42.9M, and the healthy MLB-plan ceiling about $201M, not $198M (`nov3_cap_check()`).
+  - **Why the tables aren't re-priced:** neither article says whether the 15% and 16% maximums changed.
+- **This is where the talks stand, not a probability.** The chance of a cap stays a scenario.
 
 **Before December 1, the old rules run the offseason.**
 - **Option and qualifying-offer decisions:** a few days after the World Series.
@@ -268,7 +280,7 @@
 | Current rules, injury-stress floor | $132M | $193M | $254M | — | — |
 | FanGraphs arbitration shares, no MLBTR anchor | $203M | $231M | $260M | — | — |
 
-**The club's break-even price,** weighting the two rule sets by the chance q that MLB's plan is adopted as proposed (`breakeven`). q is not estimated here. The union opposes a cap, and no market price on it was found.
+**The club's break-even price,** weighting the two rule sets by the chance q that MLB's plan is adopted as proposed (`breakeven`). q is not estimated here, and it can't be sourced: nobody publishes a probability that the next agreement has a cap. It stays a scenario. Where the talks stood on Nov. 15 is in section (b).
 
 | q | Healthy | 20% stress chance | 35% stress chance | Player floor |
 |---|---|---|---|---|
@@ -288,7 +300,10 @@
   - **For the club:** it clears the break-even unless q is above about 0.6 (20% stress) or 0.3 (35% stress).
   - **For the player:** it sits at his current-rules floor and $20-30M above his floor under MLB's plan.
 - **The walk-away, about $215M:** the club's break-even at 20% stress and q = 0.25. A club more confident that current rules survive, or in his arm, can go higher. The healthy, current-rules limit is about $255M.
-  - **The 20% and the 25% are scenarios, not estimates.** I found no sourced injury rate for a pitcher like him and no market price on the cap. The grid above is the sensitivity table: read the walk-away off the row and column you believe.
+  - **The 20% and the 25% are scenarios, not estimates.**
+    - **The 20%** now sits beside published surgery rates: 25% to 33% of the pitcher groups studied have had an elbow ligament reconstruction. Read two ways, those shares bracket the stress chance at 9% to 33% (Nov. 15 check below).
+    - **The 25%** has no source, and I did not make one.
+    - **The grid above is the sensitivity table:** read the walk-away off the row and column you believe.
 
 **Check added Nov. 14, 2026: the same grid at one flat price of a win** (`skenes_flat_price_check()`).
 - **Why:** the [Torres evaluation](2026-hitter-evaluation-torres.md) prices wins at one rate because tiers put a cliff at 2.0 WAR. This memo uses FanGraphs' tiers ($12.84M at 2+ WAR). The two should be reconciled, so here is Skenes at FanGraphs' flat rate, $11.23M a win in 2026 dollars, with everything else the same.
@@ -304,6 +319,77 @@
 - **How to read the two:** the tiered price is the right one if the market pays more per win for stars, which is what FanGraphs' bands report. The flat price is the right one if a win is a win. About $15M of the walk-away rests on that choice. **A club that prices every player at one rate should walk away at about $200M.**
 - **Free-agent seasons on the flat price:** about $56M a year nominal for 2030-34, against $64M on the tiers.
 - **Every price of a win and the discount rate used in this portfolio** are in one table: [valuation conventions](../docs/valuation-conventions.md).
+
+**Check added Nov. 15, 2026: the stress chance beside published surgery rates** (`skenes_injury_check()`).
+- **What I looked for:** the chance that a young, hard-throwing starter has a major arm surgery during an eight-year deal.
+- **What exists:** no study I read reports that number. What is published is the share of a group of pitchers who have had an elbow ligament (UCL) reconstruction at some point.
+
+| Group | Share with a UCL reconstruction in their history | Source |
+|---|---|---|
+| Major league pitchers, survey of all 30 organizations (mean age 28.8) | 25% (96 of 382) | Conte et al., Am J Sports Med, 2015 |
+| Major league pitchers in the 2007-12 pitch-tracking data | 26.8% (309 of 1,327) | Chalmers et al., Am J Sports Med, 2016 |
+| Pitchers drafted in the first five rounds, 2011-20 | 33.0% (281 of 851) | Kriz et al., JSES International, 2026 |
+
+- **Velocity:** peak velocity was the leading predictor of the surgery (93.3 mph before it, against 92.1 for pitchers who never had it), but the model explained 7% of the variance (Chalmers et al.). So no source turns one pitcher's velocity into a higher rate.
+- **What one surgery costs:** a mean of 470 days to the next professional game. 93% of major league pitchers returned, and 71% returned to the same level (Meta et al., Orthop J Sports Med, 2025; 2,281 surgeries, 2010-23).
+- **The direction:** up. Surgeries on professional pitchers rose across 2010 to 2023 (Meta et al.). MLB's December 2024 report says injured-list placements and days for pitchers rose steadily for twenty years; MLB.com's summary adds that in-season placements have trended down since 2021. The report's text gives no rate per pitcher.
+- **Why these don't map onto the 20% one for one:**
+  - **They look back.** Each is the share of a group that has had the surgery so far, some of it before the majors. None is a forward eight-year chance for one pitcher.
+  - **They count one elbow surgery.** Shoulders and second surgeries are not in them.
+  - **The stress path is harsher than one surgery.** It removes 44% of his projected wins across all eight seasons. A surgery that costs 470 days removes 16% of an eight-year deal if he comes back the same pitcher.
+- **So each share is read two ways** (break-even at q = 0.25):
+
+| Reading | Stress chance | Break-even |
+|---|---|---|
+| Time missed only, 25% of pitchers | 9% | $230M |
+| Time missed only, 33% of pitchers | 12% | $227M |
+| **The memo's scenario** | **20%** | **$218M** |
+| Every surgery costs the full stress path, 25% of pitchers | 25% | $213M |
+| Every surgery costs the full stress path, 33% of pitchers | 33% | $204M |
+
+- **The headline keeps 20%.**
+  - **It sits inside the sourced bracket,** 9% to 33%.
+  - **The bottom is too kind:** it assumes every pitcher comes back the same, and 71% returned to the same level.
+  - **The top is too harsh:** it charges every surgery the full stress path, and 93% returned.
+  - **What I can't do:** pick a point between them from a source. So the walk-away stays about $215M, and the bracket is $204M to $230M.
+- **A reader who takes the 33% at face value** should walk away at about $204M. That is close to the flat-price answer.
+- **The grid at the sourced shares:**
+
+| q | 20% stress chance | 25% stress chance | 33% stress chance |
+|---|---|---|---|
+| 0 | $229M | $223M | $213M |
+| 0.25 | $218M | $213M | $204M |
+| 0.5 | $207M | $202M | $195M |
+| 1 | $185M | $181M | $176M |
+
+- **Shown, not used:** a FanGraphs Community post found the surgery in the history of 9 of 20 starters who averaged 95 to 98 mph (45%), against 121 of 464 starters overall (26%) (Julien Assouline, May 19, 2015). It is a reader post on 20 pitchers.
+
+**Check added Nov. 15, 2026: the walk-away by where the club sits on the win curve** (`skenes_win_curve_check()`).
+- **Why:** every price above is the market's price of a win. A club's own value of a win depends on how close it is to the playoffs.
+- **The source:** Vince Gennaro's club-by-club regressions of revenue on wins (The Hardball Times, Mar. 22, 2007; 2006 curves).
+  - **The average club:** five more wins were worth $4.2M from 78 wins and $11.7M from 86 wins, 2.8 times as much.
+  - **The Pirates:** $2.3M and $7.3M.
+  - **The range:** revenue responds to wins between about 70 and 100. Below and above, a win adds little (Gennaro, Baseball Research Journal, Summer 2009).
+- **What I use:** the ratio only. The dollar levels are 2006 revenue and sit far below any market price, so they can't price a contract.
+- **The rule** (`club_ceiling_own_value()`): a club never pays more for a season than the season is worth to it. Each season counts the lower of what the alternative costs and the club's own value.
+- **The assumption:** the market price of a win is what a win is worth to a club at 86 to 91 wins, because those clubs bid for stars. In brackets: the market price is the mean of the two bands.
+
+| Club's place for the eight years | Its value of a win, as a share of the market price | Walk-away (20% stress, q = 0.25) |
+|---|---|---|
+| 86 to 91 wins | 1.00 (1.47) | $218M ($218M) |
+| 78 to 83 wins | 0.36 (0.53) | $109M ($144M) |
+
+- **How to read it for 75, 85 and 92 wins:**
+  - **75 wins:** below the lowest band the source publishes. The 78-to-83 row is an upper bound.
+  - **85 wins:** between the two rows.
+  - **92 wins:** just above the top band. A club that values a win at or above the market price walks away at the market number, because it can buy the same seasons at that price later.
+- **What it shows:** the walk-away of about $215M is a contender's number. A club that expects to sit near .500 for all eight years values his free-agent seasons at a third to a half of the market price and should not match it.
+- **What it leaves out:** a trade. A club in the lower band can sell him to one in the upper band, so its real floor is his trade value, which isn't modeled.
+- **Why this is a sensitivity and not the headline:**
+  - **It is a 2006 curve.** The playoff format and club revenues have changed since.
+  - **The anchor is my assumption.** The two anchors differ by $35M in the lower band.
+  - **No club stays in one band for eight years.**
+- **Still open:** a current curve. It needs marginal revenue per win at each win total from 70 to 100, for the average club and for the Pirates, under the current playoff format and in 2026 dollars. I found none published.
 - **Why the signing bonus:**
   - **It survives a stoppage.** Salaries are paid by games played and stop in a stoppage; a signing bonus is paid regardless. That is the structure the Blue Jays used with Guerrero's $325M bonus (CBS Sports, Matt Snyder, Apr. 9, 2025).
   - **What a stoppage would cost him otherwise:** canceling 60 games would cost him about $2.7M of a $7.2M arbitration salary (proportional approximation).
@@ -329,7 +415,7 @@
   - **If MLB's limits pass,** the club pays more than it had to by signing now.
   - **If they don't,** waiting costs more and may run into a new extension maximum.
   - **The recommendation:** the opening offer is priced to win under both.
-- **The Pirates' value of a win.** The ceiling prices wins at the free-agent rate. A club whose marginal revenue per win is lower should treat the ceiling as lower. Under a payroll floor it would be partly higher. Payroll capacity isn't modeled.
+- **The Pirates' value of a win.** The ceiling prices wins at the free-agent rate. A club whose marginal revenue per win is lower should treat the ceiling as lower: on a 2006 win curve, a club near .500 for the whole deal walks away at $109M to $144M, not $218M (Nov. 15 check above). Under a payroll floor it would be partly higher. Payroll capacity isn't modeled.
 - **The free-agent price.** If the market wouldn't pay a 5-WAR pitcher at 28 at the linear rate, both ends fall.
 - **Pricing convention:** free-agent seasons are priced at each season's own $/WAR. A real contract signed in the 2029-30 offseason fixes its price at signing, so the later seasons' prices depend on its structure. The difference is small next to the scenario spread.
 - **His agent and his preferences.** They aren't modeled. Nothing here is a claim about whether he would sign.
@@ -352,11 +438,13 @@
   - **The qualifying offer.**
 - **`facts.py`:** every public number, with its source. **`cases.py`:** this memo's numbers and figure.
 
-**Tests.** 43 in `tests/test_roster_service.py` and `tests/test_roster_money.py`.
+**Tests.** 51 in `tests/test_roster_service.py` and `tests/test_roster_money.py`.
 - **Real bills:** eight 2025 bills within $1, plus the Red Sox gap pinned.
 - **Rule edge cases.**
 - **Arithmetic:** valuation, extension bands, the implied $/WAR and the comparables check, worked by hand in the comments.
 - **The Skenes ceilings, break-evens and base-year sensitivity.**
+- **The Nov. 15 checks:** the surgery shares and the two readings, the own-value rule worked by hand, the win-curve ratio.
+- **The saved table:** `reports/outputs/skenes-checks-2026.json`, checked against this page by `tests/test_report_outputs.py`.
 
 Fictional players in tests are labeled fictional.
 
@@ -370,7 +458,9 @@ Fictional players in tests are labeled fictional.
 - **Assumptions:**
   - the 5/4/3 weights
   - the ×0.8 floor and ×0.6 stress
-  - the stress chances (no sourced injury rate is used; they are scenarios)
+  - the stress chances (scenarios; published surgery shares bracket them at 9% to 33%, and the headline keeps 20%)
+  - the chance of a cap (a scenario; no source prices it)
+  - the win-curve anchor (the market price is a contender's value of a win)
   - the tiered price of a win (the flat-price check moves the walk-away from about $215M to about $200M)
   - 3% growth and the 10% discount
   - 3% cap growth
@@ -383,7 +473,7 @@ Fictional players in tests are labeled fictional.
 
 ## Reproduce
 ```bash
-uv run python -m baseball.roster.cases     # every number in this memo, and the figure
+uv run python -m baseball.roster.cases     # every number in this memo, and reports/outputs/skenes-checks-2026.json
 uv run pytest tests/test_roster_service.py tests/test_roster_money.py
 ```
 
@@ -409,6 +499,18 @@ uv run pytest tests/test_roster_service.py tests/test_roster_money.py
   - Yahoo Sports (Chris Cwik) and Bleacher Nation (Brett Taylor) on MLB's lockout memo, Oct. 8, 2026
   - MLB.com (Anthony Castrovince), June 25, 2026
   - AP (Ronald Blum), June 25, 2026
+  - MLB.com (Mark Feinsand), "MLB increases cap and floor in latest proposal, sets 2028 target," Nov. 4, 2026 (read Nov. 15, 2026)
+  - AP, "Major League Baseball proposes delaying salary cap start until 2028 in talks with players," Nov. 4, 2026, as published by MPR News (read Nov. 15, 2026)
+- **Arm injury (abstracts read Nov. 15, 2026, on Europe PMC; the two 2015-16 papers are paywalled at the journal):**
+  - Conte SA, Fleisig GS, Dines JS, Wilk KE, Aune KT, Patterson-Flynn N, ElAttrache N, "Prevalence of Ulnar Collateral Ligament Surgery in Professional Baseball Players," Am J Sports Med 2015;43(7):1764-1769, doi:10.1177/0363546515580792
+  - Chalmers PN, Erickson BJ, Ball B, Romeo AA, Verma NN, "Fastball Pitch Velocity Helps Predict Ulnar Collateral Ligament Reconstruction in Major League Baseball Pitchers," Am J Sports Med 2016;44(8):2130-2135, doi:10.1177/0363546516634305
+  - Kriz PK, Staffa SJ, Kriz JP, Kocher MS, "Early-career ulnar collateral ligament reconstruction in elite baseball pitchers: impact on professional career performance, longevity, and earning potential," JSES International 2026;10:101391, doi:10.1016/j.jseint.2025.09.011
+  - Meta F, Meister K, Griffith TB, Conte S, Chalmers PN, Mavrommatis S, Clark SC, Hebert E, Camp CL, "Epidemiology of Elbow Medial Ulnar Collateral Ligament Surgeries in Major and Minor League Baseball Pitchers: A Descriptive Study of 2281 Cases," Orthop J Sports Med 2025;13, doi:10.1177/23259671251352199
+  - Major League Baseball, "Report on Pitcher Injuries," December 2024 (read Nov. 15, 2026); MLB.com (David Adler), "MLB releases report on injuries to pitchers," Dec. 17, 2024
+  - Julien Assouline, "Velocity and the Likelihood of Tommy John Surgery," FanGraphs Community, May 19, 2015 (read Nov. 15, 2026; shown, not used)
+- **Win curve (read Nov. 15, 2026):**
+  - Vince Gennaro, "Diamond Dollars: The Economics of Winning in Baseball (Part 1)," The Hardball Times, Mar. 22, 2007
+  - Vince Gennaro, "Estimating the Dollar Value of Players," Baseball Research Journal, Summer 2009 (SABR)
 - **Contracts:**
   - Crochet: CBS Sports (Dayn Perry), Apr. 1, 2025; MLB.com (Theo DeRosa), Aug. 23, 2026
   - Burnes: MLB.com, Dec. 28 and Dec. 31, 2024
