@@ -1,6 +1,6 @@
 {
  "source": "python -m baseball.edge.savant_benchmark 2026, on the bb edge 2026 pitch tables (stuff_<season>.parquet), the regular-season pitch files, and Baseball Savant's leaderboard CSV downloads.",
- "what_this_is": "A benchmark against Baseball Savant's public leaderboards (Pitch Arsenal Stats, Swing Timing + Miss Distance). It is not a comparison with Stuff+, which needs the FanGraphs members-only export.",
+ "what_this_is": "A benchmark against Baseball Savant's public leaderboards (Pitch Arsenal Stats, Swing Timing + Miss Distance). It is not a comparison with Stuff+; that one is in edge-stuffplus-benchmark-<season>.json.",
  "savant_files": {
   "savant_arsenal_2024.csv": {
    "url": "https://baseballsavant.mlb.com/leaderboard/pitch-arsenal-stats?type=pitcher&pitchType=&year=2024&team=&min=1&minPitches=50&csv=true",
