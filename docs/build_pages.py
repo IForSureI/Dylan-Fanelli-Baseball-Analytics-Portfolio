@@ -7,7 +7,7 @@ standard header and footer on every report page (see docs/report-standard.md).
 The header and footer sit between marker comments, so re-running replaces them and never touches
 the report's own text. Numbers in PAGES and GLANCE are copied from each report's own answer; when a
 report's answer changes, change it here too (tests/test_portfolio_pages.py checks the structure).
-Photos are Dylan Fanelli's own (docs/photo-credits.md).
+Photos are my own (docs/photo-credits.md).
 """
 from __future__ import annotations
 
