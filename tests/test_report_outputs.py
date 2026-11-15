@@ -1,4 +1,4 @@
-"""The headline numbers in four reports, checked against the small saved tables in reports/outputs/.
+"""The headline numbers in five reports, checked against the small saved tables in reports/outputs/.
 If a report and its table disagree, one of them is stale."""
 import json
 from pathlib import Path
@@ -114,3 +114,50 @@ def test_il_warning_report_matches_its_saved_table():
     # the multiple-test correction across the six outcome rows
     q = min(x["tracking_vs_naive"]["log_loss"]["q_bh"] for x in s["specs"].values())
     assert f"the smallest Benjamini\u2013Hochberg q is {q:.2f}" in rep
+
+
+def test_skenes_memo_matches_its_saved_table(tmp_path):
+    from baseball.roster.cases import save_checks
+    s, memo = _load("skenes-checks-2026.json"), _text("2026-roster-cba-engine.md")
+    # the saved table is what the code writes today
+    assert json.loads(save_checks(tmp_path / "skenes.json").read_text()) == s
+    m = lambda x: f"${x:.0f}M"
+    inj, be = s["injury"], s["breakeven"]
+    # the memo's own grid and the flat-price grid, row q = 0.25
+    assert f"| 0.25 | {m(be['q=0.25, stress=0.0'])} | {m(be['q=0.25, stress=0.2'])} | {m(be['q=0.25, stress=0.35'])} |" in memo
+    fl = s["breakeven_flat_price"]
+    assert f"| 0.25 | {m(fl['q=0.25, stress=0.0'])} | {m(fl['q=0.25, stress=0.2'])} | {m(fl['q=0.25, stress=0.35'])} |" in memo
+    # the published shares: 96 of 382 and 281 of 851
+    conte, kriz = inj["rows"]
+    assert f"{100 * conte['share']:.0f}% ({conte['n']} of {conte['of']})" in memo
+    assert f"{100 * kriz['share']:.1f}% ({kriz['n']} of {kriz['of']})" in memo
+    # the two readings of each share, and the scenario between them
+    for r in (conte, kriz):
+        share = f"{100 * r['share']:.0f}%"
+        assert f"| Time missed only, {share} of pitchers | {100 * r['stress_chance_time_only']:.0f}% | {m(r['breakeven_time_only'])} |" in memo
+        assert f"| Every surgery costs the full stress path, {share} of pitchers | {share} | {m(r['breakeven_full_stress'])} |" in memo
+    assert f"| **The memo's scenario** | **20%** | **{m(inj['headline_breakeven'])}** |" in memo
+    assert inj["headline_stress_chance"] == 0.2
+    lo, hi = conte["stress_chance_time_only"], kriz["share"]
+    assert f"{100 * lo:.0f}% to {100 * hi:.0f}%" in memo and lo < 0.2 < hi
+    assert f"the bracket is {m(kriz['breakeven_full_stress'])} to {m(conte['breakeven_time_only'])}" in memo
+    assert f"removes {100 * inj['war_share_lost_on_stress_path']:.0f}% of his projected wins" in memo
+    assert f"{inj['days_out']} days removes {100 * inj['share_of_deal_missed']:.0f}% of an eight-year deal" in memo
+    # the grid at the sourced shares
+    g = inj["grid"]
+    for q, label in ((0.0, "0"), (0.25, "0.25"), (0.5, "0.5"), (1.0, "1")):
+        assert f"| {label} | {m(g[f'q={q}, stress=0.2'])} | {m(g[f'q={q}, stress=0.25'])} | {m(g[f'q={q}, stress=0.33'])} |" in memo
+    # the win curve: the ratio, the multiples and the two walk-aways
+    w = s["win_curve"]
+    low, high = w["rows"]
+    a, b = "market price = value at 86 to 91 wins", "market price = mean of the two bands"
+    assert f"{w['ratio_86_91_to_78_83']:.1f} times as much" in memo
+    assert f"| 86 to 91 wins | {high[a]['multiple']:.2f} ({high[b]['multiple']:.2f}) | {m(high[a]['breakeven'])} ({m(high[b]['breakeven'])}) |" in memo
+    assert f"| 78 to 83 wins | {low[a]['multiple']:.2f} ({low[b]['multiple']:.2f}) | {m(low[a]['breakeven'])} ({m(low[b]['breakeven'])}) |" in memo
+    assert f"The two anchors differ by {m(low[b]['breakeven'] - low[a]['breakeven'])} in the lower band" in memo
+    assert f"walks away at {m(low[a]['breakeven'])} to {m(low[b]['breakeven'])}, not {m(w['market_breakeven'])}" in memo
+    # the Nov. 3 offer
+    n = s["nov3_cap"]
+    assert f"{100 * (n['ratio'] - 1):.1f}% above this memo's path ($245.3M grown 3% is ${n['memo_cap_2028']:.1f}M)" in memo
+    assert f"${n['own_club_max_2030_nov3']:.1f}M, not ${n['own_club_max_2030_memo']:.1f}M" in memo
+    assert f"about {m(n['mlb_plan_ceiling_nov3'])}, not {m(n['mlb_plan_ceiling_memo'])}" in memo

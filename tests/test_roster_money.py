@@ -249,3 +249,96 @@ def test_one_discount_and_growth_convention_across_modules():
     assert acquisition.DISCOUNT is money.DISCOUNT and arbitration.DISCOUNT is money.DISCOUNT
     # the Torres rate sits within 1% of FanGraphs' flat rate grown one year
     assert sd.PRICE_OF_WIN_2027 / (money.DPW_FLAT_2026 * 1.03) == pytest.approx(1.0, abs=0.01)
+
+
+def test_stress_equivalent_by_hand():
+    from baseball.roster.cases import stress_equivalent
+    # a 25% chance of a surgery that costs 470 of 2,920 days loses 0.25 x 0.16096 = 4.02% of the wins;
+    # a stress path that loses 40% of them does that at a 10.06% chance
+    assert stress_equivalent(0.25, 470, 0.40) == pytest.approx(0.25 * 470 / 2920 / 0.40)
+    assert stress_equivalent(0.25, 470, 0.40) == pytest.approx(0.1006, abs=1e-4)
+    # a surgery that costs the whole deal and a path that loses every win are the same thing
+    assert stress_equivalent(0.3, 365 * 8, 1.0) == pytest.approx(0.3)
+
+
+def test_skenes_injury_check_uses_the_published_counts_and_the_same_grid():
+    from baseball.roster import facts
+    from baseball.roster.cases import breakeven_at, skenes_extension, skenes_injury_check
+    e, c = skenes_extension(), skenes_injury_check()
+    # the shares are the published counts: 96 of 382 and 281 of 851
+    assert [(r["n"], r["of"]) for r in c["rows"]] == [(96, 382), (281, 851)]
+    assert c["rows"][0]["share"] == pytest.approx(96 / 382) and c["rows"][1]["share"] == pytest.approx(281 / 851)
+    assert facts.UCL_EVIDENCE["days_to_return"] == 470
+    # the stress path's lost share of wins comes from the two WAR paths, not a typed number
+    lost = 1 - sum(e["paths"]["stress"]["war"]) / sum(e["paths"]["base"]["war"])
+    assert c["war_share_lost_on_stress_path"] == pytest.approx(lost) and 0.40 < lost < 0.50
+    # breakeven_at reproduces the memo's grid where the two overlap, and is linear in the stress chance
+    paths, own = e["paths"], e["own_club_max"]
+    for (q, sp), v in e["breakeven"].items():
+        assert breakeven_at(paths, own, sp, q) == pytest.approx(v)
+    assert c["grid"][(0.25, 0.25)] == pytest.approx(1.25 * e["breakeven"][(0.25, 0.2)] - 0.25 * e["breakeven"][(0.25, 0.0)])
+    # each share read as time missed only is a smaller stress chance than the share itself, so its
+    # break-even is higher; the memo's 20% sits between the two readings of both shares
+    for r in c["rows"]:
+        assert r["stress_chance_time_only"] < 0.2 < r["share"]
+        assert r["breakeven_full_stress"] < c["headline_breakeven"] < r["breakeven_time_only"]
+        assert r["breakeven_full_stress"] == pytest.approx(breakeven_at(paths, own, r["share"], 0.25))
+
+
+def test_club_ceiling_own_value_logic():
+    from baseball.roster.cases import (SCENARIOS, club_ceiling, club_ceiling_own_value, skenes_extension,
+                                       skenes_paths, skenes_war_base)
+    e = skenes_extension()
+    paths = {k: skenes_paths(skenes_war_base() * m) for k, m in SCENARIOS.items()}
+    own = e["own_club_max"]
+    # at the market price, or any price above it, the ceiling is the market ceiling
+    for cap in (None, own):
+        for sp in (0.0, 0.2):
+            assert club_ceiling_own_value(paths, sp, cap, 1.0) == pytest.approx(club_ceiling(paths, sp, cap))
+            assert club_ceiling_own_value(paths, sp, cap, 3.0) == pytest.approx(club_ceiling(paths, sp, cap))
+    # a club that values a win at nothing pays nothing; a lower value never raises the ceiling
+    assert club_ceiling_own_value(paths, 0.2, None, 0.0) == 0.0
+    vals = [club_ceiling_own_value(paths, 0.2, None, m) for m in (0.2, 0.4, 0.6, 0.8, 1.0)]
+    assert vals == sorted(vals) and vals[0] < vals[-1]
+    # by hand, healthy path, one season: 2030 is worth 72.1 at the market price; at half that the club
+    # counts 36.0 for it, below the 16% maximum (42.9), so the cap no longer binds in that season
+    b = paths["base"]
+    assert min(min(b["fa_value"][0], own[0]), 0.5 * b["value"][3]) == pytest.approx(0.5 * b["fa_value"][0])
+    # at half the market price every healthy free-agent season counts half; arbitration still counts in
+    # full, because each salary (7.2, 20.6, 30.3) is below half the season's value (33.0, 34.0, 35.0)
+    half = [min(a, 0.5 * v) for a, v in zip(list(b["arb_mlbtr"]) + list(b["fa_value"]), b["value"])]
+    assert club_ceiling_own_value(paths, 0.0, None, 0.5) == pytest.approx(pv(half))
+    assert half[:3] == pytest.approx(b["arb_mlbtr"]) and half[3:] == pytest.approx([0.5 * v for v in b["fa_value"]])
+
+
+def test_skenes_win_curve_check_uses_the_published_ratio():
+    from baseball.roster.cases import skenes_extension, skenes_win_curve_check
+    w, e = skenes_win_curve_check(), skenes_extension()
+    # Gennaro's averages: five wins are worth $4.2M from 78 and $11.7M from 86, a ratio of 2.79
+    assert w["ratio_86_91_to_78_83"] == pytest.approx(11.7 / 4.2)
+    low, high = w["rows"]
+    a, m = "market price = value at 86 to 91 wins", "market price = mean of the two bands"
+    assert low[a]["multiple"] == pytest.approx(4.2 / 11.7) and low[m]["multiple"] == pytest.approx(4.2 / 7.95)
+    assert high[a]["multiple"] == 1.0 and high[m]["multiple"] == pytest.approx(11.7 / 7.95)
+    # a club at or above the market price walks away at the market break-even; a club below it, lower,
+    # and lower still on the anchor that puts it further below the market
+    assert high[a]["breakeven"] == pytest.approx(e["breakeven"][(0.25, 0.2)])
+    assert high[m]["breakeven"] == pytest.approx(e["breakeven"][(0.25, 0.2)])
+    assert low[a]["breakeven"] < low[m]["breakeven"] < high[a]["breakeven"]
+
+
+def test_nov3_cap_check_arithmetic():
+    from baseball.roster.cases import nov3_cap_check
+    n = nov3_cap_check()
+    # the memo's 2028 cap is 245.3 x 1.03 = 252.659; the Nov. 3 offer is 258.2, 2.19% higher
+    assert n["memo_cap_2028"] == pytest.approx(252.659) and n["ratio"] == pytest.approx(258.2 / 252.659)
+    assert n["own_club_max_2030_nov3"] == pytest.approx(0.16 * 258.2 * 1.03 ** 2)
+    assert n["mlb_plan_ceiling_memo"] < n["mlb_plan_ceiling_nov3"] < n["mlb_plan_ceiling_memo"] * n["ratio"]
+
+
+def test_save_checks_round_trips(tmp_path):
+    import json
+    from baseball.roster.cases import save_checks, skenes_injury_check
+    out = json.loads(save_checks(tmp_path / "x.json").read_text())
+    assert out["injury"]["grid"]["q=0.25, stress=0.33"] == pytest.approx(skenes_injury_check()["grid"][(0.25, 0.33)], abs=1e-4)
+    assert set(out) == {"source", "breakeven", "breakeven_flat_price", "injury", "win_curve", "nov3_cap"}
