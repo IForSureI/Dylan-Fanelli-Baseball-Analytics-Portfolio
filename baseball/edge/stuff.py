@@ -163,6 +163,55 @@ def validate(prev: pd.DataFrame, curr: pd.DataFrame, min_swings: int = 60) -> di
     }
 
 
+def validate_holdout(train_prev: pd.DataFrame, train_curr: pd.DataFrame, test_prev: pd.DataFrame, test_curr: pd.DataFrame,
+                     min_swings: int = 60, n_boot: int = 2000, seed: int = 7) -> dict:
+    """A true held-out season: fit the blend (last season's whiff% + expected whiff%) and the regressed baseline
+    (last season's whiff% alone) on one pair of seasons, then score both on the next pair, whose outcomes the
+    weights never saw. Weighted like `validate` (sqrt of the smaller swing count). The interval on the gain
+    resamples pitchers in the test pair. Each season's expected whiff is cross-fit within that season, so it
+    never sees the next season's results."""
+    keys = ["pitcher", "pitch_type"]
+
+    def pair(prev, curr):
+        return prev[prev["swings"] >= min_swings].merge(curr[curr["swings"] >= min_swings], on=keys, suffixes=("_prev", "_curr"))
+
+    def design(m, with_x):
+        cols = [np.ones(len(m)), m["whiff_pct_prev"].to_numpy()] + ([m["x_whiff_pct_prev"].to_numpy()] if with_x else [])
+        return np.column_stack(cols)
+
+    def weights(m):
+        return np.sqrt(np.minimum(m["swings_prev"], m["swings_curr"]).to_numpy(float))
+
+    def fit(m, with_x):
+        w = weights(m)
+        c, *_ = np.linalg.lstsq(design(m, with_x) * w[:, None], m["whiff_pct_curr"].to_numpy() * w, rcond=None)
+        return c
+
+    def rmse(m, c, with_x):
+        return float(np.sqrt(np.average((m["whiff_pct_curr"].to_numpy() - design(m, with_x) @ c) ** 2, weights=weights(m))))
+
+    tr, te = pair(train_prev, train_curr), pair(test_prev, test_curr)
+    c_base, c_blend = fit(tr, False), fit(tr, True)
+    base, blend = rmse(te, c_base, False), rmse(te, c_blend, True)
+    raw = float(np.sqrt(np.average((te["whiff_pct_curr"] - te["whiff_pct_prev"]) ** 2, weights=weights(te))))
+    rng = np.random.default_rng(seed)
+    ids = te["pitcher"].unique()
+    g = te.set_index("pitcher")
+    gains = []
+    for _ in range(n_boot):
+        s = g.loc[rng.choice(ids, len(ids))]
+        gains.append(100 * (1 - rmse(s, c_blend, True) / rmse(s, c_base, False)))
+    small = te[te["swings_prev"] <= 150]
+    return {"train_pitches": int(len(tr)), "test_pitches": int(len(te)), "rmse_raw_last_season": raw,
+            "rmse_regressed_baseline": base, "rmse_blend": blend, "gain_pct": 100 * (1 - blend / base),
+            "gain_pct_lo": float(np.percentile(gains, 2.5)) if gains else float("nan"),
+            "gain_pct_hi": float(np.percentile(gains, 97.5)) if gains else float("nan"),
+            "small_sample": {"max_prev_swings": 150, "pitches": int(len(small)),
+                             "rmse_regressed_baseline": rmse(small, c_base, False) if len(small) else float("nan"),
+                             "rmse_blend": rmse(small, c_blend, True) if len(small) else float("nan")},
+            "blend": {"intercept": float(c_blend[0]), "actual": float(c_blend[1]), "x_whiff": float(c_blend[2])}}
+
+
 def project(curr: pd.DataFrame, blend: dict) -> pd.DataFrame:
     """Next-season whiff% projection from this season's actual and expected, using validated blend weights."""
     out = curr.copy()
