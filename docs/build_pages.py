@@ -26,7 +26,7 @@ REPO = "https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio"
 PAPER, INK, MUTED, GREEN, CLAY = "#f6f3ec", "#1f1f1f", "#6b6b6b", "#1d5c3f", "#b4532a"
 
 # ---------------------------------------------------------------------------------------------
-# Photos: Dylan Fanelli's own, from his playing and scouting years (docs/photo-credits.md).
+# Photos: my own, from my playing and scouting years (docs/photo-credits.md).
 # Sources live in assets/img/src/ (re-saved without location or camera data). Values: caption, and
 # where to center the crop (x, y as fractions of the photo).
 # ---------------------------------------------------------------------------------------------
