@@ -2,19 +2,23 @@
 
   uv run python -m baseball.edge.stuffplus_benchmark 2026
 
-The Stuff+ table: the FanGraphs Major League pitching leaderboard, Stuff+ tab, single seasons 2025 and
-2026, as shown on the public page on Nov. 15, 2026. It sits in data/fangraphs/ with a SOURCE.txt and is
-never committed. Nothing here contacts FanGraphs. There is no 2024 table.
+The Stuff+ tables: the FanGraphs Major League pitching leaderboard, Stuff+ tab, single seasons 2024, 2025
+and 2026, as shown on the public page on Nov. 15, 2026. They sit in data/fangraphs/ with a SOURCE.txt and
+are never committed. Nothing here contacts FanGraphs.
+
+Innings: the 2024 and 2026 tables hold pitchers with 15+ innings. The 2025 table also holds pitchers under
+15 innings, but only those in the first 708 rows by Pitching+, so its short-innings rows lean toward good
+ones. The held-out test below keeps 15+ innings in every season so the fit and the scoring see the same
+kind of pitcher.
 
 Two things to keep in mind when reading the results:
 
 - Stuff+ is built to predict run value. My expected whiff is built to predict swings and misses. So the
   same-season section shows each one against Savant's run value per 100 as well as against whiffs.
-- Only one pair of seasons has Stuff+ (2025 into 2026), so a model that uses Stuff+ has no earlier pair
-  to fit its weights on. Those models are scored by cross-validation by pitcher inside the one pair:
-  the pitchers are split into five groups, weights are fit on four and scored on the fifth. Every model
-  is scored that way so the measures stand on equal footing. The models that need no Stuff+ are also
-  scored the stricter way the Savant benchmark uses (weights fit on 2024 into 2025).
+- Next season's whiff rate is scored two ways. Held out, the strict way the Savant benchmark uses: every
+  model's weights are fit on 2024 into 2025 and scored on 2025 into 2026. And by cross-validation by
+  pitcher inside 2025 into 2026 (the pitchers are split into five groups, weights are fit on four and
+  scored on the fifth), which was the only option before the 2024 table existed and is kept beside it.
 
 Ids: FanGraphs player id to MLBAM id through the Chadwick register (data/people/people.parquet).
 Players the register does not link are left out. No names are matched.
@@ -35,7 +39,8 @@ from baseball.edge import savant_benchmark as sb
 
 ROOT = Path(__file__).resolve().parents[2]
 FG_DIR = ROOT / "data" / "fangraphs"
-FG_FILE = "stuff_plus_by_pitch_2025_2026.csv"
+FG_FILES = ("stuff_plus_by_pitch_2024.csv", "stuff_plus_by_pitch_2025_2026.csv")
+MIN_IP = 15.0        # the innings floor every season's table shares
 OUT = ROOT / "reports" / "outputs"
 
 FG_COLUMNS = ("FA", "SI", "FC", "FS", "SL", "CU", "CH", "KC", "FO")
@@ -52,8 +57,9 @@ THROWS = 100         # "throws the pitch" in the evidence counts: 100+ pitches i
 # Load and map
 # ---------------------------------------------------------------------------------------------
 
-def load_fangraphs(path: Path | None = None) -> pd.DataFrame:
-    return pd.read_csv(path or FG_DIR / FG_FILE)
+def load_fangraphs(paths=None) -> pd.DataFrame:
+    """Every season's table stacked. One row per pitcher and season."""
+    return pd.concat([pd.read_csv(p) for p in (paths or [FG_DIR / f for f in FG_FILES])], ignore_index=True)
 
 
 def map_ids(fg: pd.DataFrame, register: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
@@ -69,7 +75,7 @@ def map_ids(fg: pd.DataFrame, register: pd.DataFrame) -> tuple[pd.DataFrame, dic
 
 def long_stuff(fg: pd.DataFrame) -> pd.DataFrame:
     """One row per pitcher, season and FanGraphs column that holds a Stuff+ value."""
-    out = fg.melt(id_vars=["season", "pitcher"], value_vars=list(FG_COLUMNS), var_name="fg_col", value_name="stuff_plus")
+    out = fg.melt(id_vars=["season", "pitcher", "ip"], value_vars=list(FG_COLUMNS), var_name="fg_col", value_name="stuff_plus")
     return out.dropna(subset=["stuff_plus"]).reset_index(drop=True)
 
 
@@ -78,6 +84,7 @@ def fg_column(table: pd.DataFrame, counts: pd.DataFrame) -> pd.DataFrame:
 
     - Four-seamer to FA. SI, FC, FS, FO, CH and KC to the column of the same name.
     - FanGraphs has no sweeper or slurve column. Sweepers go in its SL column and slurves in its CU column.
+      (The slurve evidence is thin and, in 2024, mixed. Slurves are a handful of rows, so the choice moves nothing.)
     - A pitcher who throws both pitches of a shared column (slider and sweeper, or curveball and slurve) has
       one Stuff+ number for the two. My pitch is matched only when it is at least 90% of his pitches in
       that column for the season; otherwise the row is dropped.
@@ -132,7 +139,7 @@ def season_frame(table: pd.DataFrame, counts: pd.DataFrame, stuff: pd.DataFrame,
     """My pitches with 60+ swings, each with its Stuff+ (FanGraphs column by the rule above) and, where Savant
     has the row, its miss distance and run value per 100."""
     t = fg_column(table[table["swings"] >= min_swings], counts)
-    t = t.merge(stuff[["pitcher", "fg_col", "stuff_plus"]], on=["pitcher", "fg_col"], how="inner")
+    t = t.merge(stuff[["pitcher", "fg_col", "stuff_plus", "ip"]], on=["pitcher", "fg_col"], how="inner")
     sv = sb.savant_type(t).merge(savant.rename(columns={"pitch_type": "sv_type"}), on=["pitcher", "sv_type"], how="left")
     return sv.reset_index(drop=True)
 
@@ -226,9 +233,10 @@ def pair(prev_frame: pd.DataFrame, curr_table: pd.DataFrame, min_swings: int = s
     type, as in the Savant benchmark."""
     p = prev_frame.dropna(subset=["stuff_plus", "sv_miss_in"])
     c = sb.savant_type(curr_table[curr_table["swings"] >= min_swings]).assign(pitcher=lambda d: d["pitcher"].astype("int64"))
-    keep = ["pitcher", "sv_type", "pitch_type", "swings", "whiff_pct", "x_whiff_pct", "sv_miss_in", "stuff_plus"]
+    keep = ["pitcher", "sv_type", "pitch_type", "swings", "whiff_pct", "x_whiff_pct", "sv_miss_in", "stuff_plus", "ip"]
     m = p[keep].merge(c[["pitcher", "sv_type", "swings", "whiff_pct"]], on=["pitcher", "sv_type"], suffixes=("_prev", "_curr"))
-    return m.rename(columns={"x_whiff_pct": "x_whiff_pct_prev", "sv_miss_in": "sv_miss_in_prev", "stuff_plus": "stuff_plus_prev"}).reset_index(drop=True)
+    return m.rename(columns={"x_whiff_pct": "x_whiff_pct_prev", "sv_miss_in": "sv_miss_in_prev", "stuff_plus": "stuff_plus_prev",
+                             "ip": "ip_prev"}).reset_index(drop=True)
 
 
 def folds(pitchers, k: int = 5, seed: int = 7) -> np.ndarray:
@@ -287,15 +295,29 @@ def verdict(scored: dict, a: str, b: str) -> str:
     return a if c["hi"] < 0 else b if c["lo"] > 0 else "tie"
 
 
+def winners(scored: dict) -> dict:
+    out = {name: verdict(scored, a, b) for name, (a, b) in VERDICTS.items()}
+    out["stuff_vs_miss_alone_given_pitch_type"] = verdict(scored, "stuff+type", "miss+type")
+    out["stuff_vs_miss_with_last_season"] = verdict(scored, "last+stuff", "last+miss")
+    return out
+
+
+def held_out(train: pd.DataFrame, test: pd.DataFrame, n_boot: int = 2000, seed: int = 7) -> dict:
+    """Every model, Stuff+ ones included: weights fit on `train` (an earlier pair of seasons) and scored on
+    `test`, whose outcomes no weight has seen."""
+    out = score(test, holdout_predictions(train, test, MODELS), CONTRASTS, n_boot, seed)
+    out["train_pitches"], out["train_pitchers"] = int(len(train)), int(train["pitcher"].nunique())
+    out["winner"] = winners(out)
+    return out
+
+
 def next_season(test: pd.DataFrame, train_earlier: pd.DataFrame | None = None, k: int = 5, n_boot: int = 2000, seed: int = 7) -> dict:
     """Score every model on `test` (the one pair with Stuff+).
 
     - `cross_validated_by_pitcher`: every model, weights fit inside the pair on other pitchers.
     - `weights_from_earlier_pair`: the models that need no Stuff+, weights fit on `train_earlier`."""
     cv = score(test, cv_predictions(test, MODELS, k, seed), CONTRASTS, n_boot, seed)
-    cv["winner"] = {name: verdict(cv, a, b) for name, (a, b) in VERDICTS.items()}
-    cv["winner"]["stuff_vs_miss_alone_given_pitch_type"] = verdict(cv, "stuff+type", "miss+type")
-    cv["winner"]["stuff_vs_miss_with_last_season"] = verdict(cv, "last+stuff", "last+miss")
+    cv["winner"] = winners(cv)
     cv["folds"], cv["fold_seed"] = k, seed
     y = test["whiff_pct_curr"].to_numpy(float)
     alone = {c: sb.corr_row(test.assign(y=y), c, "y", None, n_boot, seed) for c in ("whiff_pct_prev", *MEASURES.values())}
@@ -318,9 +340,9 @@ def run(season: int = 2026, n_boot: int = 2000, seed: int = 7, log=print) -> dic
     from baseball.ingest.league import load_season
     from baseball.phases import phase
 
-    seasons = [season - 1, season]
-    tables = sb.load_tables([season - 2, *seasons], season)
-    savant = {s: sb.load_savant(s) for s in [season - 2, *seasons]}
+    seasons = [season - 2, season - 1, season]
+    tables = sb.load_tables(seasons, season)
+    savant = {s: sb.load_savant(s) for s in seasons}
     fg_all = load_fangraphs()
     fg, id_counts = map_ids(fg_all, people.load())
     stuff = long_stuff(fg)
@@ -336,11 +358,14 @@ def run(season: int = 2026, n_boot: int = 2000, seed: int = 7, log=print) -> dic
         all_pitches[s] = sb.match(tables[s], savant[s]).assign(season=s)
         coverage[str(s)] = {"my_pitches_60_swings": int(len(floor)), "in_a_type_fangraphs_lists": int(len(mapped_types)),
                             "after_shared_column_rule": int(len(with_col)), "dropped_by_shared_column_rule": int(len(mapped_types) - len(with_col)),
-                            "with_stuff_plus": int(len(frames[s])), "with_stuff_plus_and_savant": int(frames[s][["sv_miss_in", "sv_rv100"]].notna().all(axis=1).sum())}
+                            "with_stuff_plus": int(len(frames[s])), "slurves_with_stuff_plus": int(frames[s]["pitch_type"].eq("SV").sum()), "with_stuff_plus_and_savant": int(frames[s][["sv_miss_in", "sv_rv100"]].notna().all(axis=1).sum())}
         evidence[str(s)] = mapping_evidence(counts[s], fg[fg["season"] == s])
-    pooled = pd.concat(frames.values(), ignore_index=True)
+    pooled = pd.concat([frames[season - 1], frames[season]], ignore_index=True)   # the two seasons the first benchmark had
 
     test = pair(frames[season - 1], tables[season])
+    train_stuff = pair(frames[season - 2], tables[season - 1])
+    ip15 = lambda f: f[f["ip_prev"] >= MIN_IP].reset_index(drop=True)
+    short = test[test["ip_prev"] < MIN_IP]
     train = sb.pair(tables[season - 2], tables[season - 1], savant[season - 2])
     plain = sb.pair(tables[season - 1], tables[season], savant[season - 1])
     log(f"next-season set: {len(test):,} pitches")
@@ -351,10 +376,12 @@ def run(season: int = 2026, n_boot: int = 2000, seed: int = 7, log=print) -> dic
                   "the Savant leaderboard files of the Savant benchmark, and the FanGraphs Stuff+ table described below.",
         "what_this_is": "Expected whiff against FanGraphs Stuff+ by pitch type, 2025 and 2026. Stuff+ is built to predict run value; "
                         "expected whiff is built to predict swings and misses.",
-        "fangraphs_table": {"description": source, "rows": {str(s): int((fg_all["season"] == s).sum()) for s in seasons}},
-        "limits": ["One pair of seasons has Stuff+ (2025 into 2026); there is no 2024 table and no separate year to fit weights on.",
+        "fangraphs_table": {"description": source, "rows": {str(s): int((fg_all["season"] == s).sum()) for s in seasons},
+                            "rows_15_ip": {str(s): int(((fg_all["season"] == s) & (fg_all["ip"] >= MIN_IP)).sum()) for s in seasons}},
+        "limits": ["One held-out test: weights fit on 2024 into 2025, scored on 2025 into 2026. There is no second scoring year.",
                    "Stuff+ by pitch type exists only for the columns FanGraphs lists: FA SI FC FS SL CU CH KC FO.",
-                   "The 2025 table leaves out 139 pitchers who threw under 15 innings; the 2026 table is pitchers with 15+ innings.",
+                   "The 2024 and 2026 tables are pitchers with 15+ innings. The 2025 table leaves out 139 pitchers who threw under 15 "
+                   "innings and keeps the under-15 pitchers only from its first 708 rows by Pitching+.",
                    "FanGraphs ids with no link in the Chadwick register are left out; no names are matched."],
         "id_mapping": {"how": "FanGraphs player id to MLBAM id through the Chadwick register (key_fangraphs to key_mlbam)", "by_season": id_counts},
         "pitch_type_rule": {"map": FG_OF, "shared_columns": {k: list(v) for k, v in SHARED.items()}, "min_share_of_shared_column": MIN_SHARE,
@@ -368,14 +395,23 @@ def run(season: int = 2026, n_boot: int = 2000, seed: int = 7, log=print) -> dic
         "weighting": "RMSE and fits weighted by sqrt(min swings in the two seasons), as in stuff.validate_holdout()",
         "coverage": coverage,
         "same_season": {str(s): same_season(frames[s], n_boot, seed) for s in seasons} | {"pooled": same_season(pooled, n_boot, seed)},
+        "same_season_pooled_is": f"{season - 1} and {season}",
         "expected_vs_stuff_by_pitch_type": by_pitch_type(pooled, n_boot=n_boot, seed=seed),
         "stuff_vs_run_value_by_pitch_type": by_pitch_type(pooled, "stuff_plus", "sv_rv100", n_boot=n_boot, seed=seed),
         "expected_vs_whiff_by_pitch_type": by_pitch_type(pooled, "x_whiff_pct", "whiff_pct", n_boot=n_boot, seed=seed),
         "stuff_vs_whiff_by_pitch_type": by_pitch_type(pooled, "stuff_plus", "whiff_pct", n_boot=n_boot, seed=seed),
-        "pitcher_level": pitcher_level(pd.concat(all_pitches.values(), ignore_index=True), fg, n_boot, seed),
+        "pitcher_level": pitcher_level(pd.concat([all_pitches[season - 1], all_pitches[season]], ignore_index=True), fg, n_boot, seed),
         "next_season": {"pair": f"{season - 1}->{season}", "pitches_in_savant_benchmark_test_set": int(len(plain)),
                         "pitches_with_stuff_plus": int(len(test)), "earlier_pair": f"{season - 2}->{season - 1}"}
-                       | next_season(test, train, n_boot=n_boot, seed=seed),
+                       | next_season(test, train, n_boot=n_boot, seed=seed)
+                       | {"held_out": {
+                           "fit": f"{season - 2}->{season - 1}", "scored": f"{season - 1}->{season}",
+                           "test_pitches_from_pitchers_under_15_ip": int(len(short)),
+                           "test_pitchers_under_15_ip": int(short["pitcher"].nunique()),
+                           "15_ip_every_season": held_out(ip15(train_stuff), ip15(test), n_boot, seed),
+                           "all_rows_in_the_tables": held_out(train_stuff, test, n_boot, seed)},
+                          "cross_validated_by_pitcher_15_ip": {k: v for k, v in next_season(ip15(test), None, n_boot=n_boot, seed=seed)
+                                                               ["cross_validated_by_pitcher"].items()}},
     }
     OUT.mkdir(parents=True, exist_ok=True)
     path = OUT / f"edge-stuffplus-benchmark-{season}.json"
