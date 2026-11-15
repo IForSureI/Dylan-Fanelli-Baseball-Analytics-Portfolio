@@ -2,6 +2,30 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-14: Audit fixes: qualifying offers, availability, one valuation table, held-out stuff test
+**Built**
+- **Bullpen memo and one-pager:** the Nov. 2 qualifying offers entered as facts (AP, CBS Sports): Morejón and Bednar have one, Abreu does not. The memo's own rule now sets the walk-away at four years, $60M, the same as the opening offer, and the landing odds there are 26% (47% at $72M). Abreu is the likely signing. The Fairbanks line now says he is priced for a third of 2027.
+- **`baseball/roster/acquisition.py`, `bullpen_case.py`:** `workload_retention()` and `availability_path()`. The 170 relievers with 800+ relief pitches in 2024 kept 63% of that workload in 2025 and 48% in 2026. On that path four years of Morejón are worth $51.5M at the market line ($12.9M a year), not $72M.
+- **`docs/valuation-conventions.md`:** one table for the four prices of a win and the one discount convention (10% on dollars, 3% growth, about 7% net). The Torres module now imports growth and discount from `baseball/roster/money.py`.
+- **`skenes_flat_price_check()`:** the Skenes grid at one flat price of a win. The break-even at 20% stress and q = 0.25 is about $202M, against $218M on the tiers.
+- **`validate_holdout()` in `baseball/edge/stuff.py`:** blend weights fit on 2024 → 2025 and scored on 2025 → 2026. 6.4% less error than a regressed baseline (4.9% to 8.0%; RMSE 5.20 vs. 5.56 on 1,040 pitches).
+- **`reports/outputs/` and `tests/test_report_outputs.py`:** small saved tables for the bullpen memo, the Edge Board and pitch familiarity, and a test that checks each report's headline numbers against them.
+- **Wording and dates:** pitch familiarity is now "in association, yes" with its placebo stated up front; pitch changes on the Edge Board are candidates; arbitration odds carry their ranges (Smith 49% to 71%, Varland 40% to 77%); the tender deadline is Nov. 20; the draft table says average where it meant average; front-office ties say how the dating rule moves p; the Atlas lists three gaps; the Skubal page is marked as not updated for 2026; two ambiguous lines on the Spanish coach page now carry a subject.
+- **README:** the blanket claims are replaced with what was tested and how. The test count is no longer a hard number. "Run it" says what compare-relievers needs.
+
+**Decided**
+- **The prediction log's calls are not edited.** The qualifying offers and the held-out result are in a dated notes section above the calls.
+- **The Skenes headline keeps the tiered price,** because that is what the cited study reports, and shows the flat-price answer beside it. A club that prices every player at one rate should walk away at about $200M.
+- **The Edge Board page is reset to the saved run's table.** Four numbers moved in the last digit (292 candidates, not 291; 8.2% and 2.7, not 8.1% and 2.6; tells +0.19 controlled, not +0.18; portable AUC 0.631).
+
+**Learned**
+- The new outputs test caught two of my own numbers the day it was written: the two-season workload figure is 47.5%, which I had written as 47%, and the Edge Board page was one run behind its saved table.
+- A walk-away at the market's expected price is not a surplus. Once the offer was made on Nov. 2, the memo's headline ($72M) and its own qualifying-offer rule ($60M) disagreed until this revision.
+- Leave-one-out inside the fitting seasons is not a held-out season. The held-out gain is smaller (6.4% against 8.2%).
+
+**Not done**
+- A null simulation and leave-own-game-out fixed effects for pitch familiarity; a permutation null for the pitch-change detector; a Stuff+ benchmark; a sourced injury rate and cap probability for Skenes; a club win curve for any contract price. Each needs the pitch-level data or an outside table, and each report now says so.
+
 ## 2026-11-09: Postseason page filters, new palette and display face
 **Built**
 - **`docs/postseason.html`:** one filter row above every chart (round range, inning, count, reset; sticky, and one line on a phone), so all ten charts re-cut to the same slice. The page carries additive cells per player or club, round, inning group and count, and re-ranks from them; with every filter on "All" it matches the published charts exactly (tested in Python and in the browser). Minimum samples scale with the cut. Charts a filter can't apply to say so. Marks keep the club colours (main colour fill, second colour border); bars rounded at the data end with value labels measured clear of the right-hand column; velocity and exit velocity as dots, since their axis can't start at zero. New palette on warm paper (ink, blue #285d9e, stitch red #c8392b; checked for colour-blind separation and contrast), light only; Be Vietnam Pro for headings in place of Syne.
