@@ -1,4 +1,4 @@
-# Dylan Fanelli's HYPOTHETICAL retrospective plan for a real MLB pitcher. It is not the club's plan and makes no
+# My HYPOTHETICAL retrospective plan for a real MLB pitcher. It is not the club's plan and makes no
 # claim about what the club or the pitcher actually worked on. Written as if in the 2025-26 offseason: every
 # baseline is his public 2025 Statcast data, and the payoff numbers behind the targets were recomputed from
 # 2024-25 data alone: 2024->25 season pairs, an expected-whiff model trained on 2024-25 only, and thresholds
@@ -10,7 +10,7 @@
 player: "Logan Gilbert"
 pitcher: 669302
 season: 2026
-label: "Dylan Fanelli's HYPOTHETICAL retrospective plan from public data; not the club's plan"
+label: "HYPOTHETICAL retrospective plan by Dylan Fanelli from public data; not the club's plan"
 level: "MLB"
 role_now: "SP"
 role_target: "SP, front of the rotation"
