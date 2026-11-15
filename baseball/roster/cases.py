@@ -1,8 +1,12 @@
 """The engine applied to public cases: the 2025 tax bills and the Paul Skenes extension decision.
 
-`uv run python -m baseball.roster.cases` prints every number the report quotes.
+`uv run python -m baseball.roster.cases` prints every number the report quotes and saves the two Nov. 15
+checks (sourced injury rates, a club's own value of a win) to `reports/outputs/skenes-checks-2026.json`.
 """
 from __future__ import annotations
+
+import json
+from pathlib import Path
 
 import pandas as pd
 
@@ -30,7 +34,8 @@ FA_YEARS_BOUGHT = 5            # 2030-34: an 8-year extension through his age-32
 WEIGHTS = (5, 4, 3)            # ASSUMPTION: Marcel-style weights on the last three seasons, most recent first
 SCENARIOS = {"low": 0.8, "base": 1.0, "high": 1.2, "stress": 0.6}   # stress: ILLUSTRATIVE major-arm-injury case
 CAP_GROWTH = 0.03              # ASSUMPTION for the MLB-proposal case: the cap grows like the cost of a win
-STRESS_PROBS = (0.0, 0.2, 0.35)  # ASSUMPTION: illustrative chances of the stress path (no sourced rate)
+STRESS_PROBS = (0.0, 0.2, 0.35)  # ASSUMPTION: chances of the stress path. Scenarios; skenes_injury_check()
+                                 # sets them beside the published surgery shares
 CAP_PROBS = (0.0, 0.25, 0.5, 1.0)  # chance MLB's cap-and-max system is adopted as proposed (not estimated)
 
 
@@ -158,6 +163,117 @@ def skenes_flat_price_check() -> dict:
             "fa_aav_nominal": e["fa_aav_nominal"]}
 
 
+def breakeven_at(paths: dict, own_max: list[float], stress_prob: float, q: float) -> float:
+    """The club's break-even at any stress chance and any chance q of MLB's plan: the same mix as the grid in
+    `skenes_extension()`, for values the grid doesn't carry."""
+    return (1 - q) * club_ceiling(paths, stress_prob, None) + q * club_ceiling(paths, stress_prob, own_max)
+
+
+def stress_equivalent(surgery_share: float, days_out: float, war_share_lost: float, years: int = 8) -> float:
+    """The stress chance that loses as many expected wins as a surgery that only costs time. A surgery with
+    chance `surgery_share` that costs `days_out` of a `years`-year deal loses surgery_share x days_out /
+    (365 x years) of the wins; the stress path loses `war_share_lost` of them. The ratio is the chance."""
+    return surgery_share * days_out / (365 * years) / war_share_lost
+
+
+def skenes_injury_check(q: float = 0.25) -> dict:
+    """The memo's stress chance beside published surgery shares (facts.UCL_EVIDENCE). The published figures
+    are shares of pitchers with an elbow ligament reconstruction in their history, not a forward chance for
+    one pitcher, and the stress path (60% of his wins in every season) is harsher than one surgery. So each
+    share is read two ways: as the stress chance itself (every surgery costs the whole stress path), and as
+    time missed only (the mean 470 days out, then the same pitcher). The memo's 20% sits between them."""
+    e = skenes_extension()
+    paths, own = e["paths"], e["own_club_max"]
+    lost = 1 - sum(paths["stress"]["war"]) / sum(paths["base"]["war"])
+    ev = facts.UCL_EVIDENCE
+    rows = []
+    for label, key in (("major league pitchers (Conte 2015)", "mlb_pitchers_with_history"),
+                       ("top-five-round draftees, 2011-20 (Kriz 2026)", "top_five_round_draftees_with_history")):
+        share = ev[key]["share"]
+        time_only = stress_equivalent(share, ev["days_to_return"], lost, years=len(paths["base"]["war"]))
+        rows.append({"population": label, "n": ev[key]["n"], "of": ev[key]["of"], "share": share,
+                     "stress_chance_time_only": time_only,
+                     "breakeven_time_only": breakeven_at(paths, own, time_only, q),
+                     "breakeven_full_stress": breakeven_at(paths, own, share, q)})
+    grid = {(qq, sp): breakeven_at(paths, own, sp, qq) for qq in CAP_PROBS for sp in (0.2, 0.25, 0.33)}
+    return {"q": q, "war_share_lost_on_stress_path": lost, "days_out": ev["days_to_return"],
+            "share_of_deal_missed": ev["days_to_return"] / (365 * len(paths["base"]["war"])),
+            "rows": rows, "headline_stress_chance": 0.2, "headline_breakeven": e["breakeven"][(q, 0.2)],
+            "grid": grid}
+
+
+def club_ceiling_own_value(paths: dict, stress_prob: float, cap: list[float] | None, multiple: float) -> float:
+    """The club ceiling when a win is worth `multiple` times the market price to this club. Season by
+    season the club's alternative costs what `club_ceiling` says (arbitration, then the going price), but a
+    club never pays more for a season than the season is worth to it, so each season counts
+    min(alternative cost, multiple x market value). At multiple >= 1 this is `club_ceiling`: a club that
+    values a win above the market price can still buy the seasons at the market price."""
+    def cost(p: dict) -> list[float]:
+        alt = list(p["arb_mlbtr"]) + _capped(p["fa_value"], cap)
+        return [min(a, multiple * v) for a, v in zip(alt, p["value"])]
+    return pv(_mix(cost(paths["base"]), cost(paths["stress"]), stress_prob))
+
+
+def skenes_win_curve_check(stress_prob: float = 0.2, q: float = 0.25) -> dict:
+    """The walk-away for a club by where it sits on the win curve (facts.WIN_CURVE_GENNARO_2006; shape only).
+    ASSUMPTION: the market price of a win is what a win is worth to a club at 86 to 91 wins, because those
+    are the clubs that bid for stars. The second anchor (the mean of the two bands) is shown beside it."""
+    e = skenes_extension()
+    paths, own = e["paths"], e["own_club_max"]
+    g = facts.WIN_CURVE_GENNARO_2006
+    lo, hi = g["78-83"]["average"], g["86-91"]["average"]
+    anchors = {"market price = value at 86 to 91 wins": hi, "market price = mean of the two bands": (lo + hi) / 2}
+
+    def walk(multiple: float) -> float:
+        return ((1 - q) * club_ceiling_own_value(paths, stress_prob, None, multiple)
+                + q * club_ceiling_own_value(paths, stress_prob, own, multiple))
+
+    rows = []
+    for band, five in (("78 to 83 wins", lo), ("86 to 91 wins", hi)):
+        row = {"band": band, "value_of_five_wins_2006": five}
+        for name, ref in anchors.items():
+            row[name] = {"multiple": five / ref, "breakeven": walk(five / ref)}
+        rows.append(row)
+    return {"stress_prob": stress_prob, "q": q, "market_breakeven": e["breakeven"][(q, stress_prob)],
+            "ratio_86_91_to_78_83": hi / lo,
+            "pirates_ratio_86_91_to_78_83": g["86-91"]["pirates"] / g["78-83"]["pirates"],
+            "pirates_share_of_average_86_91": g["86-91"]["pirates"] / hi, "rows": rows}
+
+
+def nov3_cap_check() -> dict:
+    """MLB's Nov. 3, 2026 offer against the cap path this memo uses. The memo grows the May figure 3% a year;
+    the new offer starts in 2028. If the 16% share is unchanged (not reported), the own-club maximum and the
+    healthy MLB-plan ceiling's free-agent part rise by the same ratio."""
+    e = skenes_extension()
+    memo_2028 = facts.MLB_PROPOSAL["cap_2027"] * (1 + CAP_GROWTH)
+    ratio = facts.MLB_PROPOSAL_NOV3["cap_2028"] / memo_2028
+    arb = pv(e["paths"]["base"]["arb_mlbtr"])
+    ceiling = e["bands"]["MLB plan"]["club_ceiling_pv"]
+    return {"memo_cap_2028": memo_2028, "nov3_cap_2028": facts.MLB_PROPOSAL_NOV3["cap_2028"], "ratio": ratio,
+            "own_club_max_2030_memo": e["own_club_max"][0], "own_club_max_2030_nov3": e["own_club_max"][0] * ratio,
+            "mlb_plan_ceiling_memo": ceiling, "mlb_plan_ceiling_nov3": arb + ratio * (ceiling - arb)}
+
+
+def _jsonable(x):
+    if isinstance(x, dict):
+        return {(f"q={k[0]}, stress={k[1]}" if isinstance(k, tuple) else str(k)): _jsonable(v) for k, v in x.items()}
+    if isinstance(x, (list, tuple)):
+        return [_jsonable(v) for v in x]
+    return round(x, 4) if isinstance(x, float) else x
+
+
+def save_checks(path: str | Path | None = None) -> Path:
+    """Write the Nov. 15 checks to reports/outputs/skenes-checks-2026.json."""
+    path = Path(path) if path else Path(__file__).resolve().parents[2] / "reports" / "outputs" / "skenes-checks-2026.json"
+    e, fl = skenes_extension(), skenes_flat_price_check()
+    out = {"source": "Built 2026-11-15 by baseball.roster.cases.save_checks() from the public facts in "
+                     "baseball/roster/facts.py. Dollars are $M of present value at the start of 2027.",
+           "breakeven": e["breakeven"], "breakeven_flat_price": fl["breakeven"],
+           "injury": skenes_injury_check(), "win_curve": skenes_win_curve_check(), "nov3_cap": nov3_cap_check()}
+    path.write_text(json.dumps(_jsonable(out), indent=1) + "\n")
+    return path
+
+
 def comps_check() -> pd.DataFrame:
     """Does the linear $/WAR price reproduce real pitcher contracts? FanGraphs' study method
     (`implied_dpw`): level pay deflated 5% a year over the aged projection. Grain: one contract."""
@@ -282,6 +398,23 @@ def main() -> None:
     for q in CAP_PROBS:
         print(f"   q={q:.2f}: " + "  ".join(f"{fl['breakeven'][(q, sp)]:.1f}" for sp in STRESS_PROBS)
               + f"   | player floor {fl['player_floor_by_q'][q]:.1f}")
+    inj = skenes_injury_check()
+    print(f"\nSourced surgery shares beside the stress chance (q = {inj['q']}); the stress path loses "
+          f"{100 * inj['war_share_lost_on_stress_path']:.1f}% of his wins, {inj['days_out']} days is "
+          f"{100 * inj['share_of_deal_missed']:.1f}% of the deal:")
+    for r in inj["rows"]:
+        print(f"   {r['population']}: {r['n']} of {r['of']} = {100 * r['share']:.1f}%; time only = stress chance "
+              f"{100 * r['stress_chance_time_only']:.1f}%, break-even {r['breakeven_time_only']:.1f}; "
+              f"as the stress chance, break-even {r['breakeven_full_stress']:.1f}")
+    for qq in CAP_PROBS:
+        print(f"   q={qq:.2f}: " + "  ".join(f"{inj['grid'][(qq, sp)]:.1f}" for sp in (0.2, 0.25, 0.33)))
+    wc = skenes_win_curve_check()
+    print(f"\nWalk-away by place on the win curve (Gennaro 2006 shape; market break-even {wc['market_breakeven']:.1f}):")
+    for r in wc["rows"]:
+        print(f"   {r['band']}: " + "; ".join(f"{k}: x{v['multiple']:.2f} -> {v['breakeven']:.1f}"
+                                             for k, v in r.items() if isinstance(v, dict)))
+    print("Nov. 3 cap offer:", {k: round(v, 3) for k, v in nov3_cap_check().items()})
+    print("Saved:", save_checks())
     o = structure_pv(ILLUSTRATIVE_OFFER["signing_bonus"], ILLUSTRATIVE_OFFER["salaries"])
     print("\nOpening offer:", ILLUSTRATIVE_OFFER, {k: round(v, 1) for k, v in o.items()})
     w = structure_pv(WALK_AWAY["signing_bonus"], WALK_AWAY["salaries"])

@@ -106,3 +106,47 @@ MARKET_COMPS = [
 # MLB's figure; 15% x $245.3M = $36.8M with 5% raises over 5 years is $203.3M by this arithmetic.
 MLB_PROPOSAL = {"cap_2027": 245.3, "floor_2027": 171.2, "new_club_share": 0.15, "own_club_share": 0.16,
                 "raise": 0.05, "new_club_max_years": 5, "own_club_max_fa_years": 6}
+
+# MLB, Nov. 3, 2026 (MLB.com, Mark Feinsand, Nov. 4, 2026; AP, Nov. 4, 2026, read on MPR News; both read
+# 2026-11-15): the cap and floor would start in 2028, not 2027, at $258.2M and $180.2M. Neither article
+# says whether the 15% and 16% contract maximums changed, so MLB_PROPOSAL above is left as it was.
+MLB_PROPOSAL_NOV3 = {"cap_2028": 258.2, "floor_2028": 180.2}
+
+# ------------------------------------------------------------------ arm injury: published base rates
+# Every figure is the share of a group of pitchers with an elbow ligament (UCL) reconstruction in their
+# history, or what the surgery costs. None is a forward eight-year chance for one pitcher. Read 2026-11-15
+# as abstracts on Europe PMC (the two 2015-16 papers are behind the journal's paywall; the others are open).
+UCL_EVIDENCE = {
+    # Conte, Fleisig, Dines, Wilk, Aune, Patterson-Flynn, ElAttrache, "Prevalence of Ulnar Collateral Ligament
+    # Surgery in Professional Baseball Players," Am J Sports Med 2015;43(7):1764-1769,
+    # doi:10.1177/0363546515580792. Survey of all 30 organizations: 96 of 382 major league pitchers (mean
+    # age 28.8) had a reconstruction in their history; 341 of 2,324 minor league pitchers (15%).
+    "mlb_pitchers_with_history": {"n": 96, "of": 382, "share": 96 / 382},
+    # Chalmers, Erickson, Ball, Romeo, Verma, "Fastball Pitch Velocity Helps Predict Ulnar Collateral
+    # Ligament Reconstruction in Major League Baseball Pitchers," Am J Sports Med 2016;44(8):2130-2135,
+    # doi:10.1177/0363546516634305. Pitchers in the 2007-12 pitch-tracking data: 309 of 1,327 had the
+    # surgery at some point. Peak velocity was the leading predictor (93.3 mph before surgery vs 92.1 for
+    # controls), but the model explained 7% of the variance.
+    "pitch_tracked_pitchers_with_history": {"n": 309, "of": 1327, "share": 309 / 1327,
+                                            "variance_explained": 0.07},
+    # Kriz, Staffa, Kriz, Kocher, "Early-career ulnar collateral ligament reconstruction in elite baseball
+    # pitchers," JSES International 2026;10:101391, doi:10.1016/j.jseint.2025.09.011. Pitchers taken in the
+    # first five rounds of the 2011-20 drafts: 281 of 851 had a primary reconstruction by the time of writing.
+    "top_five_round_draftees_with_history": {"n": 281, "of": 851, "share": 281 / 851},
+    # Meta, Meister, Griffith, Conte, Chalmers, Mavrommatis, Clark, Hebert, Camp, "Epidemiology of Elbow
+    # Medial Ulnar Collateral Ligament Surgeries in Major and Minor League Baseball Pitchers: A Descriptive
+    # Study of 2281 Cases," Orthop J Sports Med 2025;13, doi:10.1177/23259671251352199. MLB's injury
+    # tracking system, 2010-23: mean return to any professional game 470 days (SD 135); 93% of major league
+    # pitchers returned to play and 71% to the same level.
+    "days_to_return": 470, "mlb_return_any_level": 0.93, "mlb_return_same_level": 0.71,
+}
+
+# ------------------------------------------------------------------ a club's own value of a win
+# Vince Gennaro, "Diamond Dollars: The Economics of Winning in Baseball (Part 1)," The Hardball Times,
+# Mar. 22, 2007 (read 2026-11-15): club-by-club regressions of revenue on wins ("based on 2006 win curve").
+# Value of five more wins, $M, for a club at 78 wins and at 86 wins: the 30-club average and the Pirates.
+# The playoff format and club revenues have changed since 2006. Used for its shape only.
+WIN_CURVE_GENNARO_2006 = {"78-83": {"average": 4.2, "pirates": 2.3},
+                          "86-91": {"average": 11.7, "pirates": 7.3},
+                          "81st_win": {"average": 0.9, "pirates": 0.5},
+                          "90th_win": {"average": 2.8, "pirates": 1.7}}
