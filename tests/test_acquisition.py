@@ -118,3 +118,22 @@ def test_walk_away_with_a_qo_uses_the_house_pick_value():
     assert 4 * w["walkaway_with_qo_aav"] == pytest.approx(60.25, abs=0.01)
     # Edwards (2019): $5.3M + $0.5M -> about $66M, the memo's first figure
     assert 4 * w["walkaway_with_qo_aav_edwards_2019"] == pytest.approx(65.75, abs=0.01)
+
+
+def test_workload_retention_by_hand():
+    # FICTIONAL relievers. Base 2024: pitcher 1 threw 1,000 and pitcher 2 threw 800 (both count); pitcher 3 threw 500 (below 800).
+    rs = pd.DataFrame({"pitcher": [1, 1, 1, 2, 2, 3, 3], "season": [2024, 2025, 2026, 2024, 2025, 2024, 2025],
+                       "pitches": [1000, 900, 600, 800, 360, 500, 900]})
+    k = A.workload_retention(rs, 2024)
+    # One season later: (900 + 360) / 1800 = 0.70. Two seasons later: (600 + 0) / 1800 = 0.3333. Step: 0.3333 / 0.70 = 0.47619
+    assert k["n"] == 2 and k["one_season"] == pytest.approx(0.70) and k["two_seasons"] == pytest.approx(1 / 3)
+    assert k["step"] == pytest.approx((1 / 3) / 0.70)
+
+
+def test_availability_path_and_its_effect_on_breakeven():
+    assert A.availability_path(0.8, 3) == pytest.approx([1.0, 0.8, 0.64])
+    line = {"intercept": 0.0, "slope": 10.0}
+    # FICTIONAL 28-year-old, 1.0 neutral win, 2 years, no decline before 31. Value: 10 + 10 x 1.03 x 0.8 / 1.1 = 17.4909
+    # Annuity: 1 + 1 / 1.1 = 1.90909. Break-even AAV: 17.4909 / 1.90909 = 9.16190
+    be = A.breakeven_aav(2, 1.0, 1.0, 28, 2027, line, availability=A.availability_path(0.8, 2))
+    assert be == pytest.approx((10 + 10 * 1.03 * 0.8 / 1.1) / (1 + 1 / 1.1))

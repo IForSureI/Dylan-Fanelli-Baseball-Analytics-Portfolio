@@ -222,3 +222,30 @@ def test_comps_check_by_hand():
     # 37.4 total is rounded) = 7.203
     assert t.loc["Gerrit Cole", "implied_dpw"] == pytest.approx(7.203, abs=1e-3)
     assert 2.5 < t.loc["Corbin Burnes", "implied_war1_at_rate"] < 4.0
+
+
+def test_skenes_flat_price_check_lowers_the_price_and_restores_the_tiers():
+    from baseball.roster import money
+    from baseball.roster.cases import skenes_extension, skenes_flat_price_check
+
+    before = money.DPW_TIERS_2026
+    flat, tiered = skenes_flat_price_check(), skenes_extension()
+    assert money.DPW_TIERS_2026 == before  # the module price is put back
+    # a 2+ WAR pitcher is priced at $11.23M a win in place of $12.84M, so every break-even falls
+    assert all(flat["breakeven"][k] < tiered["breakeven"][k] for k in tiered["breakeven"])
+    assert flat["breakeven"][(0.25, 0.20)] == pytest.approx(201.7, abs=0.1)
+    assert tiered["breakeven"][(0.25, 0.20)] == pytest.approx(218.2, abs=0.1)
+    assert flat["fa_aav_nominal"] < tiered["fa_aav_nominal"]
+
+
+def test_one_discount_and_growth_convention_across_modules():
+    from baseball.evaluation import swing_decisions as sd
+    from baseball.roster import acquisition, arbitration, money
+
+    # 10% on dollars and 3% growth in the price of a win: about 7% net (docs/valuation-conventions.md)
+    assert money.DISCOUNT == 0.10 and money.DPW_GROWTH == 0.03
+    assert (1 + money.DISCOUNT) / (1 + money.DPW_GROWTH) - 1 == pytest.approx(0.068, abs=0.0005)
+    assert sd.DISCOUNT_RATE is money.DISCOUNT and sd.PRICE_GROWTH is money.DPW_GROWTH
+    assert acquisition.DISCOUNT is money.DISCOUNT and arbitration.DISCOUNT is money.DISCOUNT
+    # the Torres rate sits within 1% of FanGraphs' flat rate grown one year
+    assert sd.PRICE_OF_WIN_2027 / (money.DPW_FLAT_2026 * 1.03) == pytest.approx(1.0, abs=0.01)

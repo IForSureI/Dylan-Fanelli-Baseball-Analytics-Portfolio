@@ -97,3 +97,30 @@ def test_mlb_context_shapes_and_percentiles():
     ch = ctx["secondary"]["CH"]
     assert all(g < 0 for g in ch["vaa_gap_2.0"])            # changeups arrive steeper than the four-seamer
     assert pct(ctx["ff"]["velo"], 200) == 100.0 and pct(ctx["ff"]["velo"], 0) == 0.0 and pct([], 1) is None
+
+
+def test_holdout_scores_weights_on_a_season_they_never_saw():
+    from baseball.edge.stuff import validate_holdout
+
+    def tab(seed, talent):
+        rng = np.random.default_rng(seed)
+        n = len(talent)
+        swings = rng.integers(80, 400, n)
+        # expected whiff tracks true talent closely; the observed rate is talent plus binomial noise
+        whiff = 100 * rng.binomial(swings, talent / 100) / swings
+        return pd.DataFrame({"pitcher": np.arange(n), "pitch_type": "FF", "swings": swings,
+                             "whiff_pct": whiff, "x_whiff_pct": talent + rng.normal(0, 1.0, n)})
+
+    talent = np.random.default_rng(1).uniform(12, 40, 300)
+    a, b, c = tab(2, talent), tab(3, talent), tab(4, talent)
+    v = validate_holdout(a, b, b, c, n_boot=200)
+    assert v["train_pitches"] == 300 and v["test_pitches"] == 300
+    # an accurate expected rate has to help on the unseen season, and regression has to beat the raw carry-over
+    assert v["rmse_blend"] < v["rmse_regressed_baseline"] < v["rmse_raw_last_season"]
+    assert v["gain_pct_lo"] <= v["gain_pct"] <= v["gain_pct_hi"] and v["gain_pct_lo"] > 0
+    assert v["small_sample"]["pitches"] == int((b["swings"] <= 150).sum())
+    # pure-noise expected rate: the held-out gain cannot be clearly positive
+    noise = np.random.default_rng(9)
+    a2, b2 = a.assign(x_whiff_pct=noise.uniform(12, 40, 300)), b.assign(x_whiff_pct=noise.uniform(12, 40, 300))
+    v2 = validate_holdout(a2, b, b2, c, n_boot=200)
+    assert v2["gain_pct_lo"] < 0.5 and v2["gain_pct"] < v["gain_pct"] / 4
