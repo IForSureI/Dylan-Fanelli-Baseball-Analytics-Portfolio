@@ -72,3 +72,21 @@ def test_pitcher_level_is_swing_weighted():
     t = pd.DataFrame({"pitcher": [1, 1, 2], "swings": [300, 100, 50], "x_whiff_pct": [20.0, 40.0, 33.0]})
     out = gn.pitcher_level([t, t.assign(x_whiff_pct=t["x_whiff_pct"] + 2)], [1])
     assert out == {"1": {"lo": pytest.approx(25.0), "hi": pytest.approx(27.0)}}
+
+
+def test_saved_values_read_the_saved_run_and_nothing_else(tmp_path):
+    for season, shift in ((2025, 0.0), (2026, 2.0)):
+        t = _table(97.5).assign(whiffs=30, x_whiff_pct=lambda d: d["x_whiff_pct"] + shift)
+        t.to_parquet(tmp_path / f"stuff_{season}.parquet")
+    t26 = pd.read_parquet(tmp_path / "stuff_2026.parquet")
+    t26.assign(proj_whiff_pct=t26["x_whiff_pct"] - 5).to_parquet(tmp_path / "projection.parquet")
+    out = gn.saved_values(2026, [1], [100], edge_dir=tmp_path)
+    p = out["pitches"]["1_SL"]
+    assert p["x_whiff_pct"] == 99.5 and p["gap"] == pytest.approx(30.0 - 99.5) and p["proj_whiff_pct"] == 94.5
+    assert p["grade_stuff"] == grade_from_percentile(percentile(t26["x_whiff_pct"], 99.5))
+    # by season: swing-weighted expected whiff and actual minus expected, from each season's own table
+    assert set(out["pitcher_by_season"]["1"]) == {"2025", "2026"}
+    assert out["pitcher_by_season"]["1"]["2025"]["x_whiff_pct"] == 97.5
+    assert out["pitcher_by_season"]["1"]["2026"]["gap"] == pytest.approx(100 * 30 / 73 - 99.5)
+    # projections for the graded pitcher and for anyone else a report lists
+    assert out["projected_whiff_next_season"] == {"1": 94.5, "100": pytest.approx(2.0 - 5)}

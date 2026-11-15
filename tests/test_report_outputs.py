@@ -374,7 +374,7 @@ def test_edge_board_sweeper_and_refit_checks_match_their_saved_table():
         comp = v["held_out_rmse_vs_base"]
         assert v["rule"]["adopt"] == (comp["ST"]["hi"] < 0 and not any(x["lo"] > 0 for x in comp.values()))
         assert not v["rule"]["adopt"] and v["rule"]["clearly_worse_on"] == []      # "None passes. None is clearly worse elsewhere either."
-    assert k["model_changed"] is False and "The model is unchanged, so no published number moved." in board
+    assert k["model_changed"] is False and "The stuff model is unchanged, so no published number moved." in board
     # no sweeper grade from the model is quoted in the two reports that print pitch grades
     for name in ("2026-bullpen-acquisition-memo.md", "2026-bullpen-one-page.md", "2026-morejon-pro-scouting-report.md"):
         assert "sweeper" not in _text(name).lower()
@@ -388,43 +388,116 @@ def test_edge_board_sweeper_and_refit_checks_match_their_saved_table():
     assert sv["x_whiff_mean_abs_diff"] < min(mv)                                   # "smaller than a reordering makes"
 
 
+def _memo_rows(memo, heading):
+    """The arsenal table under one pitcher's heading: pitch name -> (2027 grade, stuff grade) as printed."""
+    block = memo[memo.index(heading):]
+    block = block[block.index("| Pitch | Usage"):]
+    out = {}
+    for line in block.splitlines()[2:]:
+        if not line.startswith("|"):
+            break
+        cells = [c.strip() for c in line.strip("|").split("|")]
+        if cells[0] != "Control":
+            out[cells[0]] = (int(cells[6]), int(cells[7]))
+    return out
+
+
+MEMO_PITCHERS = {"670970": ("### Adrián Morejón", {"Sinker": "SI", "Changeup": "CH", "Slider": "SL", "Four-seamer": "FF"}),
+                 "650556": ("### Bryan Abreu", {"Slider": "SL", "Four-seamer": "FF", "Cutter": "FC"}),
+                 "664126": ("### Pete Fairbanks", {"Four-seamer": "FF", "Slider": "SL", "Cutter": "FC"})}
+
+
+def test_bullpen_memo_model_numbers_are_the_saved_run():
+    """Every stuff grade, 2027 grade, expected whiff, gap and engine projection the memo prints is generated from the
+    saved run (bullpen-grades-2026.json), and the Morejón report repeats the same grades."""
+    g = _load("bullpen-grades-2026.json")
+    memo, scout = _text("2026-bullpen-acquisition-memo.md"), _text("2026-morejon-pro-scouting-report.md")
+    pitches, by_season, proj = g["pitches"], g["pitcher_by_season"], g["projected_whiff_next_season"]
+    sg = lambda v: f"+{abs(v):.1f}" if round(v, 1) >= 0 else f"\u2212{abs(v):.1f}"
+    # the three arsenal tables, cell by cell
+    seen = 0
+    for pid, (heading, types) in MEMO_PITCHERS.items():
+        rows = _memo_rows(memo, heading)
+        assert set(rows) == set(types)
+        for name, code in types.items():
+            assert rows[name] == (pitches[f"{pid}_{code}"]["grade_next"], pitches[f"{pid}_{code}"]["grade_stuff"]), (pid, name)
+            seen += 1
+        # stuff vs. results by season
+        for season, v in by_season[pid].items():
+            assert f"{season}: {v['x_whiff_pct']:.1f}% expected, {sg(v['gap'])} gap." in memo, (pid, season)
+    assert seen == len(pitches) == 10
+    mo, ab, fa = "670970", "650556", "664126"
+    msl, mch, mff, asl = pitches[mo + "_SL"], pitches[mo + "_CH"], pitches[mo + "_FF"], pitches[ab + "_SL"]
+    # single pitches quoted in prose
+    assert f"**Stuff grade:** {msl['grade_stuff']} (expected whiff {msl['x_whiff_pct']:.0f}%, {msl['pct_stuff']:.0f}th percentile;" in memo
+    assert f"Graded 50 now and {msl['grade_next']} for 2027" in memo
+    assert f"**Stuff:** {pitches[ab + '_FC']['grade_stuff']} (ten refits gave" in memo
+    assert f"the four-seamer ({sg(mff['gap'])}) and changeup ({sg(mch['gap'])}) beat their physics, and the slider ({sg(msl['gap'])}) trailed it" in memo
+    assert f"got whiffs {mch['gap']:.0f} points above its physics" in memo
+    assert f"The engine projects {mch['proj_whiff_pct']:.1f}%" in memo and mch["pct_next"] >= 99      # "still the 99th percentile of changeups"
+    assert f"Its physics grade ({msl['grade_stuff']};" in memo
+    # the side-by-side labels: 2027 grades of the pitches named
+    assert f"Changeup / four-seamer (75 / {mch['grade_next']})" in memo and mch["grade_next"] == mff["grade_next"]
+    assert f"Slider and four-seamer (60 / {asl['grade_next']})" in memo and asl["grade_next"] == pitches[ab + "_FF"]["grade_next"]
+    assert f"Cutter (65 / {pitches[fa + '_FC']['grade_next']}; 86 swings)" in memo
+    # engine whiff projections: the three, and the candidate table
+    w = lambda pid: f"{proj[pid]:.1f}"
+    assert f"Abreu {w(ab)}%, Morejón {w(mo)}%, Fairbanks {w(fa)}%" in memo and proj[ab] > proj[mo] > proj[fa]
+    assert f"the best 2027 whiff projection of the three ({w(ab)}%)" in memo and f"whiff projection, {w(ab)}%,** is the best of the three" in memo
+    table = {"Adrián Morejón": mo, "Alex Vesia": "681911", "Raisel Iglesias": "628452", "David Bednar": "670280", "Bryan Abreu": ab,
+             "Steven Okert": "595345", "Taylor Clarke": "664199", "Dennis Santana": "642701", "Paul Blackburn": "621112",
+             "Sean Newcomb": "656794", "JoJo Romero": "668941", "Tyler Kinley": "641755", "Pete Fairbanks": fa}
+    assert set(table.values()) == set(proj)
+    block = memo[memo.index("| Rank of 38 |"):]
+    rows = {c[1].strip("* "): c[-1].strip("* ") for c in ([x.strip() for x in line.strip("|").split("|")] for line in block.splitlines()[2:15])}
+    assert rows == {name: w(pid) for name, pid in table.items()}
+    low3 = [proj[k] for k in ("664199", "642701", "621112")]
+    assert f"engine whiff {min(low3):.1f}–{max(low3):.1f}%" in memo
+    # the reads that rest on these numbers still hold in the saved run
+    m, a, f = by_season[mo], by_season[ab], by_season[fa]
+    assert m["2026"]["gap"] > 0 and m["2024"]["gap"] < 0.5 and m["2025"]["gap"] < 0          # "before 2026 his results matched or trailed his physics"
+    assert a["2025"]["gap"] > 0 and a["2026"]["gap"] > 0                                      # "results beat his physics two years running"
+    assert f["2026"]["x_whiff_pct"] > f["2024"]["x_whiff_pct"] > f["2025"]["x_whiff_pct"]     # "best in 2026, after a dip in 2025"
+    assert "his physics were at their best in 2026, after a dip in 2025" in memo and "improved every year" not in memo.split("What changed on Nov. 15")[0]
+    # the formula OFP is still at its 60 cap for each pitcher, so no override or role changed
+    for pid, control in ((mo, 60), (ab, 40), (fa, 40)):
+        best = sorted((p["grade_next"] for k, p in pitches.items() if k.startswith(pid)), reverse=True)
+        assert min(60, 0.55 * best[0] + 0.35 * best[1] + 0.10 * control) == 60
+    # the Morejón report's copy of the memo's grades (present / 2027)
+    for name, code, present in (("Sinker", "SI", 65), ("Changeup", "CH", 75), ("Four-seamer", "FF", 75), ("Slider", "SL", 50)):
+        assert f"| {present} / {pitches[mo + '_' + code]['grade_next']} |" in scout[scout.index("## How these grades relate to the memo's"):], name
+    assert f"a {msl['grade_stuff']} stuff grade from the physics" in scout
+
+
 def test_reports_that_quote_pitch_grades_carry_the_refit_range():
     """Every stuff or 2027 pitch grade printed from the expected-whiff model is one fit. The memo and the scouting
-    report must say how far a refit moves it, and print a range wherever a grade moves more than 5 points."""
-    n = _load("edge-grade-noise-2026.json")
+    report must say how far a refit moves it, and name any grade that moves more than 5 points."""
+    n, g = _load("edge-grade-noise-2026.json"), _load("bullpen-grades-2026.json")
     memo, scout = _text("2026-bullpen-acquisition-memo.md"), _text("2026-morejon-pro-scouting-report.md")
-    pitches = n["pitches"]
-    assert n["orders"]["count"] == 10 and all(p["fits"] == 10 for p in pitches.values())
-    # the grades the memo prints (stuff, 2027), by MLBAM id and pitch type: Morejón, Abreu, Fairbanks
-    printed = {"670970_SI": (65, 60), "670970_CH": (70, 75), "670970_SL": (70, 55), "670970_FF": (70, 75),
-               "650556_SL": (60, 60), "650556_FF": (55, 65), "650556_FC": (40, 65),
-               "664126_FF": (65, 60), "664126_SL": (40, 55), "664126_FC": (75, 75)}
-    assert set(printed) == set(pitches)
-    far = lambda r, g: max(abs(r["lo"] - g), abs(r["hi"] - g)) > 5
-    unstable = sorted((k, kind) for k, (stuff_g, next_g) in printed.items()
-                      for kind, g in (("grade_stuff", stuff_g), ("grade_next", next_g)) if far(pitches[k][kind], g))
+    pitches, printed = n["pitches"], g["pitches"]
+    assert n["orders"]["count"] == 10 and all(p["fits"] == 10 for p in pitches.values()) and set(printed) == set(pitches)
+    far = lambda r, v: max(abs(r["lo"] - v), abs(r["hi"] - v)) > 5
+    unstable = sorted((k, kind) for k, p in printed.items() for kind, col in (("grade_stuff", "grade_stuff"), ("grade_next", "grade_next"))
+                      if far(pitches[k][kind], p[col]))
     assert unstable == [("664126_SL", "grade_stuff")]                       # the one exception the memo names
     assert "Every stuff and 2027 grade printed for these three pitchers stayed within 5 points of the printed grade, with one exception" in memo
     fsl = pitches["664126_SL"]
     lo, hi = fsl["grade_stuff"]["lo"], fsl["grade_stuff"]["hi"]
-    assert f"Fairbanks's slider stuff grade ran {lo} to {hi} and is printed as that range" in memo
-    assert f"| 60 | 55 | {lo}-{hi} | The physics grade is not stable: {lo} to {hi} across ten refits" in memo
-    assert f"expected whiff {fsl['x_whiff_pct']['lo']:.1f}% to {fsl['x_whiff_pct']['hi']:.1f}%" in memo
+    assert f"Fairbanks's slider stuff grade, printed {printed['664126_SL']['grade_stuff']}, ran {lo} to {hi}" in memo
+    assert f"The physics grade is not stable: ten refits gave {lo} to {hi} (expected whiff {fsl['x_whiff_pct']['lo']:.1f}% to {fsl['x_whiff_pct']['hi']:.1f}%)" in memo
     assert fsl["gap"]["lo"] > 0 and "In every fit the results beat it" in memo
-    assert "| 60 | 55 | 40 | Physics says worse" not in memo
     # single numbers quoted in prose carry their range
     msl, mch, mff, afc = pitches["670970_SL"], pitches["670970_CH"], pitches["670970_FF"], pitches["650556_FC"]
     sg = lambda v: f"+{v:.1f}" if v >= 0 else f"\u2212{abs(v):.1f}"
-    assert (f"98th percentile; {msl['grade_stuff']['lo']} to {msl['grade_stuff']['hi']} and {msl['x_whiff_pct']['lo']:.1f}% to "
-            f"{msl['x_whiff_pct']['hi']:.1f}% across ten refits)") in memo
-    assert msl["x_whiff_pct"]["lo"] <= 42.0 <= msl["x_whiff_pct"]["hi"] and msl["grade_stuff"]["lo"] >= 70   # "far ahead of its results (50)" holds in every fit
-    assert f"**Stuff:** 40 ({afc['grade_stuff']['lo']} to {afc['grade_stuff']['hi']} across ten refits)" in memo
-    assert (f"run {sg(mch['gap']['lo'])} to {sg(mch['gap']['hi'])}, {sg(mff['gap']['lo'])} to {sg(mff['gap']['hi'])} and "
+    assert (f"ten refits gave {msl['grade_stuff']['lo']} to {msl['grade_stuff']['hi']} and {msl['x_whiff_pct']['lo']:.1f}% to "
+            f"{msl['x_whiff_pct']['hi']:.1f}%)") in memo
+    assert msl["grade_stuff"]["lo"] >= 70 and printed["670970_SL"]["grade_stuff"] >= 70     # "far ahead of its results (50)" holds in every fit
+    assert f"(ten refits gave {afc['grade_stuff']['lo']} to {afc['grade_stuff']['hi']})" in memo
+    assert (f"Ten refits gave {sg(mff['gap']['lo'])} to {sg(mff['gap']['hi'])}, {sg(mch['gap']['lo'])} to {sg(mch['gap']['hi'])} and "
             f"{sg(msl['gap']['lo'])} to {sg(msl['gap']['hi'])}, so the signs hold") in memo
     assert mch["gap"]["lo"] > 0 and mff["gap"]["lo"] > 0 and msl["gap"]["hi"] < 0
-    assert f"projects 48.9% ({mch['proj_whiff_pct']['lo']:.1f}% to {mch['proj_whiff_pct']['hi']:.1f}% across ten refits)" in memo
-    assert mch["proj_whiff_pct"]["lo"] <= 48.9 <= mch["proj_whiff_pct"]["hi"] and mch["pct_next"]["lo"] >= 98.5      # "still the 99th percentile"
-    assert f"physics grade (70; {msl['grade_stuff']['lo']} to {msl['grade_stuff']['hi']} across ten refits)" in memo
+    assert f"(ten refits gave {mch['proj_whiff_pct']['lo']:.1f}% to {mch['proj_whiff_pct']['hi']:.1f}%)" in memo and mch["pct_next"]["lo"] >= 98.5
+    assert f"ten refits gave {msl['grade_stuff']['lo']} to {msl['grade_stuff']['hi']}) is far ahead of its results (50)" in memo
     # no ranking or role rests on a grade that moved: the two best 2027 grades of each pitcher keep the formula OFP at its cap
     for pid, control in (("670970", 60), ("650556", 40), ("664126", 40)):
         lows = sorted((p["grade_next"]["lo"] for k, p in pitches.items() if k.startswith(pid)), reverse=True)
@@ -432,8 +505,63 @@ def test_reports_that_quote_pitch_grades_carry_the_refit_range():
     # the scouting report
     assert f"a 70 stuff grade from the physics ({msl['grade_stuff']['lo']} to {msl['grade_stuff']['hi']} across ten refits of the model)" in scout
     assert "stayed within 5 points of the printed ones" in scout and "edge-grade-noise-2026.json" in scout and "edge-grade-noise-2026.json" in memo
-    assert not any(far(pitches[k][kind], g) for k, (sg_, ng) in printed.items() if k.startswith("670970")
-                   for kind, g in (("grade_stuff", sg_), ("grade_next", ng)))
     board = _text("2026-edge-board.md")
     assert f"kept {2 * len(printed) - len(unstable)} of the {2 * len(printed)} stuff and 2027 grades within 5 points" in board
     assert f"Fairbanks's slider stuff grade, {lo} to {hi}" in board
+
+
+def test_edge_board_location_aware_measure_matches_its_saved_table():
+    loc, board = _load("edge-stuff-location-2026.json"), _text("2026-edge-board.md")
+    extra = _load("edge-stuffplus-benchmark-2026.json")["location_aware"]
+    z = lambda v: 0.0 if abs(v) < 0.005 else v
+    d = lambda v: f"{z(v['diff']):+.2f} ({z(v['lo']):.2f} to {z(v['hi']):.2f})"
+    ys = ("2024", "2025", "2026")
+    lst = lambda f: ", ".join(f(y) for y in ys[:-1]) + " and " + f(ys[-1])
+    # said plainly: not stuff, and the stuff grade keeps its meaning
+    assert "It is not stuff." in board and "The stuff grade keeps its meaning (physics only)" in board
+    assert "My stuff grade on a sweeper stays unproven." in board
+    ss = loc["same_season"]
+    assert (f"r = {lst(lambda y: format(ss[y]['ST']['location']['r'], '.2f'))} in 2024, 2025 and 2026, where the physics number gave "
+            f"{lst(lambda y: format(ss[y]['ST']['physics']['r'], '.2f'))}") in board
+    assert all(v["location"]["r"] > v["physics"]["r"] for y in ys for v in ss[y].values())          # "higher on every pitch type"
+    stw = extra["same_season_vs_whiff_by_pitch_type"]["ST"]
+    assert f"On the {stw['n']} sweepers matched to Stuff+ it is {stw['r']:.2f} ({stw['lo']:.2f} to {stw['hi']:.2f})" in board
+    h, hr = loc["held_out"]["fit 2024->2025, scored 2025->2026"], loc["held_out"]["fit 2025->2026, scored 2024->2025"]
+    assert f"({h['train_pitches']} pitches), scored on 2025 → 2026 ({h['test_pitches']:,} pitches)" in board
+    rn = h["r_with_next_season_whiff"]["ST"]
+    assert f"at r = {rn['location']:.2f}; the physics number at {rn['physics']:.2f}; last season's whiff rate itself at {rn['last_whiff']:.2f}" in board
+    alone, blend = h["contrasts"]["location minus physics"], h["contrasts"]["last+location minus last+physics"]
+    assert f"all pitches {d(alone['all'])}; sweepers {d(alone['ST'])} on {alone['ST']['pitches']}" in board
+    # the rule, recomputed from the table: adopted for a type only with an interval below zero and no type clearly worse
+    types = {k: v for k, v in alone.items() if k != "all"}
+    assert h["rule_alone"]["adopted_for"] == sorted(k for k, v in types.items() if v["hi"] < 0) and not any(v["lo"] > 0 for v in types.values())
+    assert h["rule_alone"]["adopted_for"] == ["CH", "CU", "SI", "ST"] and "changeups, curveballs, sinkers and sweepers" in board
+    assert loc["decision"]["alone"] == h["rule_alone"] and loc["decision"]["with_last_season"]["adopted_for"] == []
+    assert f"all pitches {d(blend['all'])}, sweepers {d(blend['ST'])}, and sliders are clearly worse ({d(blend['SL'])})" in board
+    assert blend["SL"]["lo"] > 0 and blend["ST"]["lo"] < 0 < blend["ST"]["hi"] and "So the projection keeps the physics number." in board
+    assert f"Putting both in moves all pitches {d(h['contrasts']['last+physics+location minus last+physics']['all'])}" in board
+    vs_last = h["contrasts"]["last+location minus last_whiff"]["ST"]
+    assert f"Alone it scores {h['rmse']['location']:.2f} against {h['rmse']['last_whiff']:.2f}" in board and h["rmse"]["location"] > h["rmse"]["last_whiff"]
+    assert f"changes sweeper RMSE by {d(vs_last)}, which is not clear" in board and vs_last["lo"] < 0 < vs_last["hi"]
+    ra = hr["contrasts"]["location minus physics"]
+    rr = hr["r_with_next_season_whiff"]["ST"]
+    assert (f"all pitches {d(ra['all'])} alone, sweepers {d(ra['ST'])} on {ra['ST']['pitches']}, next-season r {rr['location']:.2f} against "
+            f"{rr['physics']:.2f}") in board
+    # the published blend inside this module is the published held-out number, to refit noise
+    pub = _load("edge-2026.json")["holdout_fit_2024_25_scored_2025_26"]
+    assert h["test_pitches"] == pub["test_pitches"] and h["rmse"]["last+physics"] == pytest.approx(pub["rmse_blend"], abs=0.02)
+    # beside Stuff+: extra rows only
+    sp = extra["held_out_15_ip"]
+    sm, sc = sp["models"], sp["contrasts"]
+    main = _load("edge-stuffplus-benchmark-2026.json")["next_season"]["held_out"]["15_ip_every_season"]
+    assert sp["pitches"] == main["pitches"] and extra["pitches_missing_the_measure"] == {"train": 0, "test": 0}
+    for k in ("stuff+type", "expected+type", "last+stuff+type"):                         # the shared rows are the same rows
+        assert sm[k]["rmse"] == pytest.approx(main["models"][k]["rmse"])
+    assert not any("location" in k for k in main["models"])
+    size = lambda x: f"{abs(x['rmse_diff']):.2f} ({min(abs(x['lo']), abs(x['hi'])):.2f} to {max(abs(x['lo']), abs(x['hi'])):.2f})"
+    span = lambda x: f"{z(x['rmse_diff']):.2f}, interval {x['lo']:.2f} to {x['hi']:.2f}"
+    assert (f"location-aware scores {sm['location+type']['rmse']:.2f} against {sm['stuff+type']['rmse']:.2f} for Stuff+ and "
+            f"{sm['expected+type']['rmse']:.2f} for my physics number; it is ahead of Stuff+ by {size(sc['location+type minus stuff+type'])}") in board
+    assert "That is not a like-for-like win: Stuff+ does not see location." in board
+    assert f"they tie (difference {span(sc['last+location+type minus last+stuff+type'])})" in board
+    assert sp["winner"]["last+location+type vs last+stuff+type"] == "tie"
