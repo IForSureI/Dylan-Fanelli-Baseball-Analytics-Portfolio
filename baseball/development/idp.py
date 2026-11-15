@@ -652,6 +652,35 @@ def progress_figure(plan: Plan, pitches: pd.DataFrame, out_path: str | Path) -> 
     return out_path
 
 
+def summary(path: str | Path, as_of: date | str | None = None, pitches: pd.DataFrame | None = None) -> dict:
+    """The review as a small table to save beside a report: the plan's label and period, the dates of the
+    pitches it was run on, the power warnings, and one row per priority at every checkpoint up to as_of
+    (default: the plan's end). Aggregates only; no pitch rows."""
+    plan = load_plan(path)
+    as_of = _date(as_of) if as_of else plan.period_end
+    p = pitches if pitches is not None else pitches_for(plan)
+    days = pd.to_datetime(p["game_date"]).dt.date
+    used = days[(days >= plan.period_start) & (days <= as_of)]
+    cps = sorted({c for pr in plan.priorities for c in pr.checkpoints if c <= as_of} | {as_of})
+    ct = checkpoint_table(plan, p, cps)
+    keep = ["priority", "skill", "metric", "as_of", "baseline", "target", "target_date", "floor", "value", "se", "lo", "hi",
+            "n", "n_unit", "games", "z", "fraction_closed", "expected_fraction", "detectable_change", "verdict", "call",
+            "guard", "guard_limit", "guard_keep", "guard_value", "guard_lo", "guard_hi", "guard_n", "guard_status"]
+    rows = []
+    for r in ct[[c for c in keep if c in ct.columns]].to_dict("records"):
+        rows.append({k: (None if isinstance(v, float) and not np.isfinite(v) else round(v, 4) if isinstance(v, float) else
+                         int(v) if isinstance(v, (int, np.integer)) else v) for k, v in r.items()})
+    return {"plan": Path(path).name, "player": plan.player, "label": plan.label, "data_source": plan.data_source,
+            "period_start": plan.period_start.isoformat(), "period_end": plan.period_end.isoformat(),
+            "as_of": as_of.isoformat(),
+            "first_pitch_date": used.min().isoformat() if len(used) else None,
+            "last_pitch_date": used.max().isoformat() if len(used) else None,
+            "pitches": int(len(used)), "games": int(p.loc[used.index, "game_pk"].nunique()) if len(used) else 0,
+            "baselines": [{"priority": pr.id, "value": pr.baseline.value, "se": pr.baseline.se, "n": pr.baseline.n,
+                           "period": pr.baseline.period, "source": pr.baseline.source} for pr in plan.priorities],
+            "power_warnings": list(plan.warnings), "rows": rows}
+
+
 def review(path: str | Path, as_of: date | str | None = None, pitches: pd.DataFrame | None = None) -> str:
     """The whole review as markdown: the label, verdicts at every checkpoint up to as_of (default: the plan's
     end), then the progress table and both notes as of that date."""
