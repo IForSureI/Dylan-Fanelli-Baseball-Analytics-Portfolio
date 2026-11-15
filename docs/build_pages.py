@@ -3,6 +3,7 @@ standard header and footer on every report page (see docs/report-standard.md).
 
     uv run python docs/build_pages.py            # rebuild assets and re-stamp every report
     uv run python docs/build_pages.py --check    # fail if a report is missing its header
+    uv run python docs/build_pages.py --no-images --only <slug> <slug>   # re-stamp only these reports
 
 The header and footer sit between marker comments, so re-running replaces them and never touches
 the report's own text. Numbers in PAGES and GLANCE are copied from each report's own answer; when a
@@ -75,6 +76,11 @@ PAGES = [
          question="Which pitch-design changes stick and pay?",
          answer="Four-seam ride is the best-supported lever (+1.62 whiff points per 2 in). Velocity's payoff fails a placebo, so selection or recovery isn't ruled out.",
          club="Points a pitching lab at the shape changes most likely to pay, and comes with an individual development plan format that tracks them."),
+    dict(slug="2026-development-plan", short="Development plan", dept="Player development",
+         status="awaiting review", tags=["IDP", "power check", "worked example"],
+         question="Is a development plan working, and how would a department know?",
+         answer="On my hypothetical 2026 plan for Logan Gilbert, graded on his season through Sept. 27: four-seam velocity and slider depth are on track. Slider whiffs are inconclusive, as the power check said before the season, and the usage guard is breached.",
+         club="A plan with a number, a date, a sample floor and a guard for every priority, and a review that says keep, adjust or stop."),
     dict(slug="2026-il-early-warning", short="IL early warning", dept="Medical and performance staff",
          status="awaiting review", tags=["out-of-sample", "calibration", "alert rule"],
          question="Does a drop in a pitcher's velocity or stuff, against his own regressed baseline, warn of an injured-list stint?",
@@ -184,9 +190,12 @@ def _money(s: str) -> str:
     return re.sub(r"(?<!\\)\$(?=\d)", r"\\$", s)
 
 
-def stamp_reports() -> None:
+def stamp_reports(only: set[str] | None = None) -> None:
+    """Stamp every report, or only the slugs given (a new page and the two beside it)."""
     order = [p["slug"] for p in PAGES]
     for i, p in enumerate(PAGES):
+        if only and p["slug"] not in only:
+            continue
         path = REPORTS / f"{p['slug']}.md"
         text = _strip_blocks(path.read_text())
         nav = ["[← Portfolio](../README.md)"]
@@ -210,7 +219,7 @@ def stamp_reports() -> None:
         path.write_text(header + body.rstrip() + "\n" + footer)
     for slug, parent in SUPPORT.items():
         path = REPORTS / f"{slug}.md"
-        if not path.exists():
+        if not path.exists() or (only and slug not in only):
             continue
         text = _strip_blocks(path.read_text())
         pshort = next(p["short"] for p in PAGES if p["slug"] == parent)
@@ -311,6 +320,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--no-images", action="store_true")
+    ap.add_argument("--only", nargs="+", default=None, help="stamp only these report slugs")
     a = ap.parse_args()
     if a.check:
         bad = check()
@@ -318,7 +328,7 @@ def main() -> None:
         sys.exit(1 if bad else 0)
     if not a.no_images:
         build_images()
-    stamp_reports()
+    stamp_reports(set(a.only) if a.only else None)
     print("pages stamped")
 
 
