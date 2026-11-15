@@ -161,3 +161,72 @@ def test_skenes_memo_matches_its_saved_table(tmp_path):
     assert f"{100 * (n['ratio'] - 1):.1f}% above this memo's path ($245.3M grown 3% is ${n['memo_cap_2028']:.1f}M)" in memo
     assert f"${n['own_club_max_2030_nov3']:.1f}M, not ${n['own_club_max_2030_memo']:.1f}M" in memo
     assert f"about {m(n['mlb_plan_ceiling_nov3'])}, not {m(n['mlb_plan_ceiling_memo'])}" in memo
+
+
+def test_edge_board_savant_benchmark_matches_its_saved_table():
+    b, board = _load("edge-savant-benchmark-2026.json"), _text("2026-edge-board.md")
+    # what it is, and what is still open
+    assert "This is not a Stuff+ comparison." in board and "Still open: a Stuff+ benchmark." in board
+    assert "No outside benchmark yet" not in board
+    assert len(b["savant_files"]) == 6 and all(f["status"] == 200 and "baseballsavant.mlb.com" in f["url"] and "csv=true" in f["url"]
+                                               for f in b["savant_files"].values())
+    assert not any("fangraphs" in f["url"].lower() for f in b["savant_files"].values())
+    # 1. pipeline: my whiff rate against Savant's printed whiff%
+    pipe = [b["pipeline"][s] for s in ("2024", "2025", "2026")]
+    mad = [p["pitch_files_vs_savant"]["mean_abs_diff"] for p in pipe]
+    assert f"sits {min(mad):.2f} to {max(mad):.2f} points from Savant's published whiff%" in board and max(mad) < 0.05
+    p26 = pipe[2]["pitch_files_vs_savant"]
+    assert f"that is {p26['mean_abs_diff']:.2f} on {p26['n']:,} pitches, and {100 * p26['share_within_tol']:.0f}% equal" in board
+    no_tips = sum(p["pitch_files_without_foul_tips_vs_savant"]["mean_abs_diff"] for p in pipe) / 3
+    assert f"about {no_tips:.1f} points" in board
+    tab = [p["model_table_vs_savant"]["mean_abs_diff"] for p in pipe]
+    assert f"sit {min(tab):.2f} to {max(tab):.2f} away" in board
+    # 2. same season
+    ci = lambda x: f"{x['r']:.2f} ({x['lo']:.2f} to {x['hi']:.2f})"
+    pooled = b["same_season"]["pooled"]
+    xm, xr, wr = pooled["x_whiff_pct ~ sv_miss_in"], pooled["x_whiff_pct ~ sv_rv100"], pooled["whiff_pct ~ sv_rv100"]
+    assert f"r = {ci(xm['raw'])} on {xm['raw']['n']:,} pitches by {xm['raw']['pitchers']} pitchers" in board
+    assert f"others of its type: r = {ci(xm['within_pitch_type'])}" in board
+    assert f"r = {ci(xr['raw'])} together and {ci(xr['within_pitch_type'])} within type, on {xr['raw']['n']:,} pitches" in board
+    assert f"reaches {wr['raw']['r']:.2f} and {wr['within_pitch_type']['r']:.2f}" in board
+    t = b["miss_distance_by_type"]
+    assert f"misses by {t['FF']['mean_in']:.1f} inches and the average curveball by {t['CU']['mean_in']:.1f}" in board
+    # 3. next season: fit on one pair, scored on the other
+    f, r = b["next_season"]["fit 2024->2025, scored 2025->2026"], b["next_season"]["fit 2025->2026, scored 2024->2025"]
+    m, c = f["models"], f["contrasts"]
+    assert f"({f['train_pitches']:,} pitches) and scored on 2025 → 2026 ({f['test_pitches']:,} pitches, {f['test_pitchers']} pitchers)" in board
+    assert f"whiff rate {m['last_whiff']['rmse']:.2f}, my expected whiff {m['expected']['rmse']:.2f}, Savant's miss distance {m['miss']['rmse']:.2f}" in board
+    gain = lambda x: f"{x['gain_vs_baseline_pct']:.1f}% ({x['gain_lo']:.1f}% to {x['gain_hi']:.1f}%)"
+    size = lambda x: f"{abs(x['rmse_diff']):.2f} ({min(abs(x['lo']), abs(x['hi'])):.2f} to {max(abs(x['lo']), abs(x['hi'])):.2f})"
+    assert f"mine is ahead by {size(c['expected minus miss'])}" in board
+    ct = c["expected+type minus miss+type"]
+    assert f"miss distance scores {m['miss+type']['rmse']:.2f} and mine {m['expected+type']['rmse']:.2f}: a tie (difference {abs(ct['rmse_diff']):.2f}, interval {ct['lo']:.2f} to {ct['hi']:.2f})" in board
+    assert f"Mine cuts error {gain(m['last+expected'])}" in board and f"Miss distance cuts {gain(m['last+miss'])}" in board
+    assert f"tie at {m['last+expected+type']['gain_vs_baseline_pct']:.1f}% and {m['last+miss+type']['gain_vs_baseline_pct']:.1f}%" in board
+    assert f"All three cut {gain(m['last+expected+miss'])}" in board
+    assert f"takes {size(c['last+expected+miss minus last+expected'])} of RMSE off my blend" in board
+    rm, rc = r["models"], r["contrasts"]
+    assert f"{r['test_pitches']:,} pitches): alone, {rm['last_whiff']['rmse']:.2f}, {rm['expected']['rmse']:.2f} and {rm['miss']['rmse']:.2f}" in board
+    assert f"tie ({rm['last+expected']['gain_vs_baseline_pct']:.1f}% and {rm['last+miss']['gain_vs_baseline_pct']:.1f}%)" in board
+    assert f"again adds {size(rc['last+expected+miss minus last+expected'])}" in board
+    # the words follow the saved verdicts: a win needs an interval that excludes zero
+    assert f["winner"] == {"alone": "expected", "alone_given_pitch_type": "tie", "with_last_season": "last+expected",
+                           "with_last_season_given_pitch_type": "tie"}
+    assert r["winner"]["with_last_season"] == "tie" and r["winner"]["alone_given_pitch_type"] == "tie"
+    for res in (f, r):
+        mm = res["models"]
+        assert mm["last_whiff"]["rmse"] < mm["expected"]["rmse"] < mm["miss"]["rmse"]            # "wins alone", "same order"
+        assert mm["last+expected"]["gain_lo"] > 0 and mm["last+miss"]["gain_lo"] > 0
+        assert res["contrasts"]["last+expected+miss minus last+expected"]["hi"] < 0                # "holds something my model lacks"
+        assert res["contrasts"]["expected minus miss"]["hi"] < 0                                   # "beats raw miss distance"
+    # the same test set as the published held-out number, three fewer pitches in the fit
+    h = _load("edge-2026.json")["holdout_fit_2024_25_scored_2025_26"]
+    assert f["test_pitches"] == h["test_pitches"] and h["train_pitches"] - f["train_pitches"] == 3
+    assert "three more pitches in the fit" in board
+    assert f["rmse_raw_last_season"] == pytest.approx(h["rmse_raw_last_season"], abs=1e-3)
+    assert m["last+expected"]["gain_vs_baseline_pct"] == pytest.approx(h["gain_pct"], abs=0.1)
+    # the refit
+    rf = b["refit_check"]
+    k = rf["next_season"]["fit 2024->2025, scored 2025->2026"]
+    assert f"moves expected whiff {rf['x_whiff_mean_abs_diff']:.1f} points per pitch on average (r = {rf['x_whiff_r_between_fits']:.3f} between fits)" in board
+    assert k["winner"] == f["winner"] and f"the gain is {k['models']['last+expected']['gain_vs_baseline_pct']:.1f}%" in board
