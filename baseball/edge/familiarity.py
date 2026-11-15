@@ -219,6 +219,21 @@ def controls(p: pd.DataFrame, location: bool = True) -> pd.DataFrame:
 
 # ---------------------------------------------------------------- estimation
 
+def design(p: pd.DataFrame, y: str, terms: list[str], location: bool = True,
+           fe: tuple = ("pkey", "bkey"), cluster: str = "pitcher") -> tuple[pd.DataFrame, list[str]]:
+    """The rows and columns a fit uses: complete cases, without fixed-effect groups of one row.
+
+    Returns (frame, regressor names). `fit` and the checks in `familiarity_checks` both start here, so they
+    score the same sample.
+    """
+    c = controls(p, location)
+    d = pd.concat([p[[y, *terms, *fe, cluster]], c], axis=1).dropna()
+    # Fixed-effect groups with one row carry no within-group information
+    for k in fe:
+        d = d[d.groupby(k)[y].transform("size") > 1]
+    return d, [*terms, *c.columns]
+
+
 def fit(p: pd.DataFrame, y: str, terms: list[str], location: bool = True,
         fe: tuple = ("pkey", "bkey"), cluster: str = "pitcher", all_terms: bool = False) -> pd.DataFrame:
     """y on the exposure terms + controls, fixed effects absorbed, SEs clustered by pitcher.
@@ -228,12 +243,7 @@ def fit(p: pd.DataFrame, y: str, terms: list[str], location: bool = True,
     """
     from scipy.stats import norm
 
-    c = controls(p, location)
-    d = pd.concat([p[[y, *terms, *fe, cluster]], c], axis=1).dropna()
-    # Fixed-effect groups with one row carry no within-group information
-    for k in fe:
-        d = d[d.groupby(k)[y].transform("size") > 1]
-    xcols = [*terms, *c.columns]
+    d, xcols = design(p, y, terms, location, fe, cluster)
     r = absorb(d, [y, *xcols], list(fe))
     keep = [col for col in xcols if r[col].abs().max() > 1e-9]          # drop columns the FE swallowed
     beta, se = clustered_wls(r[y].to_numpy(), r[keep].to_numpy(), np.ones(len(r)), d[cluster].to_numpy())

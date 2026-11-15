@@ -53,11 +53,16 @@ def _prepare(p: pd.DataFrame) -> pd.DataFrame:
 
 def _best_split(games: pd.DataFrame) -> tuple[int, float, float, float]:
     """games: ordered rows with n, s, ss. Returns (k = first 'after' index, shift, t, persistence)."""
-    n, s, ss = games["n"].to_numpy(float), games["s"].to_numpy(float), games["ss"].to_numpy(float)
+    return _best_split_arrays(games["n"].to_numpy(float), games["s"].to_numpy(float), games["ss"].to_numpy(float))
+
+
+def _best_split_arrays(n: np.ndarray, s: np.ndarray, ss: np.ndarray) -> tuple[int, float, float, float]:
+    """The split search on per-game arrays in date order (the permutation null in shift_null.py reorders
+    these arrays and calls this directly)."""
     cn, cs, css = np.cumsum(n), np.cumsum(s), np.cumsum(ss)
     N, S, SS = cn[-1], cs[-1], css[-1]
     best = (-1, 0.0, 0.0)
-    for k in range(MIN_GAMES_SIDE, len(games) - MIN_GAMES_SIDE + 1):
+    for k in range(MIN_GAMES_SIDE, len(n) - MIN_GAMES_SIDE + 1):
         n1, s1, ss1 = cn[k - 1], cs[k - 1], css[k - 1]
         n2, s2, ss2 = N - n1, S - s1, SS - ss1
         m1, m2 = s1 / n1, s2 / n2
@@ -201,6 +206,26 @@ def pitcher_shifts(pitches: pd.DataFrame) -> pd.DataFrame:
 def league_shifts(pitches: pd.DataFrame) -> pd.DataFrame:
     parts = [s for _, g in pitches.groupby("pitcher", sort=False) if not (s := pitcher_shifts(g)).empty]
     return pd.concat(parts, ignore_index=True) if parts else pd.DataFrame()
+
+
+CANDIDATE_METRICS = [label for col, (label, _) in METRICS.items() if col != "arm_angle"]
+MIN_SWINGS_SIDE = 40
+
+
+def candidates(shifts_df: pd.DataFrame) -> pd.DataFrame:
+    """The Edge Board's candidate list from the detector's rows (the same filter board.py applies).
+
+    One pitch moved on its own, the label check passed, 40+ swings on each side of the date, arm angle
+    left out, and one row per pitcher x pitch type kept on its largest |t|.
+    """
+    if shifts_df.empty:
+        return shifts_df
+    ch = shifts_df[
+        (shifts_df["scope"] == "this pitch only") & (shifts_df["label_check"] == "ok")
+        & shifts_df["metric"].isin(CANDIDATE_METRICS)
+        & (shifts_df["swings_before"] >= MIN_SWINGS_SIDE) & (shifts_df["swings_after"] >= MIN_SWINGS_SIDE)
+    ]
+    return ch.sort_values("t", key=np.abs, ascending=False).drop_duplicates(["pitcher", "pitch_type"]).reset_index(drop=True)
 
 
 def score_shifts(shifts_df: pd.DataFrame, swings: pd.DataFrame) -> pd.DataFrame:
