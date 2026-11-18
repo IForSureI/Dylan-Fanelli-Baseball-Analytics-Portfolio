@@ -12,8 +12,7 @@
 <style>
 /* Direction: a long-form essay on October, printed on warm scorebook paper: black ink, a stitch red and a deep blue,
    both checked with the dataviz validator for colour-blind separation and contrast; no tints of purple or neon.
-   Light only, by design: the page is read like paper. The
-   one oversized numeral (the 4-1 series) is set in the text face, bold, proportional figures. Display: Be Vietnam Pro. Text:
+   Light only, by design: the page is read like paper. Display: Be Vietnam Pro. Text:
    Bricolage Grotesque. Scale 1.25. No panels or boxes: the type and the rules carry the page. Margin notes beside each figure.
    Every chart can be re-cut by round, and where it means something by inning and count (filters above each plate). */
 :root {
@@ -35,9 +34,8 @@ a:focus-visible, .hit:focus-visible, summary:focus-visible { outline: 2px solid 
 header.top { padding-top: 40px; padding-bottom: 10px; }
 .crumbs { font-size: 15px; display: flex; gap: 18px; flex-wrap: wrap; margin: 0 0 36px; }
 h1 { font: 800 clamp(34px, 6vw, 56px)/1.02 var(--display); margin: 0 0 22px; letter-spacing: -.01em; }
-.hero { position: relative; margin: 0 0 26px; }
-.hero .num { display: inline-block; white-space: nowrap; font: 700 clamp(88px, 20vw, 180px)/1 var(--text); font-variant-numeric: proportional-nums; letter-spacing: -.01em; color: var(--ink); }
-.hero .cap { font-size: 16px; margin: 22px 0 0; max-width: 40ch; }
+.hero { margin: 0 0 22px; }
+.hero .cap { font-size: 18px; margin: 0; max-width: 60ch; }
 .hero .cap b { font-family: var(--display); font-weight: 800; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0 0 22px; font-size: 14px; color: var(--muted); }
 .tags span b { color: var(--ink); font-weight: 600; }
@@ -693,8 +691,7 @@ const M = DATA.meta;
 const F = DATA.findings;
 const wsG = F.world_series.games, tc0 = F.team_contact.teams[0], hw0 = F.hitter_wpa.top5[0], pw0 = F.pitcher_wpa.top5[0];
 const milWins = F.world_series.mil_wins, tbWins = wsG.length - milWins;
-document.getElementById("hero").innerHTML = `<div class="num" aria-hidden="true">${milWins}\u2009–\u2009${tbWins}</div>` +
-  `<p class="cap"><b>Brewers over Rays.</b> Milwaukee won the World Series in ${wsG.length}; Tampa Bay's only win took 12 innings.</p>`;
+document.getElementById("hero").innerHTML = `<p class="cap"><b>Brewers over Rays.</b> Milwaukee won the World Series in ${wsG.length}; Tampa Bay's only win took 12 innings.</p>`;
 document.getElementById("badges").innerHTML = [["Status", "reviewed"], ["Data", "public"], ["For", "pro scouting and the front office"],
   ["Methods", "win probability added, xwOBA, plate discipline, Statcast"]].map(([k, v]) => `<span><b>${k}:</b> ${v}</span>`).join("");
 document.getElementById("glance").innerHTML = [
