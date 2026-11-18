@@ -452,6 +452,19 @@ def normalize_trackman(df: pd.DataFrame, force_flip: bool = False) -> tuple[pd.D
     out["launch_direction"] = _to_num(_col(df, "Direction"))
     out["hit_distance_sc"] = _to_num(_col(df, "Distance"))
     out["hit_spin_rate"] = _to_num(_col(df, "HitSpinRate"))
+    # ball flight and contact: hang time and bearing drive outfield catch probability. TrackMan's contact point is in
+    # its field frame (X toward the pitcher, Y up, Z sideways): on a college export X runs -1.4 to 4.7 ft (median
+    # 2.2, in front of the plate), Y 0.4 to 4.4 ft (median 2.3, a contact height) and Z -2.0 to 2.3 ft around zero
+    out["hang_time"] = _to_num(_col(df, "HangTime"))
+    out["hit_bearing"] = _to_num(_col(df, "Bearing"))
+    out["hit_max_height"] = _to_num(_col(df, "MaxHeight"))
+    out["contact_depth"] = _to_num(_col(df, "ContactPositionX"))
+    out["contact_height"] = _to_num(_col(df, "ContactPositionY"))
+    out["contact_side"] = _to_num(_col(df, "ContactPositionZ"))
+    # catcher throws (filled only on pitches the catcher threw on): pop time = glove to the fielder's glove, s
+    out["throw_speed"] = _to_num(_col(df, "ThrowSpeed"))
+    out["pop_time"] = _to_num(_col(df, "PopTime"))
+    out["exchange_time"] = _to_num(_col(df, "ExchangeTime"))
 
     out["release_confidence"] = _col(df, "PitchReleaseConfidence")
     out["location_confidence"] = _col(df, "PitchLocationConfidence")

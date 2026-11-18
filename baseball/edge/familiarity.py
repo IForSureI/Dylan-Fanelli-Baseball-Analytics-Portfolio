@@ -52,7 +52,7 @@ SEQ_COLUMNS = [
     "n_priorpa_thisgame_player_at_bat", "pitcher_days_since_prev_game", "age_pit", "age_bat", "delta_run_exp",
     "delta_home_win_exp", "woba_value", "woba_denom", "estimated_woba_using_speedangle", "estimated_ba_using_speedangle",
     "launch_speed", "launch_angle", "launch_speed_angle", "hc_x", "hc_y", "bat_speed", "swing_length", "attack_angle",
-    "attack_direction", "swing_path_tilt",
+    "attack_direction", "swing_path_tilt", "fielder_2",
 ]
 
 EXPOSURE = ["prev_same", "prev_other", "pa_same", "pa_other"]

@@ -54,3 +54,18 @@ def test_tilt_and_efficiency_math():
     assert tl.tilt_to_axis("1:30") == 225
     eff = tl.spin_efficiency(total=2400, true=2100)
     assert abs(eff["spin_efficiency"] - 0.875) < 1e-9 and abs(eff["gyro_angle_deg"] - 28.96) < 0.01
+
+
+def test_contact_hang_and_catcher_throw_fields():
+    """TrackMan's contact point (X out front, Y height, Z side), hang time and catcher-throw timings survive the loader."""
+    import pandas as pd
+    from baseball.ingest import tracking
+
+    df = pd.DataFrame({"PitcherThrows": ["Right"], "TaggedPitchType": ["Fastball"], "PitchCall": ["InPlay"],
+                       "ContactPositionX": [2.2], "ContactPositionY": [2.4], "ContactPositionZ": [-0.3], "HangTime": [4.1],
+                       "Bearing": [-12.0], "MaxHeight": [80.0], "PopTime": [1.98], "ExchangeTime": [0.75], "ThrowSpeed": [79.5]})
+    out, _ = tracking.normalize_trackman(df)
+    r = out.iloc[0]
+    assert (r["contact_depth"], r["contact_height"], r["contact_side"]) == (2.2, 2.4, -0.3)
+    assert (r["hang_time"], r["hit_bearing"], r["hit_max_height"]) == (4.1, -12.0, 80.0)
+    assert (r["pop_time"], r["exchange_time"], r["throw_speed"]) == (1.98, 0.75, 79.5)

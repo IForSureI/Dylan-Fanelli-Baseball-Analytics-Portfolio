@@ -47,7 +47,7 @@ TM_COLUMNS = [
     "AwayTeamForeignID", "GameForeignID", "Catcher", "CatcherId", "CatcherThrows", "CatcherTeam", "PlayID",
     "PitchReleaseConfidence", "PitchLocationConfidence", "PitchMovementConfidence", "HitLaunchConfidence",
     "HitLandingConfidence", "CatcherThrowCatchConfidence", "CatcherThrowReleaseConfidence",
-    "CatcherThrowLocationConfidence",
+    "CatcherThrowLocationConfidence", "ThrowSpeed", "PopTime", "ExchangeTime",
 ]
 
 # pitch: (share, velo, sd, ivb_in, hb_armside_in, spin, axis_deg_for_RHP, tagged, auto)
