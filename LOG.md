@@ -2,6 +2,13 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-18: Morejón declined the qualifying offer
+**Built**
+- **Bullpen memo, one-page and Morejón report:** he turned down the Padres' $23.15M qualifying offer on Nov. 17 and is a free agent (MLB.com, AJ Cassavell; NBC Sports; both Nov. 17, 2026). The pages now say so, the memo has a dated Nov. 18 update, and the "if he accepts" branch is marked as not having happened. The price, grades, ranking and recommendation did not change: the Nov. 14 numbers already assumed the offer was attached.
+
+**Not done**
+- The Morejón one-page PDF still shows the Nov. 14 status line and needs a rebuild.
+
 ## 2026-11-18: TrackMan loader keeps contact point, hang time and catcher throws
 **Built**
 - **Loader:** `baseball/ingest/tracking.py` now keeps TrackMan's contact point (`contact_depth` from ContactPositionX, feet in front of the plate; `contact_height` and `contact_side` from Y and Z), hang time, bearing and peak height, and the catcher-throw fields (pop time, exchange time, throw speed). On a public college export (Mendeley Data, CC BY 4.0) contact depth runs -1.4 to 4.7 ft with a 2.2 ft median, and 76 throws carry a pop time (median 2.07 s). A test covers the mapping; the sample generator's column list carries the three throw fields.
