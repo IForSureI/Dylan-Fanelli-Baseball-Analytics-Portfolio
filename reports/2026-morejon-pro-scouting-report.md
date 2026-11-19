@@ -17,7 +17,7 @@
 *Adrián Morejón; LHP; B/T L/L; 5'11", 224 lb (listed); born Feb. 27, 1999, Havana, Cuba (27.6 on the report date; 2027 age 28); San Diego Padres*
 *Report date 2026-10-14; Scout: Dylan Fanelli; Basis: data (Statcast, all 1,318 regular-season pitches of 2026, with 2024–25 for history and the 2026 postseason as a check) and public reporting. No live or video look: the delivery items that need eyes are NG (no grade).*
 
-**Status:** first free agency after 2026 ("set to become a free agent after the 2026 season," Matt Levine, Padres On SI, Aug. 3, 2026). He's qualifying-offer eligible: with San Diego all season, he can't have received a QO before. The Padres made the offer on Nov. 2 (AP).
+**Status:** first free agency after 2026 ("set to become a free agent after the 2026 season," Matt Levine, Padres On SI, Aug. 3, 2026). He's qualifying-offer eligible: with San Diego all season, he can't have received a QO before. The Padres made the offer on Nov. 2 (AP), and he declined it on Nov. 17; he is a free agent (MLB.com, AJ Cassavell, Nov. 17, 2026; NBC Sports, Nov. 17, 2026).
 
 ![Morejón's movement and release point, 2026](figures/2026-morejon-pro-scouting-report.png)
 
@@ -177,7 +177,7 @@
   - a medical review that doesn't clear the elbow
   - video showing the harder slider is now hittable in the zone, which would leave left-handers with a two-pitch look
 
-**The next look, before the bid.** The bid can't wait for spring. The memo's timeline runs through the qualifying-offer decision and the Dec. 1 expiration of the labor agreement, and a lockout would freeze free agency. His 2026 regular season and postseason are on video now (Baseball Savant has video of each pitch). The look should grade four things:
+**The next look, before the bid.** The bid can't wait for spring. The memo's timeline runs through the Dec. 1 expiration of the labor agreement, and a lockout would freeze free agency. His 2026 regular season and postseason are on video now (Baseball Savant has video of each pitch). The look should grade four things:
 1. **Time to the plate** from the stretch, frame-counted. Runners went twice as often as against the average pitcher.
 2. **The slider:** does the harder 2026 version still get chased below the zone, or does it flatten into hitters' barrels? Also check whether its release (4.6 in and 3.5° off his fastballs' mean, about 4.4 in and 2.8° off the sinker alone) is visible from the center-field angle.
 3. **Effort, landing and arm action** on the second of back-to-back days, against a fresh outing.

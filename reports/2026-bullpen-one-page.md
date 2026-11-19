@@ -4,9 +4,9 @@
 
 # Rangers bullpen, 2026-27: sign Adrián Morejón
 
-*To: the general manager. From: Dylan Fanelli. Oct. 18, 2026; revised Nov. 14, 2026 for the qualifying offer. The one-page version of the [full memo](2026-bullpen-acquisition-memo.md); every number below is derived there.*
+*To: the general manager. From: Dylan Fanelli. Oct. 18, 2026; revised Nov. 14, 2026 for the qualifying offer and Nov. 18 for his decision. The one-page version of the [full memo](2026-bullpen-acquisition-memo.md); every number below is derived there.*
 
-**The call.** Bid on Adrián Morejón, up to four years, $60M, with a 2031 club option, and no higher. The Padres made him a qualifying offer on Nov. 2, so signing him costs our second-round pick and pool money worth about $10.6M. That takes the walk-away from $72M to $60M. He decides on the offer by Nov. 17; if he accepts, go straight to Abreu.
+**The call.** Bid on Adrián Morejón, up to four years, $60M, with a 2031 club option, and no higher. The Padres made him a qualifying offer on Nov. 2, so signing him costs our second-round pick and pool money worth about $10.6M. That takes the walk-away from $72M to $60M. He declined the offer on Nov. 17 and is a free agent (MLB.com and NBC Sports, Nov. 17, 2026), so the bid is live.
 
 **Why him.**
 - **The need:** late-inning run prevention. Texas relievers fell from 4th to 24th in run value per 100 pitches, and the pitchers leaving threw 35% of the late, close plate appearances.
@@ -26,7 +26,7 @@
 - **A relief budget under about $15M a year:** Abreu, or Raisel Iglesias on one year.
 - **A decision that 2027 wins near the wild-card line are worth more to us than the market rate:** raise the walk-away. At $72M we land him about 47% of the time and at $80M about 62%, on top of the pick.
 
-**The ask.** Approve the offer, the walk-away and the medical review before his Nov. 17 decision, and aim to sign before the labor agreement expires on Dec. 1. A lockout is expected on Dec. 2 and would stop free-agent talks.
+**The ask.** Approve the offer, the walk-away and the medical review now that he has declined the offer, and aim to sign before the labor agreement expires on Dec. 1. A lockout is expected on Dec. 2 and would stop free-agent talks.
 
 <!-- portfolio:footer -->
 ---

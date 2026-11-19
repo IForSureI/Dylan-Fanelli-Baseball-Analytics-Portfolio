@@ -10,7 +10,7 @@
 **At a glance**
 
 - **The question:** Which reliever should the Rangers sign this winter, and at what price?
-- **The answer:** Adrián Morejón, at no more than 4 years, \$60M now that he has a qualifying offer (Nov. 2). That lands him about one time in four, so Bryan Abreu, who costs no pick, is the likely signing.
+- **The answer:** Adrián Morejón, at no more than 4 years, \$60M now that he has a qualifying offer (Nov. 2). He declined it on Nov. 17 and is a free agent. That lands him about one time in four, so Bryan Abreu, who costs no pick, is the likely signing.
 - **For a club:** One real offseason decision made the way a front office makes it: the target, the opening offer, the walk-away and the plan if he goes elsewhere. The [one-page version](2026-bullpen-one-page.md) is what a GM reads.
 <!-- /portfolio:glance -->
 
@@ -25,6 +25,10 @@
 
 ## Decision summary
 
+**Update, Nov. 18, 2026: Morejón declined the qualifying offer.**
+- **The facts:** he turned down the Padres' one-year, $23.15M qualifying offer on Nov. 17 and is a free agent (MLB.com, AJ Cassavell, Nov. 17, 2026; NBC Sports, Nov. 17, 2026). The Padres get a pick after the fourth round of the 2027 draft if he signs elsewhere (MLB.com, Nov. 17, 2026).
+- **What it does to the bid:** nothing new. The Nov. 14 numbers below already assumed he'd have the offer attached: four years, $60M, and no higher. The "if he accepts" branch is off; the bid is live until the agreement expires Dec. 1.
+
 **Update, Nov. 14, 2026: Morejón has a qualifying offer, so the walk-away is $60M.**
 - **The facts:** the Padres made Morejón a $23.15M qualifying offer on Nov. 2, one of eight in the league (AP, Nov. 2, 2026). He has until 4 p.m. ET on Nov. 17 to accept (CBS Sports, Nov. 2, 2026). No decision was reported as of Nov. 14.
 - **What it does to the bid:** this memo's own rule applies. Signing him now costs the Rangers their second-highest pick and $0.5M of pool, worth about $10.6M. **The walk-away is four years, $60M, the same number as the opening offer.** At $60M the market line lands him about 26% of the time, down from 47% at $72M.
@@ -36,7 +40,7 @@
 
 **Update, Oct. 18, 2026: the qualifying-offer case.** The first version priced the pick a QO would cost the Rangers (a second-rounder near No. 55) at $5.3M, a 2019 public estimate. My own draft-pick backtest (the values are in `baseball/roster/acquisition.py`, `PICK_VALUE_OWN`) puts that pick at about $10.1M after its 2026 slot, from what picks 45-60 returned in the 2000-2016 drafts. On that value the pick and pool cost $10.6M in present value, and **the walk-away with a QO falls from about $66M to about $60M, the opening offer**: if the Padres attach a QO, open at $60M and don't go higher. The 2027 QO is $23.15M (reported Oct. 8, 2026). Everything else below is unchanged; the QO figures are updated in place and marked.
 
-**Compiled:** 2026-10-13; revised 2026-11-14 for the qualifying offer; **On:** Bid on Adrián Morejón up to $60M; expect Abreu about three times in four
+**Compiled:** 2026-10-13; revised 2026-11-14 for the qualifying offer and 2026-11-18 for his decision (declined Nov. 17); **On:** Bid on Adrián Morejón up to $60M; expect Abreu about three times in four
 
 **Recommendation.**
 - **Bid on Adrián Morejón, up to four years, $60M** with a 2031 club option. He has a qualifying offer (Nov. 2), so $60M is both the opening offer and the walk-away.
@@ -74,12 +78,12 @@
 
 **What would change the recommendation.**
 - **His price above $60M (he has the QO; $72M was the number without it), a fifth guaranteed year, or an opt-out:** switch to Abreu.
-- **He accepts the qualifying offer by Nov. 17:** he is off the market. Sign Abreu.
+- **He accepts the qualifying offer by Nov. 17:** he is off the market. Sign Abreu. *(Did not happen: he declined on Nov. 17.)*
 - **A relief budget under about $15M a year:** Abreu, or Iglesias on one year.
 - **A club decision that 2027 wins near the wild-card line are worth more than the market rate:** raise the walk-away. At $80M we'd land him about 62% of the time, at a market-rate cost of about $6.6M in present value.
 - **A club medical review of any of them** (not public, not in this memo).
 
-**Ask.** Approve the offer and the walk-away before his Nov. 17 decision (the first version asked for approval by the qualifying-offer deadline, which passed Nov. 2). Sign before the agreement expires December 1 at 11:59 p.m. ET. A lockout is expected to start Dec. 2 (MLB Trade Rumors, Nov. 12, 2026).
+**Ask.** Approve the offer and the walk-away now that he has declined the qualifying offer (Nov. 17). Before that, the ask was ahead of his Nov. 17 decision (the first version asked for approval by the qualifying-offer deadline, which passed Nov. 2). Sign before the agreement expires December 1 at 11:59 p.m. ET. A lockout is expected to start Dec. 2 (MLB Trade Rumors, Nov. 12, 2026).
 - **Why that date:** MLB's lockout memo ends free-agent negotiations and trades: "No free agent negotiations. No trades." (Bleacher Nation's summary of the memo, Brett Taylor, Oct. 8, 2026).
 - **Last winter's timing doesn't help:** the top relievers signed December 9-11 (Díaz: AP, Dec. 9, 2025; Suarez: amNY, Dec. 11, 2025), and a lockout would take that window away.
 
@@ -588,7 +592,7 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 
 **The qualifying offer.**
 - **The rules:** a qualifying offer is the 2022-26 agreement's ($22.025M in 2026; $23.15M for 2027, reported Oct. 8, 2026).
-  - **Morejón:** the Padres made the offer on Nov. 2 (AP). He decides by 4 p.m. ET on Nov. 17. The Padres paid tax in 2026, so losing him earns them only a pick after Round 4.
+  - **Morejón:** the Padres made the offer on Nov. 2 (AP). He had until 4 p.m. ET on Nov. 17 and declined it that day (MLB.com, AJ Cassavell, Nov. 17, 2026; NBC Sports, Nov. 17, 2026). The Padres paid tax in 2026, so losing him earns them only a pick after Round 4.
   - **Abreu:** was eligible, and Houston did not make the offer (he is not among the eight). Signing him costs no pick.
 - **The Rangers' cost:** their 2nd-highest 2027 pick plus $0.5M of pool.
   - **The pick:** a 2nd-rounder near No. 55. That number is an estimate from their 80-82 finish.
