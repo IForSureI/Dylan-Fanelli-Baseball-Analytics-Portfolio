@@ -6,6 +6,8 @@ Newest first. One entry per working session: what was built, what was decided, w
 **Built**
 - **Bullpen memo, one-page and Morejón report:** he turned down the Padres' $23.15M qualifying offer on Nov. 17 and is a free agent (MLB.com, AJ Cassavell; NBC Sports; both Nov. 17, 2026). The pages now say so, the memo has a dated Nov. 18 update, and the "if he accepts" branch is marked as not having happened. The price, grades, ranking and recommendation did not change: the Nov. 14 numbers already assumed the offer was attached.
 
+- **Prediction log:** a dated Nov. 18 note records that Morejón, Rogers and Arozarena (calls 1, 3 and 4) all declined, so none of the three calls can resolve false through an accepted offer; Bednar and Jeffers accepted (MLB.com; NBC Sports; Nov. 17, 2026). The calls and probabilities are unchanged.
+
 **Not done**
 - The Morejón one-page PDF still shows the Nov. 14 status line and needs a rebuild.
 
