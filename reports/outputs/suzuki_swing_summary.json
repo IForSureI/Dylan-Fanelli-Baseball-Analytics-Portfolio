@@ -1,0 +1,86 @@
+{
+ "clips": 78,
+ "measured": 17,
+ "by_season": [
+  {
+   "season": 2024,
+   "n": 4,
+   "down_to_contact_ms": 283.6167,
+   "down_to_contact_ms_n": 2,
+   "lift_to_contact_ms": 950.95,
+   "lift_to_contact_ms_n": 2,
+   "hip_lead_ms": 8.3417,
+   "hip_lead_ms_n": 4,
+   "head_drop": 0.3399,
+   "head_drop_n": 4,
+   "shoulder_tilt": 23.8127,
+   "shoulder_tilt_n": 4,
+   "bat_speed": 76.2,
+   "bat_speed_n": 4,
+   "attack_angle": 11.1115,
+   "attack_angle_n": 4,
+   "launch_speed": 105.2,
+   "launch_speed_n": 4
+  },
+  {
+   "season": 2025,
+   "n": 6,
+   "down_to_contact_ms": 250.25,
+   "down_to_contact_ms_n": 5,
+   "lift_to_contact_ms": 750.75,
+   "lift_to_contact_ms_n": 5,
+   "hip_lead_ms": 16.6833,
+   "hip_lead_ms_n": 6,
+   "head_drop": 0.3091,
+   "head_drop_n": 6,
+   "shoulder_tilt": 22.8501,
+   "shoulder_tilt_n": 6,
+   "bat_speed": 76.7,
+   "bat_speed_n": 6,
+   "attack_angle": 10.385,
+   "attack_angle_n": 6,
+   "launch_speed": 104.65,
+   "launch_speed_n": 6
+  },
+  {
+   "season": 2026,
+   "n": 7,
+   "down_to_contact_ms": 450.45,
+   "down_to_contact_ms_n": 5,
+   "lift_to_contact_ms": 734.0667,
+   "lift_to_contact_ms_n": 4,
+   "hip_lead_ms": 16.6833,
+   "hip_lead_ms_n": 7,
+   "head_drop": 0.2492,
+   "head_drop_n": 7,
+   "shoulder_tilt": 25.7141,
+   "shoulder_tilt_n": 7,
+   "bat_speed": 77.4,
+   "bat_speed_n": 7,
+   "attack_angle": 6.5536,
+   "attack_angle_n": 7,
+   "launch_speed": 103.8,
+   "launch_speed_n": 7
+  }
+ ],
+ "tests": {
+  "hip_lead_ms": {
+   "n_a": 10,
+   "n_b": 7,
+   "diff": 0.0,
+   "p": 1.0
+  },
+  "head_drop": {
+   "n_a": 10,
+   "n_b": 7,
+   "diff": -0.09071883814099066,
+   "p": 0.4609
+  },
+  "shoulder_tilt": {
+   "n_a": 10,
+   "n_b": 7,
+   "diff": 2.7055311282333285,
+   "p": 0.13865
+  }
+ }
+}

@@ -33,6 +33,8 @@ def statcast_rows(batter: int) -> pd.DataFrame:
 
 def table(name: str, batter: int, stand: str = "R") -> pd.DataFrame:
     rows = json.loads((RAW / f"{name}_hr.json").read_text())
+    ex_file = OUT / f"{name}_excluded_by_eye.json"
+    excluded = {e["play_id"] for e in json.loads(ex_file.read_text())["excluded"]} if ex_file.exists() else set()
     sc = pd.concat([pd.read_parquet(p, columns=SEQ_COLS + ["batter"]) for p in sorted((ROOT / "data" / "seq").glob("seq_*.parquet"))])
     sc = sc[(sc.batter == batter) & (sc.events == "home_run")]
     out = []
@@ -41,7 +43,7 @@ def table(name: str, batter: int, stand: str = "R") -> pd.DataFrame:
         if not f.exists():
             continue
         z = np.load(f)
-        m = M.measure(z["keypoints"], float(z["fps"]), stand)
+        m = None if r["play_id"] in excluded else M.measure(z["keypoints"], float(z["fps"]), stand)
         s = sc[(sc.game_pk == r["game_pk"]) & (sc.at_bat_number == r["at_bat_index"] + 1)]
         rec = dict(play_id=r["play_id"], game_pk=r["game_pk"], page=r.get("page"), headline=r.get("headline"),
                    batter_px=float(z["batter_px"]), measured=m is not None)

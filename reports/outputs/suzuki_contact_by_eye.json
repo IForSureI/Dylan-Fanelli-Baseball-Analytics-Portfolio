@@ -1,0 +1,31 @@
+{
+ "rule": "Contact read by eye: the first frame where the barrel is out in front of the plate on the ball's line, on 10 consecutive frames around the detected shoulders-square frame (59.94 fps). Offsets are frames after shoulders square.",
+ "read_on": "2026-11-23",
+ "offsets": [
+  {
+   "play_id": "d4d0c656-d37c-3ac7-8a28-e54aa35efc92",
+   "page": "https://www.mlb.com/video/kumar-rocker-in-play-run-s-to-seiya-suzuki",
+   "offset_frames": 7
+  },
+  {
+   "play_id": "cae74c1b-6002-3285-b6cf-4f43871251ce",
+   "page": "https://www.mlb.com/video/seiya-suzuki-homers-9-on-a-fly-ball-to-left-center-field-0oltff",
+   "offset_frames": 7
+  },
+  {
+   "play_id": "e1f82f8b-3564-3988-9ada-2b052bbdaec9",
+   "page": "https://www.mlb.com/video/kyle-harrison-in-play-run-s-to-seiya-suzuki-mmjycc",
+   "offset_frames": 6
+  },
+  {
+   "play_id": "7c266f01-51f0-4ee8-9001-42d680f11f3f",
+   "page": "https://www.mlb.com/video/jesse-chavez-in-play-run-s-to-seiya-suzuki",
+   "offset_frames": 6
+  },
+  {
+   "play_id": "4ecb1752-47d3-3800-a772-95c85d8f8bbe",
+   "page": "https://www.mlb.com/video/kyle-harrison-in-play-run-s-to-seiya-suzuki",
+   "offset_frames": 7
+  }
+ ]
+}

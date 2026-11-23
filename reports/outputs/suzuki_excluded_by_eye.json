@@ -1,0 +1,15 @@
+{
+ "rule": "Clips I removed after looking at the frame the measurement used; each would otherwise count as a center-field measurement.",
+ "excluded": [
+  {
+   "play_id": "df170bf9-c25a-35ae-b439-c22deb3416fa",
+   "page": "https://www.mlb.com/video/brent-suter-in-play-run-s-to-seiya-suzuki",
+   "reason": "a side replay angle, not the center-field view (checked by eye, Nov. 23, 2026)"
+  },
+  {
+   "play_id": "69e371d2-3545-3655-bffe-f3c04c777f29",
+   "page": "https://www.mlb.com/video/andrew-abbott-in-play-run-s-to-seiya-suzuki-9mzcjj",
+   "reason": "an off-axis camera well to the first-base side of center (checked by eye, Nov. 23, 2026)"
+  }
+ ]
+}

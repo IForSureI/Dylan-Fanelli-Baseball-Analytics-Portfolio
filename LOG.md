@@ -2,6 +2,13 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-23: Seiya Suzuki in the swing lab
+**Built**
+- **Suzuki's 78 home-run clips** through the same video pipeline: 17 measurable after I removed two by eye (a side replay and an off-axis camera; `reports/outputs/suzuki_excluded_by_eye.json`). Contact read by eye on five swings came 6-7 frames after the shoulders square, in line with Arozarena's offset.
+
+**Learned**
+- His home-run swing shows no significant change in sequence or posture, and his home-run contact held steady (median exit velocity 104.9, 105.6, 105.0). His toe-tap load barely lifts the front foot, so foot-down timing can't be read from the center-field camera for him. His ISO still projects down (.179-.191 against .204), which is regression rather than a warning sign.
+
 ## 2026-11-23: Randy Arozarena, frame by frame
 **Built**
 - **Video lab** (`baseball/video/`, `bb swing-video`): it finds MLB's own highlight clip of every play through the MLB Stats API content feed (matched by Statcast play id). It cuts the clip into camera shots, finds the center-field pitch view, and tracks the batter frame by frame with a pose model at 59.94 fps. Then it measures timing and posture from the big joints, and draws the figures from the measured joints, so no MLB frame is reproduced.
