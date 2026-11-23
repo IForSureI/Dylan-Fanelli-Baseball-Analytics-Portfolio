@@ -134,7 +134,7 @@ PAGES = [
     dict(slug="2026-mlb-draft-analytics", short="Draft analytics", dept="Amateur scouting",
          status="summary", tags=["pick values", "out-of-sample", "bonus pools"],
          question="What is a draft pick worth, and does a college stat line still beat the pick?",
-         answer="Pick 1 is worth about $75M on average before the bonus; from the second round on, the median player returns nothing. A college-stat model no longer adds to the pick on 2020-2023 classes.",
+         answer="Pick 1 is worth about $69M on average over six seasons and about $93M over the service-time window, counting bad seasons against the pick; from pick 11 on, about half the players return nothing or less. A college-stat model shows no gain over the pick on 2020-2023 classes.",
          club="Pick values and bonus-pool math for the draft room, and an honest read on what public college lines still add."),
     dict(slug="2025-skubal-arsenal", short="Skubal arsenal", dept="Pitching and pro scouting",
          status="reviewed", tags=["arsenal analysis", "league context"],
