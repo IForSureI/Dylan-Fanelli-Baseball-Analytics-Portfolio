@@ -6,6 +6,7 @@ stops if any headline number differs from reports/2026-postseason-snippets/findi
 interactive charts can never drift from the published ones.
 
     uv run python -m baseball.postseason_web     # -> docs/postseason.html (served on GitHub Pages)
+    uv run python -m baseball.postseason_web --restyle   # template change only: re-wrap the page's own data
 
 Data: Baseball Savant pitch-level search and the MLB Stats API (see baseball/postseason.py).
 """
@@ -424,6 +425,16 @@ def write(data: dict, out: Path = PAGE) -> Path:
     return out
 
 
+def embedded(page: Path = PAGE) -> dict:
+    """The data embedded in the published page, read back exactly as it was written (after `const DATA = `)."""
+    text = page.read_text(encoding="utf-8")
+    return json.JSONDecoder().raw_decode(text, text.index("const DATA = ") + len("const DATA = "))[0]
+
+
 if __name__ == "__main__":
+    import sys
+    if "--restyle" in sys.argv:   # new template, same data: re-wrap the published page's own data, no pull needed
+        print(write(embedded()), "restyled")
+        raise SystemExit
     d = build()
     print(write(d), f"{len(d['hitters'])} hitters, {len(d['pitchers'])} pitchers, {len(d['teams'])} clubs")

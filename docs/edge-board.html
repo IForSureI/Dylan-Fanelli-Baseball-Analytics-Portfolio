@@ -7,19 +7,19 @@
 <title>The Edge Board, 2026: every pitch</title>
 <meta name="description" content="A dashboard of every 2026 pitcher and pitch type with 50 or more tracked swings: whiff rate, expected whiff, results beyond stuff, the 2027 projection and 20-80 grades. Search, filter, sort. Dylan Fanelli.">
 <style>
-/* House look: the scorebook paper, black ink, stitch red and deep blue of the postseason page. Light only.
+/* House look: a white page with cool gray rules (the packet's Baseball Savant look), black ink, stitch red and deep blue. Light only.
    One file: no outside fonts, scripts or images. Blue marks the field, red marks the pitcher the reader picked. */
 :root {
-  --paper: #f7f4ec; --plate: #fffdf8; --ink: #1a1a1a; --muted: #5b5a55; --soft: #8e8c85; --rule: #ddd8cc; --grid: #ebe7dd;
-  --red: #c8392b; --red-ink: #a8301f; --blue: #285d9e; --tint: #efe9dc;
-  --tip: #1a1a1a; --tip-ink: #f7f4ec; --tip-muted: #b5b2a9; --tip-rule: #3a3936;
+  --paper: #ffffff; --plate: #ffffff; --ink: #1a1a1a; --muted: #5f6b73; --soft: #8a959c; --rule: #cfd8dc; --grid: #e7ebee;
+  --red: #c8392b; --red-ink: #a8301f; --blue: #285d9e; --tint: #eef2f4;
+  --tip: #1a1a1a; --tip-ink: #ffffff; --tip-muted: #b4bcc2; --tip-rule: #3a4046;
   --display: "Be Vietnam Pro", "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   --text: "Bricolage Grotesque", "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   color-scheme: light;
 }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: #f7f4ec; background: var(--paper); color: var(--ink); font: 400 17px/1.6 var(--text); overflow-x: hidden; }
+body { margin: 0; background: #ffffff; background: var(--paper); color: var(--ink); font: 400 17px/1.6 var(--text); overflow-x: hidden; }
 table, .tiles b, svg text, .rlabel { font-variant-numeric: tabular-nums; }
 a { color: var(--blue); text-underline-offset: 3px; }
 a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--red-ink); outline-offset: 2px; }
@@ -119,10 +119,10 @@ table.grid th.plain { padding: 8px 8px 6px; font-size: 13px; }
 table.grid td { border-bottom: 1px solid var(--grid); padding: 6px 8px; text-align: right; white-space: nowrap; }
 table.grid tbody tr { cursor: pointer; }
 table.grid tbody tr:hover td { background: var(--tint); }
-table.grid tbody tr.sel td { background: #f6e3de; }
+table.grid tbody tr.sel td { background: #fbe9eb; }
 table.grid td:first-child, table.grid th:first-child { position: sticky; left: 0; z-index: 1; background: var(--paper); }
 table.grid tbody tr:hover td:first-child { background: var(--tint); }
-table.grid tbody tr.sel td:first-child { background: #f6e3de; }
+table.grid tbody tr.sel td:first-child { background: #fbe9eb; }
 #arsenal table.grid tbody tr { cursor: default; }
 #arsenal table.grid td, #arsenal table.grid th.plain { padding-left: 5px; padding-right: 5px; }
 #arsenal table.grid { font-size: 13.5px; }
@@ -504,15 +504,15 @@ function strip(mine) {
     const y = t + rowH * k + rowH / 2;
     s += "<text x=\"" + (l - 10) + "\" y=\"" + (y + 4) + "\" text-anchor=\"end\" style=\"font-size:12.5px;font-weight:600\">" + esc(d.pitch) + "</text>" +
       "<line x1=\"" + X(d.lo) + "\" x2=\"" + X(d.hi) + "\" y1=\"" + y + "\" y2=\"" + y + "\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>" +
-      (d.xloc != null ? "<rect x=\"" + (X(d.xloc) - 4) + "\" y=\"" + (y - 4) + "\" width=\"8\" height=\"8\" fill=\"#fffdf8\" stroke=\"#5b5a55\" stroke-width=\"1.5\"><title>Location-aware expected " + f1(d.xloc) + "%</title></rect>" : "") +
-      "<circle cx=\"" + X(d.x) + "\" cy=\"" + y + "\" r=\"5\" fill=\"#fffdf8\" stroke=\"#285d9e\" stroke-width=\"2\"><title>Expected (physics) " + f1(d.x) + "%</title></circle>" +
+      (d.xloc != null ? "<rect x=\"" + (X(d.xloc) - 4) + "\" y=\"" + (y - 4) + "\" width=\"8\" height=\"8\" fill=\"#ffffff\" stroke=\"#5f6b73\" stroke-width=\"1.5\"><title>Location-aware expected " + f1(d.xloc) + "%</title></rect>" : "") +
+      "<circle cx=\"" + X(d.x) + "\" cy=\"" + y + "\" r=\"5\" fill=\"#ffffff\" stroke=\"#285d9e\" stroke-width=\"2\"><title>Expected (physics) " + f1(d.x) + "%</title></circle>" +
       "<path d=\"M" + X(d.proj) + " " + (y - 6) + "l5 6l-5 6l-5 -6z\" fill=\"#285d9e\"><title>" + NEXT + " projection " + f1(d.proj) + "%</title></path>" +
       "<circle cx=\"" + X(d.whiff) + "\" cy=\"" + y + "\" r=\"4.5\" fill=\"#c8392b\" stroke=\"#1a1a1a\" stroke-width=\"1\"><title>Actual " + f1(d.whiff) + "% (95% interval " + f1(d.lo) + " to " + f1(d.hi) + ")</title></circle>";
   });
   return s + "</svg>" +
     "<p class=\"legend\"><span><svg viewBox=\"0 0 14 14\"><line x1=\"0\" x2=\"14\" y1=\"7\" y2=\"7\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/><circle cx=\"7\" cy=\"7\" r=\"4\" fill=\"#c8392b\" stroke=\"#1a1a1a\"/></svg>actual, with 95% interval</span>" +
-    "<span><svg viewBox=\"0 0 14 14\"><circle cx=\"7\" cy=\"7\" r=\"4.5\" fill=\"#fffdf8\" stroke=\"#285d9e\" stroke-width=\"2\"/></svg>expected (physics)</span>" +
-    (M.has_location ? "<span><svg viewBox=\"0 0 14 14\"><rect x=\"3\" y=\"3\" width=\"8\" height=\"8\" fill=\"#fffdf8\" stroke=\"#5b5a55\" stroke-width=\"1.5\"/></svg>location-aware</span>" : "") +
+    "<span><svg viewBox=\"0 0 14 14\"><circle cx=\"7\" cy=\"7\" r=\"4.5\" fill=\"#ffffff\" stroke=\"#285d9e\" stroke-width=\"2\"/></svg>expected (physics)</span>" +
+    (M.has_location ? "<span><svg viewBox=\"0 0 14 14\"><rect x=\"3\" y=\"3\" width=\"8\" height=\"8\" fill=\"#ffffff\" stroke=\"#5f6b73\" stroke-width=\"1.5\"/></svg>location-aware</span>" : "") +
     "<span><svg viewBox=\"0 0 14 14\"><path d=\"M7 1l5 6l-5 6l-5 -6z\" fill=\"#285d9e\"/></svg>" + NEXT + " projection</span></p>";
 }
 function drawPitcher() {

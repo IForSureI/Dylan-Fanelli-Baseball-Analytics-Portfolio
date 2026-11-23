@@ -2,6 +2,7 @@
 
     uv run bb board-web 2026            # -> docs/edge-board.html (served on GitHub Pages)
     uv run python -m baseball.edge.board_web 2026
+    uv run python -m baseball.edge.board_web --restyle   # template change only: re-wrap the page's own data
 
 Nothing is fit here. The page is built from the saved `bb edge` run and the small saved tables:
 
@@ -297,5 +298,14 @@ def main(season: int = 2026) -> Path:
     return path
 
 
+def embedded(page: Path = PAGE) -> dict:
+    """The data embedded in the published page, read back exactly as it was written (after `const DATA = `)."""
+    text = page.read_text(encoding="utf-8")
+    return json.JSONDecoder().raw_decode(text, text.index("const DATA = ") + len("const DATA = "))[0]
+
+
 if __name__ == "__main__":
-    main(int(sys.argv[1]) if len(sys.argv) > 1 else 2026)
+    if "--restyle" in sys.argv:   # new template, same data: re-wrap the published page's own data, no edge run needed
+        print(write(embedded()), "restyled")
+    else:
+        main(int(sys.argv[1]) if len(sys.argv) > 1 else 2026)

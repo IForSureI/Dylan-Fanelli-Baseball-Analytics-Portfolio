@@ -2,6 +2,13 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-23: The postseason page and the Edge Board on white
+**Changed**
+- **White pages:** the postseason page and the Edge Board moved off their warm paper (#f7f4ec ground, #fffdf8 controls, #efe9dc tint, #ebe7dd and #ddd8cc rules) to the packet's Baseball Savant look: a white ground, cool gray rules (#cfd8dc, #e7ebee) and cool gray secondary text. The selected row on the Edge Board is a light red instead of a pink-tan.
+- **Same numbers:** both pages were rebuilt through their own builders with a new `--restyle` option that re-wraps the published page's own data in the new template, so no pull or edge run was needed. The embedded data on both pages is identical before and after (compared object for object).
+- **One filter row:** the postseason page's filter bar (rounds, innings, count) now fits one row on a desktop; it wrapped to two at 1280 pixels.
+- **Test:** `tests/test_no_tan_boxes.py` now covers every page in `docs/` (the packet, the portfolio, the postseason page, the Edge Board) and the template each is built from, and fails on any warm tint or the old paper colors.
+
 ## 2026-11-23: Two Suzuki swings removed by eye
 **Fixed**
 - **Two home runs where the tracker followed the umpire:** two of Suzuki's measured 2025 swings had numbers no swing produces (May 1, his 8th: head drop 1.39, hips 334 ms ahead, foot down 0 ms; July 1, his 23rd: head drop -0.65). I pulled both clips again, reran the tracker and drew the joints over the frames. On May 1 it sat on the home-plate umpire through the swing and only found Suzuki as he ran out of the box, so the "contact" frame (267) is him running to first, about 75 frames after the real one. On July 1 it sat on the umpire for the whole shot, and the "contact" frame (42) comes before the pitch is thrown. Both are center-field clips that start before his load, so the camera wasn't the problem; the measurement never saw his swing. I removed them by eye along with the earlier two (`reports/outputs/suzuki_excluded_by_eye.json`). His other May 1 home run tracks him cleanly and stays, and the other 15 measured swings show the joints on him at contact. Rerunning the tracker reproduced all 17 stored measurements.

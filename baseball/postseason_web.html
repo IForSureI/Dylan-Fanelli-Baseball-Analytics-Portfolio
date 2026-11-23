@@ -10,21 +10,21 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@700;800&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&display=swap">
 <style>
-/* Direction: a long-form essay on October, printed on warm scorebook paper: black ink, a stitch red and a deep blue,
+/* Direction: a long-form essay on October, on a white page with cool gray rules, the packet's Baseball Savant look: black ink, a stitch red and a deep blue,
    both checked with the dataviz validator for colour-blind separation and contrast; no tints of purple or neon.
-   Light only, by design: the page is read like paper. Display: Be Vietnam Pro. Text:
+   Light only, by design: white ground, cool neutral rules. Display: Be Vietnam Pro. Text:
    Bricolage Grotesque. Scale 1.25. No panels or boxes: the type and the rules carry the page. Margin notes beside each figure.
    Every chart can be re-cut by round, and where it means something by inning and count (filters above each plate). */
 :root {
-  --paper: #f7f4ec; --plate: #fffdf8; --ink: #1a1a1a; --muted: #5b5a55; --soft: #8e8c85; --rule: #ddd8cc; --grid: #ebe7dd;
-  --red: #c8392b; --red-ink: #a8301f; --blue: #285d9e; --tint: #efe9dc;
-  --tip: #1a1a1a; --tip-ink: #f7f4ec; --tip-muted: #b5b2a9; --tip-rule: #3a3936; --pos: #7fcf9b; --neg: #f29a8c;
+  --paper: #ffffff; --plate: #ffffff; --ink: #1a1a1a; --muted: #5f6b73; --soft: #8a959c; --rule: #cfd8dc; --grid: #e7ebee;
+  --red: #c8392b; --red-ink: #a8301f; --blue: #285d9e; --tint: #eef2f4;
+  --tip: #1a1a1a; --tip-ink: #ffffff; --tip-muted: #b4bcc2; --tip-rule: #3a4046; --pos: #7fcf9b; --neg: #f29a8c;
   --display: "Be Vietnam Pro", "Arial Black", sans-serif; --text: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
   color-scheme: light;
 }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: #f7f4ec; background: var(--paper); color: var(--ink); font: 400 17px/1.6 var(--text); }
+body { margin: 0; background: #ffffff; background: var(--paper); color: var(--ink); font: 400 17px/1.6 var(--text); }
 table, .axis text, .bar-val, .bar-right, .rlabel, .tags { font-variant-numeric: tabular-nums; }
 a { color: var(--blue); text-underline-offset: 3px; }
 a:focus-visible, .hit:focus-visible, summary:focus-visible { outline: 2px solid var(--red-ink); outline-offset: 2px; }
@@ -99,7 +99,8 @@ svg.dim .hit:not(.active) text { opacity: .35; }
 
 /* filters: one bar per plate (same classes on the NFL page) */
 .filterbar { position: sticky; top: 0; z-index: 5; background: var(--paper); border-bottom: 1px solid var(--rule); }
-.filters { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; font-size: 13px; margin: 0 auto; max-width: 1060px; padding: 10px 16px; }
+.filters { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; font-size: 13px; margin: 0 auto; max-width: 1120px; padding: 10px 16px; }
+@media (min-width: 1100px) { .filters { flex-wrap: nowrap; } }   /* one filter row on a desktop */
 .ftoggle { display: none; font: 600 14px/1.2 var(--text); color: var(--ink); background: var(--plate); border: 1px solid var(--rule); border-radius: 6px; padding: 8px 10px; text-align: left; width: 100%; cursor: pointer; }
 .ftoggle::after { content: " ▾"; color: var(--muted); }
 .ftoggle:focus-visible { outline: 2px solid var(--blue); outline-offset: 1px; }
