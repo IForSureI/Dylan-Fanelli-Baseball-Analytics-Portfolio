@@ -2,6 +2,15 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-23: Catcher framing after the ABS challenge system
+**Built**
+- **Framing study** (`reports/2026-catcher-framing.md`, `bb framing`): a called-strike model on every 2024-26 take (1.11 million), fit out of fold by game; extra strikes valued count by count from run expectancy; a pitcher- and park-adjusted version. It matches Baseball Savant's framing runs at r 0.97, 0.98 and 0.92.
+- **League data on the cloud machine:** I pulled 2024-26 Statcast and wrote the sequence files there too, so studies that need every pitch no longer wait for the Mac.
+
+**Learned**
+- In 2026, the first ABS challenge season, the spread of framing fell from about 6 runs to 3.6, the uncertain band of the zone shrank from 21% of takes to 15%, and called balls well inside the zone nearly disappeared. Patrick Bailey went from +27.6 to +3.3. Framing still repeats within a season (0.73), but 2025 predicted 2026 about half as well as 2024 predicted 2025.
+- Baseball Savant's leaderboard CSV ignores `year=` and returns the current season; the season has to go in `seasonStart` and `seasonEnd`. A test keeps it that way.
+
 ## 2026-11-23: The 2026-27 market board
 **Built**
 - **Market board** (`reports/2027-market-board.md`, `bb market`): 38 dated calls on this winter's open free agents, each an average salary and a probability of signing above MLB Trade Rumors' predicted salary, scored against MLBTR's Nov. 2 calls as players sign. The calls are frozen in `market/calls_2026-27.json`.

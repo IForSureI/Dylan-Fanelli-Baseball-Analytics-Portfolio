@@ -534,6 +534,17 @@ def cmd_market(a: argparse.Namespace) -> None:
         print(f"{r['n']} signed: AAV error mine ${r['mae_mine']:.2f}M vs MLBTR ${r['mae_mlbtr']:.2f}M; closer on {r['closer']}; "
               f"over/under Brier {r['brier']:.3f}")
 
+
+def cmd_framing(a: argparse.Namespace) -> None:
+    from baseball.evaluation import framing as fr
+
+    out = fr.run()
+    for s, v in out["seasons"].items():
+        print(f"{s}: {v['takes']:,} takes; Savant agreement r {v['savant']['r_raw']:.2f}; full-season reliability "
+              f"{v['split_half']['r_season']:.2f}; spread (SD, adjusted) {out['spread'][s]['sd_adj']:.1f} runs")
+    print(f"year to year (adjusted): {out['year_to_year_adj']}")
+    print(f"figure -> {fr.figure()}")
+
 def cmd_sql(a: argparse.Namespace) -> None:
     from baseball import sqlkit
 
@@ -809,6 +820,8 @@ def main(argv: list[str] | None = None) -> None:
     go.add_argument("grades", nargs="+")
     gr.set_defaults(func=cmd_grade)
 
+    fr_ = sub.add_parser("framing", help="catcher framing 2024-26: the call model, framing runs, Savant check, the 2026 ABS change")
+    fr_.set_defaults(func=cmd_framing)
     mk_ = sub.add_parser("market", help="the 2026-27 market board: my free-agent calls vs MLB Trade Rumors', scored as players sign")
     mk_.add_argument("action", choices=["pull", "backtest", "freeze", "score", "render"])
     mk_.add_argument("--as-of", default=None, help="freeze: the date the calls are made (YYYY-MM-DD)")

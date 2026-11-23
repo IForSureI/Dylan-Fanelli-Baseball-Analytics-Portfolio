@@ -1,5 +1,5 @@
 <!-- portfolio:header -->
-<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Arbitration: Varland](2027-arbitration-brief-varland.md) &nbsp;|&nbsp; [Draft analytics →](2026-mlb-draft-analytics.md)</sub>
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Arbitration: Varland](2027-arbitration-brief-varland.md) &nbsp;|&nbsp; [Catcher framing →](2026-catcher-framing.md)</sub>
 <!-- /portfolio:header -->
 
 # Gleyber Torres (2B, free agent): a hitter evaluation built on swing decisions and bat tracking
@@ -301,7 +301,7 @@ uv run pytest tests/test_swing_decisions.py
 
 <!-- portfolio:footer -->
 ---
-<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Arbitration: Varland](2027-arbitration-brief-varland.md) &nbsp;|&nbsp; [Draft analytics →](2026-mlb-draft-analytics.md)</sub>
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Arbitration: Varland](2027-arbitration-brief-varland.md) &nbsp;|&nbsp; [Catcher framing →](2026-catcher-framing.md)</sub>
 
 <sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Gleyber Torres (2B, free agent): a hitter evaluation built on swing decisions and bat tracking*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-hitter-evaluation-torres.md</sub>
 <!-- /portfolio:footer -->
