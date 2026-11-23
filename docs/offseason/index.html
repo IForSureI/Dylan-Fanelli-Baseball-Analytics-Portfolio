@@ -17,7 +17,7 @@
   --paper:#ffffff; --plate:#ffffff; --ink:#1f2328; --muted:#5f6b73; --soft:#8a959c; --grid:#e7ebee; --rule:#cfd8dc;
   --zebra:#f6f8f9; --band:#e9f1f3; --bandrule:#c9dde2; --teal:#2e7d8f; --teal-ink:#1d5e6d;
   --blue:#3661ad; --red:#c8283a; --green:#2a8a6a; --ochre:#b5811a; --mid:#b9b9b9;
-  --blue-soft:#e8eef8; --red-soft:#fbe9eb; --green-soft:#e3f1ec; --ochre-soft:#f7f1e3;
+  --blue-soft:#e8eef8; --red-soft:#fbe9eb; --green-soft:#e3f1ec;
   --display:"Be Vietnam Pro","Segoe UI",system-ui,sans-serif;
   --text:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
   --r:3px;
@@ -193,7 +193,6 @@ input[type=range]{flex:1;min-width:140px;accent-color:var(--red)}
 table.fr .bar{width:30%}
 table.fr .nm{white-space:nowrap}
 table.fr svg{width:100%;height:14px;display:block}
-.callout{background:var(--ochre-soft);border:1px solid #e6d7b4;border-radius:var(--r);padding:12px 14px;display:grid;gap:6px}
 @media (max-width:700px){table.fr .nm{white-space:normal}table.fr .hm{display:none}table.fr td,table.fr th{padding-inline:4px}table.fr .bar{width:30%}}
 
 /* methods */
@@ -645,7 +644,7 @@ function viewCatchers() {
     <div style="display:grid;gap:16px;align-content:start">
       <div class="panel" style="display:grid;gap:8px"><h3>The spread, season by season</h3><svg id="spread" viewBox="0 0 460 260" style="width:100%;height:auto" role="img" aria-label="Framing runs by catcher and season"></svg>
         <p class="small muted">Each dot is a catcher with 1,500+ takes; pitcher- and park-adjusted runs. Red: Patrick Bailey. In the table, Savant is Baseball Savant's own framing runs, and Pctl ranks the catcher among that season's catchers (red high, blue low).</p></div>
-      <div class="callout"><h3>This winter's free-agent catchers</h3>
+      <div class="panel" style="display:grid;gap:6px"><h3>This winter's free-agent catchers</h3>
         ${["Tyler Stephenson", "Carson Kelly"].map(n => { const c = F.catchers.find(x => x.name === n); if (!c) return ""; return `<p><b>${n}</b>: ${[2024, 2025, 2026].map(s => c.seasons[s] ? sgn(c.seasons[s].adj) : "n/a").join(" / ")} runs (2024 / 2025 / 2026). ${n === "Tyler Stephenson" ? "Near the bottom of the league the last two seasons. My board's $9.0M a year runs on Baseball-Reference WAR, which carries little framing, so a club that prices framing should pay less." : "About average, and steady."}</p>`; }).join("")}
       </div>
     </div>
