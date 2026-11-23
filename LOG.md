@@ -2,6 +2,17 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-23: Packet corrections
+**Fixed**
+- **Brier label:** the board tile now says what the 0.218 means: a backtest Brier score (lower is better) on "signs above MLBTR's salary", where always guessing last winter's 64% base rate scores 0.231 and a coin flip 0.250 (`market/calls_2026-27.json`).
+- **Catcher year-to-year:** the tile now uses the paired number, 0.34 on the same 37 catchers, down from 0.61; the drop's 95% range (-0.07 to +0.55) includes zero (`reports/outputs/framing_summary.json`). The pricing discount now reads 10-23%, the two measured drops.
+- **Rounding:** 5/4/3 WAR is stored to three places, so Kevin Gausman shows 2.1 (2.051). Contract AAVs print one decimal when exact and two otherwise, rounded half up, on the page and in the board report: Suzuki's MLBTR call is $26.25M (it read $26.2M in the report), accepted qualifying offers $23.15M. Bat speed's share of the ISO error is 0.6% (0.57%), not 0.5%. Suzuki's median home-run exit velocity in 2025 is 105.7 (105.65), not 105.6; the page now computes all three from the clips.
+- **Skubal:** agreed with the Mets on Nov. 22, nine years and $450M, official after his physical (MLB Trade Rumors, Nov. 22, 2026; MLB.com). The packet row, its detail and the board report say so.
+- **Club chips:** a player who signed shows his new club, read from MLBTR's signing line (Skubal NYM, Gray MIN, May CWS, Phillips ATL, Bauers BOS, Pagán DET, Loáisiga NYY; Jeffers and Bednar stay with the clubs whose offers they accepted). "Signed first" now reads "Signed before my call".
+- **Swing lab:** Suzuki's per-swing table drops the foot-down column, since his toe tap can't be read from this camera; unmeasured cells show a dash. The method view gives each hitter's clip counts: Arozarena 23 of 73, Suzuki 17 of 78 after two removed by eye, eye offsets 6-7 frames on five of his swings.
+- **Plain English:** each view ends with a one-line glossary, the probability column is "Chance above MLBTR", and probabilities from my log read "I give it 40%".
+- **Builder:** `docs/build_offseason.py` can now refresh the packet without the league files. It keeps the last build's ids, 2026 clubs, headshots and swing figures, and rebuilds everything that comes from `market/` and `reports/outputs/`.
+
 ## 2026-11-23: The 2027 Offseason Decision Packet
 **Built**
 - **An interactive packet** (`docs/offseason/`, built by `docs/build_offseason.py` from this repo's outputs) with five views. Every chart is drawn from the data in the page, and no MLB video frame is reproduced.
@@ -17,7 +28,7 @@ Newest first. One entry per working session: what was built, what was decided, w
 - **Suzuki's 78 home-run clips** through the same video pipeline: 17 measurable after I removed two by eye (a side replay and an off-axis camera; `reports/outputs/suzuki_excluded_by_eye.json`). Contact read by eye on five swings came 6-7 frames after the shoulders square, in line with Arozarena's offset.
 
 **Learned**
-- His home-run swing shows no significant change in sequence or posture, and his home-run contact held steady (median exit velocity 104.9, 105.6, 105.0). His toe-tap load barely lifts the front foot, so foot-down timing can't be read from the center-field camera for him. His ISO still projects down (.179-.191 against .204), which is regression rather than a warning sign.
+- His home-run swing shows no significant change in sequence or posture, and his home-run contact held steady (median exit velocity 104.9, 105.7, 105.0). His toe-tap load barely lifts the front foot, so foot-down timing can't be read from the center-field camera for him. His ISO still projects down (.179-.191 against .204), which is regression rather than a warning sign.
 
 ## 2026-11-23: Randy Arozarena, frame by frame
 **Built**

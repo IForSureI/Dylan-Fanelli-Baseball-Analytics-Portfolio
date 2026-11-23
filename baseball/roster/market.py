@@ -96,6 +96,22 @@ def mlb_deal(text: str) -> bool:
     return bool(_CLUB_RX.search(text))
 
 
+def signed_club(text: str) -> str | None:
+    """The MLB club a signing line names ('Signed with Mets for ...' -> 'Mets'), or None when the line isn't a
+    major league deal with an MLB club."""
+    if not mlb_deal(text):
+        return None
+    m = _CLUB_RX.search(text)
+    hit = m.group(1).lower()
+    return next(c for c in MLB_CLUBS if c.lower() == hit)
+
+
+# Status notes on a signing line that MLBTR's one-line entry doesn't carry, each with its source.
+SIGNING_NOTES = {
+    "Tarik Skubal": "agreed Nov. 22; official after physical",   # MLBTR, Nov. 22, 2026; MLB.com: pending a physical
+}
+
+
 def unparsed(players: list[dict]) -> list[str]:
     """Signing lines that name an MLB club but whose years or money can't be read. They would drop out of the
     score silently, so `bb market score` lists them for a hand check."""
@@ -380,6 +396,25 @@ def _money(x) -> str:
     return "" if x is None or x != x else f"${x:,.1f}M"
 
 
+def _aav(x) -> str:
+    """A contract's AAV: one decimal when that is exact, otherwise two, rounded half up ($26.25M, $23.15M,
+    $11.67M), so the report and the packet print the same number."""
+    if x is None or x != x:
+        return ""
+    from decimal import Decimal, ROUND_HALF_UP
+    d = Decimal(repr(float(x)))
+    one = d.quantize(Decimal("0.1"), rounding=ROUND_HALF_UP)
+    if abs(float(one) - float(x)) < 1e-9:
+        return f"${one:,}M"
+    return f"${d.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP):,}M"
+
+
+def _signed(name: str, line) -> str:
+    line = line if isinstance(line, str) else ""
+    note = SIGNING_NOTES.get(name)
+    return f"{line} ({note})" if line and note else line
+
+
 def render_board(root: Path = MARKET) -> str:
     """The board section of the report: the score so far, then every call, from the frozen file and the
     latest signing lines."""
@@ -400,14 +435,15 @@ def render_board(root: Path = MARKET) -> str:
         res = ""
         if c["actual_aav"] == c["actual_aav"] and c["actual_aav"] is not None:
             mine, theirs = abs(c["my_aav"] - c["actual_aav"]), abs(c["mlbtr_aav"] - c["actual_aav"])
-            res = f"{_money(c['actual_aav'])} AAV; {'mine closer' if mine < theirs else 'MLBTR closer' if theirs < mine else 'tie'}"
-        lines.append(f"| {c['rank']} | {DISPLAY.get(c['name'], c['name'])} | {c['mlbtr']} | {_money(c['mlbtr_aav'])} | {_money(c['my_aav'])} | "
+            res = f"{_aav(c['actual_aav'])} AAV; {'mine closer' if mine < theirs else 'MLBTR closer' if theirs < mine else 'tie'}"
+        lines.append(f"| {c['rank']} | {DISPLAY.get(c['name'], c['name'])} | {c['mlbtr']} | {_aav(c['mlbtr_aav'])} | {_money(c['my_aav'])} | "
                      f"{c['p_over']:.2f} | {f['wwar']:.1f}{' (RP)' if f['reliever'] else ''}, {int(f['age'])} | "
-                     f"{c['signed'] if isinstance(c['signed'], str) else ''} | {res} |")
+                     f"{_signed(c['name'], c['signed'])} | {res} |")
     pre = s[s.call != "called"].sort_values("rank")
     lines += ["", "No call from me (signed before Nov. 23, or no MLB record):", ""]
     for _, c in pre.iterrows():
-        lines.append(f"- {c['rank']}. {c['name']}: {c['call']}{'; ' + c['signed'] if isinstance(c['signed'], str) and c['signed'] else ''}.")
+        sig = _signed(c["name"], c["signed"])
+        lines.append(f"- {c['rank']}. {DISPLAY.get(c['name'], c['name'])}: {c['call']}{'; ' + sig if sig else ''}.")
     return "\n".join(lines)
 
 

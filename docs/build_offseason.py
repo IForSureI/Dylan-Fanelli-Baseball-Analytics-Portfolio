@@ -4,6 +4,8 @@
     uv run python docs/build_offseason.py
 
 Needs the league sequence files (data/seq) for teams and the video pose files (data/raw/video/pose) for the swing lab.
+Without them it refreshes the previous data.json: ids, 2026 clubs, headshots and swing-lab figures are kept, and
+everything read from market/ and reports/outputs/ is rebuilt.
 """
 import json, glob, base64, urllib.request, sys
 from pathlib import Path
@@ -25,24 +27,49 @@ TEAMS = {  # (primary, secondary); the Rockies use black and silver (no purple, 
  "SD": ("#2F241D", "#FFC425"), "SF": ("#FD5A1E", "#27251F"), "SEA": ("#0C2C56", "#005C5C"), "STL": ("#C41E3A", "#0C2340"),
  "TB": ("#092C5C", "#8FBCE6"), "TEX": ("#003278", "#C0111F"), "TOR": ("#134A8E", "#1D2D5C"), "WSH": ("#AB0003", "#14225A"),
 }
-people = pd.read_parquet(REPO / 'data/people/people.parquet')
-bref2mlbam = dict(zip(people.key_bbref, people.key_mlbam))
-mlbam2name = dict(zip(people.key_mlbam, people.name))
+# MLBTR's signing lines name the club by nickname; the chip shows the new club once a player signs
+NICK = {"Angels": "LAA", "Astros": "HOU", "Athletics": "ATH", "A's": "ATH", "Blue Jays": "TOR", "Braves": "ATL", "Brewers": "MIL",
+        "Cardinals": "STL", "Cubs": "CHC", "Diamondbacks": "AZ", "D-backs": "AZ", "Dodgers": "LAD", "Giants": "SF", "Guardians": "CLE",
+        "Mariners": "SEA", "Marlins": "MIA", "Mets": "NYM", "Nationals": "WSH", "Orioles": "BAL", "Padres": "SD", "Phillies": "PHI",
+        "Pirates": "PIT", "Rangers": "TEX", "Rays": "TB", "Red Sox": "BOS", "Reds": "CIN", "Rockies": "COL", "Royals": "KC",
+        "Tigers": "DET", "Twins": "MIN", "White Sox": "CWS", "Yankees": "NYY"}
+assert set(NICK) == set(mk.MLB_CLUBS)
 
-seq = pd.concat([pd.read_parquet(p, columns=['game_pk', 'game_date', 'game_type', 'home_team', 'away_team', 'inning_topbot', 'batter', 'pitcher', 'fielder_2'])
-                 for p in glob.glob(str(REPO / 'data/seq/seq_2026_*.parquet'))])
-seq = seq[seq.game_type == 'R']
-bat_team = np.where(seq.inning_topbot == 'Bot', seq.home_team, seq.away_team)
-pit_team = np.where(seq.inning_topbot == 'Bot', seq.away_team, seq.home_team)
-team_of = {}
-for who, tm in ((seq.batter, bat_team), (seq.pitcher, pit_team), (seq.fielder_2, pit_team)):
-    df = pd.DataFrame({'id': who.values, 'team': tm, 'date': seq.game_date.values}).dropna().sort_values('date')
-    for i, t in df.groupby('id').team.last().items():
-        team_of.setdefault(int(i), t)
-
+SEQ = sorted(glob.glob(str(REPO / 'data/seq/seq_2026_*.parquet')))
+PEOPLE = REPO / 'data/people/people.parquet'
+FULL = bool(SEQ) and PEOPLE.exists()
+PREV = json.loads((OUT / 'data.json').read_text()) if (OUT / 'data.json').exists() else None
+if not FULL and PREV is None:
+    sys.exit("needs the league files (data/seq, data/people), or a previous data.json to refresh")
 heads = {}
+if FULL:
+    people = pd.read_parquet(PEOPLE)
+    bref2mlbam = dict(zip(people.key_bbref, people.key_mlbam))
+    mlbam2name = dict(zip(people.key_mlbam, people.name))
+    seq = pd.concat([pd.read_parquet(p, columns=['game_pk', 'game_date', 'game_type', 'home_team', 'away_team', 'inning_topbot', 'batter', 'pitcher', 'fielder_2'])
+                     for p in SEQ])
+    seq = seq[seq.game_type == 'R']
+    bat_team = np.where(seq.inning_topbot == 'Bot', seq.home_team, seq.away_team)
+    pit_team = np.where(seq.inning_topbot == 'Bot', seq.away_team, seq.home_team)
+    team_of = {}
+    for who, tm in ((seq.batter, bat_team), (seq.pitcher, pit_team), (seq.fielder_2, pit_team)):
+        df = pd.DataFrame({'id': who.values, 'team': tm, 'date': seq.game_date.values}).dropna().sort_values('date')
+        for i, t in df.groupby('id').team.last().items():
+            team_of.setdefault(int(i), t)
+else:
+    # Refresh without the league files: keep the previous build's player ids, 2026 clubs, headshots and swing-lab
+    # figures (they need data/seq and the pose files), and re-derive everything that comes from market/ and
+    # reports/outputs/ (calls, signing lines, new clubs, WAR, scores, framing, bat-tracking numbers).
+    _raw = {p['rank']: p for p in mk.load(2026)['players']}
+    bref2mlbam = {_raw[b['rank']].get('bref_id'): b['mlbam'] for b in PREV['board'] if b.get('mlbam')}
+    mlbam2name = {c['id']: c['name'] for c in PREV['framing']['catchers']}
+    team_of = {c['id']: c['team'] for c in PREV['framing']['catchers']} | {b['mlbam']: b['team'] for b in PREV['board'] if b.get('mlbam')}
+    for x in PREV['board'] + PREV['framing']['catchers'] + list(PREV['labs'].values()):
+        if x.get('head'):
+            heads[x.get('mlbam') or x.get('id')] = x['head']
+
 def headshot(mid):
-    if mid in heads: return heads[mid]
+    if mid in heads or not FULL: return heads.get(mid)
     url = f"https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_120,q_auto:best/v1/people/{mid}/headshot/67/current"
     try:
         b = urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'}), timeout=30).read()
@@ -61,11 +88,12 @@ for c in calls['calls']:
     mid = bref2mlbam.get(p.get('bref_id'))
     mid = int(mid) if mid == mid and mid is not None else None
     board.append(dict(rank=c['rank'], name={'Adrian Morejon': 'Adrián Morejón'}.get(c['name'], c['name']), pos=p['pos'], mlbam=mid, team=team_of.get(mid) if mid else None,
-        age=p.get('age'), war=p.get('war'), wwar=None if r.wwar != r.wwar else round(float(r.wwar), 2), reliever=bool(p.get('reliever')),
+        age=p.get('age'), war=p.get('war'), wwar=None if r.wwar != r.wwar else round(float(r.wwar), 3), reliever=bool(p.get('reliever')),
         mlbtr=c['mlbtr'], mlbtr_years=None if r.mlbtr_years != r.mlbtr_years else int(r.mlbtr_years), mlbtr_aav=c['mlbtr_aav'],
         my_aav=c['my_aav'], p_over=c['p_over'], call=c['call'], signed=p.get('signed') or '',
         actual_aav=None if r.actual_aav != r.actual_aav else round(float(r.actual_aav), 3),
-        actual_years=None if r.actual_years != r.actual_years else int(r.actual_years), first_seen=p.get('first_seen')))
+        actual_years=None if r.actual_years != r.actual_years else int(r.actual_years), first_seen=p.get('first_seen'),
+        new_team=NICK.get(mk.signed_club(p.get('signed') or '')), note=mk.SIGNING_NOTES.get(c['name'])))
 for b in board:
     b['head'] = headshot(b['mlbam']) if b['mlbam'] else None
 
@@ -103,12 +131,18 @@ def lab(name, mlbam, stand, title):
                 by_season=B.by_season(t).round(4).replace({np.nan: None}).to_dict('records'), tests=tests,
                 traj=dict(early=rnd(early), late=rnd(late), n_early=ne, n_late=nl, pre=60, post=12, fps=59.94), swings=swings)
 
-labs = {'arozarena': lab('arozarena', 668227, 'R', 'Randy Arozarena')}
-summary_aro = json.loads((REPO / 'reports/outputs/arozarena_swing_summary.json').read_text())
-labs['arozarena']['detectable'] = summary_aro.get('detectable_change')
-_sz = REPO / 'data/raw/video/suzuki_hr.json'
-if _sz.exists() and all((REPO / 'data/raw/video/pose' / f"{r['play_id']}.npz").exists() for r in json.loads(_sz.read_text()) if 'mp4' in r):
-    labs['suzuki'] = lab('suzuki', 673548, 'R', 'Seiya Suzuki')
+if FULL:
+    labs = {'arozarena': lab('arozarena', 668227, 'R', 'Randy Arozarena')}
+    summary_aro = json.loads((REPO / 'reports/outputs/arozarena_swing_summary.json').read_text())
+    labs['arozarena']['detectable'] = summary_aro.get('detectable_change')
+    _sz = REPO / 'data/raw/video/suzuki_hr.json'
+    if _sz.exists() and all((REPO / 'data/raw/video/pose' / f"{r['play_id']}.npz").exists() for r in json.loads(_sz.read_text()) if 'mp4' in r):
+        labs['suzuki'] = lab('suzuki', 673548, 'R', 'Seiya Suzuki')
+else:
+    labs = PREV['labs']
+for k, v in labs.items():   # clips removed by eye after looking at the frame (counted on the method view)
+    ex = REPO / 'reports/outputs' / f'{k}_excluded_by_eye.json'
+    v['excluded_by_eye'] = len(json.loads(ex.read_text())['excluded']) if ex.exists() else 0
 
 bp = json.loads((REPO / 'reports/outputs/bat_power_summary.json').read_text())
 bps = pd.read_json(REPO / 'reports/outputs/bat_power_seasons.json')
@@ -133,7 +167,8 @@ data = dict(built='2026-11-23', teams=TEAMS, board=board, backtest=calls['backte
             framing=dict(summary=fs, catchers=catchers), labs=labs,
             bat_power=dict(n_train=bp['n_train'], n_test=bp['n_test'], best=bp['best_ball'], change=bp['bat_speed_change'], ball={k: dict(r2=round(v['r2_out'], 3), rmse=round(v['rmse_out'], 4)) for k, v in bp['ball'].items()},
                            bat_alone={k: dict(r2=round(v['r2_out'], 3), rmse=round(v['rmse_out'], 4)) for k, v in bp['bat_alone'].items()},
-                           adds={k: dict(gain=round(v['gain'], 4), lo=round(v['gain_lo'], 4), hi=round(v['gain_hi'], 4)) for k, v in bp['adds'].items()},
+                           adds={k: dict(gain=round(v['gain'], 4), lo=round(v['gain_lo'], 4), hi=round(v['gain_hi'], 4),
+                                                pct=round(100 * v['gain'] / v['rmse_base'], 2)) for k, v in bp['adds'].items()},
                            stability={k: round(v['r'], 3) for k, v in bp['stability'].items()}))
 (OUT / 'data.json').write_text(json.dumps(data, separators=(',', ':'), default=lambda o: None if o != o else float(o)))
 print('board', len(board), 'heads', sum(1 for b in board if b['head']), 'catchers', len(catchers), 'labs', list(labs), 'bytes', (OUT / 'data.json').stat().st_size)

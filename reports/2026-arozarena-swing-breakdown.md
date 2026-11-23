@@ -49,7 +49,7 @@ Before reading one hitter's bat speed, I checked what bat speed is worth for any
 - **Adding bat tracking to the chosen model:** bat speed and swing length help a little.
   - Bat speed cuts the error by .0002 (95% range .0001 to .0004).
   - Swing length cuts it by .0005 (.0001 to .0010).
-  - That's about 1% of the error (0.5% for bat speed, 1.4% for swing length). Detectable, too small to change a decision.
+  - That's about 1% of the error (0.6% for bat speed, 1.4% for swing length). Detectable, too small to change a decision.
   - Attack angle, squared-up rate and blast rate add nothing; their ranges include zero or point the wrong way.
 - **Bat speed is among the steadiest numbers in the set.** It correlates 0.94 with itself year to year (swing length 0.95), against 0.61 for ISO and 0.91 for 90th-percentile exit velocity. The hard-hit exit velocities carry most of what it knows.
 - **A drop in bat speed doesn't add a warning of its own.** On the 151 hitters with three straight qualifying seasons, a change in bat speed from 2024 to 2025 predicted -0.002 ISO per mph in 2026, 95% range -0.008 to +0.004. That's beyond what 2025's ISO and exit velocity already said.

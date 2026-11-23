@@ -83,7 +83,7 @@ select{font:inherit;font-size:.86rem;padding:5px 8px;border:1px solid var(--rule
 .key{display:inline-flex;align-items:center;gap:6px}
 .dot{width:11px;height:11px;border-radius:50%;display:inline-block}
 .boardwrap{overflow-x:auto}
-.brow{display:grid;grid-template-columns:28px minmax(170px,230px) minmax(260px,1fr) 64px 92px;gap:12px;align-items:center;padding:8px 6px;border-bottom:1px solid var(--grid);cursor:pointer;min-width:640px}
+.brow{display:grid;grid-template-columns:28px minmax(170px,230px) minmax(240px,1fr) 80px 150px;gap:12px;align-items:center;padding:8px 6px;border-bottom:1px solid var(--grid);cursor:pointer;min-width:700px}
 .brow:hover{background:#fbf8f1}
 .brow[aria-expanded="true"]{background:#f9f5ec}
 .brow .rk{color:var(--soft);font-size:.8rem;text-align:right}
@@ -97,7 +97,7 @@ select{font:inherit;font-size:.86rem;padding:5px 8px;border:1px solid var(--rule
 .pill.win{background:var(--green-soft);color:var(--green)}
 .pill.lose{background:var(--blue-soft);color:var(--blue)}
 @media (max-width:700px){
-  .brow{grid-template-columns:22px minmax(0,1fr) 48px 86px;grid-template-areas:"rk who p st" "ch ch ch ch";min-width:0;row-gap:4px}
+  .brow{grid-template-columns:22px minmax(0,1fr) 48px 136px;grid-template-areas:"rk who p st" "ch ch ch ch";min-width:0;row-gap:4px}
   .brow>.rk{grid-area:rk}.brow>.who{grid-area:who}.brow>svg{grid-area:ch}.brow>.pcol{grid-area:p}.brow>.st{grid-area:st}
   .brow.axisrow{display:none}
   .who .nm{white-space:normal;overflow:visible}
@@ -179,13 +179,21 @@ let D = null;
 const state = {group:"all", status:"all", sort:"rank", open:null, lab:"arozarena", frame:null, playing:false, speed:0.25, show:{early:true, late:true}, season:2026};
 
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const money = v => v == null ? "" : "$" + v.toFixed(1) + "M";
-const money2 = v => v == null ? "" : "$" + v.toFixed(2) + "M";
+const half = (v, d) => { const f = 10 ** d; return (Math.round(v * f + (v >= 0 ? 1e-9 : -1e-9)) / f).toFixed(d); };  // round half up
+const money = v => v == null ? "" : "$" + half(v, 1) + "M";
+const money2 = v => v == null ? "" : "$" + half(v, 2) + "M";
+/* a contract's AAV: one decimal when exact, else two ($26.25M, $23.15M), as in the board report */
+const aav = v => v == null ? "" : Math.abs(v * 10 - Math.round(v * 10)) < 1e-6 ? money(v) : money2(v);
+const iso = v => v == null ? "" : (v < 0 ? "-" : "") + Math.abs(v).toFixed(3).replace(/^0/, "");
+const MON = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."];
+const day = (s, yr = true) => { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s || ""); return m ? `${MON[+m[2] - 1]} ${+m[3]}${yr ? ", " + m[1] : ""}` : esc(s); };
+const median = a => { const v = a.filter(x => x != null).sort((x, y) => x - y), n = v.length; return n ? (n % 2 ? v[(n - 1) / 2] : (v[n / 2 - 1] + v[n / 2]) / 2) : null; };
+const clubOf = p => p.new_team || p.team;
 const pct = v => v == null ? "" : Math.round(v * 100) + "%";
 const sgn = (v, d = 1) => v == null ? "" : (v > 0 ? "+" : "") + v.toFixed(d);
 const club = t => { if (!t || !D.teams[t]) return ""; const [a, b] = D.teams[t]; return `<span class="club" style="background:${a};border-color:${b}">${esc(t)}</span>`; };
 const head = (p, cls = "") => {
-  const ring = p.team && D.teams[p.team] ? D.teams[p.team][0] : C.rule;
+  const t = clubOf(p), ring = t && D.teams[t] ? D.teams[t][0] : C.rule;
   return p.head ? `<img class="head ${cls}" src="${p.head}" alt="" style="border-color:${ring}" loading="lazy">`
                 : `<span class="head ph ${cls}" style="border-color:${C.grid}">${esc((p.name || "").split(" ").map(w => w[0]).join("").slice(0, 2))}</span>`;
 };
@@ -233,14 +241,14 @@ function viewBoard() {
   return `<section class="view">
   <div class="lede">
     <div style="display:grid;gap:10px">
-      <p class="eyebrow">Market board, calls frozen ${esc(D.made)}</p>
+      <p class="eyebrow">Market board, calls frozen ${day(D.made, false)}</p>
       <h2>${called.length} free-agent salary calls, scored against MLB Trade Rumors as each player signs</h2>
       <p class="answer">My model starts from MLBTR's own prediction and moves it on three seasons of WAR, age and role. Last winter it missed by ${money2(bt.mae_mine)} a year against MLBTR's ${money2(bt.mae_mlbtr)}, but <strong>that edge came from one player</strong>: without Kyle Tucker the two were tied (${money2(D.robust.without_tucker.mae_mine)} against ${money2(D.robust.without_tucker.mae_mlbtr)}). So this board is a public test of one idea: that last winter's shorter, richer deals repeat. I call ${above} of ${called.length} players above MLBTR's salary, so the calls mostly win or lose together.</p>
     </div>
     <div class="tiles">
       <div class="tile"><span class="v num">${sc ? sc.n : 0} / ${called.length}</span><span class="k">called players signed so far</span></div>
       <div class="tile"><span class="v num">${sc ? money(sc.mine) : "n/a"}</span><span class="k">my average miss${sc ? " (MLBTR " + money(sc.theirs) + ")" : ", once players sign"}</span></div>
-      <div class="tile"><span class="v num">${bt.brier.toFixed(3)}</span><span class="k">backtest Brier on "beats MLBTR's salary" (base rate 0.231, coin flip 0.250)</span></div>
+      <div class="tile"><span class="v num">${bt.brier.toFixed(3)}</span><span class="k">backtest Brier score (lower is better) on "signs above MLBTR's salary": always guessing last winter's ${Math.round(bt.base_rate * 100)}% base rate scores ${bt.brier_base.toFixed(3)}, a coin flip 0.250</span></div>
     </div>
   </div>
   <div class="filters" role="group" aria-label="Board filters">
@@ -253,28 +261,30 @@ function viewBoard() {
     <span class="key"><span class="dot" style="background:${C.blue}"></span>MLBTR's call (Nov. 2)</span>
     <span class="key"><span class="dot" style="background:${C.red}"></span>My call (Nov. 23)</span>
     <span class="key"><span class="dot" style="background:${C.ink}"></span>Signed for</span>
-    <span class="key">Right column: my chance he signs above MLBTR's average salary</span>
+    <span class="key">Club chip: 2026 club, or new club once signed</span>
   </div>
+  <p class="small muted gloss">Terms: AAV is average annual value, guaranteed money over guaranteed years. Chance above MLBTR is my probability that he signs for more than MLBTR's AAV. A Brier score is the average squared miss of those probabilities (0 is perfect). 5/4/3 WAR weights his 2026, 2025 and 2024 WAR 5, 4 and 3.</p>
   <div class="panel boardwrap" style="padding:6px 10px"><div id="rows"></div></div>
-  <p class="small muted">Average salary is guaranteed money over guaranteed years; an accepted qualifying offer is one year at $23.15M. MLBTR's call is from its Nov. 2 top-50 list; mine are from Nov. 23, after the qualifying-offer decisions, which gives me three weeks of news MLBTR didn't have. No call on players who signed first or have no MLB record. Click a player for the detail.</p>
+  <p class="small muted">Average salary is guaranteed money over guaranteed years; an accepted qualifying offer is one year at $23.15M. MLBTR's call is from its Nov. 2 top-50 list; mine are from Nov. 23, after the qualifying-offer decisions, which gives me three weeks of news MLBTR didn't have. No call on players who signed before my call or have no MLB record. Click a player for the detail.</p>
 </section>`;
 }
 function dumbbell(b, lo, hi, w = 520) {
   const H = 34, pad = 8, x = v => pad + (v - lo) / (hi - lo) * (w - 2 * pad);
   const parts = [`<line x1="${x(b.mlbtr_aav)}" x2="${x(b.my_aav ?? b.mlbtr_aav)}" y1="${H/2}" y2="${H/2}" stroke="${C.soft}" stroke-width="2"/>`];
-  parts.push(`<circle cx="${x(b.mlbtr_aav)}" cy="${H/2}" r="6" fill="${C.blue}"><title>MLBTR ${money(b.mlbtr_aav)}</title></circle>`);
+  parts.push(`<circle cx="${x(b.mlbtr_aav)}" cy="${H/2}" r="6" fill="${C.blue}"><title>MLBTR ${aav(b.mlbtr_aav)}</title></circle>`);
   if (b.my_aav != null) parts.push(`<circle cx="${x(b.my_aav)}" cy="${H/2}" r="6" fill="${C.red}"><title>Mine ${money(b.my_aav)}</title></circle>`);
-  if (b.actual_aav != null) parts.push(`<rect x="${x(b.actual_aav) - 2}" y="${H/2 - 10}" width="4" height="20" rx="1" fill="${C.ink}"><title>Signed ${money(b.actual_aav)}</title></rect>`);
+  if (b.actual_aav != null) parts.push(`<rect x="${x(b.actual_aav) - 2}" y="${H/2 - 10}" width="4" height="20" rx="1" fill="${C.ink}"><title>Signed ${aav(b.actual_aav)}</title></rect>`);
   const vals = [[b.mlbtr_aav, C.blue], [b.my_aav, C.red]].filter(v => v[0] != null).sort((a, c) => a[0] - c[0]);
   if (vals.length === 2 && x(vals[1][0]) - x(vals[0][0]) > 64) {
-    parts.push(`<text x="${x(vals[0][0]) - 10}" y="${H/2 + 4}" text-anchor="end" font-size="11" fill="${vals[0][1]}" class="num">${money(vals[0][0])}</text>`);
-    parts.push(`<text x="${x(vals[1][0]) + 10}" y="${H/2 + 4}" font-size="11" fill="${vals[1][1]}" class="num">${money(vals[1][0])}</text>`);
+    parts.push(`<text x="${x(vals[0][0]) - 10}" y="${H/2 + 4}" text-anchor="end" font-size="11" fill="${vals[0][1]}" class="num">${aav(vals[0][0])}</text>`);
+    parts.push(`<text x="${x(vals[1][0]) + 10}" y="${H/2 + 4}" font-size="11" fill="${vals[1][1]}" class="num">${aav(vals[1][0])}</text>`);
   } else {
     const v = vals[vals.length - 1], left = b.actual_aav != null || x(v[0]) > w - 120;
-    const txt = vals.map(z => money(z[0])).join(" to ") + (b.actual_aav != null ? ", signed " + money(b.actual_aav) : "");
+    const even = vals.length === 2 && Math.abs(vals[1][0] - vals[0][0]) < 0.05;
+    const txt = (even ? "Even at " + aav(vals[0][0]) : vals.map(z => aav(z[0])).join(" to ")) + (b.actual_aav != null ? ", signed " + aav(b.actual_aav) : "");
     parts.push(`<text x="${left ? x(vals[0][0]) - 10 : x(v[0]) + 10}" y="${H/2 + 4}" ${left ? 'text-anchor="end"' : ""} font-size="11" fill="${C.muted}" class="num">${txt}</text>`);
   }
-  return `<svg viewBox="0 0 ${w} ${H}" preserveAspectRatio="none" style="width:100%;height:${H}px;overflow:visible" role="img" aria-label="MLBTR ${money(b.mlbtr_aav)}, mine ${money(b.my_aav)}">${parts.join("")}</svg>`;
+  return `<svg viewBox="0 0 ${w} ${H}" preserveAspectRatio="none" style="width:100%;height:${H}px;overflow:visible" role="img" aria-label="MLBTR ${aav(b.mlbtr_aav)}${b.my_aav != null ? ", mine " + money(b.my_aav) : ""}">${parts.join("")}</svg>`;
 }
 function renderRows() {
   const rows = boardRows();
@@ -286,20 +296,20 @@ function renderRows() {
   const ticks = []; for (let v = 0; v <= hi; v += hi > 40 ? 10 : 5) ticks.push(v);
   const axis = `<div class="brow axisrow" style="cursor:default;border-bottom:1px solid var(--rule)" aria-hidden="true"><span></span><span class="eyebrow">Player</span>
     <svg viewBox="0 0 520 18" preserveAspectRatio="none" style="width:100%;height:18px;overflow:visible" class="axis">${ticks.map(v => `<text x="${8 + v / hi * 504}" y="13" text-anchor="middle">$${v}M</text>`).join("")}</svg>
-    <span class="eyebrow" style="text-align:right">Above</span><span class="eyebrow" style="text-align:right">Status</span></div>`;
+    <span class="eyebrow" style="text-align:right">Chance above MLBTR</span><span class="eyebrow" style="text-align:right">Status</span></div>`;
   el.innerHTML = axis + rows.map(b => {
     const open = state.open === b.rank;
     let status;
     if (b.actual_aav != null && b.call === "called") {
       const mine = Math.abs(b.my_aav - b.actual_aav), th = Math.abs(b.mlbtr_aav - b.actual_aav);
       status = Math.abs(mine - th) < 1e-9 ? `<span class="pill open">Tie</span>` : mine < th ? `<span class="pill win">Mine closer</span>` : `<span class="pill lose">MLBTR closer</span>`;
-    } else if (b.call !== "called") status = `<span class="pill open">${b.call === "no MLB record" ? "No call" : "Signed first"}</span>`;
+    } else if (b.call !== "called") status = `<span class="pill open">${b.call === "no MLB record" ? "No call" : "Signed before my call"}</span>`;
     else status = `<span class="pill open">Unsigned</span>`;
     const age = b.age ? `${Math.round(b.age)}` : "";
     const role = b.reliever ? "RP" : b.pos;
     return `<div class="brow" role="button" tabindex="0" aria-expanded="${open}" data-rank="${b.rank}">
       <span class="rk num">${b.rank}</span>
-      <span class="who">${head(b)}<span style="min-width:0"><span class="nm">${esc(b.name)}</span><span class="meta">${club(b.team)}<span>${esc(role)}${age ? ", " + age : ""}</span></span></span></span>
+      <span class="who">${head(b)}<span style="min-width:0"><span class="nm">${esc(b.name)}</span><span class="meta">${club(clubOf(b))}<span>${esc(role)}${age ? ", " + age : ""}${b.note ? ", " + esc(b.note) : ""}</span></span></span></span>
       ${dumbbell(b, lo, hi)}
       <span class="pcol num">${b.p_over != null ? pct(b.p_over) : ""}</span>
       <span class="st" style="text-align:right">${status}</span>
@@ -310,11 +320,11 @@ function renderRows() {
 function detail(b) {
   const war = b.war ? `${b.war[2]?.toFixed(1)}, ${b.war[1]?.toFixed(1)}, ${b.war[0]?.toFixed(1)}` : "no MLB record";
   const why = b.my_aav == null ? "No call: " + (b.call === "no MLB record" ? "no MLB record for the model to read." : "signed before Nov. 23.")
-    : `${Math.abs(b.my_aav - b.mlbtr_aav) < 0.05 ? "Even with MLBTR." : (b.my_aav > b.mlbtr_aav ? "Above" : "Below") + " MLBTR by " + money(Math.abs(b.my_aav - b.mlbtr_aav)) + " a year."} ${b.reliever ? "Relievers beat their predictions most last winter. " : ""}${b.age >= 33 ? "Age pulls the call down (about 5% a year past 30). " : ""}${b.wwar >= 3.5 ? "Three seasons near " + b.wwar.toFixed(1) + " WAR a year carry it up. " : ""}`;
+    : `${Math.abs(b.my_aav - b.mlbtr_aav) < 0.05 ? "Even at " + money(b.my_aav) + "." : (b.my_aav > b.mlbtr_aav ? "Above" : "Below") + " MLBTR by " + money(Math.abs(b.my_aav - b.mlbtr_aav)) + " a year."} ${b.reliever ? "Relievers beat their predictions most last winter. " : ""}${b.age >= 33 ? "Age pulls the call down (about 5% a year past 30). " : ""}${b.wwar >= 3.5 ? "Three seasons near " + half(b.wwar, 1) + " WAR a year carry it up. " : ""}`;
   return `<div class="detail" onclick="event.stopPropagation()">
-    <div><p class="k">MLBTR's call (Nov. 2)</p><p>${esc(b.mlbtr)}</p><p class="k" style="margin-top:6px">Signing line</p><p>${esc(b.signed || "Not signed")}</p></div>
-    <div><p class="k">Baseball-Reference WAR, 2024 / 2025 / 2026</p><p class="num">${war}</p><p class="k" style="margin-top:6px">Weighted (5/4/3)</p><p class="num">${b.wwar != null ? b.wwar.toFixed(2) : ""}</p></div>
-    <div><p class="k">My read</p><p>${why}</p>${b.my_aav != null ? `<p class="k" style="margin-top:6px">Chance he signs above MLBTR's ${money(b.mlbtr_aav)}</p><p class="num"><b>${pct(b.p_over)}</b></p>` : ""}</div>
+    <div><p class="k">MLBTR's call (Nov. 2)</p><p>${esc(b.mlbtr)}</p><p class="k" style="margin-top:6px">Signing line</p><p>${esc(b.signed ? b.signed + (b.note ? " (" + b.note + ")" : "") : "Not signed")}</p></div>
+    <div><p class="k">Baseball-Reference WAR, 2024 / 2025 / 2026</p><p class="num">${war}</p><p class="k" style="margin-top:6px">Weighted (5/4/3)</p><p class="num">${b.wwar != null ? half(b.wwar, 1) : ""}</p></div>
+    <div><p class="k">My read</p><p>${why}</p>${b.my_aav != null ? `<p class="k" style="margin-top:6px">Chance he signs above MLBTR's ${aav(b.mlbtr_aav)}</p><p class="num"><b>${pct(b.p_over)}</b></p>` : ""}</div>
   </div>`;
 }
 function bindBoard() {
@@ -334,12 +344,12 @@ function bindBoard() {
 function card(rank, verdict, bullets, links) {
   const b = D.board.find(x => x.rank === rank); if (!b) return "";
   return `<article class="card">
-    <header>${head(b, "lg")}<div style="display:grid;gap:4px;min-width:0"><p class="eyebrow">${esc(b.reliever ? "Reliever" : b.pos)}, ${Math.round(b.age)} ${club(b.team)}</p><h3>${esc(b.name)}</h3><p class="verdict">${verdict}</p></div></header>
+    <header>${head(b, "lg")}<div style="display:grid;gap:4px;min-width:0"><p class="eyebrow">${esc(b.reliever ? "Reliever" : b.pos)}, ${Math.round(b.age)} ${club(clubOf(b))}</p><h3>${esc(b.name)}</h3><p class="verdict">${verdict}</p></div></header>
     <div class="kv">
-      <div><span class="k">MLBTR</span><span class="v">${money(b.mlbtr_aav)}</span></div>
+      <div><span class="k">MLBTR</span><span class="v">${aav(b.mlbtr_aav)}</span></div>
       <div><span class="k">My call</span><span class="v" style="color:${C.red}">${money(b.my_aav)}</span></div>
-      <div><span class="k">Above MLBTR</span><span class="v">${pct(b.p_over)}</span></div>
-      <div><span class="k">WAR, 5/4/3 avg</span><span class="v">${b.wwar?.toFixed(1)}</span></div>
+      <div><span class="k">Chance above MLBTR</span><span class="v">${pct(b.p_over)}</span></div>
+      <div><span class="k">WAR, 5/4/3 avg</span><span class="v">${b.wwar != null ? half(b.wwar, 1) : ""}</span></div>
     </div>
     <ul>${bullets.map(x => `<li>${x}</li>`).join("")}</ul>
     <p class="small">${links}</p>
@@ -350,7 +360,7 @@ function viewPlayers() {
   return `<section class="view">
   <div class="lede"><div style="display:grid;gap:10px"><p class="eyebrow">Decisions</p>
     <h2>Where my forecast and my price part ways</h2>
-    <p class="answer">The board forecasts what the market will pay. A club still has to decide what it should pay. Where a card gives a buyer's verdict, a report sits behind it; where it doesn't, the card says it's a market forecast only. The first two cards also share one problem: if the board is right about relievers, both of my bullpen targets price out at my walk-aways, and Raisel Iglesias on one year is the target the board doesn't push up.</p></div></div>
+    <p class="answer">The board forecasts what the market will pay. A club still has to decide what it should pay. Where a card gives a buyer's verdict, a report sits behind it; where it doesn't, the card says it's a market forecast only. The Morej\u00f3n and Abreu cards share one problem: if the board is right about relievers, both of my bullpen targets price out at my walk-aways, and Raisel Iglesias on one year is the target the board doesn't push up.</p></div></div>
   <div class="cards">
   ${card(8, "Bid to $60M over four years and stop", [
     "The board expects the market to pay about $24.8M a year, well above MLBTR's $16.0M, because relievers beat their predictions most last winter. That reliever term rests on 14 relievers in one winter.",
@@ -359,24 +369,24 @@ function viewPlayers() {
     "Age: 27 here is Baseball-Reference's season age; the memo's 28 is his age next season. The elbow medical gates any multi-year deal."],
     `<a href="${REPO}2026-bullpen-acquisition-memo.md" target="_blank" rel="noopener">Bullpen memo</a>, <a href="${REPO}2026-morejon-pro-scouting-report.md" target="_blank" rel="noopener">scouting report</a>`)}
   ${card(5, "Don't pay for 2026", [
-    `The ISO rise is fewer strikeouts, not harder contact: extra bases per at-bat without a strikeout were .272 in both 2025 and 2026, while his strikeout rate fell from 26.8% to 21.6% and barrels, hard-hit exit velocity and bat speed fell.`,
-    `The league model chosen on training data puts his 2027 ISO at <b>${a.iso_range[0].toFixed(3).slice(1)}-${a.iso_range[1].toFixed(3).slice(1)}</b>. Frame by frame, his home-run swing shows no timing change the camera could detect.`,
-    "My log's call 6 (130 wRC+ or lower in 2027, 0.70) stands. The board's $33.0M is what the market may pay; a buyer's walk-away belongs below it. Fewer strikeouts are worth paying for; they aren't power."],
+    `The ISO rise came from fewer strikeouts: extra bases per at-bat without a strikeout were .272 in both 2025 and 2026, while his strikeout rate fell from 26.8% to 21.6% and barrels, hard-hit exit velocity and bat speed fell.`,
+    `The league model chosen on training data puts his 2027 ISO at <b>${iso(a.iso_range[0])}-${iso(a.iso_range[1])}</b>. Frame by frame, his home-run swing shows no timing change the camera could detect.`,
+    "Call 6 in my prediction log stands: 130 wRC+ or lower in 2027, and I give it 70%. The board's $33.0M is what the market may pay; a buyer's walk-away belongs below it. Fewer strikeouts are worth paying for, but they won't add power."],
     `<a href="#swing">Swing lab</a>, <a href="${REPO}2026-arozarena-swing-breakdown.md" target="_blank" rel="noopener">report</a>`)}
   ${card(4, "Market forecast only; his power projects down too", [
     "Three seasons near 3.9 WAR a year at 31 carry the call to about $33M a year. That sits at the top of the training range, where three players (Tucker, Bregman, Bellinger) set the slope, so it's the board's least anchored kind of call.",
-    `The same league model I use on Arozarena puts Suzuki's 2027 ISO at ${D.projections["673548"] ? Math.min(D.projections["673548"].train_2024_25, D.projections["673548"].both_pairs, D.projections["673548"].pair_2025_26).toFixed(3).slice(1) + "-" + Math.max(D.projections["673548"].train_2024_25, D.projections["673548"].both_pairs, D.projections["673548"].pair_2025_26).toFixed(3).slice(1) : ""}, against ${D.projections["673548"] ? D.projections["673548"].iso_2026.toFixed(3).slice(1) : ""} in 2026.`,
-    D.labs.suzuki ? "Frame by frame on 17 clean home-run clips, his swing shows no significant change, and his home-run contact held steady. The projected ISO drop is regression, not a warning sign. I have no buyer's report on him yet, so this card stops at the forecast." : "I have no buyer's report on him yet, so this card stops at the forecast."],
+    `The same league model I use on Arozarena puts Suzuki's 2027 ISO at ${D.projections["673548"] ? iso(Math.min(D.projections["673548"].train_2024_25, D.projections["673548"].both_pairs, D.projections["673548"].pair_2025_26)) + "-" + iso(Math.max(D.projections["673548"].train_2024_25, D.projections["673548"].both_pairs, D.projections["673548"].pair_2025_26)) : ""}, against ${D.projections["673548"] ? iso(D.projections["673548"].iso_2026) : ""} in 2026.`,
+    D.labs.suzuki ? "Frame by frame on 17 clean home-run clips, his swing shows no significant change, and his home-run contact held steady. I read the projected ISO drop as ordinary regression. I have no buyer's report on him yet, so this card stops at the forecast." : "I have no buyer's report on him yet, so this card stops at the forecast."],
     `<a href="#swing">Swing lab</a>, <a href="${REPO}2027-market-board.md" target="_blank" rel="noopener">board report</a>`)}
   ${card(18, "Market forecast only: below MLBTR", [
     "At 35, with WAR of 1.1, 4.0 and 1.1 over three seasons, the age term pulls the call to $16.9M against MLBTR's $22.0M.",
-    "Only a 20% chance he signs above MLBTR's average salary. This is what I expect the market to pay, not a valuation; I haven't priced him for a buyer."],
+    "I give him a 20% chance to sign above MLBTR's average salary. This is what I expect the market to pay; I haven't priced him for a buyer."],
     `<a href="${REPO}2027-market-board.md" target="_blank" rel="noopener">Board report</a>`)}
   ${card(32, "The likely signing for a club that can't pay Morej\u00f3n's price", [
     "No qualifying offer, so no pick lost. My bullpen memo names him the most likely signing once Morej\u00f3n's price runs past $60M.",
     "But the board puts him at $15.4M a year. My memo's walk-away (above $25M over two years) would land him about 24% of the time on the board's model.",
     "The board forecasts $15.4M a year against MLBTR's $11.0M: relievers again.",
-    "Prediction-log call 10: walk rate 11.0% or lower in 2027 (2026: 15.3%), at 0.40."],
+    "Prediction-log call 10: walk rate 11.0% or lower in 2027 (2026: 15.3%). I give it 40%."],
     `<a href="${REPO}2026-bullpen-acquisition-memo.md" target="_blank" rel="noopener">Bullpen memo</a>, <a href="${REPO}2027-prediction-log.md" target="_blank" rel="noopener">prediction log</a>`)}
   ${card(40, "Price his framing in", [
     "Framing runs, pitcher- and park-adjusted: +2.6 in 2024, -6.7 in 2025, -7.4 in 2026, near the bottom of the league (Savant: -4.4, -7.9, -9.5).",
@@ -384,6 +394,7 @@ function viewPlayers() {
     "A club that prices framing should pay him less than the board's number. How much less depends on how much of 2026 carries over, which one ABS season can't settle."],
     `<a href="#catchers">Catchers</a>, <a href="${REPO}2026-catcher-framing.md" target="_blank" rel="noopener">framing report</a>`)}
   </div>
+  <p class="small muted gloss">Terms: ISO is slugging minus batting average, extra bases per at-bat. wRC+ is runs created per plate appearance against a league average of 100. AAV is average annual value. 5/4/3 WAR weights his 2026, 2025 and 2024 WAR 5, 4 and 3. Chance above MLBTR is my probability that he signs for more than MLBTR's AAV.</p>
 </section>`;
 }
 
@@ -397,15 +408,18 @@ function viewSwing() {
   const bs = L.by_season;
   const row = (lab, key, f) => `<tr><td>${lab}</td>${bs.map(s => `<td>${s[key] == null ? "" : f(s[key])}${L.n_by_measure && L.n_by_measure[key] ? ` <span class="small muted">(${L.n_by_measure[key][s.season] ?? 0})</span>` : ""}</td>`).join("")}<td>${testCell(L.tests[key], key)}</td></tr>`;
   const sc = L.statcast;
+  const evs = [2024, 2025, 2026].map(y => half(median(L.swings.filter(s => s.season === y).map(s => s.launch_speed)), 1)).join(", ");
+  const foot = state.lab !== "suzuki";
+  const dash = '<span class="muted">\u2014</span>';
   return `<section class="view">
   <div class="lede"><div style="display:grid;gap:10px"><p class="eyebrow">Swing lab: MLB's own clips, measured frame by frame</p>
     <h2>${esc(L.name)}: did the home-run swing change?</h2>
     <p class="answer">${state.lab === "arozarena"
       ? "<strong>Not as power.</strong> The ISO rise is fewer strikeouts: extra bases per at-bat without a strikeout were .272 in both 2025 and 2026, while barrels, hard-hit exit velocity and bat speed fell. Frame by frame, his home-run swing shows no timing change the camera could detect (about 80 ms at foot down with this many swings). Posture can't be compared across these parks."
-      : "<strong>No sign of a change.</strong> On " + L.measured + " clean center-field clips of his " + L.clips + " home runs, his sequence and posture show no significant change, and his home-run contact held steady (median exit velocity 104.9, 105.6, 105.0). His ISO still projects down, which is ordinary regression, not a broken swing."}</p></div>
+      : "<strong>No sign of a change.</strong> On " + L.measured + " clean center-field clips of his " + L.clips + " home runs, his sequence and posture show no significant change, and his home-run contact held steady (median exit velocity " + evs + " mph in 2024, 2025 and 2026, all home runs). His ISO still projects down, which I read as ordinary regression."}</p></div>
     <div class="tiles">
       <div class="tile"><span class="v num">${L.measured} / ${L.clips}</span><span class="k">home-run clips measurable from the center-field camera</span></div>
-      <div class="tile"><span class="v num">${L.iso_range[0].toFixed(3).slice(1)}-${L.iso_range[1].toFixed(3).slice(1)}</span><span class="k">2027 ISO forecast by fit (2026: ${L.iso_2026.toFixed(3)}); ${Math.round(L.p_match[0] * 100)}-${Math.round(L.p_match[1] * 100)}% chance he matches it</span></div>
+      <div class="tile"><span class="v num">${iso(L.iso_range[0])}-${iso(L.iso_range[1])}</span><span class="k">2027 ISO forecast by fit (2026: ${iso(L.iso_2026)}); ${Math.round(L.p_match[0] * 100)}-${Math.round(L.p_match[1] * 100)}% chance he matches it</span></div>
       <div class="tile"><span class="v num">${L.eye.lo}-${L.eye.hi} frames</span><span class="k">from shoulders square to contact, read by eye on ${L.eye.n} of his swings (one frame is 17 ms)</span></div>
     </div></div>
   <div class="filters" role="group" aria-label="Swing lab controls">
@@ -438,17 +452,19 @@ function viewSwing() {
       </div>
       <div class="panel" style="display:grid;gap:8px"><h3>What Statcast says, all swings</h3>
         <div class="tablewrap"><table><thead><tr><th>Season</th><th>PA</th><th>ISO</th><th>Barrel</th><th>EV90</th><th>Bat speed</th><th>Length</th><th>Attack</th></tr></thead><tbody>
-        ${sc.map(s => `<tr><td>${s.season}</td><td>${s.pa}</td><td>${s.iso.toFixed(3)}</td><td>${(s.barrel * 100).toFixed(1)}%</td><td>${s.ev90}</td><td>${s.bat_speed ?? ""}</td><td>${s.swing_length ?? ""}</td><td>${s.attack_angle ?? ""}&deg;</td></tr>`).join("")}
+        ${sc.map(s => `<tr><td>${s.season}</td><td>${s.pa}</td><td>${iso(s.iso)}</td><td>${(s.barrel * 100).toFixed(1)}%</td><td>${s.ev90.toFixed(1)}</td><td>${s.bat_speed != null ? s.bat_speed.toFixed(1) : dash}</td><td>${s.swing_length != null ? s.swing_length.toFixed(2) : dash}</td><td>${s.attack_angle != null ? s.attack_angle.toFixed(1) + "&deg;" : dash}</td></tr>`).join("")}
         </tbody></table></div>
-        <p class="small muted">Bat speed, length and attack angle on competitive swings. Across the league, adding them to ISO plus barrel rate (the model chosen on training data) cuts next season's ISO error by about 1% (0.5% for bat speed, 1.4% for swing length) (${D.bat_power.n_test} hitters, scored on 2025 to 2026).</p>
+        <p class="small muted">Bat speed, length and attack angle on competitive swings. Across the league, adding them to ISO plus barrel rate (the model chosen on training data) cuts about 1% of the error in next season's ISO (${D.bat_power.adds.bat_speed.pct.toFixed(1)}% for bat speed, ${D.bat_power.adds.swing_length.pct.toFixed(1)}% for swing length; ${D.bat_power.n_test} hitters, scored on 2025 to 2026).</p>
       </div>
     </div>
   </div>
   <div class="panel" style="display:grid;gap:10px"><h3>Every home run, with the clip</h3>
-    <div class="tablewrap"><table><thead><tr><th>Date</th><th>Pitch</th><th>EV</th><th>LA</th><th>Bat speed</th><th>Foot down</th><th>Head drop</th><th>Clip</th></tr></thead><tbody>
-    ${L.swings.slice().sort((a, b) => String(b.date).localeCompare(String(a.date))).map(s => `<tr><td>${esc(s.date ?? "")}</td><td>${esc(s.pitch_type ?? "")} ${s.pitch_speed ? s.pitch_speed.toFixed(0) : ""}</td><td>${s.launch_speed ?? ""}</td><td>${s.launch_angle ?? ""}</td><td>${s.bat_speed ?? ""}</td><td>${s.measured && s.down_to_contact_ms != null ? Math.round(s.down_to_contact_ms) + " ms" : '<span class="muted">not measured</span>'}</td><td>${s.measured ? s.head_drop?.toFixed(2) : ""}</td><td>${s.page ? `<a href="${esc(s.page)}" target="_blank" rel="noopener">MLB.com</a>` : ""}</td></tr>`).join("")}
+    <p class="small muted">A dash means the camera couldn't measure that swing.${foot ? "" : " Foot down is left out for him: his toe-tap load can't be read from this camera."}</p>
+    <div class="tablewrap"><table><thead><tr><th>Date</th><th>Pitch</th><th>EV</th><th>LA</th><th>Bat speed</th>${foot ? "<th>Foot down</th>" : ""}<th>Head drop</th><th>Clip</th></tr></thead><tbody>
+    ${L.swings.slice().sort((a, b) => String(b.date).localeCompare(String(a.date))).map(s => `<tr><td>${day(s.date)}</td><td>${esc(s.pitch_type ?? "")} ${s.pitch_speed ? s.pitch_speed.toFixed(0) : ""}</td><td>${s.launch_speed != null ? s.launch_speed.toFixed(1) : dash}</td><td>${s.launch_angle ?? dash}</td><td>${s.bat_speed != null ? s.bat_speed.toFixed(1) : dash}</td>${foot ? `<td>${s.measured && s.down_to_contact_ms != null ? Math.round(s.down_to_contact_ms) + " ms" : dash}</td>` : ""}<td>${s.measured && s.head_drop != null ? s.head_drop.toFixed(2) : dash}</td><td>${s.page ? `<a href="${esc(s.page)}" target="_blank" rel="noopener">MLB.com</a>` : ""}</td></tr>`).join("")}
     </tbody></table></div>
   </div>
+  <p class="small muted gloss">Terms: ISO is slugging minus batting average. EV90 is his 90th-percentile exit velocity, a read on his hardest contact. Barrel is the share of batted balls with the speed and angle that usually go for extra bases. p is the chance of a gap this large if nothing changed (red when under 0.05).</p>
 </section>`;
 }
 function testCell(t, key) {
@@ -516,15 +532,16 @@ function setPlayLabel() { const b = document.getElementById("play"); if (b) b.te
 /* ---------------- catchers ---------------- */
 function viewCatchers() {
   const F = D.framing, S = F.summary;
-  const sd = s => S.spread[s].sd_adj.toFixed(1), r = s => S.seasons[s].savant.r_raw.toFixed(2);
+  const r = s => S.seasons[s].savant.r_raw.toFixed(2), P = S.year_to_year_paired;
+  const drop = (s, k) => Math.round(100 * (1 - S.spread[s][k] / S.spread[s - 1][k]));
   return `<section class="view">
   <div class="lede"><div style="display:grid;gap:10px"><p class="eyebrow">Catchers: framing after the ABS challenge system</p>
     <h2>Calls got sharper in 2026. Framing paid 10-23% less, depending on whose model.</h2>
-    <p class="answer">My public model matches Baseball Savant's framing runs (r ${r(2024)}, ${r(2025)}, ${r(2026)}). In the first ABS season, takes with an uncertain call fell from ${(100 * S.seasons[2025].zone.uncertain_share).toFixed(0)}% to ${(100 * S.seasons[2026].zone.uncertain_share).toFixed(0)}%. Framing's spread per pitch fell <strong>${Math.round(100 * (1 - S.spread[2026].sd_per_1000 / S.spread[2025].sd_per_1000))}%</strong> on my model and <strong>${Math.round(100 * (1 - S.spread[2026].sd_savant_per_1000 / S.spread[2025].sd_savant_per_1000))}%</strong> on Savant's, after an 8-10% drop the year before, so the ABS share can't be pinned down on one season. Discount a catcher's pre-2026 framing by 10-25% when pricing him.</p></div>
+    <p class="answer">My public model matches Baseball Savant's framing runs (r ${r(2024)}, ${r(2025)}, ${r(2026)}). In the first ABS season, takes with an uncertain call fell from ${(100 * S.seasons[2025].zone.uncertain_share).toFixed(0)}% to ${(100 * S.seasons[2026].zone.uncertain_share).toFixed(0)}%. Framing's spread per pitch fell <strong>${drop(2026, "sd_per_1000")}%</strong> on my model and <strong>${drop(2026, "sd_savant_per_1000")}%</strong> on Savant's, after ${drop(2025, "sd_per_1000")}% and ${drop(2025, "sd_savant_per_1000")}% the year before, so the ABS share can't be pinned down on one season. Discount a catcher's pre-2026 framing by ${Math.min(drop(2026, "sd_per_1000"), drop(2026, "sd_savant_per_1000"))}-${Math.max(drop(2026, "sd_per_1000"), drop(2026, "sd_savant_per_1000"))}% when pricing him.</p></div>
     <div class="tiles">
       <div class="tile"><span class="v num">$${S.spread[2025].full_time_sd_dollars.toFixed(1)}M</span><span class="k">one SD of framing for a full-time catcher (7,000 takes), 2025</span></div>
       <div class="tile"><span class="v num">$${S.spread[2026].full_time_sd_dollars.toFixed(1)}M</span><span class="k">the same in 2026 ($11.23M a win, 10 runs a win)</span></div>
-      <div class="tile"><span class="v num">${S.year_to_year_adj["2025->2026"].r.toFixed(2)}</span><span class="k">2025 to 2026 correlation, down from ${S.year_to_year_adj["2024->2025"].r.toFixed(2)}; not significant on the same ${S.year_to_year_paired.catchers} catchers</span></div>
+      <div class="tile"><span class="v num">${P.r_25_26.toFixed(2)}</span><span class="k">2025 to 2026 correlation, down from ${P.r_24_25.toFixed(2)}, on the same ${P.catchers} catchers; the drop isn't significant (95% range ${sgn(P.diff_lo, 2)} to ${sgn(P.diff_hi, 2)})</span></div>
     </div></div>
   <div class="filters" role="group" aria-label="Season">
     <div class="seg" data-k="season">${[2024, 2025, 2026].map(s => `<button type="button" data-v="${s}" aria-pressed="${state.season === s}">${s}${s === 2026 ? " (ABS)" : ""}</button>`).join("")}</div>
@@ -540,6 +557,7 @@ function viewCatchers() {
       </div>
     </div>
   </div>
+  <p class="small muted gloss">Terms: framing runs are the runs a catcher saves by getting extra called strikes on takes, against an average catcher on the same pitches. A take is a pitch the batter doesn't swing at. r is a correlation (1 means the two lists agree exactly, 0 means no relation). SD is the standard deviation, the typical gap from average.</p>
 </section>`;
 }
 function renderLB() {
@@ -548,7 +566,7 @@ function renderLB() {
   document.getElementById("csum").textContent = `${rows.length} catchers with 1,500+ takes`;
   const bar = v => { const w = Math.abs(v) / max * 50; return `<svg viewBox="0 0 100 14" preserveAspectRatio="none" style="width:100%;height:14px"><line x1="50" x2="50" y1="0" y2="14" stroke="${C.grid}"/><rect x="${v < 0 ? 50 - w : 50}" y="2" width="${w}" height="10" rx="2" fill="${v < 0 ? C.blue : C.red}"/></svg>`; };
   document.getElementById("lb").innerHTML = `<div class="row" style="border-bottom:1px solid var(--rule)"><span></span><span class="eyebrow">Catcher</span><span class="eyebrow" style="text-align:center">Runs lost / gained</span><span class="eyebrow" style="text-align:right">Runs</span></div>` +
-    rows.map((c, i) => `<div class="row"><span class="small muted num">${i + 1}</span><span class="who">${c.head ? head(c) : ""}<span style="min-width:0"><span class="nm" style="font-weight:600">${esc(c.name)}</span><span class="meta">${club(c.team)}<span class="num">${c.seasons[s].takes.toLocaleString()} takes</span></span></span></span>${bar(c.seasons[s].adj)}<span class="num" style="text-align:right;font-weight:700">${sgn(c.seasons[s].adj)}</span></div>`).join("");
+    rows.map((c, i) => `<div class="row"><span class="small muted num">${i + 1}</span><span class="who">${head(c)}<span style="min-width:0"><span class="nm" style="font-weight:600">${esc(c.name)}</span><span class="meta">${club(c.team)}<span class="num">${c.seasons[s].takes.toLocaleString()} takes</span></span></span></span>${bar(c.seasons[s].adj)}<span class="num" style="text-align:right;font-weight:700">${sgn(c.seasons[s].adj)}</span></div>`).join("");
 }
 function renderSpread() {
   const svg = document.getElementById("spread"); if (!svg) return;
@@ -573,6 +591,7 @@ function bindCatchers() {
 /* ---------------- method ---------------- */
 function viewMethod() {
   const bt = D.backtest, bp = D.bat_power, F = D.framing.summary;
+  const dropM = (s, k) => Math.round(100 * (1 - F.spread[s][k] / F.spread[s - 1][k]));
   return `<section class="view">
   <div class="lede"><div style="display:grid;gap:10px"><p class="eyebrow">Method and checks</p><h2>How each number was made, and how it could be wrong</h2>
   <p class="answer">Every study was scored on data its model never saw, or checked against an outside benchmark, before it went into this packet. Where the check came back small or null, the page says so.</p></div></div>
@@ -583,6 +602,7 @@ function viewMethod() {
       <li>Scoring rules, set before any called player signed: MLBTR's own signing line; major league deals only; first seen by April 30, 2027; deferrals at face value; a deal at exactly MLBTR's salary counts as not above it.</li>
       <li>Average salary error ${money2(bt.mae_mine)} against MLBTR's ${money2(bt.mae_mlbtr)}. The 95% range of the edge runs -$${Math.abs(bt.edge_lo).toFixed(2)}M to +$${bt.edge_hi.toFixed(2)}M, so it could be zero.</li>
       <li>Last winter, MLBTR's salaries ran ${money(-bt.mlbtr_bias)} a year low, its years ${bt.years_bias.toFixed(1)} long, its totals $${bt.total_bias.toFixed(1)}M high.</li>
+      <li>Brier score ${bt.brier.toFixed(3)} on "signs above MLBTR's salary" (lower is better); always guessing the ${Math.round(bt.base_rate * 100)}% base rate scores ${bt.brier_base.toFixed(3)}, a coin flip 0.250.</li>
       <li>Partly in-sample: the spread behind the probabilities and the Brier score come from the same winter, and I chose the reliever and age terms after seeing it. This winter is the clean test.</li>
       <li>The calls are frozen in the repo (market/calls_2026-27.json); scoring reads the signing lines MLBTR adds to its own list.</li></ul>
       <p class="small"><a href="${REPO}2027-market-board.md" target="_blank" rel="noopener">Full report</a></p></div>
@@ -590,23 +610,26 @@ function viewMethod() {
       <li>Called-strike model on ${(F.seasons[2024].takes + F.seasons[2025].takes + F.seasons[2026].takes).toLocaleString()} takes, fit out of fold by game; a strike valued count by count from run expectancy.</li>
       <li>Matches Savant's framing runs at r ${F.seasons[2024].savant.r_raw.toFixed(2)}, ${F.seasons[2025].savant.r_raw.toFixed(2)}, ${F.seasons[2026].savant.r_raw.toFixed(2)}.</li>
       <li>Within-season reliability ${F.seasons[2026].split_half.r_season.toFixed(2)} (odd vs even games, 2026).</li>
-      <li>The drop is measured per 1,000 takes (mine) and per 1,000 pitches (Savant's), so more catchers sharing the 2026 takes doesn't inflate it: 23% on mine, 10% on Savant's, after 10% and 8% the year before.</li>
+      <li>The drop is measured per 1,000 takes (mine) and per 1,000 pitches (Savant's), so more catchers sharing the 2026 takes doesn't inflate it: ${dropM(2026, "sd_per_1000")}% on mine, ${dropM(2026, "sd_savant_per_1000")}% on Savant's, after ${dropM(2025, "sd_per_1000")}% and ${dropM(2025, "sd_savant_per_1000")}% the year before.</li>
+      <li>Year to year on the same ${F.year_to_year_paired.catchers} catchers: r ${F.year_to_year_paired.r_24_25.toFixed(2)} (2024 to 2025), then ${F.year_to_year_paired.r_25_26.toFixed(2)} (2025 to 2026); the 95% range of the drop, ${sgn(F.year_to_year_paired.diff_lo, 2)} to ${sgn(F.year_to_year_paired.diff_hi, 2)}, includes zero.</li>
       <li>Statcast appears to log the call that stood after a challenge, so challenge wins are already inside framing runs; don't add them twice.</li>
       <li>The umpire isn't in public data; home park stands in for part of the crew.</li></ul>
       <p class="small"><a href="${REPO}2026-catcher-framing.md" target="_blank" rel="noopener">Full report</a></p></div>
     <div class="panel"><h3>Swing lab</h3><ul>
       <li>MLB's highlight clip of every home run, matched to the play by Statcast play id; 1280x720 at 59.94 frames a second.</li>
       <li>Pose tracking finds the center-field shot, follows the batter frame by frame, and measures timing and posture from the big joints. Wrists blur during the swing, so nothing uses them.</li>
-      <li>Contact is timed from the moment the shoulders square, with the offset read by eye on seven swings (5 to 7 frames).</li>
-      <li>23 of 73 clips were measurable: 19 had no usable center-field view, 27 no clean rotation, 4 a batter under 110 pixels. 2025 has only 2.</li></ul>
+      <li>Contact is timed from the moment the shoulders square, with the offset read by eye.</li>
+      <li>Arozarena: ${D.labs.arozarena.measured} of ${D.labs.arozarena.clips} clips were measurable: 19 had no usable center-field view, 27 no clean rotation, 4 a batter under 110 pixels. 2025 has only 2. Eye offsets ${D.labs.arozarena.eye.lo} to ${D.labs.arozarena.eye.hi} frames on ${D.labs.arozarena.eye.n} swings.</li>
+      ${D.labs.suzuki ? `<li>Suzuki: ${D.labs.suzuki.measured} of ${D.labs.suzuki.clips} clips were measurable, after I removed ${D.labs.suzuki.excluded_by_eye} by eye (a side replay and an off-axis camera). Eye offsets ${D.labs.suzuki.eye.lo} to ${D.labs.suzuki.eye.hi} frames on ${D.labs.suzuki.eye.n} swings. His toe-tap load hides foot down, so those timings aren't shown.</li>` : ""}</ul>
       <p class="small"><a href="${REPO}2026-arozarena-swing-breakdown.md" target="_blank" rel="noopener">Full report</a></p></div>
     <div class="panel"><h3>Bat tracking and power</h3><ul>
       <li>Fit on 2024 to 2025 (${bp.n_train} hitters), scored on 2025 to 2026 (${bp.n_test}).</li>
       <li>The batted-ball model is chosen by cross-validation on the training pairs alone: ISO plus barrel rate (out-of-sample R\u00b2 ${bp.ball["ISO + barrel rate"].r2.toFixed(2)}; ISO plus 90th-percentile exit velocity did better on the test pairs, ${bp.ball["ISO + 90th-pct EV"].r2.toFixed(2)}).</li>
-      <li>Bat speed and swing length add about 1% of the error; nothing moves it by 0.001 ISO.</li>
+      <li>Bat speed and swing length cut about 1% of the error (${bp.adds.bat_speed.pct.toFixed(1)}% and ${bp.adds.swing_length.pct.toFixed(1)}%); nothing moves it by 0.001 ISO.</li>
       <li>A drop in bat speed adds no warning of its own: ${bp.change.per_mph.toFixed(3)} ISO per mph (95% range ${bp.change.lo.toFixed(3)} to +${bp.change.hi.toFixed(3)}, ${bp.change.n} hitters).</li>
       <li>Bat speed is among the steadiest numbers (${bp.stability.bat_speed.toFixed(2)} year to year; swing length ${bp.stability.swing_length.toFixed(2)}); hard-hit exit velocity already carries most of it.</li></ul></div>
   </div>
+  <p class="small muted gloss">Terms: a Brier score is the average squared miss of a probability (0 is perfect, 0.25 is a coin flip). r is a correlation. R\u00b2 is the share of the variation a model explains on players it never saw. A 95% range is where the true value sits in 95 of 100 resamples.</p>
 </section>`;
 }
 

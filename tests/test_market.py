@@ -82,3 +82,21 @@ def test_scoring_rules_edge_cases():
 def test_every_signed_line_parses():
     assert mk.unparsed(mk.load(2026)["players"]) == []
     assert mk.unparsed([dict(name="X", signed="Signed with Mets for an undisclosed deal")]) == ["X"]
+
+
+def test_aav_prints_the_same_number_on_the_page_and_in_the_report():
+    # one decimal when exact, else two, rounded half up: Suzuki's $105M over four years is $26.25M, not $26.2M
+    assert mk._aav(26.25) == "$26.25M" and mk._aav(23.15) == "$23.15M" and mk._aav(11.667) == "$11.67M"
+    assert mk._aav(16.0) == "$16.0M" and mk._aav(12.5) == "$12.5M" and mk._aav(None) == ""
+    text = (ROOT / "reports" / "2027-market-board.md").read_text()
+    assert "| $26.25M |" in text and "$26.2M" not in text
+
+
+def test_signed_club_reads_the_new_club_from_the_signing_line():
+    assert mk.signed_club("Signed with Mets for nine years, $450MM") == "Mets"
+    assert mk.signed_club("Signed with Red Sox for four years, $58MM") == "Red Sox"
+    assert mk.signed_club("Accepted $23.15MM qualifying offer from Twins") == "Twins"
+    assert mk.signed_club("Signed with Yomiuri Giants for two years, $10MM") is None
+    assert mk.signed_club("Signed minor league deal with Twins") is None and mk.signed_club("") is None
+    assert "official after physical" in mk._signed("Tarik Skubal", "Signed with Mets for nine years, $450MM")
+    assert mk._signed("Tarik Skubal", "") == "" and mk._signed("Sonny Gray", "x") == "x"

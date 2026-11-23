@@ -41,7 +41,7 @@ On the 44 signed 2025-26 free agents with an MLB record:
 | Average error without Tucker and Bo Bichette (42) | $3.13M | $3.03M |
 | Median error in AAV | $2.74M | $2.63M |
 | Closer to the actual AAV | 21 of 44 | 23 of 44 |
-| Brier score on "signs above MLBTR's AAV" (coin flip 0.250; always guessing the base rate 0.231) | 0.218 | n/a |
+| Brier score on "signs above MLBTR's AAV", lower is better (always guessing last winter's 64% base rate scores 0.231; a coin flip 0.250) | 0.218 | n/a |
 
 So the edge is in one big miss, not in the typical player. MLBTR's worst miss last winter was Tucker's short, rich deal, and the model caught part of it. Whether that was a pattern or one player is what this winter answers.
 
@@ -75,7 +75,7 @@ So the edge is in one big miss, not in the typical player. MLBTR's worst miss la
 |---|---|---|---|---|---|---|---|---|
 | 2 | Trevor Rogers | Five years, $115MM | $23.0M | $29.0M | 0.80 | 2.8, 28 |  |  |
 | 3 | Freddy Peralta | Five years, $110MM | $22.0M | $24.6M | 0.65 | 2.8, 30 |  |  |
-| 4 | Seiya Suzuki | Four years, $105MM | $26.2M | $33.2M | 0.80 | 3.9, 31 |  |  |
+| 4 | Seiya Suzuki | Four years, $105MM | $26.25M | $33.2M | 0.80 | 3.9, 31 |  |  |
 | 5 | Randy Arozarena | Four years, $100MM | $25.0M | $33.0M | 0.80 | 4.1, 31 |  |  |
 | 6 | Michael King | Four years, $92MM | $23.0M | $26.4M | 0.70 | 3.2, 31 |  |  |
 | 8 | Adrián Morejón | Five years, $80MM | $16.0M | $24.8M | 0.95 | 1.9 (RP), 27 |  |  |
@@ -114,7 +114,7 @@ So the edge is in one big miss, not in the typical player. MLBTR's worst miss la
 
 No call from me (signed before Nov. 23, or no MLB record):
 
-- 1. Tarik Skubal: signed before the board; Signed with Mets for nine years, $450MM.
+- 1. Tarik Skubal: signed before the board; Signed with Mets for nine years, $450MM (agreed Nov. 22; official after physical).
 - 7. Teruaki Sato: no MLB record.
 - 9. Ryan Jeffers: signed before the board; Accepted $23.15MM qualifying offer from Twins.
 - 10. Kaima Taira: no MLB record.
