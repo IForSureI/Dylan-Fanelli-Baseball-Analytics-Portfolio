@@ -85,7 +85,7 @@ def test_the_packet_shows_savants_ranks_for_the_pitcher_cards():
         sv = by[name]["savant"]
         assert sv and sv["kind"] == "pitcher" and sv["season"] == 2026
         assert [r["label"] for r in sv["rows"]][:3] == ["xERA", "xBA", "xwOBA"]
-    assert by["Bryan Abreu"]["savant"]["rows"][8] == {"label": "BB %", "pctl": 1, "value": 15.3, "fmt": "pct", "from_csv": True, "pctl25": 16}
+    assert by["Bryan Abreu"]["savant"]["rows"][8] == {"label": "BB %", "pctl": 1, "value": 15.3, "fmt": "pct", "from_csv": True, "pctl25": 16, "value25": 10.5}
     # hitters: Savant's ranks, and my computed rank only for EV90, which Savant doesn't rank
     aro = by["Randy Arozarena"]
     assert aro["savant"]["kind"] == "batter" and [r["key"] for r in aro["league"]["rows"]] == ["ev90"]

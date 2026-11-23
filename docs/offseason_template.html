@@ -18,19 +18,23 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='29' fill='%23fff' stroke='%231d5e6d' stroke-width='5'/%3E%3Cpath d='M20 9c8 12 8 34 0 46M44 9c-8 12-8 34 0 46' fill='none' stroke='%23c8283a' stroke-width='4'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#ffffff">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,400;0,500;0,700;1,400&display=swap">
 <style>
 /* Layout: a Baseball Savant-style working page. White ground, a light band with the five views, compact tables
    with small uppercase headers, light zebra rows and right-aligned tabular numbers, thin section rules, and
    Savant's percentile bubbles (red high, gray middle, blue low) only where a real rank exists. Light only;
-   club colours only on club marks; my calls in red, MLBTR's in blue. */
+   club colours only on club marks; my calls in red, MLBTR's in blue.
+   Type is Savant's own, measured on its player and leaderboard pages (Nov. 23, 2026): Roboto Condensed for text, tables
+   and navigation (Google Fonts, as Savant loads it), and Savant's heading stack. Savant's headings name mlb-primary,
+   MLB's own face, which Savant doesn't serve, so they render in Helvetica Neue, Helvetica or Arial; so do these. */
 :root{
   --paper:#ffffff; --plate:#ffffff; --ink:#1f2328; --muted:#5f6b73; --soft:#8a959c; --grid:#e7ebee; --rule:#cfd8dc;
   --zebra:#f6f8f9; --band:#e9f1f3; --bandrule:#c9dde2; --teal:#2e7d8f; --teal-ink:#1d5e6d;
   --blue:#3661ad; --red:#c8283a; --green:#1f7356; --ochre:#b5811a; --mid:#b9b9b9;
   --blue-soft:#e8eef8; --red-soft:#fbe9eb; --green-soft:#e3f1ec;
-  --display:"Be Vietnam Pro","Segoe UI",system-ui,sans-serif;
-  --text:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --display:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  --text:"Roboto Condensed","Helvetica Neue",Helvetica,Arial,sans-serif;
   --r:3px;
   color-scheme:light;
 }
@@ -44,7 +48,7 @@ a{color:var(--teal-ink);text-underline-offset:2px}
 a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-visible,th[data-sort]:focus-visible{outline:2px solid var(--teal);outline-offset:1px;border-radius:2px}
 .wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.005em}
-h2{font-size:clamp(1.2rem,2.1vw,1.5rem);font-weight:700}
+h2{font-size:clamp(1.2rem,2.1vw,1.5rem);font-weight:700;line-height:1.2}
 h3{font-size:.98rem;font-weight:700}
 p{margin:0}
 .num{font-variant-numeric:tabular-nums}
@@ -55,7 +59,7 @@ p{margin:0}
 /* masthead: white title row, then the light band of views */
 header.mast{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper)}
 .mast .top{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;padding-block:12px 10px}
-.brand b{font-family:var(--display);font-weight:800;font-size:1.2rem;color:var(--teal-ink);letter-spacing:-.01em}
+.brand b{font-family:var(--display);font-weight:700;font-size:1.2rem;color:var(--teal-ink);letter-spacing:-.01em}
 .brand span{font-size:.8rem;color:var(--muted);margin-left:10px}
 .printbtn{margin-left:auto;font:inherit;font-size:.74rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--rule);background:#fff;color:var(--ink);border-radius:var(--r);padding:5px 10px;cursor:pointer}
 .printbtn:hover{border-color:var(--teal);color:var(--teal-ink)}
@@ -85,7 +89,7 @@ section.view{display:grid;gap:18px;grid-template-columns:minmax(0,1fr)}
 .tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--bandrule);border-radius:var(--r)}
 .tile{padding:10px 12px;display:grid;gap:2px;align-content:start}
 .tile+.tile{border-left:1px solid var(--grid)}
-.tile .v{font-family:var(--display);font-size:1.35rem;font-weight:800;font-variant-numeric:tabular-nums}
+.tile .v{font-family:var(--text);font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums}
 .tile .k{font-size:.74rem;color:var(--muted);line-height:1.3}
 @media (max-width:520px){.tiles{grid-template-columns:1fr}.tile+.tile{border-left:0;border-top:1px solid var(--grid)}}
 /* Savant section title: centred, with a thin rule either side */
@@ -189,7 +193,7 @@ tr.det td{background:#fff!important;padding:0 8px 10px;white-space:normal;text-a
 .card header{display:flex;gap:14px;align-items:center}
 .card h3{font-size:1.35rem;font-weight:600;font-family:var(--display)}
 .card .bio{font-size:.8rem;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.card .verdict{font-family:var(--display);font-weight:800;font-size:1rem;color:var(--teal-ink)}
+.card .verdict{font-family:var(--display);font-weight:700;font-size:1rem;color:var(--teal-ink)}
 .card ul{margin:0;padding-left:18px;display:grid;gap:4px}
 /* what I'd do: the eight verdicts in one paragraph */
 .summary{display:grid;gap:8px}
@@ -232,14 +236,60 @@ footer{border-top:1px solid var(--rule);padding-block:18px 30px;font-size:.78rem
 footer .by{color:var(--ink);font-size:.86rem}
 .ponly{display:none}
 .loading{padding:40px 0;color:var(--muted)}
+
+/* hover cards: my snippets' card (opens beside what it explains, flips at the edges, pinned on a tap or click, a
+   sheet on phones), drawn as a Savant table panel: white, a hairline frame, small uppercase headers, tabular numbers */
+[data-hv]{cursor:help}
+tr.r[data-hv],.lbt [data-hv]{cursor:pointer}
+.pr[data-hv]{border-radius:2px}
+.pr[data-hv]:hover,.pr.hv-on{background:var(--zebra)}
+table.fr tbody tr[data-hv]:hover td,table.fr tbody tr.hv-on td,table.fit tbody tr[data-hv]:hover td,table.fit tbody tr.hv-on td,table.meas tbody tr[data-hv]:hover td,table.meas tbody tr.hv-on td{background:var(--band)}
+.tile[data-hv]:hover,.tile.hv-on{background:var(--zebra)}
+svg [data-hv]{cursor:pointer}
+svg .hv-on{stroke:var(--ink);stroke-width:2}
+.hvn{border-bottom:1px dotted var(--soft)}
+#hv{position:fixed;z-index:40;left:0;top:0;pointer-events:none;opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity 120ms ease-out,transform 120ms ease-out,visibility 0s 120ms;
+  width:min(340px,calc(100vw - 24px));max-height:calc(100vh - 16px);overflow:auto;background:#fff;color:var(--ink);border:1px solid var(--rule);border-radius:var(--r);
+  box-shadow:0 8px 24px rgba(31,35,40,.16);padding:10px 12px;font:13px/1.4 var(--text);font-variant-numeric:tabular-nums;text-align:left}
+#hv.on{opacity:1;visibility:visible;transform:none;transition:opacity 120ms ease-out,transform 120ms ease-out}
+#hv.pin{pointer-events:auto}
+#hv .t-head{display:flex;align-items:center;gap:8px;padding-right:24px}
+#hv .t-name{font:700 15px/1.2 var(--display)}
+#hv .t-sub{color:var(--muted);font-size:12px;margin:2px 0 6px}
+#hv .big{display:flex;gap:16px;margin:6px 0 8px;flex-wrap:wrap}
+#hv .big div{display:flex;flex-direction:column}
+#hv .big b{font:700 19px/1.1 var(--text)}
+#hv .big span{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+#hv table{width:100%;border-collapse:collapse;margin:2px 0 6px;font-size:12.5px}
+#hv th{font-size:10.5px;color:var(--muted);font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-bottom:1px solid var(--ink);padding:2px 4px;text-align:right;background:#fff;white-space:nowrap}
+#hv td{padding:2px 4px;text-align:right;border-bottom:1px solid var(--grid);white-space:nowrap;background:#fff}
+#hv tbody tr:nth-child(even) td{background:var(--zebra)}
+#hv th:first-child,#hv td:first-child{text-align:left;padding-left:0;white-space:normal}
+#hv tr.hl td{font-weight:700}
+#hv .sec{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:8px 0 3px;padding-top:6px;border-top:1px solid var(--grid)}
+#hv .note{color:var(--muted);font-size:11.5px;margin-top:4px}
+#hv dl.kv{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin:4px 0 6px}
+#hv dl.kv div{display:flex;flex-direction:column;min-width:0}
+#hv dl.kv dt{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+#hv dl.kv dd{margin:0;font-weight:600}
+#hv p+p{margin-top:4px}
+#hv a{color:var(--teal-ink)}
+#hv .x{position:absolute;top:5px;right:5px;width:28px;height:28px;border:0;background:transparent;color:var(--muted);font:700 18px/1 var(--text);cursor:pointer;display:none;border-radius:var(--r)}
+#hv.pin .x{display:block}
+#hv .x:hover{color:var(--ink);background:var(--zebra)}
+@media (max-width:640px){
+  #hv{left:10px!important;right:10px;top:auto!important;bottom:10px;width:auto;max-height:min(60vh,calc(100vh - 20px))}
+  #hv.up{top:10px!important;bottom:auto}
+}
+@media print{#hv{display:none!important}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
 /* Print / Save as PDF: a leave-behind with all five views in order, no navigation, a running header on every page */
 @page{size:letter;margin:.62in .5in .55in;
-  @top-left{content:"2027 Offseason Decision Packet";font-family:"Be Vietnam Pro",sans-serif;font-size:8pt;font-weight:700;color:#1d5e6d}
-  @top-right{content:"Dylan Fanelli, built Nov. 23, 2026";font-family:"Bricolage Grotesque",sans-serif;font-size:8pt;color:#5f6b73}
-  @bottom-right{content:"Page " counter(page) " of " counter(pages);font-family:"Bricolage Grotesque",sans-serif;font-size:8pt;color:#5f6b73}
-  @bottom-left{content:"iforsurei.github.io/Dylan-Fanelli-Baseball-Analytics-Portfolio/offseason/";font-family:"Bricolage Grotesque",sans-serif;font-size:7.5pt;color:#5f6b73}}
+  @top-left{content:"2027 Offseason Decision Packet";font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:8pt;font-weight:700;color:#1d5e6d}
+  @top-right{content:"Dylan Fanelli, built Nov. 23, 2026";font-family:"Roboto Condensed",sans-serif;font-size:8pt;color:#5f6b73}
+  @bottom-right{content:"Page " counter(page) " of " counter(pages);font-family:"Roboto Condensed",sans-serif;font-size:8pt;color:#5f6b73}
+  @bottom-left{content:"iforsurei.github.io/Dylan-Fanelli-Baseball-Analytics-Portfolio/offseason/";font-family:"Roboto Condensed",sans-serif;font-size:7.5pt;color:#5f6b73}}
 @media print{
   html,body{background:#fff}
   body{font-size:9.5pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -296,6 +346,7 @@ footer .by{color:var(--ink);font-size:.86rem}
 
 <main class="wrap" id="app"><p class="loading">Loading the packet data.</p></main>
 <div class="wrap" id="print"></div>
+<div id="hv" role="tooltip" aria-live="polite"></div>
 
 <footer class="wrap">
   <p class="by"><b>Dylan Fanelli</b>, baseball operations. <a href="https://www.linkedin.com/in/dylanfanelli/" target="_blank" rel="noopener">LinkedIn</a>, <a href="https://iforsurei.github.io/Dylan-Fanelli-Baseball-Analytics-Portfolio/portfolio.html">portfolio</a>, <a href="https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio" target="_blank" rel="noopener">code on GitHub</a>.</p>
@@ -342,7 +393,7 @@ function route() {
   const v = (location.hash || "#board").slice(1);
   const name = VIEWS[v] ? v : "board";
   document.querySelectorAll("nav.tabs a").forEach(a => a.setAttribute("aria-current", a.getAttribute("href") === "#" + name ? "page" : "false"));
-  stopPlay();
+  stopPlay(); hvHide();
   app.innerHTML = VIEWS[name]();
   if (name === "board") bindBoard();
   if (name === "swing") bindSwing();
@@ -387,9 +438,9 @@ function viewBoard() {
       <p class="answer">My model starts from MLBTR's own prediction and moves it on three seasons of WAR, age and role. Last winter it missed by ${money2(bt.mae_mine)} a year against MLBTR's ${money2(bt.mae_mlbtr)}, but <strong>that edge came from one player</strong>: without Kyle Tucker the two were tied (${money2(D.robust.without_tucker.mae_mine)} against ${money2(D.robust.without_tucker.mae_mlbtr)}). So this board is a public test of one idea: that last winter's shorter, richer deals repeat. I call ${above} of ${called.length} players above MLBTR's salary, so the calls mostly win or lose together.</p>
     </div>
     <div class="tiles">
-      <div class="tile"><span class="v num">${sc ? sc.n : 0} / ${called.length}</span><span class="k">called players signed so far</span></div>
-      <div class="tile"><span class="v num">${sc ? money(sc.mine) : "n/a"}</span><span class="k">my average miss${sc ? " (MLBTR " + money(sc.theirs) + ")" : ", once players sign"}</span></div>
-      <div class="tile"><span class="v num">${bt.brier.toFixed(3)}</span><span class="k">backtest Brier score (lower is better) on "signs above MLBTR's salary": always guessing last winter's ${Math.round(bt.base_rate * 100)}% base rate scores ${bt.brier_base.toFixed(3)}, a coin flip 0.250</span></div>
+      <div class="tile"${hvA("bt", 0)}><span class="v num">${sc ? sc.n : 0} / ${called.length}</span><span class="k">called players signed so far</span></div>
+      <div class="tile"${hvA("bt", 1)}><span class="v num">${sc ? money(sc.mine) : "n/a"}</span><span class="k">my average miss${sc ? " (MLBTR " + money(sc.theirs) + ")" : ", once players sign"}</span></div>
+      <div class="tile"${hvA("bt", 2)}><span class="v num">${bt.brier.toFixed(3)}</span><span class="k">backtest Brier score (lower is better) on "signs above MLBTR's salary": always guessing last winter's ${Math.round(bt.base_rate * 100)}% base rate scores ${bt.brier_base.toFixed(3)}, a coin flip 0.250</span></div>
     </div>
   </div>
   <div class="filters" role="group" aria-label="Board filters">
@@ -403,7 +454,7 @@ function viewBoard() {
     <span class="key"><span class="dot" style="background:${C.red}"></span>My call (Nov. 23)</span>
     <span class="key"><span class="dot" style="background:${C.ink};border-radius:1px;width:4px"></span>Signed for</span>
     <span class="key">Club chip: 2026 club, or new club once signed</span>
-    <span class="key noprint">Choose a column header to sort, a player for the detail</span>
+    <span class="key noprint">Choose a column header to sort, a player for the detail; point at any number for its breakdown</span>
   </div>
   <div class="panel" style="padding:0 0 2px"><table class="lbt"><thead id="bh"></thead><tbody id="rows"></tbody></table></div>
   <p class="small muted">Average salary is guaranteed money over guaranteed years; an accepted qualifying offer is one year at $23.15M. MLBTR's call is from its Nov. 2 top-50 list; mine are from Nov. 23, after the qualifying-offer decisions, which gives me three weeks of news MLBTR didn't have. No call on players who signed before my call or have no MLB record. The bubble in the chance column is red when the chance is high and blue when it is low.</p>
@@ -414,9 +465,9 @@ function strip(b, hi, w = 200) {
   const H = 22, pad = 7, x = v => pad + v / hi * (w - 2 * pad), out = [];
   out.push(`<line x1="${pad}" x2="${w - pad}" y1="${H/2}" y2="${H/2}" stroke="${C.grid}" stroke-width="1"/>`);
   if (b.my_aav != null) out.push(`<line x1="${x(b.mlbtr_aav)}" x2="${x(b.my_aav)}" y1="${H/2}" y2="${H/2}" stroke="${C.soft}" stroke-width="2"/>`);
-  out.push(`<circle cx="${x(b.mlbtr_aav)}" cy="${H/2}" r="5" fill="${C.blue}"/>`);
-  if (b.my_aav != null) out.push(`<circle cx="${x(b.my_aav)}" cy="${H/2}" r="5" fill="${C.red}"/>`);
-  if (b.actual_aav != null) out.push(`<rect x="${x(b.actual_aav) - 1.5}" y="2" width="3" height="${H - 4}" fill="${C.ink}"/>`);
+  out.push(`<circle cx="${x(b.mlbtr_aav)}" cy="${H/2}" r="5" fill="${C.blue}"${hvM("b", b.rank)}/>`);
+  if (b.my_aav != null) out.push(`<circle cx="${x(b.my_aav)}" cy="${H/2}" r="5" fill="${C.red}"${hvM("bm", b.rank)}/>`);
+  if (b.actual_aav != null) out.push(`<rect x="${x(b.actual_aav) - 1.5}" y="2" width="3" height="${H - 4}" fill="${C.ink}"${hvM("bs", b.rank)}/>`);
   return `<svg class="strip" viewBox="0 0 ${w} ${H}" width="${w}" height="${H}" aria-hidden="true">${out.join("")}</svg>`;
 }
 const pairText = b => {
@@ -448,19 +499,20 @@ function renderRows(root = document) {
   el.innerHTML = rows.map(b => {
     const open = state.open === b.rank, role = b.reliever ? "RP" : b.pos, age = b.age ? `${Math.round(b.age)}` : "";
     const g = b.my_aav == null ? null : b.my_aav - b.mlbtr_aav;
-    return `<tr class="r" tabindex="0" aria-expanded="${open}" data-rank="${b.rank}">
+    return `<tr class="r" tabindex="0" aria-expanded="${open}" data-rank="${b.rank}"${hvM("b", b.rank)}>
       <td class="num muted">${b.rank}</td>
-      <td class="l"><span class="who">${head(b)}<span><span class="nm">${esc(b.name)}</span><span class="meta">${club(clubOf(b))}<span>${esc(role)}${age ? ", " + age : ""}${b.note ? ", " + esc(b.note) : ""}</span></span><span class="line num">${pairText(b)}</span></span></span></td>
+      <td class="l"><span class="who">${head(b)}<span><span class="nm">${esc(b.name)}</span><span class="meta">${club(clubOf(b))}<span>${esc(role)}${age ? ", " + age : ""}${b.note ? ", " + esc(b.note) : ""}</span></span><span class="line num"${hvM("b", b.rank)}>${pairText(b)}</span></span></span></td>
       <td class="l hm call">${esc(b.mlbtr)}</td>
-      <td class="hm num" style="color:${C.blue}">${aav(b.mlbtr_aav)}</td>
-      <td class="hm num" style="color:${C.red};font-weight:700">${money(b.my_aav)}</td>
+      <td class="hm num" style="color:${C.blue}"${hvM("b", b.rank)}>${aav(b.mlbtr_aav)}</td>
+      <td class="hm num" style="color:${C.red};font-weight:700"${hvM("bm", b.rank)}>${money(b.my_aav)}</td>
       <td class="hm num gap ${g == null ? "" : g > 0.05 ? "up" : g < -0.05 ? "dn" : ""}">${g == null ? "" : Math.abs(g) < 0.05 ? "Even" : sgn(g, 1)}</td>
       <td class="hm l">${strip(b, hi)}</td>
-      <td>${b.p_over != null ? `<span class="bub solo" style="background:${pcol(b.p_over * 100)};color:${onFill(pcol(b.p_over * 100))}">${Math.round(b.p_over * 100)}</span>` : ""}</td>
-      <td class="hm num">${aav(b.actual_aav)}</td>
-      <td style="white-space:normal">${statusOf(b)}</td>
+      <td>${b.p_over != null ? `<span class="bub solo" style="background:${pcol(b.p_over * 100)};color:${onFill(pcol(b.p_over * 100))}"${hvA("bp", b.rank)} aria-label="Chance above MLBTR, ${Math.round(b.p_over * 100)}%">${Math.round(b.p_over * 100)}</span>` : ""}</td>
+      <td class="hm num"${b.actual_aav != null ? hvM("bs", b.rank) : ""}>${aav(b.actual_aav)}</td>
+      <td style="white-space:normal"><span${hvA("bs", b.rank)}>${statusOf(b)}</span></td>
     </tr>${open ? `<tr class="det"><td colspan="${COLS.length}">${detail(b)}</td></tr>` : ""}`;
   }).join("");
+  hvGone();
 }
 function detail(b) {
   const war = b.war ? `${b.war[2]?.toFixed(1)}, ${b.war[1]?.toFixed(1)}, ${b.war[0]?.toFixed(1)}` : "no MLB record";
@@ -485,7 +537,8 @@ function bindBoard() {
   bh.addEventListener("keydown", e => { const t = e.target.closest("th[data-sort]"); if (t && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); sortBy(t.dataset.sort); } });
   const rows = document.getElementById("rows");
   const toggle = el => { const r = +el.dataset.rank; state.open = state.open === r ? null : r; renderRows(); };
-  rows.addEventListener("click", e => { if (e.target.closest("tr.det")) return; const r = e.target.closest("tr.r"); if (r) toggle(r); });
+  /* a tap on a number inside a row opens its card; a tap anywhere else on the row (or any click) opens the detail */
+  rows.addEventListener("click", e => { if (e.target.closest("tr.det")) return; const r = e.target.closest("tr.r"); if (!r || (hvTouch && e.target.closest("[data-hv]") !== r)) return; toggle(r); });
   rows.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { const r = e.target.closest("tr.r"); if (r) { e.preventDefault(); toggle(r); } } });
   const f = document.querySelector(".filters"); if (f) document.documentElement.style.setProperty("--filt", f.offsetHeight + "px");
   renderRows();
@@ -503,7 +556,7 @@ function pctlBlock(title, rows, ends = ["Poor", "Average", "Great"], o = {}) {
   const yr = o.prev;
   return `<div class="pctl${yr ? " yr" : ""}"><p class="eyebrow">${title}</p>${o.sub ? `<p class="src">${o.sub}</p>` : ""}
     <div class="hdr" aria-hidden="true"><span></span><span><span style="color:${C.blue}">${ends[0]}</span><span class="muted">${ends[1]}</span><span style="color:${C.red}">${ends[2]}</span></span><span></span>${yr ? `<span class="prev">${yr}</span>` : ""}</div>
-    ${rows.map(r => `<div class="pr"><span class="lab">${r.label}</span><span class="trk" role="img" aria-label="${esc(r.label)}: ${ord(r.p)} percentile${r.val ? ", " + esc(String(r.val).replace(/<[^>]+>/g, "")) : ""}${yr && r.prev != null ? ", " + ord(r.prev) + " in " + yr : ""}"><span class="fill" style="width:${r.p}%;background:${pcol(r.p)};opacity:.85"></span><span class="bub" style="left:${r.p}%;background:${pcol(r.p)};color:${onFill(pcol(r.p))}" aria-hidden="true">${r.p}</span></span><span class="val">${r.val}</span>${yr ? `<span class="prev" aria-hidden="true">${r.prev ?? "\u2014"}</span>` : ""}</div>`).join("")}
+    ${rows.map(r => `<div class="pr"${r.hv || ""}><span class="lab">${r.label}</span><span class="trk" role="img" aria-label="${esc(r.label)}: ${ord(r.p)} percentile${r.val ? ", " + esc(String(r.val).replace(/<[^>]+>/g, "")) : ""}${yr && r.prev != null ? ", " + ord(r.prev) + " in " + yr : ""}"><span class="fill" style="width:${r.p}%;background:${pcol(r.p)};opacity:.85"></span><span class="bub" style="left:${r.p}%;background:${pcol(r.p)};color:${onFill(pcol(r.p))}" aria-hidden="true">${r.p}</span></span><span class="val">${r.val}</span>${yr ? `<span class="prev" aria-hidden="true">${r.prev ?? "\u2014"}</span>` : ""}</div>`).join("")}
   </div>`;
 }
 /* Baseball Savant's own percentile card for one player (market/savant/, pulled by baseball.ingest.savant_percentiles) */
@@ -514,7 +567,7 @@ function svBlock(b) {
   const pageOnly = s.rows.filter(r => !r.from_csv).map(r => r.label);
   const who = ranked ? `Savant's own ranks among the ${D.savant.pools[s.kind]} ${P ? "pitchers" : "hitters"} it ranks on ${lead} in 2026 (${s.pa} ${P ? "batters faced" : "PA"}).` : `Savant ranks him only on the rows shown for 2026.`;
   const src = `${pageOnly.length ? pageOnly.join(" and ") + " from his <a href=\"" + D.savant.page + b.mlbam + "\" target=\"_blank\" rel=\"noopener\">Savant player page</a>, the rest from Savant's <a href=\"" + (P ? D.savant.csv : D.savant.csv_batter) + "\" target=\"_blank\" rel=\"noopener\">percentile-rankings export</a>" : "From Savant's <a href=\"" + (P ? D.savant.csv : D.savant.csv_batter) + "\" target=\"_blank\" rel=\"noopener\">percentile-rankings export</a>"}, pulled ${day(D.savant.pulled)}.`;
-  return pctlBlock("Baseball Savant percentile rankings, 2026", s.rows.map(r => ({label: r.label, p: r.pctl, prev: r.pctl25, val: r.value == null ? "\u2014" : (SVF[r.fmt] || String)(r.value)})), ["Poor", "Average", "Great"],
+  return pctlBlock("Baseball Savant percentile rankings, 2026", s.rows.map(r => ({label: r.label, p: r.pctl, prev: r.pctl25, val: r.value == null ? "\u2014" : (SVF[r.fmt] || String)(r.value), hv: hvA("sv", b.rank, r.label)})), ["Poor", "Average", "Great"],
     {prev: "2025", sub: `${who} The right column is his 2025 rank. ${src}`});
 }
 
@@ -524,18 +577,18 @@ function card(rank, verdict, bullets, links) {
   const b = D.board.find(x => x.rank === rank); if (!b) return "";
   const called = D.board.filter(x => x.call === "called");
   const boardRowsP = [
-    {label: "5/4/3 WAR", p: rankPct(b.wwar, called.map(x => x.wwar)), val: b.wwar != null ? half(b.wwar, 1) : ""},
-    {label: "My AAV", p: rankPct(b.my_aav, called.map(x => x.my_aav)), val: money(b.my_aav)},
-    {label: "Chance above MLBTR", p: rankPct(b.p_over, called.map(x => x.p_over)), val: pct(b.p_over)}];
+    {label: "5/4/3 WAR", p: rankPct(b.wwar, called.map(x => x.wwar)), val: b.wwar != null ? half(b.wwar, 1) : "", hv: hvA("cr", rank, "wwar")},
+    {label: "My AAV", p: rankPct(b.my_aav, called.map(x => x.my_aav)), val: money(b.my_aav), hv: hvA("cr", rank, "my_aav")},
+    {label: "Chance above MLBTR", p: rankPct(b.p_over, called.map(x => x.p_over)), val: pct(b.p_over), hv: hvA("cr", rank, "p_over")}];
   const lg = b.league;
   const fc = D.framing.catchers.find(c => c.name === b.name);
-  const frRows = fc ? [2024, 2025, 2026].map(s => { const pool = D.framing.catchers.filter(c => c.seasons[s]).map(c => c.seasons[s].adj); return fc.seasons[s] ? {label: `${s} framing runs`, p: rankPct(fc.seasons[s].adj, pool), val: sgn(fc.seasons[s].adj)} : {label: s, p: null}; }) : [];
+  const frRows = fc ? [2024, 2025, 2026].map(s => { const pool = D.framing.catchers.filter(c => c.seasons[s]).map(c => c.seasons[s].adj); return fc.seasons[s] ? {label: `${s} framing runs`, p: rankPct(fc.seasons[s].adj, pool), val: sgn(fc.seasons[s].adj), hv: hvA("c", fc.id, s)} : {label: s, p: null}; }) : [];
   return `<article class="card">
     <header>${head(b, "lg")}<div style="display:grid;gap:3px;min-width:0"><h3>${esc(b.name)}</h3><p class="bio">${club(clubOf(b))}<span>${esc(b.reliever ? "Reliever" : b.pos)}</span><span>Age ${Math.round(b.age)}</span><span>MLBTR rank ${b.rank}</span></p><p class="verdict">${verdict}</p></div></header>
     <div class="tablewrap"><table><thead><tr><th class="l">MLBTR's call</th><th>MLBTR AAV</th><th>My AAV</th><th>Chance above MLBTR</th><th>5/4/3 WAR</th></tr></thead>
-      <tbody><tr><td class="l">${esc(b.mlbtr)}</td><td style="color:${C.blue}">${aav(b.mlbtr_aav)}</td><td style="color:${C.red};font-weight:700">${money(b.my_aav)}</td><td>${pct(b.p_over)}</td><td>${b.wwar != null ? half(b.wwar, 1) : ""}</td></tr></tbody></table></div>
+      <tbody><tr><td class="l"${hvA("b", rank)}>${esc(b.mlbtr)}</td><td style="color:${C.blue}"${hvA("b", rank)}>${aav(b.mlbtr_aav)}</td><td style="color:${C.red};font-weight:700"${hvA("bm", rank)}>${money(b.my_aav)}</td><td${hvA("bp", rank)}>${pct(b.p_over)}</td><td${hvA("bw", rank)}>${b.wwar != null ? half(b.wwar, 1) : ""}</td></tr></tbody></table></div>
     ${svBlock(b)}
-    ${lg && lg.rows.length ? pctlBlock(`My rank where Savant has none: ${lg.season} percentile among ${lg.n} hitters with ${lg.min_pa}+ PA`, lg.rows.map(r => ({label: r.label, p: r.pctl, val: (LFMT[r.key] || (v => v))(r.value)}))) : ""}
+    ${lg && lg.rows.length ? pctlBlock(`My rank where Savant has none: ${lg.season} percentile among ${lg.n} hitters with ${lg.min_pa}+ PA`, lg.rows.map(r => ({label: r.label, p: r.pctl, val: (LFMT[r.key] || (v => v))(r.value), hv: hvA("lg", rank, r.key)}))) : ""}
     ${frRows.length ? pctlBlock(`Framing percentile among catchers with 1,500+ takes`, frRows) : ""}
     ${pctlBlock(`Rank among this winter's ${called.length} called players`, boardRowsP, ["Low", "Middle", "High"])}
     <ul>${bullets.map(x => `<li>${x}</li>`).join("")}</ul>
@@ -635,7 +688,7 @@ function viewSwing() {
   const L = D.labs[state.lab];
   const opts = Object.entries(D.labs).map(([k, v]) => `<button type="button" data-v="${k}" aria-pressed="${state.lab === k}">${esc(v.name)}</button>`).join("");
   const bs = L.by_season;
-  const row = (lab, key, f) => `<tr><td>${lab}</td>${bs.map(s => `<td>${s[key] == null ? "" : f(s[key])}${L.n_by_measure && L.n_by_measure[key] ? ` <span class="small muted n">(${L.n_by_measure[key][s.season] ?? 0})</span>` : ""}</td>`).join("")}<td>${testCell(L.tests[key], key)}</td></tr>`;
+  const row = (lab, key, f) => `<tr${hvA("lm", state.lab, key)}><td>${lab}</td>${bs.map(s => `<td>${s[key] == null ? "" : f(s[key])}${L.n_by_measure && L.n_by_measure[key] ? ` <span class="small muted n">(${L.n_by_measure[key][s.season] ?? 0})</span>` : ""}</td>`).join("")}<td>${testCell(L.tests[key], key)}</td></tr>`;
   const sc = L.statcast;
   const X = LABTXT[state.lab], foot = X.foot;
   const dash = '<span class="muted">\u2014</span>';
@@ -644,9 +697,9 @@ function viewSwing() {
     <h2>${esc(L.name)}: did the home-run swing change?</h2>
     <p class="answer">${X.answer(L)}</p></div>
     <div class="tiles">
-      <div class="tile"><span class="v num">${L.measured} / ${L.clips}</span><span class="k">home-run clips measurable from the center-field camera</span></div>
-      <div class="tile"><span class="v num">${iso(L.iso_range[0])}-${iso(L.iso_range[1])}</span><span class="k">2027 ISO forecast by fit (2026: ${iso(L.iso_2026)}); ${Math.round(L.p_match[0] * 100)}-${Math.round(L.p_match[1] * 100)}% chance he matches it</span></div>
-      <div class="tile"><span class="v num">${L.eye.lo}-${L.eye.hi} frames</span><span class="k">from shoulders square to contact, read by eye on ${L.eye.n} of his swings (one frame is 17 ms)</span></div>
+      <div class="tile"${hvA("lt", state.lab, 0)}><span class="v num">${L.measured} / ${L.clips}</span><span class="k">home-run clips measurable from the center-field camera</span></div>
+      <div class="tile"${hvA("lt", state.lab, 1)}><span class="v num">${iso(L.iso_range[0])}-${iso(L.iso_range[1])}</span><span class="k">2027 ISO forecast by fit (2026: ${iso(L.iso_2026)}); ${Math.round(L.p_match[0] * 100)}-${Math.round(L.p_match[1] * 100)}% chance he matches it</span></div>
+      <div class="tile"${hvA("lt", state.lab, 2)}><span class="v num">${L.eye.lo}-${L.eye.hi} frames</span><span class="k">from shoulders square to contact, read by eye on ${L.eye.n} of his swings (one frame is 17 ms)</span></div>
     </div></div>
   <div class="filters" role="group" aria-label="Swing lab controls">
     <div class="seg" data-k="lab">${opts}</div>
@@ -658,7 +711,7 @@ function viewSwing() {
   </div>
   <div class="labgrid">
     <div class="stage">
-      <svg id="skel" viewBox="0 0 400 420" role="img" aria-label="Median skeleton of his home-run swings, drawn from measured joints"></svg>
+      <svg id="skel" viewBox="0 0 400 420" role="img" aria-label="Median skeleton of his home-run swings, drawn from measured joints"${hvA("lk", state.lab)}></svg>
       <div class="controls"><button class="btn" id="play" type="button">Play swing</button>
         <input type="range" id="scrub" min="0" max="${L.traj.pre + L.traj.post}" step="1" aria-label="Frame">
         <span class="small num" id="flabel" style="min-width:9ch;text-align:right"></span></div>
@@ -678,16 +731,16 @@ function viewSwing() {
       </div>
       <div class="panel" style="display:grid;gap:8px"><h3>What Statcast says, all swings</h3>
         <div class="tablewrap"><table class="fit"><thead><tr><th>Season</th><th>PA</th><th>ISO</th><th>Barrel</th><th>EV90</th><th>Bat speed</th><th>Length</th><th>Attack</th></tr></thead><tbody>
-        ${sc.map(s => `<tr><td>${s.season}</td><td>${s.pa}</td><td>${iso(s.iso)}</td><td>${(s.barrel * 100).toFixed(1)}%</td><td>${s.ev90.toFixed(1)}</td><td>${s.bat_speed != null ? s.bat_speed.toFixed(1) : dash}</td><td>${s.swing_length != null ? s.swing_length.toFixed(2) : dash}</td><td>${s.attack_angle != null ? s.attack_angle.toFixed(1) + "&deg;" : dash}</td></tr>`).join("")}
+        ${sc.map(s => `<tr${hvA("lst", state.lab, s.season)}><td>${s.season}</td><td>${s.pa}</td><td>${iso(s.iso)}</td><td>${(s.barrel * 100).toFixed(1)}%</td><td>${s.ev90.toFixed(1)}</td><td>${s.bat_speed != null ? s.bat_speed.toFixed(1) : dash}</td><td>${s.swing_length != null ? s.swing_length.toFixed(2) : dash}</td><td>${s.attack_angle != null ? s.attack_angle.toFixed(1) + "&deg;" : dash}</td></tr>`).join("")}
         </tbody></table></div>
         <p class="small muted">Bat speed, length and attack angle on competitive swings. Across the league, adding them to ISO plus barrel rate (the model chosen on training data) cuts about 1% of the error in next season's ISO (${D.bat_power.adds.bat_speed.pct.toFixed(1)}% for bat speed, ${D.bat_power.adds.swing_length.pct.toFixed(1)}% for swing length; ${D.bat_power.n_test} hitters, scored on 2025 to 2026).</p>
       </div>
     </div>
   </div>
   <div class="panel" style="display:grid;gap:10px"><h3>Every home run, with the clip</h3>
-    <p class="small muted">A dash means the camera couldn't measure that swing.${foot ? "" : " Foot down is left out for him: his toe-tap load can't be read from this camera."}</p>
+    <p class="small muted">Point at or tap a home run for the full breakdown and the clip. A dash means the camera couldn't measure that swing.${foot ? "" : " Foot down is left out for him: his toe-tap load can't be read from this camera."}</p>
     <div class="tablewrap"><table class="fit"><thead><tr><th>Date</th><th>Pitch</th><th>EV</th><th>LA</th><th>Bat speed</th>${foot ? "<th>Foot down</th>" : ""}<th>Head drop</th><th>Clip</th></tr></thead><tbody>
-    ${L.swings.slice().sort((a, b) => String(b.date).localeCompare(String(a.date))).map(s => `<tr><td>${day(s.date)}</td><td>${esc(s.pitch_type ?? "")} ${s.pitch_speed ? s.pitch_speed.toFixed(0) : ""}</td><td>${s.launch_speed != null ? s.launch_speed.toFixed(1) : dash}</td><td>${s.launch_angle ?? dash}</td><td>${s.bat_speed != null ? s.bat_speed.toFixed(1) : dash}</td>${foot ? `<td>${s.measured && s.down_to_contact_ms != null ? Math.round(s.down_to_contact_ms) + " ms" : dash}</td>` : ""}<td>${s.measured && s.head_drop != null ? s.head_drop.toFixed(2) : dash}</td><td>${s.page ? `<a href="${esc(s.page)}" target="_blank" rel="noopener">MLB.com</a>` : ""}</td></tr>`).join("")}
+    ${L.swings.slice().sort((a, b) => String(b.date).localeCompare(String(a.date))).map(s => `<tr${hvA("ls", state.lab, s.play_id)}><td>${day(s.date)}</td><td>${esc(s.pitch_type ?? "")} ${s.pitch_speed ? s.pitch_speed.toFixed(0) : ""}</td><td>${s.launch_speed != null ? s.launch_speed.toFixed(1) : dash}</td><td>${s.launch_angle ?? dash}</td><td>${s.bat_speed != null ? s.bat_speed.toFixed(1) : dash}</td>${foot ? `<td>${s.measured && s.down_to_contact_ms != null ? Math.round(s.down_to_contact_ms) + " ms" : dash}</td>` : ""}<td>${s.measured && s.head_drop != null ? s.head_drop.toFixed(2) : dash}</td><td>${s.page ? `<a href="${esc(s.page)}" target="_blank" rel="noopener">MLB.com</a>` : ""}</td></tr>`).join("")}
     </tbody></table></div>
   </div>
   <p class="small muted gloss">Terms: ISO is slugging minus batting average. EV90 is his 90th-percentile exit velocity, a read on his hardest contact. Barrel is the share of batted balls with the speed and angle that usually go for extra bases. p is the chance of a gap this large if nothing changed (red when under 0.05).</p>
@@ -717,11 +770,12 @@ function drawSkel(i, root = document) {
     }
   }
   const pre = L.traj.pre, ms = Math.round((i - pre) * 1000 / L.traj.fps);
-  out.push(`<text x="20" y="400" font-size="13" fill="${C.muted}" font-family="Bricolage Grotesque, system-ui">${i === pre ? "Contact" : (ms < 0 ? ms + " ms before contact" : "+" + ms + " ms after contact")}</text>`);
-  out.push(`<text x="380" y="400" font-size="12" text-anchor="end" fill="${C.muted}" font-family="Bricolage Grotesque, system-ui">Dashed: head height at the start</text>`);
+  out.push(`<text x="20" y="400" font-size="13" fill="${C.muted}" font-family="Roboto Condensed, Helvetica Neue, Arial, sans-serif">${i === pre ? "Contact" : (ms < 0 ? ms + " ms before contact" : "+" + ms + " ms after contact")}</text>`);
+  out.push(`<text x="380" y="400" font-size="12" text-anchor="end" fill="${C.muted}" font-family="Roboto Condensed, Helvetica Neue, Arial, sans-serif">Dashed: head height at the start</text>`);
   svg.innerHTML = out.join("");
   const lab = $(root, "flabel"); if (lab) lab.textContent = (ms > 0 ? "+" : "") + ms + " ms";
   const sc = $(root, "scrub"); if (sc && +sc.value !== i) sc.value = i;
+  if (hvActive && hvActive === svg) hvShow(svg, hvX, !!hvPinned);
 }
 function bindSwing() {
   const L = D.labs[state.lab];
@@ -766,9 +820,9 @@ function viewCatchers() {
     <h2>Calls got sharper in 2026. Framing paid 10-23% less, depending on whose model.</h2>
     <p class="answer">My public model matches Baseball Savant's framing runs (r ${r(2024)}, ${r(2025)}, ${r(2026)}). In the first ABS season, takes with an uncertain call fell from ${(100 * S.seasons[2025].zone.uncertain_share).toFixed(0)}% to ${(100 * S.seasons[2026].zone.uncertain_share).toFixed(0)}%. Framing's spread per pitch fell <strong>${drop(2026, "sd_per_1000")}%</strong> on my model and <strong>${drop(2026, "sd_savant_per_1000")}%</strong> on Savant's, after ${drop(2025, "sd_per_1000")}% and ${drop(2025, "sd_savant_per_1000")}% the year before, so the ABS share can't be pinned down on one season. Discount a catcher's pre-2026 framing by ${Math.min(drop(2026, "sd_per_1000"), drop(2026, "sd_savant_per_1000"))}-${Math.max(drop(2026, "sd_per_1000"), drop(2026, "sd_savant_per_1000"))}% when pricing him.</p></div>
     <div class="tiles">
-      <div class="tile"><span class="v num">$${S.spread[2025].full_time_sd_dollars.toFixed(1)}M</span><span class="k">one SD of framing for a full-time catcher (7,000 takes), 2025</span></div>
-      <div class="tile"><span class="v num">$${S.spread[2026].full_time_sd_dollars.toFixed(1)}M</span><span class="k">the same in 2026 ($11.23M a win, 10 runs a win)</span></div>
-      <div class="tile"><span class="v num">${P.r_25_26.toFixed(2)}</span><span class="k">2025 to 2026 correlation, down from ${P.r_24_25.toFixed(2)}, on the same ${P.catchers} catchers; the drop isn't significant (95% range ${sgn(P.diff_lo, 2)} to ${sgn(P.diff_hi, 2)})</span></div>
+      <div class="tile"${hvA("ct", 2025)}><span class="v num">$${S.spread[2025].full_time_sd_dollars.toFixed(1)}M</span><span class="k">one SD of framing for a full-time catcher (7,000 takes), 2025</span></div>
+      <div class="tile"${hvA("ct", 2026)}><span class="v num">$${S.spread[2026].full_time_sd_dollars.toFixed(1)}M</span><span class="k">the same in 2026 ($11.23M a win, 10 runs a win)</span></div>
+      <div class="tile"${hvA("ct", "pair")}><span class="v num">${P.r_25_26.toFixed(2)}</span><span class="k">2025 to 2026 correlation, down from ${P.r_24_25.toFixed(2)}, on the same ${P.catchers} catchers; the drop isn't significant (95% range ${sgn(P.diff_lo, 2)} to ${sgn(P.diff_hi, 2)})</span></div>
     </div></div>
   <div class="filters" role="group" aria-label="Season">
     <div class="seg" data-k="season">${[2024, 2025, 2026].map(s => `<button type="button" data-v="${s}" aria-pressed="${state.season === s}">${s}${s === 2026 ? " (ABS)" : ""}</button>`).join("")}</div>
@@ -778,9 +832,9 @@ function viewCatchers() {
     <div class="panel lb" style="padding:0 0 2px;overflow-x:auto"><div id="lb"></div></div>
     <div style="display:grid;gap:16px;align-content:start">
       <div class="panel" style="display:grid;gap:8px"><h3>The spread, season by season</h3><svg id="spread" class="spread" viewBox="0 0 460 260" style="width:100%;height:auto" role="img" aria-label="Framing runs by catcher and season"></svg>
-        <p class="small muted">Each dot is a catcher with 1,500+ takes; pitcher- and park-adjusted runs. Red: Patrick Bailey. In the table, Savant is Baseball Savant's own framing runs, and Pctl ranks the catcher among that season's catchers (red high, blue low).</p></div>
+        <p class="small muted">Each dot is a catcher with 1,500+ takes (point at or tap one for his three seasons); pitcher- and park-adjusted runs. Red: Patrick Bailey. In the table, Savant is Baseball Savant's own framing runs, and Pctl ranks the catcher among that season's catchers (red high, blue low).</p></div>
       <div class="panel" style="display:grid;gap:6px"><h3>This winter's free-agent catchers</h3>
-        ${["Tyler Stephenson", "Carson Kelly"].map(n => { const c = F.catchers.find(x => x.name === n); if (!c) return ""; return `<p><b>${n}</b>: ${[2024, 2025, 2026].map(s => c.seasons[s] ? sgn(c.seasons[s].adj) : "n/a").join(" / ")} runs (2024 / 2025 / 2026). ${n === "Tyler Stephenson" ? "Near the bottom of the league the last two seasons. My board's $9.0M a year runs on Baseball-Reference WAR, which carries little framing, so a club that prices framing should pay less." : "About average, and steady."}</p>`; }).join("")}
+        ${["Tyler Stephenson", "Carson Kelly"].map(n => { const c = F.catchers.find(x => x.name === n); if (!c) return ""; return `<p><b class="hvn"${hvA("c", c.id, 2026)}>${n}</b>: ${[2024, 2025, 2026].map(s => c.seasons[s] ? sgn(c.seasons[s].adj) : "n/a").join(" / ")} runs (2024 / 2025 / 2026). ${n === "Tyler Stephenson" ? "Near the bottom of the league the last two seasons. My board's $9.0M a year runs on Baseball-Reference WAR, which carries little framing, so a club that prices framing should pay less." : "About average, and steady."}</p>`; }).join("")}
       </div>
     </div>
   </div>
@@ -793,7 +847,8 @@ function renderLB(root = document) {
   $(root, "csum").textContent = `${rows.length} catchers with 1,500+ takes`;
   const bar = v => { const w = Math.abs(v) / max * 50; return `<svg viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true"><line x1="50" x2="50" y1="0" y2="14" stroke="${C.soft}" stroke-width=".6"/><rect x="${v < 0 ? 50 - w : 50}" y="2" width="${w}" height="10" fill="${v < 0 ? C.blue : C.red}"/></svg>`; };
   $(root, "lb").innerHTML = `<table class="fr"><caption class="ponly" style="text-align:left;font-weight:700;padding-bottom:4px">${s} framing leaderboard</caption><thead><tr><th scope="col">Rk</th><th scope="col" class="l">Catcher</th><th scope="col" class="hm">Takes</th><th scope="col" class="l bar">Runs lost / gained</th><th scope="col">Runs</th><th scope="col" class="hm">Savant</th><th scope="col" class="hm">Pctl</th></tr></thead><tbody>` +
-    rows.map((c, i) => { const v = c.seasons[s], p = rankPct(v.adj, pool); return `<tr><td class="num muted">${i + 1}</td><td class="l"><span class="who">${head(c)}<span><span class="nm" style="font-weight:600">${esc(c.name)}</span><span class="meta">${club(c.team)}</span></span></span></td><td class="hm">${v.takes.toLocaleString()}</td><td class="bar">${bar(v.adj)}</td><td style="font-weight:700;color:${v.adj < 0 ? C.blue : C.red}">${sgn(v.adj)}</td><td class="hm muted">${v.savant == null ? "\u2014" : sgn(v.savant)}</td><td class="hm"><span class="bub solo" style="background:${pcol(p)};color:${onFill(pcol(p))}">${p}</span></td></tr>`; }).join("") + `</tbody></table>`;
+    rows.map((c, i) => { const v = c.seasons[s], p = rankPct(v.adj, pool); return `<tr${hvA("c", c.id, s)}><td class="num muted">${i + 1}</td><td class="l"><span class="who">${head(c)}<span><span class="nm" style="font-weight:600">${esc(c.name)}</span><span class="meta">${club(c.team)}</span></span></span></td><td class="hm">${v.takes.toLocaleString()}</td><td class="bar">${bar(v.adj)}</td><td style="font-weight:700;color:${v.adj < 0 ? C.blue : C.red}">${sgn(v.adj)}</td><td class="hm muted">${v.savant == null ? "\u2014" : sgn(v.savant)}</td><td class="hm"><span class="bub solo" style="background:${pcol(p)};color:${onFill(pcol(p))}">${p}</span></td></tr>`; }).join("") + `</tbody></table>`;
+  hvGone();
 }
 function renderSpread(root = document) {
   const svg = $(root, "spread"); if (!svg) return;
@@ -802,7 +857,7 @@ function renderSpread(root = document) {
   let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
   for (const c of D.framing.catchers) for (const [s, v] of Object.entries(c.seasons)) {
     const bailey = c.name === "Patrick Bailey";
-    out.push(`<circle cx="${xs[s] + (bailey ? 0 : (rnd() - 0.5) * 60)}" cy="${Y(v.adj)}" r="${bailey ? 6 : 3.6}" fill="${bailey ? C.red : C.blue}" opacity="${bailey ? 1 : 0.55}"><title>${esc(c.name)} ${s}: ${sgn(v.adj)}</title></circle>`);
+    out.push(`<circle cx="${xs[s] + (bailey ? 0 : (rnd() - 0.5) * 60)}" cy="${Y(v.adj)}" r="${bailey ? 6 : 3.6}" fill="${bailey ? C.red : C.blue}" opacity="${bailey ? 1 : 0.55}"${hvM("c", c.id, s)}></circle>`);
   }
   for (const s of [2024, 2025, 2026]) out.push(`<text x="${xs[s]}" y="250" text-anchor="middle" font-size="12" fill="${C.ink}" font-weight="600">${s}${s === 2026 ? " (ABS)" : ""}</text>`);
   svg.innerHTML = out.join("");
@@ -825,20 +880,20 @@ function viewMethod() {
   <div class="method">
     <div class="panel"><h3>Market board</h3><ul>
       <li>Fit on the 2025-26 class (${bt.n} signed players with an MLB record), each player left out of his own fit.</li>
-      <li>The edge is one player: without Kyle Tucker, ${money2(D.robust.without_tucker.mae_mine)} against ${money2(D.robust.without_tucker.mae_mlbtr)}; without Tucker and Bichette, MLBTR is better. The median miss is ${money2(D.robust.median_mine)} against ${money2(D.robust.median_mlbtr)}.</li>
+      <li><span class="hvn"${hvA("mt", "robust")}>The edge is one player</span>: without Kyle Tucker, ${money2(D.robust.without_tucker.mae_mine)} against ${money2(D.robust.without_tucker.mae_mlbtr)}; without Tucker and Bichette, MLBTR is better. The median miss is ${money2(D.robust.median_mine)} against ${money2(D.robust.median_mlbtr)}.</li>
       <li>Scoring rules, set before any called player signed: MLBTR's own signing line; major league deals only; first seen by April 30, 2027; deferrals at face value; a deal at exactly MLBTR's salary counts as not above it.</li>
-      <li>Average salary error ${money2(bt.mae_mine)} against MLBTR's ${money2(bt.mae_mlbtr)}. The 95% range of the edge runs -$${Math.abs(bt.edge_lo).toFixed(2)}M to +$${bt.edge_hi.toFixed(2)}M, so it could be zero.</li>
+      <li>Average salary error <span class="hvn"${hvA("mt", "mae")}>${money2(bt.mae_mine)} against MLBTR's ${money2(bt.mae_mlbtr)}</span>. The 95% range of the edge runs -$${Math.abs(bt.edge_lo).toFixed(2)}M to +$${bt.edge_hi.toFixed(2)}M, so it could be zero.</li>
       <li>Last winter, MLBTR's salaries ran ${money(-bt.mlbtr_bias)} a year low, its years ${bt.years_bias.toFixed(1)} long, its totals $${bt.total_bias.toFixed(1)}M high.</li>
-      <li>Brier score ${bt.brier.toFixed(3)} on "signs above MLBTR's salary" (lower is better); always guessing the ${Math.round(bt.base_rate * 100)}% base rate scores ${bt.brier_base.toFixed(3)}, a coin flip 0.250.</li>
+      <li>Brier score <span class="hvn"${hvA("bt", 2)}>${bt.brier.toFixed(3)}</span> on "signs above MLBTR's salary" (lower is better); always guessing the ${Math.round(bt.base_rate * 100)}% base rate scores ${bt.brier_base.toFixed(3)}, a coin flip 0.250.</li>
       <li>Partly in-sample: the spread behind the probabilities and the Brier score come from the same winter, and I chose the reliever and age terms after seeing it. This winter is the clean test.</li>
       <li>The calls are frozen in the repo (market/calls_2026-27.json); scoring reads the signing lines MLBTR adds to its own list.</li></ul>
       <p class="small"><a href="${REPO}2027-market-board.md" target="_blank" rel="noopener">Full report</a></p></div>
     <div class="panel"><h3>Catcher framing</h3><ul>
       <li>Called-strike model on ${(F.seasons[2024].takes + F.seasons[2025].takes + F.seasons[2026].takes).toLocaleString()} takes, fit out of fold by game; a strike valued count by count from run expectancy.</li>
-      <li>Matches Savant's framing runs at r ${F.seasons[2024].savant.r_raw.toFixed(2)}, ${F.seasons[2025].savant.r_raw.toFixed(2)}, ${F.seasons[2026].savant.r_raw.toFixed(2)}.</li>
-      <li>Within-season reliability ${F.seasons[2026].split_half.r_season.toFixed(2)} (odd vs even games, 2026).</li>
+      <li>Matches Savant's framing runs at <span class="hvn"${hvA("mt", "savant")}>r ${F.seasons[2024].savant.r_raw.toFixed(2)}, ${F.seasons[2025].savant.r_raw.toFixed(2)}, ${F.seasons[2026].savant.r_raw.toFixed(2)}</span>.</li>
+      <li>Within-season reliability <span class="hvn"${hvA("mt", "split")}>${F.seasons[2026].split_half.r_season.toFixed(2)}</span> (odd vs even games, 2026).</li>
       <li>The drop is measured per 1,000 takes (mine) and per 1,000 pitches (Savant's), so more catchers sharing the 2026 takes doesn't inflate it: ${dropM(2026, "sd_per_1000")}% on mine, ${dropM(2026, "sd_savant_per_1000")}% on Savant's, after ${dropM(2025, "sd_per_1000")}% and ${dropM(2025, "sd_savant_per_1000")}% the year before.</li>
-      <li>Year to year on the same ${F.year_to_year_paired.catchers} catchers: r ${F.year_to_year_paired.r_24_25.toFixed(2)} (2024 to 2025), then ${F.year_to_year_paired.r_25_26.toFixed(2)} (2025 to 2026); the 95% range of the drop, ${sgn(F.year_to_year_paired.diff_lo, 2)} to ${sgn(F.year_to_year_paired.diff_hi, 2)}, includes zero.</li>
+      <li><span class="hvn"${hvA("ct", "pair")}>Year to year on the same ${F.year_to_year_paired.catchers} catchers</span>: r ${F.year_to_year_paired.r_24_25.toFixed(2)} (2024 to 2025), then ${F.year_to_year_paired.r_25_26.toFixed(2)} (2025 to 2026); the 95% range of the drop, ${sgn(F.year_to_year_paired.diff_lo, 2)} to ${sgn(F.year_to_year_paired.diff_hi, 2)}, includes zero.</li>
       <li>Statcast appears to log the call that stood after a challenge, so challenge wins are already inside framing runs; don't add them twice.</li>
       <li>The umpire isn't in public data; home park stands in for part of the crew.</li></ul>
       <p class="small"><a href="${REPO}2026-catcher-framing.md" target="_blank" rel="noopener">Full report</a></p></div>
@@ -853,14 +908,326 @@ function viewMethod() {
       <p class="small"><a href="${REPO}2026-arozarena-swing-breakdown.md" target="_blank" rel="noopener">Full report</a></p></div>
     <div class="panel"><h3>Bat tracking and power</h3><ul>
       <li>Fit on 2024 to 2025 (${bp.n_train} hitters), scored on 2025 to 2026 (${bp.n_test}).</li>
-      <li>The batted-ball model is chosen by cross-validation on the training pairs alone: ISO plus barrel rate (out-of-sample R\u00b2 ${bp.ball["ISO + barrel rate"].r2.toFixed(2)}; ISO plus 90th-percentile exit velocity did better on the test pairs, ${bp.ball["ISO + 90th-pct EV"].r2.toFixed(2)}).</li>
-      <li>Bat speed and swing length cut about 1% of the error (${bp.adds.bat_speed.pct.toFixed(1)}% and ${bp.adds.swing_length.pct.toFixed(1)}%); nothing moves it by 0.001 ISO.</li>
+      <li>The batted-ball model is chosen by cross-validation on the training pairs alone: ISO plus barrel rate (<span class="hvn"${hvA("mt", "ball")}>out-of-sample R\u00b2 ${bp.ball["ISO + barrel rate"].r2.toFixed(2)}</span>; ISO plus 90th-percentile exit velocity did better on the test pairs, ${bp.ball["ISO + 90th-pct EV"].r2.toFixed(2)}).</li>
+      <li>Bat speed and swing length cut about 1% of the error (<span class="hvn"${hvA("mt", "adds")}>${bp.adds.bat_speed.pct.toFixed(1)}% and ${bp.adds.swing_length.pct.toFixed(1)}%</span>); nothing moves it by 0.001 ISO.</li>
       <li>A drop in bat speed adds no warning of its own: ${bp.change.per_mph.toFixed(3)} ISO per mph (95% range ${bp.change.lo.toFixed(3)} to +${bp.change.hi.toFixed(3)}, ${bp.change.n} hitters).</li>
-      <li>Bat speed is among the steadiest numbers (${bp.stability.bat_speed.toFixed(2)} year to year; swing length ${bp.stability.swing_length.toFixed(2)}); hard-hit exit velocity already carries most of it.</li></ul></div>
+      <li>Bat speed is among the steadiest numbers (<span class="hvn"${hvA("mt", "stab")}>${bp.stability.bat_speed.toFixed(2)} year to year</span>; swing length ${bp.stability.swing_length.toFixed(2)}); hard-hit exit velocity already carries most of it.</li></ul></div>
   </div>
   <p class="small muted gloss">Terms: a Brier score is the average squared miss of a probability (0 is perfect, 0.25 is a coin flip). r is a correlation. R\u00b2 is the share of the variation a model explains on players it never saw. A 95% range is where the true value sits in 95 of 100 resamples.</p>
 </section>`;
 }
+
+/* ---------------- hover cards ----------------
+   The pattern from my snippets pages: point at a number (or focus it, or tap it on a phone) and a card breaks it down
+   further. Every number in a card is read from data.json, or is arithmetic on it shown in the card. Each target
+   carries data-hv="kind|key..."; HV[kind] writes the card. */
+const hvEl = document.getElementById("hv");
+let hvTouch = false, hvPinned = null, hvActive = null, hvX = null;
+const hvKey = k => k.map(x => encodeURIComponent(x)).join("|");
+const hvA = (...k) => ` data-hv="${hvKey(k)}" tabindex="0"`;   // a target of its own: keyboard and pointer
+const hvM = (...k) => ` data-hv="${hvKey(k)}"`;                 // a mark inside a row or drawing: pointer only
+const HT = {
+  head: (p, sub) => `<div class="t-head">${club(clubOf(p))}<span class="t-name">${esc(p.name)}</span></div>${sub ? `<div class="t-sub">${sub}</div>` : ""}`,
+  big: items => `<div class="big">${items.map(([v, l, c]) => `<div><b${c ? ` style="color:${c}"` : ""}>${v}</b><span>${l}</span></div>`).join("")}</div>`,
+  table: (cols, rows, hl) => `<table><thead><tr>${cols.map(c => `<th>${c}</th>`).join("")}</tr></thead><tbody>${rows.map((r, i) => `<tr${hl === i ? ' class="hl"' : ""}>${r.map(v => `<td>${v == null || v === "" ? "—" : v}</td>`).join("")}</tr>`).join("")}</tbody></table>`,
+  sec: t => `<div class="sec">${t}</div>`,
+  kv: pairs => `<dl class="kv">${pairs.map(([k, v]) => `<div><dt>${k}</dt><dd>${v == null || v === "" ? "—" : v}</dd></div>`).join("")}</dl>`,
+  note: t => `<p class="note">${t}</p>`,
+};
+const f2 = v => v == null ? null : v.toFixed(2), f3 = v => v == null ? null : v.toFixed(3);
+const sg3 = v => (v >= 0 ? "+" : "-") + Math.abs(v).toFixed(3);
+const gapTxt = g => g == null ? "—" : Math.abs(g) < 0.05 ? "Even" : (g > 0 ? "+" : "-") + "$" + half(Math.abs(g), 1) + "M";
+const roleTxt = b => b.reliever ? "Reliever" : b.pos;
+const WARW = {2024: 3, 2025: 4, 2026: 5};   // 5/4/3: his 2026, 2025 and 2024 WAR
+const warRows = b => b.war ? [[2024, b.war[2]], [2025, b.war[1]], [2026, b.war[0]]] : [];
+const overHow = b => `My probability that he signs for more than MLBTR's ${aav(b.mlbtr_aav)} a year: a log-normal salary centered on my ${money(b.my_aav)}, with a spread of ${D.backtest.sigma.toFixed(3)} on the log scale (my model's leave-one-out miss on last winter's ${D.backtest.n} signings), rounded to the nearest 5% and kept between 5% and 95%.`;
+const overShort = b => `Log-normal around my ${money(b.my_aav)}, spread ${D.backtest.sigma.toFixed(3)} on the log scale (last winter's leave-one-out miss, ${D.backtest.n} signings), rounded to the nearest 5%, kept within 5-95%.`;
+const noCall = b => `No call: ${b.call === "no MLB record" ? "no MLB record for the model to read" : "he signed before my Nov. 23 calls"}.`;
+function signingTxt(b) {
+  if (!b.signed) return `<p>Not on MLBTR's signed list at the Nov. 23 build.</p>`;
+  return `<p>${esc(b.signed)}${b.note ? ` (${esc(b.note)})` : ""}</p>` + (b.actual_aav != null ? `<p>Scored at ${aav(b.actual_aav)} a year${b.actual_years ? ` over ${b.actual_years} year${b.actual_years > 1 ? "s" : ""}` : ""}.</p>` : "");
+}
+const PITCH = {FF: "four-seam fastball", SI: "sinker", FC: "cutter", SL: "slider", ST: "sweeper", SV: "slurve", CU: "curveball", KC: "knuckle curve", CS: "slow curve",
+  CH: "changeup", FS: "splitter", FO: "forkball", SC: "screwball", KN: "knuckleball", EP: "eephus"};
+const MEAS = {down_to_contact_ms: ["Foot down to contact", v => Math.round(v) + " ms"], lift_to_contact_ms: ["Leg lift to contact", v => Math.round(v) + " ms"],
+  hip_lead_ms: ["Hips square before shoulders", v => Math.round(v) + " ms"], head_drop: ["Head drop (torso lengths)", v => v.toFixed(2)], shoulder_tilt: ["Shoulder tilt at contact", v => v.toFixed(1) + "°"]};
+const testFmt = (k, v) => k === "head_drop" ? sgn(v, 2) : k === "shoulder_tilt" ? sgn(v, 1) + "°" : (v > 0 ? "+" : "") + Math.round(v) + " ms";
+const pTxt = p => p < 0.001 ? "&lt;0.001" : p.toFixed(p < 0.05 ? 3 : 2);
+const HV = {
+  /* market board: the whole call */
+  b(rank) {
+    const b = P(+rank), g = b.my_aav == null ? null : b.my_aav - b.mlbtr_aav;
+    let h = HT.head(b, `${esc(roleTxt(b))}${b.age ? `, ${Math.round(b.age)} in 2026 (Baseball-Reference season age)` : ""}. MLBTR rank ${b.rank}.`)
+      + HT.big([[aav(b.mlbtr_aav), "MLBTR AAV", C.blue], [b.my_aav != null ? money(b.my_aav) : "No call", "My AAV", C.red], [gapTxt(g), "Gap a year"]])
+      + `<p><b>MLBTR's call, Nov. 2:</b> ${esc(b.mlbtr)}, ${aav(b.mlbtr_aav)} a year.</p>`;
+    h += b.war ? HT.table(["B-Ref WAR", "2024", "2025", "2026", "5/4/3"], [["WAR", ...warRows(b).map(([s, w]) => w.toFixed(1)), b.wwar != null ? `<b>${half(b.wwar, 1)}</b>` : null], ["Weight", "3", "4", "5", ""]]) : `<p>No MLB record.</p>`;
+    h += HT.sec("Chance above MLBTR") + (b.p_over != null ? `<p><b>${pct(b.p_over)}</b> that he signs for more than ${aav(b.mlbtr_aav)} a year.</p>` + HT.note(overShort(b)) : `<p>${noCall(b)}</p>`);
+    return h + HT.sec("Signing") + signingTxt(b);
+  },
+  /* my AAV, term by term */
+  bm(rank) {
+    const b = P(+rank), m = D.model;
+    if (b.my_aav == null) return HT.head(b, esc(roleTxt(b))) + `<p>${noCall(b)}</p>`;
+    const w = Math.min(8, Math.max(-1, b.wwar)), t = [
+      ["Constant", "", m.const, m.const], ["MLBTR's AAV, logged", aav(b.mlbtr_aav), m.log_mlbtr, m.log_mlbtr * Math.log(b.mlbtr_aav)],
+      ["5/4/3 WAR", half(b.wwar, 2), m.wwar, m.wwar * w], ["2026 WAR", b.war[0].toFixed(2), m.war0, m.war0 * b.war[0]],
+      ["Reliever", b.reliever ? "Yes" : "No", m.reliever, m.reliever * (b.reliever ? 1 : 0)], ["Age minus 30", String(Math.round(b.age - 30)), m.age30, m.age30 * (b.age - 30)]];
+    const sum = t.reduce((s, r) => s + r[3], 0);
+    return HT.head(b, "How my AAV is built") + HT.big([[money(b.my_aav), "My AAV", C.red], [aav(b.mlbtr_aav), "MLBTR AAV", C.blue], [gapTxt(b.my_aav - b.mlbtr_aav), "Gap a year"]])
+      + HT.table(["Term", "Input", "Coef.", "Adds"], [...t.map(r => [r[0], r[1], r[2].toFixed(4), sg3(r[3])]), ["Sum: log of my AAV", "", "", sum.toFixed(3)]], 6)
+      + HT.note(`A least-squares fit of the log of last winter's AAVs on these terms (${D.backtest.n} signed players with an MLB record). e to the sum is my AAV before it is rounded to $0.1M.`);
+  },
+  /* the chance column */
+  bp(rank) {
+    const b = P(+rank), bt = D.backtest;
+    if (b.p_over == null) return HT.head(b, esc(roleTxt(b))) + `<p>${noCall(b)}</p>`;
+    return HT.head(b, "Chance he signs above MLBTR's AAV") + HT.big([[pct(b.p_over), "Chance above"], [aav(b.mlbtr_aav), "MLBTR AAV", C.blue], [money(b.my_aav), "My AAV", C.red]])
+      + `<p>${overHow(b)}</p>` + HT.sec("How these chances scored last winter")
+      + HT.table(["Brier score (lower is better)", ""], [["My chances", bt.brier.toFixed(3)], [`Always ${Math.round(bt.base_rate * 100)}%, last winter's base rate`, bt.brier_base.toFixed(3)], ["A coin flip", "0.250"]])
+      + HT.note("Partly in-sample: the spread and the Brier score come from the same winter. This winter is the clean test.");
+  },
+  /* the signing and how it scores */
+  bs(rank) {
+    const b = P(+rank);
+    let h = HT.head(b, `${esc(roleTxt(b))}. MLBTR's call: ${esc(b.mlbtr)}.`) + HT.sec("Signing") + signingTxt(b);
+    if (b.actual_aav != null && b.call === "called") {
+      const mine = Math.abs(b.my_aav - b.actual_aav), th = Math.abs(b.mlbtr_aav - b.actual_aav);
+      h += HT.table(["", "AAV", "Miss"], [["Signed", aav(b.actual_aav), ""], ["Mine", money(b.my_aav), money(mine)], ["MLBTR", aav(b.mlbtr_aav), money(th)]]);
+    } else if (b.call !== "called") h += HT.note(noCall(b) + (b.actual_aav != null ? ` MLBTR's call missed by ${money(Math.abs(b.mlbtr_aav - b.actual_aav))} a year.` : ""));
+    else h += HT.note("Scored when MLBTR adds the signing line to its list: major league deals first seen by April 30, 2027, deferrals at face value.");
+    return h;
+  },
+  /* 5/4/3 WAR, season by season */
+  bw(rank) {
+    const b = P(+rank); if (!b.war) return HT.head(b) + `<p>No MLB record.</p>`;
+    const rows = warRows(b), tot = rows.reduce((s, [y, w]) => s + WARW[y] * w, 0);
+    return HT.head(b, "Baseball-Reference WAR, weighted 5/4/3") + HT.big([[half(b.wwar, 1), "5/4/3 WAR"], [b.war[0].toFixed(1), "2026 WAR"]])
+      + HT.table(["Season", "WAR", "Weight", "Weight x WAR"], [...rows.map(([y, w]) => [y, w.toFixed(2), WARW[y], (WARW[y] * w).toFixed(2)]), ["Sum / 12", "", "12", `${tot.toFixed(2)} / 12 = ${half(b.wwar, 2)}`]], 3);
+  },
+  /* a Savant percentile bubble */
+  sv(rank, label) {
+    const b = P(+rank), s = b.savant, r = s.rows.find(x => x.label === label); if (!r) return "";
+    const Pk = s.kind === "pitcher", lead = Pk ? "xERA" : "xwOBA", fm = v => v == null ? null : (SVF[r.fmt] || String)(v);
+    const src = r.from_csv ? `Savant's <a href="${Pk ? D.savant.csv : D.savant.csv_batter}" target="_blank" rel="noopener">percentile-rankings export</a>` : `his <a href="${D.savant.page}${b.mlbam}" target="_blank" rel="noopener">Savant player page</a> (the export leaves this one out)`;
+    return HT.head(b, `Baseball Savant percentile rank: ${esc(label)}`)
+      + HT.big([[fm(r.value) ?? "—", `${esc(label)}, 2026`], [ord(r.pctl), "2026 percentile", pcol(r.pctl)], [r.pctl25 != null ? ord(r.pctl25) : "—", "2025 percentile"]])
+      + HT.table(["Season", "Value", "Percentile"], [[2026, fm(r.value), ord(r.pctl)], [2025, fm(r.value25), r.pctl25 != null ? ord(r.pctl25) : null]], 0)
+      + HT.sec("Pool and source") + `<p>Savant ranks ${D.savant.pools[s.kind]} ${Pk ? "pitchers" : "hitters"} on ${lead} in 2026; he had ${s.pa} ${Pk ? "batters faced" : "plate appearances"}. From ${src}, pulled ${day(D.savant.pulled)}.</p>`
+      + HT.note(`Savant's percentiles run from 1 (worst) to 100 (best), so ${Pk ? "a low walk rate, or a high strikeout rate, ranks high for a pitcher" : "a low strikeout rate ranks high for a hitter"}.`);
+  },
+  /* my own rank where Savant has none */
+  lg(rank, key) {
+    const b = P(+rank), L = b.league, r = L.rows.find(x => x.key === key), f = LFMT[key] || String;
+    return HT.head(b, `My rank: ${esc(r.label)}`) + HT.big([[f(r.value), `${esc(r.label)}, 2026`], [ord(r.pctl), "2026 percentile", pcol(r.pctl)], [r.pctl25 != null ? ord(r.pctl25) : "—", "2025 percentile"]])
+      + HT.table(["Season", "Value", "Percentile", "Pool"], [[2026, f(r.value), ord(r.pctl), L.n], [2025, r.value25 != null ? f(r.value25) : null, r.pctl25 != null ? ord(r.pctl25) : null, L.n25]], 0)
+      + HT.sec("Pool and source") + `<p>Ranked among hitters with ${L.min_pa}+ PA that season, from Statcast batted balls (reports/outputs/bat_power_seasons.json). Savant doesn't rank EV90, his 90th-percentile exit velocity, so this rank is mine.</p>`
+      + (r.pctl25 == null ? HT.note(`He had under ${L.min_pa} PA in 2025, so no 2025 rank.`) : "");
+  },
+  /* rank among this winter's called players */
+  cr(rank, key) {
+    const b = P(+rank), called = D.board.filter(x => x.call === "called" && x[key] != null), v = b[key];
+    const f = {wwar: x => half(x, 1), my_aav: money, p_over: pct}[key], lab = {wwar: "5/4/3 WAR", my_aav: "My AAV", p_over: "Chance above MLBTR"}[key];
+    const vals = called.map(x => x[key]).sort((x, y) => y - x), nth = vals.filter(x => x > v).length + 1, ties = vals.filter(x => x === v).length;
+    return HT.head(b, `${lab}, ranked among this winter's ${called.length} called players`)
+      + HT.big([[f(v), lab], [ord(rankPct(v, vals)), "Percentile"], [`${nth}${ties > 1 ? "=" : ""} of ${called.length}`, "Highest first"]])
+      + HT.table(["Pool", lab], [["Highest", f(vals[0])], ["Median", f(median(vals))], ["Lowest", f(vals[vals.length - 1])]])
+      + HT.note("The percentile counts the called players below him, plus half of any tie. It ranks the board's inputs and outputs, not a league leaderboard.");
+  },
+  /* a catcher, his three seasons */
+  c(id, season) {
+    const c = D.framing.catchers.find(x => x.id === +id), s = +season, v = c && c.seasons[s]; if (!v) return "";
+    const pool = y => D.framing.catchers.filter(x => x.seasons[y]).map(x => x.seasons[y].adj), yrs = [2024, 2025, 2026].filter(y => c.seasons[y]);
+    const p = rankPct(v.adj, pool(s));
+    return HT.head(c, `Framing runs, ${s}${s === 2026 ? ", the first ABS season" : ""}`)
+      + HT.big([[sgn(v.adj), "Runs (mine)", v.adj < 0 ? C.blue : C.red], [v.savant == null ? "—" : sgn(v.savant), "Savant runs"], [ord(p), `Pctl of ${pool(s).length}`, pcol(p)]])
+      + HT.table(["Season", "Takes", "Runs", "Raw", "Savant", "Pctl"], yrs.map(y => { const x = c.seasons[y]; return [y, x.takes.toLocaleString(), sgn(x.adj), sgn(x.raw), x.savant == null ? null : sgn(x.savant), ord(rankPct(x.adj, pool(y)))]; }), yrs.indexOf(s))
+      + HT.note(`Runs: my framing runs, pitcher- and park-adjusted. Raw: before that adjustment. Savant: Baseball Savant's framing runs. Pctl ranks him among that season's catchers with 1,500+ takes (${yrs.map(y => pool(y).length).join(", ")}). A season under 1,500 takes isn't shown.`);
+  },
+  /* swing lab: the three tiles */
+  lt(k, i) {
+    const L = D.labs[k], pr = D.projections[String(L.mlbam)] || {};
+    if (+i === 0) {
+      const ys = [2024, 2025, 2026], t = L.tests.head_drop;
+      return HT.head(L, "Home-run clips measurable from the center-field camera") + HT.big([[`${L.measured} / ${L.clips}`, "Measured / home runs"], [L.excluded_by_eye, "Removed by eye"]])
+        + HT.table(["Season", "Home runs", "Measured"], [...ys.map(y => [y, L.swings.filter(s => s.season === y).length, L.swings.filter(s => s.season === y && s.measured).length]), ["All", L.clips, L.measured]], 3)
+        + HT.sec("The test") + `<p>Each measure compares the 2026 median with 2024-25's by permutation: head drop on ${t.n_b} swings in 2026 against ${t.n_a} in 2024-25 (${t.diff == null ? "too few to test" : `change ${testFmt("head_drop", t.diff)}, p ${pTxt(t.p)}`}). A test needs five swings on each side.</p>`;
+    }
+    if (+i === 1) {
+      const F = [["train_2024_25", "Fit on 2024 to 2025 (chosen on training data)"], ["both_pairs", "Fit on both season pairs"], ["pair_2025_26", "Fit on 2025 to 2026"]].filter(([f]) => pr[f] != null);
+      return HT.head(L, "2027 ISO, the same league model fit three ways") + HT.big([[`${iso(L.iso_range[0])}-${iso(L.iso_range[1])}`, "2027 ISO"], [iso(L.iso_2026), "2026 ISO"]])
+        + HT.table(["Fit", "2027 ISO", "Chance he matches 2026"], F.map(([f, l]) => [l, iso(pr[f]), pr.p_match ? pct(pr.p_match[f]) : null]))
+        + HT.note(`The spread of a hitter's ISO around the fit is ${iso(L.iso_sd)} (one SD); the chance comes from it. ISO plus barrel rate, ${D.bat_power.n_train} hitters to train, ${D.bat_power.n_test} to score.`);
+    }
+    const fr = 1000 / L.traj.fps;
+    return HT.head(L, "Contact read by eye") + HT.big([[`${L.eye.lo}-${L.eye.hi}`, "Frames after shoulders square"], [`${Math.round(L.eye.lo * fr)}-${Math.round(L.eye.hi * fr)} ms`, "In time"], [L.eye.n, "Swings read"]])
+      + `<p>On ${L.eye.n} of his swings I stepped through the frames by eye and counted from the frame his shoulders square to the frame of contact. One frame is ${fr.toFixed(1)} ms at ${L.traj.fps} frames a second.</p>`;
+  },
+  /* swing lab: a measure across seasons and its test */
+  lm(k, key) {
+    const L = D.labs[k], [lab, f] = MEAS[key], t = L.tests[key], det = L.detectable && L.detectable[key];
+    return HT.head(L, `${lab}, median by season`)
+      + HT.table(["Season", "Median", "Swings"], L.by_season.map(s => [s.season, s[key] == null ? null : f(s[key]), (L.n_by_measure[key] || {})[s.season] ?? 0]))
+      + HT.sec("2026 against 2024-25") + (t.diff == null ? `<p>Too few to test: ${t.n_b} swings in 2026, ${t.n_a} in 2024-25.</p>`
+        : HT.table(["", ""], [["Change in the median", testFmt(key, t.diff)], ["p (permutation test)", pTxt(t.p)], ["Swings, 2024-25 and 2026", `${t.n_a} and ${t.n_b}`], ...(det != null ? [["Smallest change this sample could detect", key === "head_drop" ? det.toFixed(2) : key === "shoulder_tilt" ? det.toFixed(1) + "°" : Math.round(det) + " ms"]] : [])]))
+      + HT.note("p is the chance of a gap this large if nothing changed. Medians on swings the camera could measure.");
+  },
+  /* swing lab: a Statcast season and the change from the one before */
+  lst(k, season) {
+    const L = D.labs[k], y = +season, s = L.statcast.find(x => x.season === y), q = L.statcast.find(x => x.season === y - 1);
+    const rows = [["PA", "pa", v => String(v), (a, b) => sgn(a - b, 0)], ["ISO", "iso", iso, (a, b) => (a - b >= 0 ? "+" : "-") + iso(Math.abs(a - b))], ["Barrel", "barrel", v => (100 * v).toFixed(1) + "%", (a, b) => sgn(100 * (a - b), 1)],
+      ["EV90 (mph)", "ev90", v => v.toFixed(1), (a, b) => sgn(a - b, 1)], ["Bat speed (mph)", "bat_speed", v => v.toFixed(1), (a, b) => sgn(a - b, 1)], ["Swing length (ft)", "swing_length", v => v.toFixed(2), (a, b) => sgn(a - b, 2)], ["Attack angle", "attack_angle", v => v.toFixed(1) + "°", (a, b) => sgn(a - b, 1)]];
+    return HT.head(L, `Statcast, ${y}, all swings`) + HT.table(["", String(y), q ? `vs ${y - 1}` : ""], rows.map(([l, key, f, d]) => [l, s[key] == null ? null : f(s[key]), q && s[key] != null && q[key] != null ? d(s[key], q[key]) : null]))
+      + HT.note(`Bat speed, length and attack angle on competitive swings${s.bat_speed == null ? "; not tracked for him this season" : ""}. EV90 is his 90th-percentile exit velocity.`);
+  },
+  /* swing lab: one home run */
+  ls(k, id) {
+    const L = D.labs[k], s = L.swings.find(x => x.play_id === id); if (!s) return "";
+    const m = (key) => s.measured && s[key] != null ? MEAS[key][1](s[key]) : null, foot = LABTXT[k].foot;
+    return HT.head(L, `${esc((s.headline || "").trim())}, ${day(s.date)}`)
+      + HT.big([[s.launch_speed != null ? s.launch_speed.toFixed(1) : "—", "Exit velo (mph)"], [s.launch_angle != null ? s.launch_angle + "°" : "—", "Launch angle"], [s.bat_speed != null ? s.bat_speed.toFixed(1) : "—", "Bat speed (mph)"]])
+      + HT.kv([["Park (home club)", s.home_team ? club(s.home_team) : null], ["Pitch", s.pitch_type ? `${esc(PITCH[s.pitch_type] || s.pitch_type)}${s.pitch_speed ? ", " + s.pitch_speed.toFixed(1) + " mph" : ""}` : null], ["Attack angle", s.attack_angle != null ? s.attack_angle.toFixed(1) + "°" : null], ["Season", s.season]])
+      + HT.sec("Measured from the clip") + (s.measured
+        ? HT.kv([["Contact frame", s.contact_frame], ...Object.keys(MEAS).filter(c => foot || (c !== "down_to_contact_ms" && c !== "lift_to_contact_ms")).map(c => [MEAS[c][0], m(c)])])
+        : `<p>Not measured: no usable center-field view, no clean rotation, too small in the frame, or removed by eye.</p>`)
+      + (s.page ? `<p><a href="${esc(s.page)}" target="_blank" rel="noopener">Watch the clip on MLB.com</a>${hvPinned ? "" : `<span class="note"> (click or tap to keep this card open)</span>`}</p>` : "");
+  },
+  /* swing lab: the median skeleton at the frame on screen */
+  lk(k) {
+    const L = D.labs[k], i = state.frame ?? L.traj.pre, ms = Math.round((i - L.traj.pre) * 1000 / L.traj.fps);
+    const headY = (key, j) => { const f = L.traj[key][j]; return f && f[0] && f[0][1] != null ? f[0][1] : null; };
+    const rows = [["early", "2024-25", L.traj.n_early], ["late", "2026", L.traj.n_late]].map(([key, l, n]) => {
+      const a = headY(key, 0), b = headY(key, i); return [l, n, a != null && b != null ? sgn(b - a, 2) : null]; });
+    return HT.head(L, `Median skeleton, ${i === L.traj.pre ? "at contact" : ms < 0 ? -ms + " ms before contact" : ms + " ms after contact"} (frame ${i} of ${L.traj.pre + L.traj.post})`)
+      + HT.table(["Group", "Swings", "Head vs start"], rows)
+      + HT.note("Each group's skeleton is the median of its measured swings frame by frame, aligned on contact and scaled to torso length. Head vs start is the head's height against its height at the first frame, in torso lengths (negative is lower). Scrub or play to move the frame.");
+  },
+  /* board tiles and the method's backtest */
+  bt(i) {
+    const called = D.board.filter(b => b.call === "called"), bt = D.backtest, sc = scoreNow();
+    if (+i === 0) {
+      const pre = D.board.filter(b => b.call !== "called" && b.actual_aav != null);
+      return `<div class="t-name">Called players signed so far</div><div class="t-sub">${sc ? sc.n : 0} of my ${called.length} called players have signed (MLBTR's list, Nov. 23 build).</div>`
+        + (sc ? HT.table(["Player", "Signed", "Mine", "MLBTR"], called.filter(b => b.actual_aav != null).map(b => [esc(b.name), aav(b.actual_aav), money(b.my_aav), aav(b.mlbtr_aav)])) : "")
+        + HT.sec(`Signed before my call (${pre.length}), not scored`) + HT.table(["Player", "Signed AAV", "MLBTR"], pre.map(b => [esc(b.name), aav(b.actual_aav), aav(b.mlbtr_aav)]));
+    }
+    if (+i === 1) return `<div class="t-name">My average miss</div>` + (sc ? HT.table(["", "Mine", "MLBTR"], [["Average miss a year", money(sc.mine), money(sc.theirs)]]) : `<div class="t-sub">No called player has signed yet, so nothing is scored.</div>`)
+      + HT.sec(`Last winter's backtest, ${bt.n} signings`) + HT.table(["", "Mine", "MLBTR"], [["Average miss a year", money2(bt.mae_mine), money2(bt.mae_mlbtr)], ["Without Kyle Tucker", money2(D.robust.without_tucker.mae_mine), money2(D.robust.without_tucker.mae_mlbtr)], ["Median miss", money2(D.robust.median_mine), money2(D.robust.median_mlbtr)]])
+      + HT.note("Scoring rules, set before any called player signed: MLBTR's own signing line, major league deals only, first seen by April 30, 2027, deferrals at face value.");
+    return `<div class="t-name">Backtest Brier score</div><div class="t-sub">On "signs above MLBTR's salary," last winter's ${bt.n} signed players with an MLB record.</div>`
+      + HT.table(["", "Brier"], [["My chances", bt.brier.toFixed(3)], [`Always ${Math.round(bt.base_rate * 100)}% (last winter's base rate)`, bt.brier_base.toFixed(3)], ["A coin flip", "0.250"]])
+      + HT.table(["Inputs", ""], [["Signed above MLBTR's AAV", `${Math.round(bt.base_rate * bt.n)} of ${bt.n}`], ["Spread on the log scale (leave-one-out)", bt.sigma.toFixed(3)]])
+      + HT.note("A Brier score is the average squared miss of a probability: 0 is perfect, 0.25 is a coin flip. Partly in-sample, since the spread comes from the same winter.");
+  },
+  /* catcher tiles */
+  ct(k) {
+    const S = D.framing.summary;
+    if (k === "pair") { const P2 = S.year_to_year_paired; return `<div class="t-name">Framing, year to year</div><div class="t-sub">The same ${P2.catchers} catchers with 1,500+ takes in all three seasons.</div>`
+      + HT.table(["Seasons", "r"], [["2024 to 2025", P2.r_24_25.toFixed(2)], ["2025 to 2026", P2.r_25_26.toFixed(2)]])
+      + HT.table(["The drop", ""], [["95% range of r(24-25) minus r(25-26)", `${sgn(P2.diff_lo, 2)} to ${sgn(P2.diff_hi, 2)}`], ["Resamples with no drop", pct(P2.share_diff_le_0)]])
+      + HT.note("r is a correlation: 1 means the two seasons' lists agree exactly, 0 means no relation. The range includes zero, so the drop isn't significant."); }
+    const y = +k, s = S.spread[y], q = S.spread[y - 1];
+    return `<div class="t-name">One SD of framing, ${y}</div><div class="t-sub">${s.catchers} catchers with 1,500+ takes; ${y === 2026 ? "the first ABS season" : "before ABS"}.</div>`
+      + HT.table(["", String(y), q ? String(y - 1) : ""], [["SD, runs", s.sd_adj.toFixed(1), q ? q.sd_adj.toFixed(1) : null], ["SD per 1,000 takes", s.sd_per_1000.toFixed(2), q ? q.sd_per_1000.toFixed(2) : null], ["SD per 1,000 pitches, Savant", s.sd_savant_per_1000.toFixed(2), q ? q.sd_savant_per_1000.toFixed(2) : null],
+        ["Average takes", Math.round(s.mean_takes).toLocaleString(), q ? Math.round(q.mean_takes).toLocaleString() : null], ["SD at 7,000 takes, runs", s.full_time_sd_runs.toFixed(1), q ? q.full_time_sd_runs.toFixed(1) : null], ["The same in dollars", "$" + s.full_time_sd_dollars.toFixed(1) + "M", q ? "$" + q.full_time_sd_dollars.toFixed(1) + "M" : null], ["Best and worst, runs", `${sgn(s.best)}, ${sgn(s.worst)}`, q ? `${sgn(q.best)}, ${sgn(q.worst)}` : null]])
+      + HT.note("Dollars at $11.23M a win and 10 runs a win.");
+  },
+  /* method numbers */
+  mt(k) {
+    const bt = D.backtest, R = D.robust, F = D.framing.summary, bp = D.bat_power;
+    if (k === "mae") return `<div class="t-name">Last winter's backtest</div><div class="t-sub">${bt.n} signed players with an MLB record, each left out of his own fit.</div>`
+      + HT.table(["", ""], [["My average miss a year", money2(bt.mae_mine)], ["MLBTR's", money2(bt.mae_mlbtr)], ["My edge", money2(bt.edge)], ["95% range of the edge", `-$${Math.abs(bt.edge_lo).toFixed(2)}M to +$${bt.edge_hi.toFixed(2)}M`], ["Players where I was closer", `${bt.closer} of ${bt.n}`]]);
+    if (k === "robust") return `<div class="t-name">How much rests on one player</div>`
+      + HT.table(["Signings", "n", "Mine", "MLBTR"], [["All", bt.n, money2(bt.mae_mine), money2(bt.mae_mlbtr)], ["Without Tucker", R.without_tucker.n, money2(R.without_tucker.mae_mine), money2(R.without_tucker.mae_mlbtr)], ["Without Tucker and Bichette", R.without_tucker_bichette.n, money2(R.without_tucker_bichette.mae_mine), money2(R.without_tucker_bichette.mae_mlbtr)], ["Median miss, all", bt.n, money2(R.median_mine), money2(R.median_mlbtr)]])
+      + HT.note("Average miss a year in AAV.");
+    if (k === "savant") return `<div class="t-name">My framing runs against Savant's</div>` + HT.table(["Season", "Catchers", "r", "r, adjusted", "Slope"], [2024, 2025, 2026].map(y => { const s = F.seasons[y].savant; return [y, s.catchers, s.r_raw.toFixed(2), s.r_adj.toFixed(2), s.slope_raw.toFixed(2)]; }))
+      + HT.note("r compares my unadjusted runs with Savant's; adjusted uses my pitcher- and park-adjusted runs.");
+    if (k === "split") return `<div class="t-name">Within-season reliability</div>` + HT.table(["Season", "Catchers", "Odd vs even games", "Full season"], [2024, 2025, 2026].map(y => { const s = F.seasons[y].split_half; return [y, s.catchers, s.r_half.toFixed(2), s.r_season.toFixed(2)]; }))
+      + HT.note("Full season steps the half-season correlation up to a whole season's takes.");
+    if (k === "ball") return `<div class="t-name">Next season's ISO from this season's batted balls</div><div class="t-sub">Out of sample: fit on ${bp.n_train} hitters (2024 to 2025), scored on ${bp.n_test} (2025 to 2026).</div>`
+      + HT.table(["Model", "R²", "RMSE"], Object.entries(bp.ball).map(([m, v]) => [esc(m), v.r2.toFixed(3), v.rmse.toFixed(4)]), Object.keys(bp.ball).indexOf(bp.best))
+      + HT.note(`Bold: ${esc(bp.best)}, the model chosen by cross-validation on the training pairs alone.`);
+    if (k === "adds") return `<div class="t-name">What each bat-tracking number adds</div><div class="t-sub">Added to ${esc(bp.best)}; the cut in next season's ISO error.</div>`
+      + HT.table(["Added", "RMSE cut", "95% range", "Share"], Object.entries(bp.adds).map(([m, v]) => [esc(m.replace(/_/g, " ")), v.gain.toFixed(4), `${v.lo.toFixed(4)} to ${v.hi.toFixed(4)}`, v.pct.toFixed(1) + "%"]));
+    if (k === "stab") return `<div class="t-name">Year-to-year correlation</div>` + HT.table(["Measure", "r"], Object.entries(bp.stability).sort((a, b) => b[1] - a[1]).map(([m, v]) => [esc(m.replace(/_/g, " ").replace("ev90", "EV90").replace("iso", "ISO")), v.toFixed(3)]));
+    return "";
+  },
+};
+function hvShow(node, x, pin) {
+  const k = (node.dataset.hv || "").split("|").map(decodeURIComponent), f = HV[k[0]];
+  if (!f || !node.isConnected) return;
+  const was = hvPinned; hvPinned = pin ? node : null;   // a card can say whether it is pinned
+  let html = ""; try { html = f(...k.slice(1)); } catch (e) { html = ""; }
+  if (!html) { hvPinned = was; return; }
+  if (hvActive && hvActive !== node) { hvActive.classList.remove("hv-on"); hvActive.removeAttribute("aria-describedby"); }
+  hvActive = node; hvX = x;
+  node.classList.add("hv-on"); node.setAttribute("aria-describedby", "hv");
+  hvEl.innerHTML = `<button type="button" class="x" aria-label="Close">×</button>` + html;
+  hvEl.classList.toggle("pin", !!pin); hvEl.classList.add("on");
+  hvPlace();
+}
+function hvHide() {
+  hvEl.classList.remove("on", "pin", "up");
+  if (hvActive) { hvActive.classList.remove("hv-on"); hvActive.removeAttribute("aria-describedby"); }
+  hvActive = hvPinned = null;
+}
+const hvGone = () => { if (hvActive && !hvActive.isConnected) hvHide(); };
+/* beside the target, never over it: below it, else above it, else to its side; inside the window; a sheet on phones */
+function hvPlace() {
+  if (!hvActive) return;
+  const r = hvActive.getBoundingClientRect(), W = document.documentElement.clientWidth, H = innerHeight, m = 8, gap = 10;
+  hvEl.style.maxHeight = "";
+  if (matchMedia("(max-width:640px)").matches) {
+    hvEl.classList.remove("up");
+    const h = hvEl.offsetHeight;
+    if (r.bottom > H - h - 10 - gap) {   // the sheet would cover what was tapped: move it to the top
+      hvEl.classList.add("up");
+      if (r.top < h + 10 + gap) hvEl.style.maxHeight = Math.max(140, r.top - 10 - gap) + "px";
+    }
+    return;
+  }
+  const w = hvEl.offsetWidth, h = hvEl.offsetHeight, x = hvX ?? (r.left + Math.min(r.width, 60));
+  let left = Math.min(Math.max(m, x + 12), W - w - m), top;
+  if (r.bottom + gap + h <= H - m) top = r.bottom + gap;
+  else if (r.top - gap - h >= m) top = r.top - gap - h;
+  else {   // no room above or below: beside it (beside the pointer on a wide row), on the roomier side
+    const a = r.width > 240 && hvX != null ? hvX - 6 : r.left, z = r.width > 240 && hvX != null ? hvX + 6 : r.right;
+    left = W - z > a ? Math.min(z + gap, W - w - m) : Math.max(m, a - gap - w);
+    top = Math.min(Math.max(m, r.top + r.height / 2 - h / 2), H - h - m);
+  }
+  hvEl.style.left = Math.round(left) + "px"; hvEl.style.top = Math.round(top) + "px";
+}
+document.addEventListener("pointerdown", e => { hvTouch = e.pointerType !== "mouse"; }, true);
+document.addEventListener("pointermove", e => { if (e.pointerType === "mouse") hvTouch = false; }, true);
+document.addEventListener("mouseover", e => {
+  if (hvTouch || hvPinned) return;
+  const t = e.target.closest ? e.target.closest("[data-hv]") : null;
+  if (t && t !== hvActive) hvShow(t, e.clientX, false);
+});
+document.addEventListener("mousemove", e => { if (!hvTouch && !hvPinned && hvActive) { hvX = e.clientX; hvPlace(); } }, {passive: true});
+document.addEventListener("mouseout", e => {
+  if (hvTouch || hvPinned || !hvActive || document.activeElement === hvActive) return;
+  const to = e.relatedTarget && e.relatedTarget.closest ? e.relatedTarget.closest("[data-hv]") : null;
+  if (!to) hvHide();
+});
+document.addEventListener("focusin", e => {
+  if (hvTouch || hvPinned || hvEl.contains(e.target)) return;
+  if (e.target.matches && e.target.matches("[data-hv]")) hvShow(e.target, null, false);
+});
+document.addEventListener("focusout", e => { if (!hvPinned && e.target === hvActive) hvHide(); });
+document.addEventListener("click", e => {
+  if (hvEl.contains(e.target)) { if (e.target.closest(".x")) { const a = hvActive; hvHide(); if (a && a.isConnected && a.focus && a.tabIndex >= 0) a.focus({preventScroll: true}); } return; }
+  const t = e.target.closest("[data-hv]");
+  if (!t || !t.isConnected || e.target.closest("a,button,select,input") || t.matches("tr.r")) { hvHide(); return; }
+  if (hvPinned === t) { hvHide(); return; }
+  hvShow(t, e.clientX || null, true);
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape" && hvActive) { hvHide(); } });
+window.addEventListener("scroll", () => {
+  if (!hvActive) return;
+  if (!hvActive.isConnected) return hvHide();
+  if (hvPinned || document.activeElement === hvActive) hvPlace(); else hvHide();
+}, {passive: true, capture: true});
+window.addEventListener("resize", () => hvPlace());
 
 /* ---------------- print: every view in order, in a container only print shows ---------------- */
 function buildPrint() {

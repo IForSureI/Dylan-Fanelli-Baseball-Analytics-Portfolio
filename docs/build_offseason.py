@@ -194,6 +194,28 @@ for k, (mid, stand, title) in LATER_LABS.items():
         labs[k] = lab(k, mid, stand, title)
         _t = B.table(k, mid, stand)
         labs[k]['detectable'] = B.save(k, _t)['detectable_change']
+def home_clubs(labs):
+    """The home club of each home run (whose park it was in), for the hover cards: joined from the pitch files on
+    batter, date, exit velocity and launch angle when they are here; otherwise the previous build's value is kept."""
+    prev = {s['play_id']: s.get('home_team') for L in (PREV or {}).get('labs', {}).values() for s in L['swings']}
+    seq_files = sorted((REPO / 'data/seq').glob('seq_*.parquet')) if (REPO / 'data/seq').exists() else []
+    hr = None
+    if seq_files:
+        cols = ['batter', 'game_date', 'events', 'home_team', 'launch_speed', 'launch_angle']
+        hr = pd.concat([pd.read_parquet(p, columns=cols) for p in seq_files])
+        hr = hr[hr.events == 'home_run']
+        hr['d'] = hr.game_date.astype(str).str[:10]
+    for L in labs.values():
+        mine = hr[hr.batter == L['mlbam']] if hr is not None else None
+        for s in L['swings']:
+            club = prev.get(s['play_id'])
+            if mine is not None and s.get('launch_speed') is not None:
+                m = mine[(mine.d == s['date']) & ((mine.launch_speed - s['launch_speed']).abs() < 0.05)
+                         & ((mine.launch_angle - (s.get('launch_angle') or -999)).abs() < 0.5)]
+                if m.home_team.nunique() == 1:
+                    club = m.home_team.iloc[0]
+            s['home_team'] = club
+home_clubs(labs)
 for k, v in labs.items():   # clips removed by eye after looking at the frame (counted on the method view)
     ex = REPO / 'reports/outputs' / f'{k}_excluded_by_eye.json'
     v['excluded_by_eye'] = len(json.loads(ex.read_text())['excluded']) if ex.exists() else 0
@@ -224,18 +246,27 @@ QUAL = 502
 PCT_ROWS = (('xwobacon', 'xwOBA on contact', False), ('ev90', 'EV90', False), ('barrel', 'Barrel %', False), ('iso', 'ISO', False),
             ('bat_speed', 'Bat speed', False), ('squared_up', 'Squared-up %', False), ('k_rate', 'K %', True))
 lg26 = bps[(bps.season == 2026) & (bps.pa >= QUAL)]
+def _rank(mid, col, low, season):
+    """(value, percentile among that season's qualified hitters), or None when he didn't qualify or has no value."""
+    r, lg = bps[(bps.batter == mid) & (bps.season == season)], bps[(bps.season == season) & (bps.pa >= QUAL)]
+    if r.empty or r.pa.iloc[0] < QUAL or r[col].iloc[0] != r[col].iloc[0]:
+        return None
+    v, pool = r[col].iloc[0], lg[col].dropna()
+    p = ((pool < v).sum() + 0.5 * (pool == v).sum()) / len(pool)
+    return round(float(v), 4), int(min(100, max(1, round(100 * (1 - p if low else p)))))
 def league_pct(mid):
     r = bps[(bps.batter == mid) & (bps.season == 2026)]
     if mid is None or r.empty or r.pa.iloc[0] < QUAL:
         return None
     rows = []
     for col, label, low in PCT_ROWS:
-        v, pool = r[col].iloc[0], lg26[col].dropna()
-        if v != v:
+        now = _rank(mid, col, low, 2026)
+        if now is None:
             continue
-        p = ((pool < v).sum() + 0.5 * (pool == v).sum()) / len(pool)
-        rows.append(dict(key=col, label=label, value=round(float(v), 4), pctl=int(min(100, max(1, round(100 * (1 - p if low else p)))))))
-    return dict(season=2026, n=int(len(lg26)), min_pa=QUAL, rows=rows)
+        before = _rank(mid, col, low, 2025)   # last season's value and rank among 2025's qualified hitters
+        rows.append(dict(key=col, label=label, value=now[0], pctl=now[1], value25=before and before[0], pctl25=before and before[1]))
+    n25 = int(((bps.season == 2025) & (bps.pa >= QUAL)).sum())
+    return dict(season=2026, n=int(len(lg26)), n25=n25, min_pa=QUAL, rows=rows)
 for b in board:
     b['league'] = None if b['reliever'] or groupless(b) else league_pct(b['mlbam'])
 
@@ -250,7 +281,8 @@ for b in board:
     if c:
         prev = SP.card(b['mlbam'], kind, 2025) or {'rows': []}
         p25 = {r['label']: r['pctl'] for r in prev['rows']}
-        c['rows'] = [dict(r, pctl25=p25.get(r['label'])) for r in c['rows']]
+        v25 = {r['label']: r['value'] for r in prev['rows']}   # last season's value beside its rank (the hover cards)
+        c['rows'] = [dict(r, pctl25=p25.get(r['label']), value25=v25.get(r['label'])) for r in c['rows']]
         del c['csv'], c['page']
     b['savant'] = c
     if b['league']:
