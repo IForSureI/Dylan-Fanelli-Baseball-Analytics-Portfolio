@@ -1,0 +1,624 @@
+<title>2027 Offseason Decision Packet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&display=swap">
+<style>
+/* Layout: a front-office binder. Sticky masthead with five tabs; each view opens with its answer, then the evidence.
+   One look on purpose (light only, the portfolio's house style): warm paper ground, plate-white working surfaces,
+   ink type, stitch red for my calls, blue for the benchmark, club colours only on club marks. */
+:root{
+  --paper:#f7f4ec; --plate:#fffdf8; --ink:#1a1a1a; --muted:#5b5a55; --soft:#8e8c85; --grid:#e8e4da; --rule:#d9d4c7;
+  --blue:#285d9e; --red:#c8392b; --green:#2a8a6a; --ochre:#b5811a;
+  --blue-soft:#e6edf6; --red-soft:#f8e7e4; --green-soft:#e3f1ec; --ochre-soft:#f5ecd9;
+  --display:"Be Vietnam Pro","Segoe UI",system-ui,sans-serif;
+  --text:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --r:10px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+img{max-width:100%}
+html{background:var(--paper)}
+body{background:var(--paper);color:var(--ink);font-family:var(--text);font-size:15px;line-height:1.5;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--ink)}
+a{color:var(--blue);text-underline-offset:2px}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h2{font-size:clamp(1.35rem,2.4vw,1.75rem);font-weight:800}
+h3{font-size:1.05rem;font-weight:700}
+p{margin:0}
+.num{font-variant-numeric:tabular-nums}
+.eyebrow{font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.muted{color:var(--muted)}
+.small{font-size:.86rem}
+
+/* masthead */
+header.mast{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--ink);color:#f7f4ec}
+.mast .wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding-block:10px}
+.brand{display:flex;flex-direction:column;line-height:1.15;min-width:0}
+.brand b{font-family:var(--display);font-weight:800;font-size:1.02rem;letter-spacing:.01em}
+.brand span{font-size:.74rem;color:#c9c4b6}
+nav.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+nav.tabs a{color:#e9e5da;text-decoration:none;font-weight:600;font-size:.88rem;padding:7px 12px;border-radius:999px;border:1px solid transparent}
+nav.tabs a:hover{border-color:#5b5a55}
+nav.tabs a[aria-current="page"]{background:#f7f4ec;color:var(--ink)}
+@media (max-width:700px){
+  .mast .wrap{gap:6px;padding-block:8px}
+  .brand span{display:none}
+  nav.tabs{margin-left:0;width:100%;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  nav.tabs a{white-space:nowrap;padding:6px 10px;font-size:.84rem}
+}
+
+/* view scaffolding */
+main{padding-block:28px 64px}
+section.view{display:grid;gap:22px}
+.lede{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:28px;align-items:end}
+.lede .answer{font-size:1.08rem;max-width:62ch}
+.lede .answer strong{font-weight:700}
+@media (max-width:820px){.lede{grid-template-columns:1fr}}
+.panel{background:var(--plate);border:1px solid var(--rule);border-radius:var(--r);padding:18px}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.tile{background:var(--plate);border:1px solid var(--rule);border-radius:var(--r);padding:12px 14px;display:grid;gap:2px;align-content:start}
+.tile .v{font-family:var(--display);font-size:1.45rem;font-weight:800;font-variant-numeric:tabular-nums}
+.tile .k{font-size:.78rem;color:var(--muted);line-height:1.3}
+@media (max-width:520px){.tiles{grid-template-columns:1fr 1fr}}
+
+/* filter row (one, above the charts) */
+.filters{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--mast,58px));z-index:10;background:var(--paper);padding-block:10px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;border-bottom:1px solid var(--rule)}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:999px;background:var(--plate);overflow:hidden}
+.seg button{font:inherit;font-size:.84rem;font-weight:600;border:0;background:transparent;color:var(--muted);padding:6px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#f7f4ec}
+.filters label{font-size:.8rem;color:var(--muted);display:inline-flex;gap:6px;align-items:center}
+select{font:inherit;font-size:.86rem;padding:5px 8px;border:1px solid var(--rule);border-radius:8px;background:var(--plate);color:var(--ink)}
+.fsum{font-size:.8rem;color:var(--muted);margin-left:auto}
+
+/* club chip: primary fill, secondary border */
+.club{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:20px;padding:0 6px;border-radius:5px;border:2px solid;font-size:.68rem;font-weight:700;letter-spacing:.04em;color:#fff}
+.head{width:40px;height:40px;border-radius:50%;object-fit:cover;background:var(--grid);border:2px solid;flex:none}
+.head.lg{width:72px;height:72px}
+.ph{display:inline-flex;align-items:center;justify-content:center;font-weight:700;color:var(--muted);font-size:.8rem}
+
+/* board */
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.82rem;color:var(--muted);align-items:center}
+.key{display:inline-flex;align-items:center;gap:6px}
+.dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+.boardwrap{overflow-x:auto}
+.brow{display:grid;grid-template-columns:28px minmax(170px,230px) minmax(260px,1fr) 64px 92px;gap:12px;align-items:center;padding:8px 6px;border-bottom:1px solid var(--grid);cursor:pointer;min-width:640px}
+.brow:hover{background:#fbf8f1}
+.brow[aria-expanded="true"]{background:#f9f5ec}
+.brow .rk{color:var(--soft);font-size:.8rem;text-align:right}
+.who{display:flex;gap:10px;align-items:center;min-width:0}
+.who>span:last-child{min-width:0;overflow:hidden}
+.who .nm{display:block;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who .meta{font-size:.76rem;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.pcol{text-align:right;font-weight:700}
+.pill{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.pill.open{background:var(--grid);color:var(--muted)}
+.pill.win{background:var(--green-soft);color:var(--green)}
+.pill.lose{background:var(--blue-soft);color:var(--blue)}
+@media (max-width:700px){
+  .brow{grid-template-columns:22px minmax(0,1fr) 48px 86px;grid-template-areas:"rk who p st" "ch ch ch ch";min-width:0;row-gap:4px}
+  .brow>.rk{grid-area:rk}.brow>.who{grid-area:who}.brow>svg{grid-area:ch}.brow>.pcol{grid-area:p}.brow>.st{grid-area:st}
+  .brow.axisrow{display:none}
+  .who .nm{white-space:normal;overflow:visible}
+  .lb .row{min-width:0;grid-template-columns:20px minmax(0,1fr) 90px 48px}
+}
+.detail{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding:10px 4px 6px}
+.detail .k{font-size:.74rem;color:var(--muted)}
+@media (max-width:700px){.detail{grid-template-columns:1fr}}
+.axis text{font-size:11px;fill:var(--muted);font-family:var(--text)}
+.axisline{stroke:var(--grid)}
+
+/* player cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:16px}
+.card{background:var(--plate);border:1px solid var(--rule);border-radius:var(--r);padding:18px;display:grid;gap:14px;align-content:start;min-width:0}
+.card header{display:flex;gap:14px;align-items:center}
+.card .verdict{font-family:var(--display);font-weight:800;font-size:1.05rem}
+.kv{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.kv div{display:grid}
+.kv .k{font-size:.72rem;color:var(--muted)}
+.kv .v{font-weight:700;font-variant-numeric:tabular-nums}
+@media (max-width:520px){.kv{grid-template-columns:1fr 1fr}}
+.card ul{margin:0;padding-left:18px;display:grid;gap:4px}
+
+/* swing lab */
+.labgrid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:18px}
+@media (max-width:900px){.labgrid{grid-template-columns:1fr}}
+.stage{background:var(--plate);border:1px solid var(--rule);border-radius:var(--r);padding:14px;display:grid;gap:10px}
+.stage svg{width:100%;height:auto;display:block}
+.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn{font:inherit;font-weight:700;font-size:.86rem;border:1px solid var(--ink);background:var(--ink);color:#f7f4ec;border-radius:999px;padding:7px 14px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink)}
+input[type=range]{flex:1;min-width:140px;accent-color:var(--red)}
+.tick-labels{display:flex;justify-content:space-between;font-size:.74rem;color:var(--muted)}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+th,td{padding:7px 8px;border-bottom:1px solid var(--grid);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+th{font-size:.74rem;color:var(--muted);font-weight:600;letter-spacing:.02em}
+th:first-child,td:first-child{text-align:left}
+.tablewrap{overflow-x:auto}
+.sig{color:var(--red);font-weight:700}
+
+/* catchers */
+.lb .row{display:grid;grid-template-columns:24px minmax(150px,220px) 1fr 64px;gap:10px;align-items:center;padding:6px 4px;border-bottom:1px solid var(--grid);min-width:520px}
+.callout{background:var(--ochre-soft);border:1px solid #ead9b5;border-radius:var(--r);padding:14px 16px;display:grid;gap:6px}
+
+/* methods */
+.method{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px}
+.method .panel{display:grid;gap:8px;align-content:start}
+.method ul{margin:0;padding-left:18px;display:grid;gap:4px}
+footer{border-top:1px solid var(--rule);padding-block:20px 32px;font-size:.8rem;color:var(--muted)}
+.loading{padding:40px 0;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="mast">
+  <div class="wrap">
+    <div class="brand"><b>2027 Offseason Decision Packet</b><span>Free agents, catchers and swings. Built Nov. 23, 2026 from public data.</span></div>
+    <nav class="tabs" aria-label="Views">
+      <a href="#board">Market board</a>
+      <a href="#players">Decisions</a>
+      <a href="#swing">Swing lab</a>
+      <a href="#catchers">Catchers</a>
+      <a href="#method">Method</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="app"><p class="loading">Loading the packet data.</p></main>
+
+<footer class="wrap">
+  <p>Dylan Fanelli. Data: Statcast and Baseball Savant, MLB Stats API (including MLB's highlight clips, measured but never reproduced here), Baseball-Reference WAR, MLB Trade Rumors' top-50 lists, FanGraphs' price of a win. Every study, its code and its tests are in <a href="https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio" target="_blank" rel="noopener">the public portfolio</a>.</p>
+</footer>
+
+<script>
+(() => {
+const REPO = "https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/";
+const C = {rule:"#d9d4c7", ink:"#1a1a1a", muted:"#5b5a55", soft:"#8e8c85", grid:"#e8e4da", blue:"#285d9e", red:"#c8392b", green:"#2a8a6a", ochre:"#b5811a", plate:"#fffdf8"};
+const app = document.getElementById("app");
+let D = null;
+const state = {group:"all", status:"all", sort:"rank", open:null, lab:"arozarena", frame:null, playing:false, speed:0.25, show:{early:true, late:true}, season:2026};
+
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const money = v => v == null ? "" : "$" + v.toFixed(1) + "M";
+const money2 = v => v == null ? "" : "$" + v.toFixed(2) + "M";
+const pct = v => v == null ? "" : Math.round(v * 100) + "%";
+const sgn = (v, d = 1) => v == null ? "" : (v > 0 ? "+" : "") + v.toFixed(d);
+const club = t => { if (!t || !D.teams[t]) return ""; const [a, b] = D.teams[t]; return `<span class="club" style="background:${a};border-color:${b}">${esc(t)}</span>`; };
+const head = (p, cls = "") => {
+  const ring = p.team && D.teams[p.team] ? D.teams[p.team][0] : C.rule;
+  return p.head ? `<img class="head ${cls}" src="${p.head}" alt="" style="border-color:${ring}" loading="lazy">`
+                : `<span class="head ph ${cls}" style="border-color:${C.grid}">${esc((p.name || "").split(" ").map(w => w[0]).join("").slice(0, 2))}</span>`;
+};
+const groupOf = b => b.reliever ? "rp" : (/HP$|^RHP|^LHP/.test(b.pos) ? "sp" : "bat");
+
+/* ---------------- router ---------------- */
+const VIEWS = {board: viewBoard, players: viewPlayers, swing: viewSwing, catchers: viewCatchers, method: viewMethod};
+function route() {
+  const v = (location.hash || "#board").slice(1);
+  const name = VIEWS[v] ? v : "board";
+  document.querySelectorAll("nav.tabs a").forEach(a => a.setAttribute("aria-current", a.getAttribute("href") === "#" + name ? "page" : "false"));
+  stopPlay();
+  app.innerHTML = VIEWS[name]();
+  if (name === "board") bindBoard();
+  if (name === "swing") bindSwing();
+  if (name === "catchers") bindCatchers();
+  try { localStorage.setItem("packet-view", name); } catch (e) {}
+}
+
+/* ---------------- board ---------------- */
+function boardRows() {
+  let rows = D.board.slice();
+  if (state.group !== "all") rows = rows.filter(b => b.call === "called" && groupOf(b) === state.group);
+  if (state.status === "open") rows = rows.filter(b => b.call === "called" && b.actual_aav == null);
+  if (state.status === "signed") rows = rows.filter(b => b.actual_aav != null || b.signed);
+  if (state.status === "called") rows = rows.filter(b => b.call === "called");
+  const edge = b => b.my_aav == null ? -1e9 : b.my_aav - b.mlbtr_aav;
+  if (state.sort === "edge") rows.sort((a, b) => Math.abs(edge(b)) - Math.abs(edge(a)));
+  if (state.sort === "p") rows.sort((a, b) => (b.p_over ?? -1) - (a.p_over ?? -1));
+  if (state.sort === "aav") rows.sort((a, b) => (b.my_aav ?? b.mlbtr_aav) - (a.my_aav ?? a.mlbtr_aav));
+  return rows;
+}
+function scoreNow() {
+  const s = D.board.filter(b => b.call === "called" && b.actual_aav != null && (!b.first_seen || b.first_seen <= "2027-04-30"));
+  if (!s.length) return null;
+  const mine = s.reduce((t, b) => t + Math.abs(b.my_aav - b.actual_aav), 0) / s.length;
+  const theirs = s.reduce((t, b) => t + Math.abs(b.mlbtr_aav - b.actual_aav), 0) / s.length;
+  const brier = s.reduce((t, b) => t + (b.p_over - (b.actual_aav > b.mlbtr_aav + 1e-9 ? 1 : 0)) ** 2, 0) / s.length;
+  return {n: s.length, mine, theirs, brier};
+}
+function viewBoard() {
+  const called = D.board.filter(b => b.call === "called");
+  const bt = D.backtest, sc = scoreNow();
+  const above = called.filter(b => b.my_aav > b.mlbtr_aav).length;
+  return `<section class="view">
+  <div class="lede">
+    <div style="display:grid;gap:10px">
+      <p class="eyebrow">Market board, calls frozen ${esc(D.made)}</p>
+      <h2>${called.length} free-agent salary calls, scored against MLB Trade Rumors as each player signs</h2>
+      <p class="answer">My model starts from MLBTR's own prediction and moves it on three seasons of WAR, age and role. Last winter it missed by ${money2(bt.mae_mine)} a year against MLBTR's ${money2(bt.mae_mlbtr)}, but <strong>that edge came from one player</strong>: without Kyle Tucker the two were tied (${money2(D.robust.without_tucker.mae_mine)} against ${money2(D.robust.without_tucker.mae_mlbtr)}). So this board is a public test of one idea: that last winter's shorter, richer deals repeat. I call ${above} of ${called.length} players above MLBTR's salary, so the calls mostly win or lose together.</p>
+    </div>
+    <div class="tiles">
+      <div class="tile"><span class="v num">${sc ? sc.n : 0} / ${called.length}</span><span class="k">called players signed so far</span></div>
+      <div class="tile"><span class="v num">${sc ? money(sc.mine) : "n/a"}</span><span class="k">my average miss${sc ? " (MLBTR " + money(sc.theirs) + ")" : ", once players sign"}</span></div>
+      <div class="tile"><span class="v num">${bt.brier.toFixed(3)}</span><span class="k">backtest Brier on "beats MLBTR's salary" (base rate 0.231, coin flip 0.250)</span></div>
+    </div>
+  </div>
+  <div class="filters" role="group" aria-label="Board filters">
+    <div class="seg" data-k="group">${[["all","All"],["sp","Starters"],["rp","Relievers"],["bat","Hitters"]].map(([k,l]) => `<button type="button" data-v="${k}" aria-pressed="${state.group===k}">${l}</button>`).join("")}</div>
+    <div class="seg" data-k="status">${[["all","All 50"],["called","My calls"],["open","Unsigned"],["signed","Signed"]].map(([k,l]) => `<button type="button" data-v="${k}" aria-pressed="${state.status===k}">${l}</button>`).join("")}</div>
+    <label for="sort">Sort <select id="sort">${[["rank","MLBTR rank"],["edge","Biggest disagreement"],["p","Most likely above MLBTR"],["aav","Salary"]].map(([k,l]) => `<option value="${k}" ${state.sort===k?"selected":""}>${l}</option>`).join("")}</select></label>
+    <span class="fsum" id="fsum"></span>
+  </div>
+  <div class="legend">
+    <span class="key"><span class="dot" style="background:${C.blue}"></span>MLBTR's call (Nov. 2)</span>
+    <span class="key"><span class="dot" style="background:${C.red}"></span>My call (Nov. 23)</span>
+    <span class="key"><span class="dot" style="background:${C.ink}"></span>Signed for</span>
+    <span class="key">Right column: my chance he signs above MLBTR's average salary</span>
+  </div>
+  <div class="panel boardwrap" style="padding:6px 10px"><div id="rows"></div></div>
+  <p class="small muted">Average salary is guaranteed money over guaranteed years; an accepted qualifying offer is one year at $23.15M. MLBTR's call is from its Nov. 2 top-50 list; mine are from Nov. 23, after the qualifying-offer decisions, which gives me three weeks of news MLBTR didn't have. No call on players who signed first or have no MLB record. Click a player for the detail.</p>
+</section>`;
+}
+function dumbbell(b, lo, hi, w = 520) {
+  const H = 34, pad = 8, x = v => pad + (v - lo) / (hi - lo) * (w - 2 * pad);
+  const parts = [`<line x1="${x(b.mlbtr_aav)}" x2="${x(b.my_aav ?? b.mlbtr_aav)}" y1="${H/2}" y2="${H/2}" stroke="${C.soft}" stroke-width="2"/>`];
+  parts.push(`<circle cx="${x(b.mlbtr_aav)}" cy="${H/2}" r="6" fill="${C.blue}"><title>MLBTR ${money(b.mlbtr_aav)}</title></circle>`);
+  if (b.my_aav != null) parts.push(`<circle cx="${x(b.my_aav)}" cy="${H/2}" r="6" fill="${C.red}"><title>Mine ${money(b.my_aav)}</title></circle>`);
+  if (b.actual_aav != null) parts.push(`<rect x="${x(b.actual_aav) - 2}" y="${H/2 - 10}" width="4" height="20" rx="1" fill="${C.ink}"><title>Signed ${money(b.actual_aav)}</title></rect>`);
+  const vals = [[b.mlbtr_aav, C.blue], [b.my_aav, C.red]].filter(v => v[0] != null).sort((a, c) => a[0] - c[0]);
+  if (vals.length === 2 && x(vals[1][0]) - x(vals[0][0]) > 64) {
+    parts.push(`<text x="${x(vals[0][0]) - 10}" y="${H/2 + 4}" text-anchor="end" font-size="11" fill="${vals[0][1]}" class="num">${money(vals[0][0])}</text>`);
+    parts.push(`<text x="${x(vals[1][0]) + 10}" y="${H/2 + 4}" font-size="11" fill="${vals[1][1]}" class="num">${money(vals[1][0])}</text>`);
+  } else {
+    const v = vals[vals.length - 1], left = b.actual_aav != null || x(v[0]) > w - 120;
+    const txt = vals.map(z => money(z[0])).join(" to ") + (b.actual_aav != null ? ", signed " + money(b.actual_aav) : "");
+    parts.push(`<text x="${left ? x(vals[0][0]) - 10 : x(v[0]) + 10}" y="${H/2 + 4}" ${left ? 'text-anchor="end"' : ""} font-size="11" fill="${C.muted}" class="num">${txt}</text>`);
+  }
+  return `<svg viewBox="0 0 ${w} ${H}" preserveAspectRatio="none" style="width:100%;height:${H}px;overflow:visible" role="img" aria-label="MLBTR ${money(b.mlbtr_aav)}, mine ${money(b.my_aav)}">${parts.join("")}</svg>`;
+}
+function renderRows() {
+  const rows = boardRows();
+  const vals = rows.flatMap(b => [b.mlbtr_aav, b.my_aav, b.actual_aav]).filter(v => v != null);
+  const lo = 0, hi = Math.max(10, Math.ceil(Math.max(...vals, 10) / 5) * 5);
+  const el = document.getElementById("rows");
+  document.getElementById("fsum").textContent = `${rows.length} player${rows.length === 1 ? "" : "s"}`;
+  if (!rows.length) { el.innerHTML = `<p class="muted" style="padding:16px">No players match these filters. Choose "All" to see the whole list.</p>`; return; }
+  const ticks = []; for (let v = 0; v <= hi; v += hi > 40 ? 10 : 5) ticks.push(v);
+  const axis = `<div class="brow axisrow" style="cursor:default;border-bottom:1px solid var(--rule)" aria-hidden="true"><span></span><span class="eyebrow">Player</span>
+    <svg viewBox="0 0 520 18" preserveAspectRatio="none" style="width:100%;height:18px;overflow:visible" class="axis">${ticks.map(v => `<text x="${8 + v / hi * 504}" y="13" text-anchor="middle">$${v}M</text>`).join("")}</svg>
+    <span class="eyebrow" style="text-align:right">Above</span><span class="eyebrow" style="text-align:right">Status</span></div>`;
+  el.innerHTML = axis + rows.map(b => {
+    const open = state.open === b.rank;
+    let status;
+    if (b.actual_aav != null && b.call === "called") {
+      const mine = Math.abs(b.my_aav - b.actual_aav), th = Math.abs(b.mlbtr_aav - b.actual_aav);
+      status = Math.abs(mine - th) < 1e-9 ? `<span class="pill open">Tie</span>` : mine < th ? `<span class="pill win">Mine closer</span>` : `<span class="pill lose">MLBTR closer</span>`;
+    } else if (b.call !== "called") status = `<span class="pill open">${b.call === "no MLB record" ? "No call" : "Signed first"}</span>`;
+    else status = `<span class="pill open">Unsigned</span>`;
+    const age = b.age ? `${Math.round(b.age)}` : "";
+    const role = b.reliever ? "RP" : b.pos;
+    return `<div class="brow" role="button" tabindex="0" aria-expanded="${open}" data-rank="${b.rank}">
+      <span class="rk num">${b.rank}</span>
+      <span class="who">${head(b)}<span style="min-width:0"><span class="nm">${esc(b.name)}</span><span class="meta">${club(b.team)}<span>${esc(role)}${age ? ", " + age : ""}</span></span></span></span>
+      ${dumbbell(b, lo, hi)}
+      <span class="pcol num">${b.p_over != null ? pct(b.p_over) : ""}</span>
+      <span class="st" style="text-align:right">${status}</span>
+      ${open ? detail(b) : ""}
+    </div>`;
+  }).join("");
+}
+function detail(b) {
+  const war = b.war ? `${b.war[2]?.toFixed(1)}, ${b.war[1]?.toFixed(1)}, ${b.war[0]?.toFixed(1)}` : "no MLB record";
+  const why = b.my_aav == null ? "No call: " + (b.call === "no MLB record" ? "no MLB record for the model to read." : "signed before Nov. 23.")
+    : `${Math.abs(b.my_aav - b.mlbtr_aav) < 0.05 ? "Even with MLBTR." : (b.my_aav > b.mlbtr_aav ? "Above" : "Below") + " MLBTR by " + money(Math.abs(b.my_aav - b.mlbtr_aav)) + " a year."} ${b.reliever ? "Relievers beat their predictions most last winter. " : ""}${b.age >= 33 ? "Age pulls the call down (about 5% a year past 30). " : ""}${b.wwar >= 3.5 ? "Three seasons near " + b.wwar.toFixed(1) + " WAR a year carry it up. " : ""}`;
+  return `<div class="detail" onclick="event.stopPropagation()">
+    <div><p class="k">MLBTR's call (Nov. 2)</p><p>${esc(b.mlbtr)}</p><p class="k" style="margin-top:6px">Signing line</p><p>${esc(b.signed || "Not signed")}</p></div>
+    <div><p class="k">Baseball-Reference WAR, 2024 / 2025 / 2026</p><p class="num">${war}</p><p class="k" style="margin-top:6px">Weighted (5/4/3)</p><p class="num">${b.wwar != null ? b.wwar.toFixed(2) : ""}</p></div>
+    <div><p class="k">My read</p><p>${why}</p>${b.my_aav != null ? `<p class="k" style="margin-top:6px">Chance he signs above MLBTR's ${money(b.mlbtr_aav)}</p><p class="num"><b>${pct(b.p_over)}</b></p>` : ""}</div>
+  </div>`;
+}
+function bindBoard() {
+  document.querySelectorAll(".seg").forEach(s => s.addEventListener("click", e => {
+    const v = e.target.closest("button")?.dataset.v; if (!v) return;
+    state[s.dataset.k] = v; s.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x.dataset.v === v)); renderRows();
+  }));
+  document.getElementById("sort").addEventListener("change", e => { state.sort = e.target.value; renderRows(); });
+  const rows = document.getElementById("rows");
+  const toggle = el => { const r = +el.dataset.rank; state.open = state.open === r ? null : r; renderRows(); };
+  rows.addEventListener("click", e => { const r = e.target.closest(".brow[data-rank]"); if (r) toggle(r); });
+  rows.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { const r = e.target.closest(".brow[data-rank]"); if (r) { e.preventDefault(); toggle(r); } } });
+  renderRows();
+}
+
+/* ---------------- decisions ---------------- */
+function card(rank, verdict, bullets, links) {
+  const b = D.board.find(x => x.rank === rank); if (!b) return "";
+  return `<article class="card">
+    <header>${head(b, "lg")}<div style="display:grid;gap:4px;min-width:0"><p class="eyebrow">${esc(b.reliever ? "Reliever" : b.pos)}, ${Math.round(b.age)} ${club(b.team)}</p><h3>${esc(b.name)}</h3><p class="verdict">${verdict}</p></div></header>
+    <div class="kv">
+      <div><span class="k">MLBTR</span><span class="v">${money(b.mlbtr_aav)}</span></div>
+      <div><span class="k">My call</span><span class="v" style="color:${C.red}">${money(b.my_aav)}</span></div>
+      <div><span class="k">Above MLBTR</span><span class="v">${pct(b.p_over)}</span></div>
+      <div><span class="k">WAR, 5/4/3 avg</span><span class="v">${b.wwar?.toFixed(1)}</span></div>
+    </div>
+    <ul>${bullets.map(x => `<li>${x}</li>`).join("")}</ul>
+    <p class="small">${links}</p>
+  </article>`;
+}
+function viewPlayers() {
+  const a = D.labs.arozarena;
+  return `<section class="view">
+  <div class="lede"><div style="display:grid;gap:10px"><p class="eyebrow">Decisions</p>
+    <h2>Where my forecast and my price part ways</h2>
+    <p class="answer">The board forecasts what the market will pay. A club still has to decide what it should pay. Where a card gives a buyer's verdict, a report sits behind it; where it doesn't, the card says it's a market forecast only. The first two cards also share one problem: if the board is right about relievers, both of my bullpen targets price out at my walk-aways, and Raisel Iglesias on one year is the target the board doesn't push up.</p></div></div>
+  <div class="cards">
+  ${card(8, "Bid to $60M over four years and stop", [
+    "The board expects the market to pay about $24.8M a year, well above MLBTR's $16.0M, because relievers beat their predictions most last winter. That reliever term rests on 14 relievers in one winter.",
+    "My bullpen memo prices him for a buyer: four years and $60M, with the qualifying-offer pick already taken off. Its market line, fit on 21 relief signings, gives that bid about a 26% chance; the board's model would make it about 5%.",
+    "If an early reliever deal clears $20M a year, I'd read it as evidence for the board, and raise the walk-away or move to Iglesias on one year.",
+    "Age: 27 here is Baseball-Reference's season age; the memo's 28 is his age next season. The elbow medical gates any multi-year deal."],
+    `<a href="${REPO}2026-bullpen-acquisition-memo.md" target="_blank" rel="noopener">Bullpen memo</a>, <a href="${REPO}2026-morejon-pro-scouting-report.md" target="_blank" rel="noopener">scouting report</a>`)}
+  ${card(5, "Don't pay for 2026", [
+    `The ISO rise is fewer strikeouts, not harder contact: extra bases per at-bat without a strikeout were .272 in both 2025 and 2026, while his strikeout rate fell from 26.8% to 21.6% and barrels, hard-hit exit velocity and bat speed fell.`,
+    `The league model chosen on training data puts his 2027 ISO at <b>${a.iso_range[0].toFixed(3).slice(1)}-${a.iso_range[1].toFixed(3).slice(1)}</b>. Frame by frame, his home-run swing shows no timing change the camera could detect.`,
+    "My log's call 6 (130 wRC+ or lower in 2027, 0.70) stands. The board's $33.0M is what the market may pay; a buyer's walk-away belongs below it. Fewer strikeouts are worth paying for; they aren't power."],
+    `<a href="#swing">Swing lab</a>, <a href="${REPO}2026-arozarena-swing-breakdown.md" target="_blank" rel="noopener">report</a>`)}
+  ${card(4, "Market forecast only; his power projects down too", [
+    "Three seasons near 3.9 WAR a year at 31 carry the call to about $33M a year. That sits at the top of the training range, where three players (Tucker, Bregman, Bellinger) set the slope, so it's the board's least anchored kind of call.",
+    `The same league model I use on Arozarena puts Suzuki's 2027 ISO at ${D.projections["673548"] ? Math.min(D.projections["673548"].train_2024_25, D.projections["673548"].both_pairs, D.projections["673548"].pair_2025_26).toFixed(3).slice(1) + "-" + Math.max(D.projections["673548"].train_2024_25, D.projections["673548"].both_pairs, D.projections["673548"].pair_2025_26).toFixed(3).slice(1) : ""}, against ${D.projections["673548"] ? D.projections["673548"].iso_2026.toFixed(3).slice(1) : ""} in 2026.`,
+    D.labs.suzuki ? "Frame by frame on 17 clean home-run clips, his swing shows no significant change, and his home-run contact held steady. The projected ISO drop is regression, not a warning sign. I have no buyer's report on him yet, so this card stops at the forecast." : "I have no buyer's report on him yet, so this card stops at the forecast."],
+    `<a href="#swing">Swing lab</a>, <a href="${REPO}2027-market-board.md" target="_blank" rel="noopener">board report</a>`)}
+  ${card(18, "Market forecast only: below MLBTR", [
+    "At 35, with WAR of 1.1, 4.0 and 1.1 over three seasons, the age term pulls the call to $16.9M against MLBTR's $22.0M.",
+    "Only a 20% chance he signs above MLBTR's average salary. This is what I expect the market to pay, not a valuation; I haven't priced him for a buyer."],
+    `<a href="${REPO}2027-market-board.md" target="_blank" rel="noopener">Board report</a>`)}
+  ${card(32, "The likely signing for a club that can't pay Morej\u00f3n's price", [
+    "No qualifying offer, so no pick lost. My bullpen memo names him the most likely signing once Morej\u00f3n's price runs past $60M.",
+    "But the board puts him at $15.4M a year. My memo's walk-away (above $25M over two years) would land him about 24% of the time on the board's model.",
+    "The board forecasts $15.4M a year against MLBTR's $11.0M: relievers again.",
+    "Prediction-log call 10: walk rate 11.0% or lower in 2027 (2026: 15.3%), at 0.40."],
+    `<a href="${REPO}2026-bullpen-acquisition-memo.md" target="_blank" rel="noopener">Bullpen memo</a>, <a href="${REPO}2027-prediction-log.md" target="_blank" rel="noopener">prediction log</a>`)}
+  ${card(40, "Price his framing in", [
+    "Framing runs, pitcher- and park-adjusted: +2.6 in 2024, -6.7 in 2025, -7.4 in 2026, near the bottom of the league (Savant: -4.4, -7.9, -9.5).",
+    "The board's $9.0M a year runs on Baseball-Reference WAR. Its catcher term credits him -5, 0 and +1 runs for 2024-26, and across catchers it barely tracks framing (0.24, -0.03, 0.26 with my unadjusted runs), so the call carries little of it.",
+    "A club that prices framing should pay him less than the board's number. How much less depends on how much of 2026 carries over, which one ABS season can't settle."],
+    `<a href="#catchers">Catchers</a>, <a href="${REPO}2026-catcher-framing.md" target="_blank" rel="noopener">framing report</a>`)}
+  </div>
+</section>`;
+}
+
+/* ---------------- swing lab ---------------- */
+const BONES = [[5,6],[5,7],[7,9],[6,8],[8,10],[5,11],[6,12],[11,12],[11,13],[13,15],[12,14],[14,16]];
+let raf = null, last = 0;
+function stopPlay() { state.playing = false; if (raf) cancelAnimationFrame(raf); raf = null; }
+function viewSwing() {
+  const L = D.labs[state.lab];
+  const opts = Object.entries(D.labs).map(([k, v]) => `<button type="button" data-v="${k}" aria-pressed="${state.lab === k}">${esc(v.name)}</button>`).join("");
+  const bs = L.by_season;
+  const row = (lab, key, f) => `<tr><td>${lab}</td>${bs.map(s => `<td>${s[key] == null ? "" : f(s[key])}${L.n_by_measure && L.n_by_measure[key] ? ` <span class="small muted">(${L.n_by_measure[key][s.season] ?? 0})</span>` : ""}</td>`).join("")}<td>${testCell(L.tests[key], key)}</td></tr>`;
+  const sc = L.statcast;
+  return `<section class="view">
+  <div class="lede"><div style="display:grid;gap:10px"><p class="eyebrow">Swing lab: MLB's own clips, measured frame by frame</p>
+    <h2>${esc(L.name)}: did the home-run swing change?</h2>
+    <p class="answer">${state.lab === "arozarena"
+      ? "<strong>Not as power.</strong> The ISO rise is fewer strikeouts: extra bases per at-bat without a strikeout were .272 in both 2025 and 2026, while barrels, hard-hit exit velocity and bat speed fell. Frame by frame, his home-run swing shows no timing change the camera could detect (about 80 ms at foot down with this many swings). Posture can't be compared across these parks."
+      : "<strong>No sign of a change.</strong> On " + L.measured + " clean center-field clips of his " + L.clips + " home runs, his sequence and posture show no significant change, and his home-run contact held steady (median exit velocity 104.9, 105.6, 105.0). His ISO still projects down, which is ordinary regression, not a broken swing."}</p></div>
+    <div class="tiles">
+      <div class="tile"><span class="v num">${L.measured} / ${L.clips}</span><span class="k">home-run clips measurable from the center-field camera</span></div>
+      <div class="tile"><span class="v num">${L.iso_range[0].toFixed(3).slice(1)}-${L.iso_range[1].toFixed(3).slice(1)}</span><span class="k">2027 ISO forecast by fit (2026: ${L.iso_2026.toFixed(3)}); ${Math.round(L.p_match[0] * 100)}-${Math.round(L.p_match[1] * 100)}% chance he matches it</span></div>
+      <div class="tile"><span class="v num">${L.eye.lo}-${L.eye.hi} frames</span><span class="k">from shoulders square to contact, read by eye on ${L.eye.n} of his swings (one frame is 17 ms)</span></div>
+    </div></div>
+  <div class="filters" role="group" aria-label="Swing lab controls">
+    <div class="seg" data-k="lab">${opts}</div>
+    <div class="seg" data-k="show">
+      <button type="button" data-v="early" aria-pressed="${state.show.early}">2024-25</button>
+      <button type="button" data-v="late" aria-pressed="${state.show.late}">2026</button>
+    </div>
+    <label for="speed">Speed <select id="speed">${[[0.1,"0.1x"],[0.25,"0.25x"],[0.5,"0.5x"],[1,"Real time"]].map(([v,l]) => `<option value="${v}" ${state.speed==v?"selected":""}>${l}</option>`).join("")}</select></label>
+  </div>
+  <div class="labgrid">
+    <div class="stage">
+      <svg id="skel" viewBox="0 0 400 420" role="img" aria-label="Median skeleton of his home-run swings, drawn from measured joints"></svg>
+      <div class="controls"><button class="btn" id="play" type="button">Play swing</button>
+        <input type="range" id="scrub" min="0" max="${L.traj.pre + L.traj.post}" step="1" aria-label="Frame">
+        <span class="small num" id="flabel" style="min-width:9ch;text-align:right"></span></div>
+      <div class="tick-labels"><span>1.0 s before contact</span><span>Contact</span><span>0.2 s after</span></div>
+      <p class="small muted">The median skeleton over ${L.traj.n_early} swings (2024-25, blue) and ${L.traj.n_late} (2026, red), aligned on contact and scaled to torso length. Drawn from the joints I measured, not from MLB's frames. The center-field camera looks down the stride, so the stride toward the pitcher is invisible here by design.</p>
+    </div>
+    <div style="display:grid;gap:16px;align-content:start">
+      <div class="panel" style="display:grid;gap:8px"><h3>What the camera measures</h3>
+        <div class="tablewrap"><table><thead><tr><th>Measure, median (swings)</th>${bs.map(s => `<th>${s.season}</th>`).join("")}<th>Change</th></tr></thead><tbody>
+          ${state.lab === "suzuki" ? "" : row("Foot down to contact", "down_to_contact_ms", v => Math.round(v) + " ms")}
+          ${state.lab === "suzuki" ? "" : row("Leg lift to contact", "lift_to_contact_ms", v => Math.round(v) + " ms")}
+          ${row("Hips square before shoulders", "hip_lead_ms", v => Math.round(v) + " ms")}
+          ${row("Head drop (torso lengths)", "head_drop", v => v.toFixed(2))}
+          ${row("Shoulder tilt at contact", "shoulder_tilt", v => v.toFixed(1) + "\u00b0")}
+        </tbody></table></div>
+        <p class="small muted">${state.lab === "arozarena" ? "Head drop is the one significant difference, and I can't tell whether it's him or the cameras: 7 of the 11 measured 2024 swings are at Tropicana Field, and camera height changes how a vertical drop looks. In the three parks with swings in both seasons, the gap shows only at Tropicana, on one 2026 swing (Seattle 0.34 vs 0.25 and 0.52; Fenway 0.45 vs 0.42 and 0.48). Smallest timing changes this sample could detect: " + Math.round(L.detectable.down_to_contact_ms) + " ms at foot down, " + Math.round(L.detectable.lift_to_contact_ms) + " ms at leg lift, one frame for hip lead." : "His load is a toe tap, so his front foot barely lifts, and foot-down timing can't be read reliably from this camera. I left those rows out. Two clips were removed by eye: a side replay and an off-axis camera. Permutation tests on the median, 2026 against 2024-25."}</p>
+      </div>
+      <div class="panel" style="display:grid;gap:8px"><h3>What Statcast says, all swings</h3>
+        <div class="tablewrap"><table><thead><tr><th>Season</th><th>PA</th><th>ISO</th><th>Barrel</th><th>EV90</th><th>Bat speed</th><th>Length</th><th>Attack</th></tr></thead><tbody>
+        ${sc.map(s => `<tr><td>${s.season}</td><td>${s.pa}</td><td>${s.iso.toFixed(3)}</td><td>${(s.barrel * 100).toFixed(1)}%</td><td>${s.ev90}</td><td>${s.bat_speed ?? ""}</td><td>${s.swing_length ?? ""}</td><td>${s.attack_angle ?? ""}&deg;</td></tr>`).join("")}
+        </tbody></table></div>
+        <p class="small muted">Bat speed, length and attack angle on competitive swings. Across the league, adding them to ISO plus barrel rate (the model chosen on training data) cuts next season's ISO error by about 1% (0.5% for bat speed, 1.4% for swing length) (${D.bat_power.n_test} hitters, scored on 2025 to 2026).</p>
+      </div>
+    </div>
+  </div>
+  <div class="panel" style="display:grid;gap:10px"><h3>Every home run, with the clip</h3>
+    <div class="tablewrap"><table><thead><tr><th>Date</th><th>Pitch</th><th>EV</th><th>LA</th><th>Bat speed</th><th>Foot down</th><th>Head drop</th><th>Clip</th></tr></thead><tbody>
+    ${L.swings.slice().sort((a, b) => String(b.date).localeCompare(String(a.date))).map(s => `<tr><td>${esc(s.date ?? "")}</td><td>${esc(s.pitch_type ?? "")} ${s.pitch_speed ? s.pitch_speed.toFixed(0) : ""}</td><td>${s.launch_speed ?? ""}</td><td>${s.launch_angle ?? ""}</td><td>${s.bat_speed ?? ""}</td><td>${s.measured && s.down_to_contact_ms != null ? Math.round(s.down_to_contact_ms) + " ms" : '<span class="muted">not measured</span>'}</td><td>${s.measured ? s.head_drop?.toFixed(2) : ""}</td><td>${s.page ? `<a href="${esc(s.page)}" target="_blank" rel="noopener">MLB.com</a>` : ""}</td></tr>`).join("")}
+    </tbody></table></div>
+  </div>
+</section>`;
+}
+function testCell(t, key) {
+  if (!t || t.diff == null) return "";
+  const f = key === "head_drop" ? t.diff.toFixed(2) : key === "shoulder_tilt" ? t.diff.toFixed(1) + "\u00b0" : Math.round(t.diff) + " ms";
+  return `<span class="${t.p < 0.05 ? "sig" : ""}">${t.diff > 0 ? "+" : ""}${f}</span><br><span class="small muted">p ${t.p < 0.001 ? "&lt;0.001" : t.p.toFixed(t.p < 0.01 ? 3 : 2)}</span>`;
+}
+function drawSkel(i) {
+  const L = D.labs[state.lab], svg = document.getElementById("skel"); if (!svg) return;
+  const X = x => 200 + x * 85, Y = y => 160 - y * 85;
+  const out = [];
+  out.push(`<rect x="0" y="0" width="400" height="420" fill="${C.plate}"/>`);
+  out.push(`<line x1="20" x2="380" y1="${Y(-1.85)}" y2="${Y(-1.85)}" stroke="${C.grid}" stroke-width="2"/>`);
+  for (const [key, col] of [["early", C.blue], ["late", C.red]]) {
+    if (!state.show[key]) continue;
+    const f = L.traj[key][i]; if (!f) continue;
+    const ok = j => f[j] && f[j][0] != null && f[j][1] != null;
+    for (const [a, b] of BONES) if (ok(a) && ok(b)) out.push(`<line x1="${X(f[a][0])}" y1="${Y(f[a][1])}" x2="${X(f[b][0])}" y2="${Y(f[b][1])}" stroke="${col}" stroke-width="5" stroke-linecap="round" opacity=".85"/>`);
+    if (ok(0)) {
+      out.push(`<circle cx="${X(f[0][0])}" cy="${Y(f[0][1])}" r="11" fill="${col}"/>`);
+      const s0 = L.traj[key][0];
+      if (s0 && s0[0] && s0[0][1] != null) out.push(`<line x1="20" x2="380" y1="${Y(s0[0][1])}" y2="${Y(s0[0][1])}" stroke="${col}" stroke-dasharray="4 5" stroke-width="1"/>`);
+    }
+  }
+  const pre = L.traj.pre, ms = Math.round((i - pre) * 1000 / L.traj.fps);
+  out.push(`<text x="20" y="400" font-size="13" fill="${C.muted}" font-family="Bricolage Grotesque, system-ui">${i === pre ? "Contact" : (ms < 0 ? ms + " ms before contact" : "+" + ms + " ms after contact")}</text>`);
+  out.push(`<text x="380" y="400" font-size="12" text-anchor="end" fill="${C.soft}" font-family="Bricolage Grotesque, system-ui">Dashed: head height at the start</text>`);
+  svg.innerHTML = out.join("");
+  const lab = document.getElementById("flabel"); if (lab) lab.textContent = (ms > 0 ? "+" : "") + ms + " ms";
+  const sc = document.getElementById("scrub"); if (sc && +sc.value !== i) sc.value = i;
+}
+function bindSwing() {
+  const L = D.labs[state.lab];
+  if (state.frame == null || state.frame > L.traj.pre + L.traj.post) state.frame = L.traj.pre;
+  document.querySelectorAll(".seg").forEach(s => s.addEventListener("click", e => {
+    const v = e.target.closest("button")?.dataset.v; if (!v) return;
+    if (s.dataset.k === "lab") { state.lab = v; state.frame = null; route(); return; }
+    state.show[v] = !state.show[v];
+    if (!state.show.early && !state.show.late) state.show[v === "early" ? "late" : "early"] = true;
+    s.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", state.show[x.dataset.v]));
+    drawSkel(state.frame);
+  }));
+  document.getElementById("speed").addEventListener("change", e => { state.speed = +e.target.value; });
+  document.getElementById("scrub").addEventListener("input", e => { stopPlay(); setPlayLabel(); state.frame = +e.target.value; drawSkel(state.frame); });
+  document.getElementById("play").addEventListener("click", () => {
+    if (state.playing) { stopPlay(); setPlayLabel(); return; }
+    const end = L.traj.pre + L.traj.post;
+    if (state.frame >= end) state.frame = 0;
+    state.playing = true; setPlayLabel(); last = performance.now();
+    let acc = state.frame;
+    const step = now => {
+      if (!state.playing) return;
+      acc += (now - last) / 1000 * L.traj.fps * state.speed; last = now;
+      const i = Math.min(end, Math.floor(acc));
+      if (i !== state.frame) { state.frame = i; drawSkel(i); }
+      if (i >= end) { stopPlay(); setPlayLabel(); return; }
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+  });
+  drawSkel(state.frame);
+}
+function setPlayLabel() { const b = document.getElementById("play"); if (b) b.textContent = state.playing ? "Pause" : "Play swing"; }
+
+/* ---------------- catchers ---------------- */
+function viewCatchers() {
+  const F = D.framing, S = F.summary;
+  const sd = s => S.spread[s].sd_adj.toFixed(1), r = s => S.seasons[s].savant.r_raw.toFixed(2);
+  return `<section class="view">
+  <div class="lede"><div style="display:grid;gap:10px"><p class="eyebrow">Catchers: framing after the ABS challenge system</p>
+    <h2>Calls got sharper in 2026. Framing paid 10-23% less, depending on whose model.</h2>
+    <p class="answer">My public model matches Baseball Savant's framing runs (r ${r(2024)}, ${r(2025)}, ${r(2026)}). In the first ABS season, takes with an uncertain call fell from ${(100 * S.seasons[2025].zone.uncertain_share).toFixed(0)}% to ${(100 * S.seasons[2026].zone.uncertain_share).toFixed(0)}%. Framing's spread per pitch fell <strong>${Math.round(100 * (1 - S.spread[2026].sd_per_1000 / S.spread[2025].sd_per_1000))}%</strong> on my model and <strong>${Math.round(100 * (1 - S.spread[2026].sd_savant_per_1000 / S.spread[2025].sd_savant_per_1000))}%</strong> on Savant's, after an 8-10% drop the year before, so the ABS share can't be pinned down on one season. Discount a catcher's pre-2026 framing by 10-25% when pricing him.</p></div>
+    <div class="tiles">
+      <div class="tile"><span class="v num">$${S.spread[2025].full_time_sd_dollars.toFixed(1)}M</span><span class="k">one SD of framing for a full-time catcher (7,000 takes), 2025</span></div>
+      <div class="tile"><span class="v num">$${S.spread[2026].full_time_sd_dollars.toFixed(1)}M</span><span class="k">the same in 2026 ($11.23M a win, 10 runs a win)</span></div>
+      <div class="tile"><span class="v num">${S.year_to_year_adj["2025->2026"].r.toFixed(2)}</span><span class="k">2025 to 2026 correlation, down from ${S.year_to_year_adj["2024->2025"].r.toFixed(2)}; not significant on the same ${S.year_to_year_paired.catchers} catchers</span></div>
+    </div></div>
+  <div class="filters" role="group" aria-label="Season">
+    <div class="seg" data-k="season">${[2024, 2025, 2026].map(s => `<button type="button" data-v="${s}" aria-pressed="${state.season === s}">${s}${s === 2026 ? " (ABS)" : ""}</button>`).join("")}</div>
+    <span class="fsum" id="csum"></span>
+  </div>
+  <div class="labgrid">
+    <div class="panel lb" style="overflow-x:auto"><div id="lb"></div></div>
+    <div style="display:grid;gap:16px;align-content:start">
+      <div class="panel" style="display:grid;gap:8px"><h3>The spread, season by season</h3><svg id="spread" viewBox="0 0 460 260" style="width:100%;height:auto" role="img" aria-label="Framing runs by catcher and season"></svg>
+        <p class="small muted">Each dot is a catcher with 1,500+ takes; pitcher- and park-adjusted runs. Red: Patrick Bailey.</p></div>
+      <div class="callout"><h3>This winter's free-agent catchers</h3>
+        ${["Tyler Stephenson", "Carson Kelly"].map(n => { const c = F.catchers.find(x => x.name === n); if (!c) return ""; return `<p><b>${n}</b>: ${[2024, 2025, 2026].map(s => c.seasons[s] ? sgn(c.seasons[s].adj) : "n/a").join(" / ")} runs (2024 / 2025 / 2026). ${n === "Tyler Stephenson" ? "Near the bottom of the league the last two seasons. My board's $9.0M a year runs on Baseball-Reference WAR, which carries little framing, so a club that prices framing should pay less." : "About average, and steady."}</p>`; }).join("")}
+      </div>
+    </div>
+  </div>
+</section>`;
+}
+function renderLB() {
+  const s = state.season, rows = D.framing.catchers.filter(c => c.seasons[s]).sort((a, b) => b.seasons[s].adj - a.seasons[s].adj);
+  const max = Math.max(5, ...rows.map(c => Math.abs(c.seasons[s].adj)));
+  document.getElementById("csum").textContent = `${rows.length} catchers with 1,500+ takes`;
+  const bar = v => { const w = Math.abs(v) / max * 50; return `<svg viewBox="0 0 100 14" preserveAspectRatio="none" style="width:100%;height:14px"><line x1="50" x2="50" y1="0" y2="14" stroke="${C.grid}"/><rect x="${v < 0 ? 50 - w : 50}" y="2" width="${w}" height="10" rx="2" fill="${v < 0 ? C.blue : C.red}"/></svg>`; };
+  document.getElementById("lb").innerHTML = `<div class="row" style="border-bottom:1px solid var(--rule)"><span></span><span class="eyebrow">Catcher</span><span class="eyebrow" style="text-align:center">Runs lost / gained</span><span class="eyebrow" style="text-align:right">Runs</span></div>` +
+    rows.map((c, i) => `<div class="row"><span class="small muted num">${i + 1}</span><span class="who">${c.head ? head(c) : ""}<span style="min-width:0"><span class="nm" style="font-weight:600">${esc(c.name)}</span><span class="meta">${club(c.team)}<span class="num">${c.seasons[s].takes.toLocaleString()} takes</span></span></span></span>${bar(c.seasons[s].adj)}<span class="num" style="text-align:right;font-weight:700">${sgn(c.seasons[s].adj)}</span></div>`).join("");
+}
+function renderSpread() {
+  const svg = document.getElementById("spread"); if (!svg) return;
+  const xs = {2024: 110, 2025: 230, 2026: 350}, Y = v => 130 - v * 4.2, out = [];
+  for (const v of [-10, 0, 10, 20]) out.push(`<line x1="44" x2="440" y1="${Y(v)}" y2="${Y(v)}" stroke="${C.grid}"/><text x="38" y="${Y(v) + 4}" text-anchor="end" font-size="11" fill="${C.muted}">${v > 0 ? "+" : ""}${v}</text>`);
+  let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+  for (const c of D.framing.catchers) for (const [s, v] of Object.entries(c.seasons)) {
+    const bailey = c.name === "Patrick Bailey";
+    out.push(`<circle cx="${xs[s] + (bailey ? 0 : (rnd() - 0.5) * 60)}" cy="${Y(v.adj)}" r="${bailey ? 6 : 3.6}" fill="${bailey ? C.red : C.blue}" opacity="${bailey ? 1 : 0.55}"><title>${esc(c.name)} ${s}: ${sgn(v.adj)}</title></circle>`);
+  }
+  for (const s of [2024, 2025, 2026]) out.push(`<text x="${xs[s]}" y="250" text-anchor="middle" font-size="12" fill="${C.ink}" font-weight="600">${s}${s === 2026 ? " (ABS)" : ""}</text>`);
+  svg.innerHTML = out.join("");
+}
+function bindCatchers() {
+  document.querySelector('.seg[data-k="season"]').addEventListener("click", e => {
+    const v = e.target.closest("button")?.dataset.v; if (!v) return;
+    state.season = +v; e.currentTarget.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x.dataset.v === v)); renderLB();
+  });
+  renderLB(); renderSpread();
+}
+
+/* ---------------- method ---------------- */
+function viewMethod() {
+  const bt = D.backtest, bp = D.bat_power, F = D.framing.summary;
+  return `<section class="view">
+  <div class="lede"><div style="display:grid;gap:10px"><p class="eyebrow">Method and checks</p><h2>How each number was made, and how it could be wrong</h2>
+  <p class="answer">Every study was scored on data its model never saw, or checked against an outside benchmark, before it went into this packet. Where the check came back small or null, the page says so.</p></div></div>
+  <div class="method">
+    <div class="panel"><h3>Market board</h3><ul>
+      <li>Fit on the 2025-26 class (${bt.n} signed players with an MLB record), each player left out of his own fit.</li>
+      <li>The edge is one player: without Kyle Tucker, ${money2(D.robust.without_tucker.mae_mine)} against ${money2(D.robust.without_tucker.mae_mlbtr)}; without Tucker and Bichette, MLBTR is better. The median miss is ${money2(D.robust.median_mine)} against ${money2(D.robust.median_mlbtr)}.</li>
+      <li>Scoring rules, set before any called player signed: MLBTR's own signing line; major league deals only; first seen by April 30, 2027; deferrals at face value; a deal at exactly MLBTR's salary counts as not above it.</li>
+      <li>Average salary error ${money2(bt.mae_mine)} against MLBTR's ${money2(bt.mae_mlbtr)}. The 95% range of the edge runs -$${Math.abs(bt.edge_lo).toFixed(2)}M to +$${bt.edge_hi.toFixed(2)}M, so it could be zero.</li>
+      <li>Last winter, MLBTR's salaries ran ${money(-bt.mlbtr_bias)} a year low, its years ${bt.years_bias.toFixed(1)} long, its totals $${bt.total_bias.toFixed(1)}M high.</li>
+      <li>Partly in-sample: the spread behind the probabilities and the Brier score come from the same winter, and I chose the reliever and age terms after seeing it. This winter is the clean test.</li>
+      <li>The calls are frozen in the repo (market/calls_2026-27.json); scoring reads the signing lines MLBTR adds to its own list.</li></ul>
+      <p class="small"><a href="${REPO}2027-market-board.md" target="_blank" rel="noopener">Full report</a></p></div>
+    <div class="panel"><h3>Catcher framing</h3><ul>
+      <li>Called-strike model on ${(F.seasons[2024].takes + F.seasons[2025].takes + F.seasons[2026].takes).toLocaleString()} takes, fit out of fold by game; a strike valued count by count from run expectancy.</li>
+      <li>Matches Savant's framing runs at r ${F.seasons[2024].savant.r_raw.toFixed(2)}, ${F.seasons[2025].savant.r_raw.toFixed(2)}, ${F.seasons[2026].savant.r_raw.toFixed(2)}.</li>
+      <li>Within-season reliability ${F.seasons[2026].split_half.r_season.toFixed(2)} (odd vs even games, 2026).</li>
+      <li>The drop is measured per 1,000 takes (mine) and per 1,000 pitches (Savant's), so more catchers sharing the 2026 takes doesn't inflate it: 23% on mine, 10% on Savant's, after 10% and 8% the year before.</li>
+      <li>Statcast appears to log the call that stood after a challenge, so challenge wins are already inside framing runs; don't add them twice.</li>
+      <li>The umpire isn't in public data; home park stands in for part of the crew.</li></ul>
+      <p class="small"><a href="${REPO}2026-catcher-framing.md" target="_blank" rel="noopener">Full report</a></p></div>
+    <div class="panel"><h3>Swing lab</h3><ul>
+      <li>MLB's highlight clip of every home run, matched to the play by Statcast play id; 1280x720 at 59.94 frames a second.</li>
+      <li>Pose tracking finds the center-field shot, follows the batter frame by frame, and measures timing and posture from the big joints. Wrists blur during the swing, so nothing uses them.</li>
+      <li>Contact is timed from the moment the shoulders square, with the offset read by eye on seven swings (5 to 7 frames).</li>
+      <li>23 of 73 clips were measurable: 19 had no usable center-field view, 27 no clean rotation, 4 a batter under 110 pixels. 2025 has only 2.</li></ul>
+      <p class="small"><a href="${REPO}2026-arozarena-swing-breakdown.md" target="_blank" rel="noopener">Full report</a></p></div>
+    <div class="panel"><h3>Bat tracking and power</h3><ul>
+      <li>Fit on 2024 to 2025 (${bp.n_train} hitters), scored on 2025 to 2026 (${bp.n_test}).</li>
+      <li>The batted-ball model is chosen by cross-validation on the training pairs alone: ISO plus barrel rate (out-of-sample R\u00b2 ${bp.ball["ISO + barrel rate"].r2.toFixed(2)}; ISO plus 90th-percentile exit velocity did better on the test pairs, ${bp.ball["ISO + 90th-pct EV"].r2.toFixed(2)}).</li>
+      <li>Bat speed and swing length add about 1% of the error; nothing moves it by 0.001 ISO.</li>
+      <li>A drop in bat speed adds no warning of its own: ${bp.change.per_mph.toFixed(3)} ISO per mph (95% range ${bp.change.lo.toFixed(3)} to +${bp.change.hi.toFixed(3)}, ${bp.change.n} hitters).</li>
+      <li>Bat speed is among the steadiest numbers (${bp.stability.bat_speed.toFixed(2)} year to year; swing length ${bp.stability.swing_length.toFixed(2)}); hard-hit exit velocity already carries most of it.</li></ul></div>
+  </div>
+</section>`;
+}
+
+/* ---------------- boot ---------------- */
+const mast = document.querySelector("header.mast");
+const setMast = () => document.documentElement.style.setProperty("--mast", mast.offsetHeight + "px");
+setMast(); window.addEventListener("resize", setMast);
+fetch("data.json").then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }).then(d => {
+  D = d;
+  if (!location.hash) { try { const v = localStorage.getItem("packet-view"); if (v && VIEWS[v]) history.replaceState(null, "", "#" + v); } catch (e) {} }
+  route();
+  window.addEventListener("hashchange", route);
+}).catch(() => { app.innerHTML = `<p class="loading">The packet data didn't load. Reload the page to try again.</p>`; });
+})();
+</script>

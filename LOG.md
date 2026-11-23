@@ -2,6 +2,16 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-23: The 2027 Offseason Decision Packet
+**Built**
+- **An interactive packet** (`docs/offseason/`, built by `docs/build_offseason.py` from this repo's outputs) with five views. Every chart is drawn from the data in the page, and no MLB video frame is reproduced.
+  - The market board, scored live as players sign.
+  - Buyer cards for the biggest disagreements with MLBTR.
+  - The swing lab: Arozarena's and Suzuki's median home-run swings animated from the measured joints.
+  - The framing leaderboard.
+  - How each number was made and checked.
+- **Kept current:** when a called player signs, I re-pull the board, score it, rebuild the packet and push it.
+
 ## 2026-11-23: Seiya Suzuki in the swing lab
 **Built**
 - **Suzuki's 78 home-run clips** through the same video pipeline: 17 measurable after I removed two by eye (a side replay and an off-axis camera; `reports/outputs/suzuki_excluded_by_eye.json`). Contact read by eye on five swings came 6-7 frames after the shoulders square, in line with Arozarena's offset.
