@@ -1,0 +1,15 @@
+{
+ "rule": "Clips I removed after looking at the frame the measurement used; each would otherwise count as a center-field measurement.",
+ "excluded": [
+  {
+   "play_id": "acc64842-5ea2-3ca2-b5df-ef3d0366e922",
+   "page": "https://www.mlb.com/video/jazz-chisholm-jr-homers-22-on-a-fly-ball-to-right-center-field",
+   "reason": "the tracker followed the Rays' pitcher instead of him (at Steinbrenner Field the center-field camera puts the pitcher in front of the batter); every measured frame is the pitcher's delivery (checked by eye, Nov. 23, 2026)"
+  },
+  {
+   "play_id": "b7fe5748-fda1-47f9-b7eb-6f3ad5a7af75",
+   "page": "https://www.mlb.com/video/jazz-chisholm-jr-homers-24-on-a-fly-ball-to-right-field",
+   "reason": "the tracker followed the catcher, not him; the measured joints are the catcher's crouch through the pitch (checked by eye, Nov. 23, 2026)"
+  }
+ ]
+}

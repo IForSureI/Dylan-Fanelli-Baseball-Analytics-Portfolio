@@ -1,0 +1,152 @@
+{
+ "clips": 87,
+ "measured": 24,
+ "by_season": [
+  {
+   "season": 2024,
+   "n": 6,
+   "down_to_contact_ms": 216.8833,
+   "down_to_contact_ms_n": 6,
+   "lift_to_contact_ms": 650.65,
+   "lift_to_contact_ms_n": 5,
+   "hip_lead_ms": 8.3417,
+   "hip_lead_ms_n": 6,
+   "head_drop": 0.4256,
+   "head_drop_n": 6,
+   "shoulder_tilt": 26.7151,
+   "shoulder_tilt_n": 6,
+   "bat_speed": 76.1,
+   "bat_speed_n": 5,
+   "attack_angle": 21.5682,
+   "attack_angle_n": 5,
+   "launch_speed": 103.9,
+   "launch_speed_n": 6
+  },
+  {
+   "season": 2025,
+   "n": 2,
+   "down_to_contact_ms": 316.9833,
+   "down_to_contact_ms_n": 2,
+   "lift_to_contact_ms": 567.2333,
+   "lift_to_contact_ms_n": 2,
+   "hip_lead_ms": 16.6833,
+   "hip_lead_ms_n": 2,
+   "head_drop": 0.4423,
+   "head_drop_n": 2,
+   "shoulder_tilt": 24.2115,
+   "shoulder_tilt_n": 2,
+   "bat_speed": 77.45,
+   "bat_speed_n": 2,
+   "attack_angle": 21.3284,
+   "attack_angle_n": 2,
+   "launch_speed": 104.85,
+   "launch_speed_n": 2
+  },
+  {
+   "season": 2026,
+   "n": 16,
+   "down_to_contact_ms": 208.5417,
+   "down_to_contact_ms_n": 16,
+   "lift_to_contact_ms": 617.2833,
+   "lift_to_contact_ms_n": 15,
+   "hip_lead_ms": 0.0,
+   "hip_lead_ms_n": 16,
+   "head_drop": 0.3727,
+   "head_drop_n": 16,
+   "shoulder_tilt": 24.8468,
+   "shoulder_tilt_n": 16,
+   "bat_speed": 75.75,
+   "bat_speed_n": 16,
+   "attack_angle": 20.3441,
+   "attack_angle_n": 16,
+   "launch_speed": 103.7,
+   "launch_speed_n": 16
+  }
+ ],
+ "tests": {
+  "down_to_contact_ms": {
+   "n_a": 8,
+   "n_b": 16,
+   "diff": -25.025000000000006,
+   "p": 0.4718
+  },
+  "lift_to_contact_ms": {
+   "n_a": 7,
+   "n_b": 15,
+   "diff": 0.0,
+   "p": 1.0
+  },
+  "hip_lead_ms": {
+   "n_a": 8,
+   "n_b": 16,
+   "diff": -16.683333333333334,
+   "p": 0.0451
+  },
+  "head_drop": {
+   "n_a": 8,
+   "n_b": 16,
+   "diff": -0.06933187677237806,
+   "p": 0.16765
+  },
+  "shoulder_tilt": {
+   "n_a": 8,
+   "n_b": 16,
+   "diff": -1.8683322352361955,
+   "p": 0.4205
+  }
+ },
+ "detectable_change": {
+  "down_to_contact_ms": 73.79216951376026,
+  "lift_to_contact_ms": 215.2564579700475,
+  "hip_lead_ms": 20.03043208138494,
+  "head_drop": 0.132369341628091,
+  "shoulder_tilt": 8.285250092360274
+ },
+ "n_by_measure": {
+  "down_to_contact_ms": {
+   "2024": 6,
+   "2025": 2,
+   "2026": 16
+  },
+  "lift_to_contact_ms": {
+   "2024": 5,
+   "2025": 2,
+   "2026": 15
+  },
+  "hip_lead_ms": {
+   "2024": 6,
+   "2025": 2,
+   "2026": 16
+  },
+  "head_drop": {
+   "2024": 6,
+   "2025": 2,
+   "2026": 16
+  },
+  "shoulder_tilt": {
+   "2024": 6,
+   "2025": 2,
+   "2026": 16
+  }
+ },
+ "statcast_hr_medians": {
+  "2024": {
+   "n": 21,
+   "launch_speed": 104.4,
+   "bat_speed": 75.55,
+   "bat_speed_n": 20
+  },
+  "2025": {
+   "n": 31,
+   "launch_speed": 105.3,
+   "bat_speed": 75.7,
+   "bat_speed_n": 28
+  },
+  "2026": {
+   "n": 35,
+   "launch_speed": 104.5,
+   "bat_speed": 76.0,
+   "bat_speed_n": 35
+  }
+ }
+}

@@ -194,3 +194,18 @@ def run(project: tuple[int, ...] = (668227, 673548)) -> dict:
     (OUT / "bat_power_summary.json").write_text(json.dumps(out, indent=1) + "\n")
     pd.concat(tables.values()).round(4).to_json(OUT / "bat_power_seasons.json", orient="records")
     return out
+
+
+def add_projections(batters: tuple[int, ...]) -> dict:
+    """Add hitters to the saved summary's projections without refitting anything else: the same three fits, run on
+    the saved season tables (reports/outputs/bat_power_seasons.json, the tables run() wrote). On those tables the
+    stored Arozarena and Suzuki projections come back to three places, so a hitter added later is projected the
+    same way as the first two. Used for Chisholm (665862) and Lowe (664040), Nov. 23, 2026."""
+    s = pd.read_json(OUT / "bat_power_seasons.json")
+    tables = {int(y): g.drop(columns="season").reset_index(drop=True) for y, g in s.groupby("season")}
+    path = OUT / "bat_power_summary.json"
+    out = json.loads(path.read_text())
+    for b in batters:
+        out["projections"][str(b)] = projection(tables, b, tuple(BALL_MODELS[out["best_ball"]]))
+    path.write_text(json.dumps(out, indent=1) + "\n")
+    return out

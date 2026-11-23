@@ -1,0 +1,41 @@
+{
+ "rule": "Contact read by eye: the first frame where the barrel is out in front of the plate on the ball's line, on the frames from 2 to 10 after the detected shoulders-square frame (59.94 fps). Offsets are frames after shoulders square. Swings where the ball can't be seen at the bat are not read.",
+ "read_on": "2026-11-23",
+ "offsets": [
+  {
+   "play_id": "fa28f077-3c84-33ff-a537-0a8121e7969c",
+   "page": "https://www.mlb.com/video/jack-leiter-in-play-run-s-to-jazz-chisholm-jr",
+   "offset_frames": 5
+  },
+  {
+   "play_id": "b3bbb8ea-305d-46ca-a46d-04bb5651e90f",
+   "page": "https://www.mlb.com/video/jazz-chisholm-jr-homers-12-on-a-fly-ball-to-right-field",
+   "offset_frames": 7
+  },
+  {
+   "play_id": "9c9d383e-80e4-3a44-9f2a-5eded15c7c5a",
+   "page": "https://www.mlb.com/video/jazz-chisholm-jr-homers-14-on-a-fly-ball-to-right-field-trent-grisham-sco",
+   "offset_frames": 6
+  },
+  {
+   "play_id": "9cccaae4-fa7f-3195-8d18-8fadd7fce6d4",
+   "page": "https://www.mlb.com/video/jazz-chisholm-jr-homers-16-on-a-fly-ball-to-center-field",
+   "offset_frames": 5
+  },
+  {
+   "play_id": "d0a98a85-bb3b-36e5-9816-efaab73b214b",
+   "page": "https://www.mlb.com/video/jazz-chisholm-jr-homers-19-on-a-fly-ball-to-center-field-giancarlo-stanto",
+   "offset_frames": 4
+  },
+  {
+   "play_id": "881f7ef4-82be-3f90-8dbd-4623222ce78e",
+   "page": "https://www.mlb.com/video/jazz-chisholm-jr-homers-20-on-a-fly-ball-to-right-center-field-gfivqo",
+   "offset_frames": 6
+  },
+  {
+   "play_id": "f1d1bfa3-df3e-35e1-8830-a6bdbb733406",
+   "page": "https://www.mlb.com/video/jazz-chisholm-jr-homers-27-on-a-fly-ball-to-right-field-trent-grisham-sco",
+   "offset_frames": 6
+  }
+ ]
+}

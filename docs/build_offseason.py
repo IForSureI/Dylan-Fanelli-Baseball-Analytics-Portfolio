@@ -127,7 +127,7 @@ def lab(name, mlbam, stand, title):
     nbm = {c: {str(int(s)): int(m[m.season == s][c].notna().sum()) for s in sorted(m.season.dropna().unique())} for c in B.MEASURES}
     eye_file = REPO / 'reports/outputs' / f'{name}_contact_by_eye.json'
     eye = [e['offset_frames'] for e in json.loads(eye_file.read_text())['offsets']] if eye_file.exists() else []
-    return dict(name=title, mlbam=mlbam, head=headshot(mlbam), clips=int(len(t)), measured=int(t.measured.sum()), n_by_measure=nbm,
+    return dict(name=title, mlbam=mlbam, stand=stand, head=headshot(mlbam), clips=int(len(t)), measured=int(t.measured.sum()), n_by_measure=nbm,
                 eye=dict(n=len(eye), lo=min(eye) if eye else None, hi=max(eye) if eye else None),
                 by_season=B.by_season(t).round(4).replace({np.nan: None}).to_dict('records'), tests=tests,
                 traj=dict(early=rnd(early), late=rnd(late), n_early=ne, n_late=nl, pre=60, post=12, fps=59.94), swings=swings)
@@ -183,7 +183,17 @@ if FULL:
     if _sz.exists() and all((REPO / 'data/raw/video/pose' / f"{r['play_id']}.npz").exists() for r in json.loads(_sz.read_text()) if 'mp4' in r):
         labs['suzuki'] = lab('suzuki', 673548, 'R', 'Seiya Suzuki')
 else:
-    labs = {k: refresh_lab(k, v) for k, v in PREV['labs'].items()}
+    labs = {k: refresh_lab(k, v, v.get('stand', 'R')) for k, v in PREV['labs'].items()}
+# Hitters added to the swing lab after the first two. Each is built in full whenever its pose files and the pitch files
+# are here (and its swing table and summary written to reports/outputs/); otherwise it is refreshed like the others.
+LATER_LABS = {'chisholm': (665862, 'L', 'Jazz Chisholm Jr.'), 'lowe': (664040, 'L', 'Brandon Lowe')}
+for k, (mid, stand, title) in LATER_LABS.items():
+    hr = REPO / 'data/raw/video' / f'{k}_hr.json'
+    if (REPO / 'data/seq').exists() and hr.exists() and all((REPO / 'data/raw/video/pose' / f"{r['play_id']}.npz").exists()
+                                                             for r in json.loads(hr.read_text()) if 'mp4' in r):
+        labs[k] = lab(k, mid, stand, title)
+        _t = B.table(k, mid, stand)
+        labs[k]['detectable'] = B.save(k, _t)['detectable_change']
 for k, v in labs.items():   # clips removed by eye after looking at the frame (counted on the method view)
     ex = REPO / 'reports/outputs' / f'{k}_excluded_by_eye.json'
     v['excluded_by_eye'] = len(json.loads(ex.read_text())['excluded']) if ex.exists() else 0

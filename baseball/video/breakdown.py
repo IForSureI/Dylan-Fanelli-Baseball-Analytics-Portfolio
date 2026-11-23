@@ -207,3 +207,31 @@ def trajectory(t: pd.DataFrame, seasons, pre: int = 60, post: int = 12, stand: s
     if not stack:
         return np.full((pre + post + 1, 17, 2), np.nan), 0
     return np.nanmedian(np.stack(stack), axis=0), len(stack)
+
+
+SWING_COLS = ["play_id", "page", "date", "season", "measured", "batter_px", "torso_px", "contact_frame", "down_to_contact_ms",
+              "lift_to_contact_ms", "hip_lead_ms", "head_drop", "shoulder_tilt", "bat_speed", "attack_angle", "swing_length",
+              "launch_speed", "launch_angle", "pitch_type", "pitch_speed"]
+
+
+def save(name: str, t: pd.DataFrame) -> dict:
+    """Write the per-swing table (reports/outputs/<name>_swings.json) and the season summary with its tests and
+    detection limits (<name>_swing_summary.json), the files the packet's swing lab and the tests read."""
+    rows = t.reindex(columns=SWING_COLS).sort_values("date")
+    rows = [{k: (None if isinstance(v, float) and not np.isfinite(v) else (round(v, 4) if isinstance(v, float) else v))
+             for k, v in r.items()} for r in rows.astype(object).to_dict("records")]
+    (OUT / f"{name}_swings.json").write_text(json.dumps(rows, indent=1) + "\n")
+    m = t[t.measured]
+    hr = t.dropna(subset=["season"])
+    summary = dict(
+        clips=int(len(t)), measured=int(t.measured.sum()),
+        by_season=by_season(t).round(4).replace({np.nan: None}).to_dict("records"),
+        tests={c: permutation(t, c) for c in MEASURES},
+        detectable_change={c: (None if not np.isfinite(v) else float(v)) for c, v in ((c, detectable(t, c)) for c in MEASURES)},
+        n_by_measure={c: {str(int(s)): int(m[m.season == s][c].notna().sum()) for s in sorted(m.season.dropna().unique())} for c in MEASURES},
+        statcast_hr_medians={str(int(s)): dict(n=int(len(g)), launch_speed=round(float(g.launch_speed.median()), 2),
+                                                bat_speed=None if g.bat_speed.isna().all() else round(float(g.bat_speed.median()), 2),
+                                                bat_speed_n=int(g.bat_speed.notna().sum()))
+                             for s, g in hr.groupby("season")})
+    (OUT / f"{name}_swing_summary.json").write_text(json.dumps(summary, indent=1) + "\n")
+    return summary

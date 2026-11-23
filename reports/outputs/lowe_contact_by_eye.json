@@ -1,0 +1,41 @@
+{
+ "rule": "Contact read by eye: the first frame where the barrel is out in front of the plate on the ball's line, on the frames from 2 to 10 after the detected shoulders-square frame (59.94 fps). Offsets are frames after shoulders square. Swings where the ball can't be seen at the bat are not read.",
+ "read_on": "2026-11-23",
+ "offsets": [
+  {
+   "play_id": "ffb4ced4-8383-4987-ae2b-34672d2bc117",
+   "page": "https://www.mlb.com/video/brandon-lowe-hits-a-grand-slam-1-to-right-center-field-ben-rortvedt-score",
+   "offset_frames": 5
+  },
+  {
+   "play_id": "2a03cfae-dfbd-469a-89ec-95137c28b8de",
+   "page": "https://www.mlb.com/video/brandon-lowe-homers-4-on-a-fly-ball-to-right-center-field-iuepuf",
+   "offset_frames": 6
+  },
+  {
+   "play_id": "60c48603-9037-4034-acde-fb951aa70e08",
+   "page": "https://www.mlb.com/video/brandon-lowe-homers-8-on-a-fly-ball-to-right-center-field",
+   "offset_frames": 7
+  },
+  {
+   "play_id": "7a06978b-f867-3f4a-a51b-d786eca55646",
+   "page": "https://www.mlb.com/video/brandon-lowe-homers-3-on-a-fly-ball-to-right-center-field-c96c5m",
+   "offset_frames": 6
+  },
+  {
+   "play_id": "18f89e85-d6f0-307b-b6d8-0e32ad5e771c",
+   "page": "https://www.mlb.com/video/brandon-lowe-homers-31-on-a-fly-ball-to-right-field",
+   "offset_frames": 5
+  },
+  {
+   "play_id": "02f24160-eba1-3b0b-92ca-65d592934cc0",
+   "page": "https://www.mlb.com/video/brandon-lowe-homers-12-on-a-fly-ball-to-right-center-field-x7205",
+   "offset_frames": 7
+  },
+  {
+   "play_id": "e9adc3a7-f648-3078-a34f-8acca9838da7",
+   "page": "https://www.mlb.com/video/brandon-lowe-homers-29-on-a-fly-ball-to-right-center-field",
+   "offset_frames": 6
+  }
+ ]
+}

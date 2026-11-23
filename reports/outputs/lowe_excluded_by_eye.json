@@ -1,0 +1,50 @@
+{
+ "rule": "Clips I removed after looking at the frame the measurement used; each would otherwise count as a center-field measurement.",
+ "excluded": [
+  {
+   "play_id": "acf734a1-95ac-3b9a-8cf8-5fd34826aede",
+   "page": "https://www.mlb.com/video/brandon-lowe-homers-1-on-a-fly-ball-to-right-center-field-yandy-diaz-scor",
+   "reason": "the tracker followed the pitcher instead of him; every measured frame is the pitcher's delivery (at Steinbrenner Field, the Rays' 2025 home, the center-field camera puts the pitcher in front of the batter) (checked by eye, Nov. 23, 2026)"
+  },
+  {
+   "play_id": "03ec105a-c34a-3107-9bf3-935a7e7fdd28",
+   "page": "https://www.mlb.com/video/jose-quintana-in-play-run-s-to-brandon-lowe",
+   "reason": "the tracker followed the pitcher instead of him; every measured frame is the pitcher's delivery (at Steinbrenner Field, the Rays' 2025 home, the center-field camera puts the pitcher in front of the batter) (checked by eye, Nov. 23, 2026)"
+  },
+  {
+   "play_id": "f5b5170d-2af9-3da3-9468-0d8478c3d3ab",
+   "page": "https://www.mlb.com/video/brandon-lowe-homers-10-on-a-fly-ball-to-right-center-field-josh-lowe-scor",
+   "reason": "the tracker followed the pitcher instead of him; every measured frame is the pitcher's delivery (at Steinbrenner Field, the Rays' 2025 home, the center-field camera puts the pitcher in front of the batter) (checked by eye, Nov. 23, 2026)"
+  },
+  {
+   "play_id": "b347cc90-d032-32da-83c7-b57155b22654",
+   "page": "https://www.mlb.com/video/brandon-lowe-homers-11-on-a-fly-ball-to-right-center-field",
+   "reason": "the tracker followed the pitcher instead of him; every measured frame is the pitcher's delivery (at Steinbrenner Field, the Rays' 2025 home, the center-field camera puts the pitcher in front of the batter) (checked by eye, Nov. 23, 2026)"
+  },
+  {
+   "play_id": "16cca481-864e-3878-bc56-680e94bd9f31",
+   "page": "https://www.mlb.com/video/brandon-lowe-homers-12-on-a-fly-ball-to-center-field-5pljcl",
+   "reason": "the tracker followed the pitcher instead of him; every measured frame is the pitcher's delivery (at Steinbrenner Field, the Rays' 2025 home, the center-field camera puts the pitcher in front of the batter) (checked by eye, Nov. 23, 2026)"
+  },
+  {
+   "play_id": "9f5ede63-2a47-3671-ab5b-429454b226d8",
+   "page": "https://www.mlb.com/video/brandon-lowe-homers-14-on-a-fly-ball-to-right-center-field-josh-lowe-scor",
+   "reason": "the tracker followed the pitcher instead of him; every measured frame is the pitcher's delivery (at Steinbrenner Field, the Rays' 2025 home, the center-field camera puts the pitcher in front of the batter) (checked by eye, Nov. 23, 2026)"
+  },
+  {
+   "play_id": "c06ab520-260f-3931-ab2a-7cbd544b2fa6",
+   "page": "https://www.mlb.com/video/brandon-lowe-homers-15-on-a-fly-ball-to-right-center-field-yandy-diaz-sco",
+   "reason": "the tracker started on him, moved to the pitcher during the delivery and ended on the home-plate umpire; the measured contact frame (207) is the umpire (checked by eye, Nov. 23, 2026)"
+  },
+  {
+   "play_id": "adb46f3d-55d9-4855-8195-b84508f26537",
+   "page": "https://www.mlb.com/video/brandon-lowe-homers-13-on-a-fly-ball-to-right-field-yandy-diaz-scores",
+   "reason": "the tracker followed the pitcher instead of him; every measured frame is the pitcher's delivery (Busch Stadium) (checked by eye, Nov. 23, 2026)"
+  },
+  {
+   "play_id": "b12727aa-fe8c-3593-82e4-08e1db269a5a",
+   "page": "https://www.mlb.com/video/brandon-lowe-homers-18-on-a-fly-ball-to-right-center-field",
+   "reason": "the shoulders-square frame came about 8 frames late on this off-center Camden Yards camera; the measured contact frame (75) is his follow-through, and contact by eye is near frame 66-67 (checked by eye, Nov. 23, 2026)"
+  }
+ ]
+}
