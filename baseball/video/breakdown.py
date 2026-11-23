@@ -168,3 +168,26 @@ def figure(t: pd.DataFrame, name: str, path: Path, early=(2024, 2025), late=(202
     fig.savefig(path, dpi=160, bbox_inches="tight")
     plt.close(fig)
     return path
+
+
+def trajectory(t: pd.DataFrame, seasons, pre: int = 60, post: int = 12, stand: str = "R") -> tuple[np.ndarray, int]:
+    """Median skeleton frame by frame from `pre` frames before contact to `post` after, over the season(s)' measured
+    swings, aligned on contact and normalized (torso lengths, origin at the opening hip center, y up). Returns the
+    (frames, 17, 2) array and how many swings fed it."""
+    stack = []
+    for _, r in t[t.measured & t.season.isin(seasons)].iterrows():
+        kp = np.load(RAW / "pose" / f"{r.play_id}.npz")["keypoints"]
+        c = int(r.contact_frame)
+        if c - pre < 0 or c + post >= len(kp):
+            continue
+        tracked = M.last_shot(kp)
+        open_ = tracked[tracked < int(r.shoulders_square) - 20][:15]
+        if not len(open_):
+            continue
+        hips = np.nanmedian(np.nanmean(kp[open_][:, [IDX["l_hip"], IDX["r_hip"]], :2], axis=1), axis=0)
+        seg = np.stack([normalized(kp, f, r.torso_px, hips, stand == "L") for f in range(c - pre, c + post + 1)])
+        seg[np.repeat((kp[c - pre:c + post + 1, :, 2] < 0.3)[..., None], 2, axis=2)] = np.nan
+        stack.append(seg)
+    if not stack:
+        return np.full((pre + post + 1, 17, 2), np.nan), 0
+    return np.nanmedian(np.stack(stack), axis=0), len(stack)

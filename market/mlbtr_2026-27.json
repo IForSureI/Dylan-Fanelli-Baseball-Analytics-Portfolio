@@ -18,7 +18,8 @@
     6.39,
     6.66
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 2,
@@ -33,7 +34,8 @@
     5.28,
     0.59
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 3,
@@ -48,7 +50,8 @@
     5.53,
     2.41
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 4,
@@ -63,7 +66,8 @@
     2.58,
     3.53
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 5,
@@ -78,7 +82,8 @@
     3.87,
     1.71
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 6,
@@ -93,7 +98,8 @@
     1.19,
     4.07
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 7,
@@ -101,7 +107,8 @@
    "pos": "3B/OF",
    "mlbtr": "Five years, $80MM",
    "signed": "",
-   "bref_id": null
+   "bref_id": null,
+   "first_seen": null
   },
   {
    "rank": 8,
@@ -116,7 +123,8 @@
     2.32,
     1.3
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": null
   },
   {
    "rank": 9,
@@ -131,7 +139,8 @@
     1.28,
     2.06
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 10,
@@ -139,7 +148,8 @@
    "pos": "RHP",
    "mlbtr": "Four years, $72MM (with at least one opt-out)",
    "signed": "",
-   "bref_id": null
+   "bref_id": null,
+   "first_seen": null
   },
   {
    "rank": 11,
@@ -154,7 +164,8 @@
     1.81,
     2.35
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 12,
@@ -169,7 +180,8 @@
     2.29,
     -0.9
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 13,
@@ -184,7 +196,8 @@
     1.32,
     1.58
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 14,
@@ -199,7 +212,8 @@
     2.18,
     0.02
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 15,
@@ -214,7 +228,8 @@
     1.38,
     1.07
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 16,
@@ -229,7 +244,8 @@
     2.14,
     0.62
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 17,
@@ -244,7 +260,8 @@
     3.96,
     3.92
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 18,
@@ -259,7 +276,8 @@
     3.96,
     1.09
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 19,
@@ -274,7 +292,8 @@
     2.19,
     3.98
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 20,
@@ -289,7 +308,8 @@
     4.12,
     2.92
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 21,
@@ -304,7 +324,8 @@
     1.48,
     3.01
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 22,
@@ -319,7 +340,8 @@
     0.0,
     0.0
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 23,
@@ -334,7 +356,8 @@
     1.03,
     -0.63
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 24,
@@ -349,7 +372,8 @@
     -0.68,
     0.0
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 25,
@@ -364,7 +388,8 @@
     1.66,
     0.26
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 26,
@@ -379,7 +404,8 @@
     0.64,
     0.62
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 27,
@@ -394,7 +420,8 @@
     1.07,
     1.77
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": null
   },
   {
    "rank": 28,
@@ -409,7 +436,8 @@
     5.0,
     1.46
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 29,
@@ -424,7 +452,8 @@
     0.41,
     -0.53
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 30,
@@ -439,7 +468,8 @@
     1.59,
     2.87
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 31,
@@ -454,7 +484,8 @@
     0.57,
     -0.31
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 32,
@@ -469,7 +500,8 @@
     2.52,
     1.76
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": null
   },
   {
    "rank": 33,
@@ -484,7 +516,8 @@
     3.53,
     0.51
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 34,
@@ -499,7 +532,8 @@
     2.74,
     4.83
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 35,
@@ -514,7 +548,8 @@
     1.93,
     0.32
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 36,
@@ -522,7 +557,8 @@
    "pos": "RHP",
    "mlbtr": "Two years, $20MM",
    "signed": "",
-   "bref_id": null
+   "bref_id": null,
+   "first_seen": null
   },
   {
    "rank": 37,
@@ -537,7 +573,8 @@
     1.72,
     0.97
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 38,
@@ -552,7 +589,8 @@
     1.25,
     2.86
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": null
   },
   {
    "rank": 39,
@@ -567,7 +605,8 @@
     3.58,
     2.66
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 40,
@@ -582,7 +621,8 @@
     1.32,
     2.4
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 41,
@@ -597,7 +637,8 @@
     -0.49,
     0.47
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": null
   },
   {
    "rank": 42,
@@ -612,7 +653,8 @@
     1.46,
     -0.22
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": null
   },
   {
    "rank": 43,
@@ -627,7 +669,8 @@
     1.36,
     1.32
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 44,
@@ -642,7 +685,8 @@
     -0.31,
     2.82
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 45,
@@ -657,7 +701,8 @@
     0.23,
     0.34
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 46,
@@ -672,7 +717,8 @@
     1.71,
     0.83
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": null
   },
   {
    "rank": 47,
@@ -687,7 +733,8 @@
     2.58,
     0.67
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 48,
@@ -702,7 +749,8 @@
     3.09,
     0.71
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 49,
@@ -717,7 +765,8 @@
     2.97,
     2.25
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 50,
@@ -732,7 +781,8 @@
     3.0,
     0.01
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   }
  ]
 }

@@ -6,10 +6,10 @@ Newest first. One entry per working session: what was built, what was decided, w
 **Built**
 - **Video lab** (`baseball/video/`, `bb swing-video`): it finds MLB's own highlight clip of every play through the MLB Stats API content feed (matched by Statcast play id). It cuts the clip into camera shots, finds the center-field pitch view, and tracks the batter frame by frame with a pose model at 59.94 fps. Then it measures timing and posture from the big joints, and draws the figures from the measured joints, so no MLB frame is reproduced.
 - **Arozarena breakdown** (`reports/2026-arozarena-swing-breakdown.md`): all 73 of his 2024-26 home-run clips, 23 measurable. Contact is timed from the moment his shoulders square, with the offset read by eye on seven swings (5 to 7 frames, median 6).
-- **Bat tracking vs power** (`bb bat-power`): fit on 2024 to 2025, scored on 2025 to 2026. No bat-tracking measure improves ISO plus 90th-percentile exit velocity as a forecast of next season's ISO.
+- **Bat tracking vs power** (`bb bat-power`): fit on 2024 to 2025, scored on 2025 to 2026, with the batted-ball model chosen by cross-validation on the training pairs (ISO + barrel rate). Bat speed and swing length add about 1% of the error; nothing moves it by 0.001 ISO.
 
 **Learned**
-- His 2026 home-run swing has the same timing (foot down 200 ms before contact) and hip-shoulder order as 2024. The one significant posture difference, head drop, mostly goes away when parks are matched. His competitive swings got slower, shorter and flatter, and his home runs came softer and higher while his ISO rose. The league model puts his 2027 ISO at .181, which supports prediction-log call 6.
+- His 2026 ISO rise is at-bats, not damage: 115 then 116 extra bases in 41 fewer at-bats, with his strikeout rate down to 21.6% while barrels, hard-hit exit velocity and bat speed fell. The league model puts his 2027 ISO at .169-.180, which supports prediction-log call 6. The video found no timing change larger than it could detect (about 80 ms at foot down). Head drop differs, but the parks are too lopsided to say whether it's him or the cameras.
 - Savant's own clip host sits behind a bot check, so I didn't use it. MLB's content feed serves the same broadcast clips openly.
 
 ## 2026-11-23: Catcher framing after the ABS challenge system
@@ -18,7 +18,7 @@ Newest first. One entry per working session: what was built, what was decided, w
 - **League data on the cloud machine:** I pulled 2024-26 Statcast and wrote the sequence files there too, so studies that need every pitch no longer wait for the Mac.
 
 **Learned**
-- In 2026, the first ABS challenge season, the spread of framing fell from about 6 runs to 3.6, the uncertain band of the zone shrank from 21% of takes to 15%, and called balls well inside the zone nearly disappeared. Patrick Bailey went from +27.6 to +3.3. Framing still repeats within a season (0.73), but 2025 predicted 2026 about half as well as 2024 predicted 2025.
+- In 2026, the first ABS challenge season, the spread of framing fell 23% per 1,000 takes (27% on Savant's numbers; the 36% drop in season totals is partly playing time). The uncertain band of the zone shrank from 21% of takes to 15%, and called balls well inside the zone nearly disappeared. Patrick Bailey went from +27.6 to +3.3. Framing still repeats within a season (0.73). The year-to-year correlation fell from 0.58 to 0.33, but on one transition that isn't significant (p = 0.14).
 - Baseball Savant's leaderboard CSV ignores `year=` and returns the current season; the season has to go in `seasonStart` and `seasonEnd`. A test keeps it that way.
 
 ## 2026-11-23: The 2026-27 market board

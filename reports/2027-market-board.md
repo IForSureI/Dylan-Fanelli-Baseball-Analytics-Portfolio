@@ -10,7 +10,7 @@
 **At a glance**
 
 - **The question:** Can I call this winter's free-agent contracts better than MLB Trade Rumors, before they sign?
-- **The answer:** 38 dated calls (Nov. 23, 2026), scored against MLBTR's as players sign. On last winter's class my model missed by \$3.24M a year against MLBTR's \$3.79M, an edge too small to be sure of; this winter is the test.
+- **The answer:** 38 dated calls (Nov. 23, 2026), scored against MLBTR's as players sign. Last winter's edge came from one player: without Kyle Tucker, my model and MLBTR were tied. This winter tests whether last winter's pattern repeats.
 - **For a club:** A forecast a front office can check: every call dated and frozen, every miss counted against the public benchmark.
 <!-- /portfolio:glance -->
 
@@ -18,23 +18,32 @@ Dylan Fanelli. Calls made Nov. 23, 2026, and never edited after that date. Data:
 
 **The question:** can I call this winter's free-agent contracts better than the public benchmark, in public, before the players sign?
 
-**The answer so far:** on last winter's class, a little, and not by enough to be sure. My model starts from MLBTR's number and moves it on each player's three-year WAR, age and role. Each player was left out of the fit that predicted him. On that test the model's average-salary (AAV) error was $3.24M against MLBTR's $3.79M. That $0.55M edge has a 95% range of -$0.66M to +$2.05M, so it could be zero. So I made 38 dated calls on this winter's open free agents, and they get scored against MLBTR's calls as each player signs.
+**The answer so far:** not yet, and last winter's edge came from one player.
+- **How the model works:** it starts from MLBTR's number and moves it on each player's three-year WAR, age and role. Each player was left out of the fit that predicted him.
+- **The headline backtest:** average-salary (AAV) error $3.24M against MLBTR's $3.79M. That $0.55M edge has a 95% range of -$0.66M to +$2.05M.
+- **Where the edge comes from:** almost all of it is Kyle Tucker. Leave him out and the two are tied ($3.31M against $3.33M). Leave out Tucker and Bo Bichette and MLBTR is better ($3.03M against $3.13M). The median miss is also slightly worse than MLBTR's ($2.74M against $2.63M).
+
+So this board isn't a claim that I beat MLBTR. It's a dated, public test of one idea: last winter's pattern repeats. That pattern was shorter deals at higher salaries than predicted, and relievers paid more. I made 38 calls on this winter's open free agents, and they get scored against MLBTR's as each player signs.
 
 ## What I learned from last winter
 
 On the 44 signed 2025-26 free agents with an MLB record:
 
 - **Players took shorter deals at higher salaries than predicted.** MLBTR's average salaries ran **$2.0M a year low**, and 64% of the players signed above MLBTR's AAV. Its years ran **0.8 years long**, and its total guarantees ran **$10.6M high**. Kyle Tucker (MLBTR: 11 years, $400M; signed four years, $240M) and Bo Bichette (eight years, $208M; signed three years, $126M) are the extreme cases.
-- **Relievers beat their predictions most.** With WAR, age and MLBTR's number held equal, a reliever signed for about 30% more per year than the formula gave a starter or hitter. Tyler Rogers (MLBTR: two years, $18M; signed three years, $37M) is the clearest case. That rests on a dozen relievers, so it is the least certain part of the model.
-- **Age matters beyond what MLBTR already priced in:** about 5% less per year for each year of age past 30.
+- **Relievers beat their predictions most.** With WAR, age and MLBTR's number held equal, a reliever signed for about 30% more per year than the formula gave a starter or hitter. Tyler Rogers (MLBTR: two years, $18M; signed three years, $37M) is the clearest case. That rests on 14 relievers, so it is the least certain part of the model.
+- **Age matters beyond what MLBTR already priced in.** The term is linear in age around 30: about 5% less per year for each year over 30, and about 5% more for each year under. Adrián Morejón (27) and Trevor Rogers (28) get the second half of that.
+- **The top of the WAR range rests on three players.** The training set's highest three-year WAR averages are Tucker (4.8), Alex Bregman (4.1) and Cody Bellinger (4.0). Seiya Suzuki (3.9) and Randy Arozarena (4.1) sit at that edge, so their calls lean hardest on those three.
 
 | Last winter, each player left out of his own fit | My model | MLBTR |
 |---|---|---|
 | Average error in AAV | $3.24M | $3.79M |
+| Average error without Kyle Tucker (43 players) | $3.31M | $3.33M |
+| Average error without Tucker and Bo Bichette (42) | $3.13M | $3.03M |
+| Median error in AAV | $2.74M | $2.63M |
 | Closer to the actual AAV | 21 of 44 | 23 of 44 |
 | Brier score on "signs above MLBTR's AAV" (coin flip 0.250; always guessing the base rate 0.231) | 0.218 | n/a |
 
-So the edge is in the size of the misses, not in how often I'm closer. When MLBTR misses badly, it's usually because a player took a short, rich deal, and the model catches part of that.
+So the edge is in one big miss, not in the typical player. MLBTR's worst miss last winter was Tucker's short, rich deal, and the model caught part of it. Whether that was a pattern or one player is what this winter answers.
 
 ## How the board is scored
 
@@ -48,6 +57,13 @@ So the edge is in the size of the misses, not in how often I'm closer. When MLBT
   - Players who signed before Nov. 23 aren't scored at all.
 - **No call:** I make no call on players without an MLB record (Teruaki Sato, Kaima Taira, Hiromi Itoh), because the model has nothing to work from.
 
+**Scoring rules.** I set these on Nov. 23, before any called player signed. They're the rules in `market.score()`.
+- **What counts as signed:** the signing line MLBTR adds under the player on its own list. An agreement counts; I don't wait for the club's announcement. My prediction log waits for the announcement, so the same signing can resolve on different days in the two documents. Skubal is the current example: agreed Nov. 22, official after his physical.
+- **Deadline:** a signing line first seen after April 30, 2027 isn't scored. A player unsigned by then, a lockout included, isn't scored. Each line's first-seen date is recorded when the list is pulled.
+- **Major league deals only:** a minor-league deal, a deal with a club outside MLB, or a retirement isn't scored. An accepted qualifying offer is one year at $23.15M.
+- **Money and years:** MLBTR's stated guarantee over its stated years. Deferred money counts at face value. When MLBTR counts a player option as a year (Sonny Gray's "two years, includes second-year player option"), so do I.
+- **Ties:** a deal at exactly MLBTR's AAV counts as not above it. A deal exactly as far from my call as from MLBTR's counts for neither side.
+
 `uv run bb market score` scores whatever has signed. `uv run bb market pull` re-reads the signing lines. `uv run bb market render` rewrites the table below.
 
 ## The board
@@ -55,14 +71,14 @@ So the edge is in the size of the misses, not in how often I'm closer. When MLBT
 <!-- board:start -->
 **Score so far:** none of the 38 called players has signed.
 
-| # | Player | MLBTR's call (Nov. 2) | MLBTR AAV | My AAV | P(beats MLBTR AAV) | 3-yr WAR, age | Signed | Result |
+| # | Player | MLBTR's call (Nov. 2) | MLBTR AAV | My AAV | P(beats MLBTR AAV) | WAR (5/4/3 average), age | Signed | Result |
 |---|---|---|---|---|---|---|---|---|
 | 2 | Trevor Rogers | Five years, $115MM | $23.0M | $29.0M | 0.80 | 2.8, 28 |  |  |
 | 3 | Freddy Peralta | Five years, $110MM | $22.0M | $24.6M | 0.65 | 2.8, 30 |  |  |
 | 4 | Seiya Suzuki | Four years, $105MM | $26.2M | $33.2M | 0.80 | 3.9, 31 |  |  |
 | 5 | Randy Arozarena | Four years, $100MM | $25.0M | $33.0M | 0.80 | 4.1, 31 |  |  |
 | 6 | Michael King | Four years, $92MM | $23.0M | $26.4M | 0.70 | 3.2, 31 |  |  |
-| 8 | Adrian Morejon | Five years, $80MM | $16.0M | $24.8M | 0.95 | 1.9 (RP), 27 |  |  |
+| 8 | Adrián Morejón | Five years, $80MM | $16.0M | $24.8M | 0.95 | 1.9 (RP), 27 |  |  |
 | 11 | Brandon Lowe | Three years, $69MM | $23.0M | $27.5M | 0.70 | 3.4, 31 |  |  |
 | 14 | Tyler Mahle | Three years, $54MM | $18.0M | $15.9M | 0.35 | 1.4, 31 |  |  |
 | 15 | Luis Arraez | Three years, $48MM | $16.0M | $17.3M | 0.60 | 1.9, 29 |  |  |
@@ -114,15 +130,33 @@ No call from me (signed before Nov. 23, or no MLB record):
 
 ## Where the board disagrees most with MLBTR
 
-- **Adrián Morejón (MLBTR $16.0M a year; mine $24.8M; 0.95 over).** It's the reliever effect plus a young age (27). My Oct. 18 prediction log (call 1: above $18M a year on two or more years, 0.55) and my bullpen memo's walk-away price ($60M over four years) are judgments made for a buyer. This board is a forecast of the market. They can disagree: the market can pay more than I would.
+- **Adrián Morejón (MLBTR $16.0M a year; mine $24.8M; 0.95 over).** It's the reliever effect plus a young age (27). This is where the board and my earlier work disagree most; the next section takes it up.
 - **Suzuki and Arozarena (MLBTR about $25-26M; mine about $33M).** Both are 31 with about 4 WAR a year over three seasons. Last winter, players like that took shorter deals at higher salaries.
 - **Kevin Gausman (MLBTR $22.0M; mine $16.9M; 0.20 over).** At 35, with WAR of 1.1, 4.0 and 1.1 over the last three seasons, he gets the age penalty.
+
+## How the board squares with my prediction log and bullpen memo
+
+Three of my documents forecast the same market, and they don't agree.
+
+| Player | Prediction log (Oct. 18) | Probability in the log | The board's model at the same line |
+|---|---|---|---|
+| Adrián Morejón | AAV above $18.0M, two or more years | 0.55 | 0.86 |
+| Randy Arozarena | AAV above $21.7M, two or more years | 0.65 | 0.92 |
+| Trevor Rogers | AAV above $29.5M, two or more years | 0.60 | 0.48 |
+
+- **Where the log comes from:** the log and the bullpen memo price relievers with a market line fit on the 21 relief signings of 2025-26. That line puts Morejón's expected price at $18.4M a year.
+- **Where the board comes from:** it uses MLBTR's number moved by the model above. Its reliever term rests on 14 relievers in one winter, and its edge rests on one hitter.
+- **Which I stand behind:** for a buying decision, the memo. Its market line is built for relievers, and the board's reliever term is its least certain part.
+  - On the board's model, the market pays Morejón more than $15M a year about 95% of the time. If that's right, the memo's $60M walk-away lands him about 5% of the time, not 26%, and Bryan Abreu goes from the fallback to the plan. The memo now carries a dated note saying so.
+- **How each is scored:** the log's probabilities stay frozen and are scored as written; the board is scored separately against MLBTR. When both resolve, they'll show which forecast was better. Dated Nov. 23 notes in the log record the board's numbers next to calls 1, 3 and 4.
 
 ## Limits
 
 - **One winter of history, 44 players.** That's why the edge's 95% range includes zero, and why this winter is the test.
 - **I could only backtest on one winter.** MLBTR's 2022-23 to 2024-25 list pages don't record the signings. Pulling those from news posts gave inconsistent wording (some posts give a total, some only salaries by year), so I left them out rather than mix answer keys.
-- **WAR is Baseball-Reference's**, and none of it is a projection system's. The model has no information on health, opt-outs, or who is bidding.
+- **WAR is Baseball-Reference's**, and none of it is a projection system's. The table's WAR column is the 5/4/3 weighted average of three seasons, not a total. Ages are Baseball-Reference's season ages, so Morejón is 27 here and 28 in my memo, which uses his age next season.
+- **What the model doesn't know:** health, opt-outs, who is bidding, and draft-pick cost. Rogers, Morejón and Arozarena all declined qualifying offers, so a club that signs them gives up a pick, and the model has no term for it.
+- **The calls are one linked bet:** 23 of the 38 lean above MLBTR, 13 below, and 2 sit at 0.50. If last winter's "MLBTR ran low" doesn't repeat, or a lockout moves the whole market, most of the calls miss together.
 - **The model doesn't call years.** Last winter MLBTR's years ran long, but my years model wasn't better than MLBTR's left-out, so I only call AAV.
 
 ## Sources

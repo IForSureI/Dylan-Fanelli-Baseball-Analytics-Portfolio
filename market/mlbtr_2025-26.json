@@ -18,7 +18,8 @@
     4.61,
     5.51
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 2,
@@ -33,7 +34,8 @@
     -0.34,
     4.75
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 3,
@@ -48,7 +50,8 @@
     4.03,
     2.19
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 4,
@@ -56,7 +59,8 @@
    "pos": "3B/1B",
    "mlbtr": "eight years, $180MM",
    "signed": "Signed with White Sox for two years, $34MM",
-   "bref_id": null
+   "bref_id": null,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 5,
@@ -71,7 +75,8 @@
     3.98,
     4.87
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 6,
@@ -86,7 +91,8 @@
     4.63,
     3.21
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 7,
@@ -94,7 +100,8 @@
    "pos": "SP",
    "mlbtr": "six years, $150MM",
    "signed": "Signed with Astros for three years, $54MM",
-   "bref_id": null
+   "bref_id": null,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 8,
@@ -109,7 +116,8 @@
     2.22,
     4.75
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 9,
@@ -124,7 +132,8 @@
     3.29,
     0.66
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 10,
@@ -139,7 +148,8 @@
     2.9,
     2.36
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 11,
@@ -154,7 +164,8 @@
     2.48,
     3.28
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 12,
@@ -169,7 +180,8 @@
     1.47,
     2.25
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 13,
@@ -184,7 +196,8 @@
     0.47,
     0.0
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 14,
@@ -199,7 +212,8 @@
     4.07,
     3.27
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 15,
@@ -214,7 +228,8 @@
     2.68,
     4.37
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 16,
@@ -229,7 +244,8 @@
     1.35,
     2.57
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 17,
@@ -244,7 +260,8 @@
     0.0,
     2.34
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 18,
@@ -259,7 +276,8 @@
     0.39,
     1.8
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 19,
@@ -267,7 +285,8 @@
    "pos": "3B/1B",
    "mlbtr": "four years, $64MM",
    "signed": "Signed with Blue Jays for four years, $60MM",
-   "bref_id": null
+   "bref_id": null,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 20,
@@ -282,7 +301,8 @@
     3.04,
     2.4
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 21,
@@ -297,7 +317,8 @@
     2.05,
     0.03
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 22,
@@ -312,7 +333,8 @@
     3.01,
     0.0
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 23,
@@ -327,7 +349,8 @@
     1.29,
     1.91
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 24,
@@ -342,7 +365,8 @@
     0.05,
     2.62
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 25,
@@ -357,7 +381,8 @@
     1.06,
     3.95
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 26,
@@ -372,7 +397,8 @@
     -0.29,
     0.4
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 27,
@@ -387,7 +413,8 @@
     0.0,
     1.58
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": null
   },
   {
    "rank": 28,
@@ -402,7 +429,8 @@
     2.58,
     5.44
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 29,
@@ -417,7 +445,8 @@
     2.86,
     3.53
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 30,
@@ -432,7 +461,8 @@
     1.75,
     1.23
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 31,
@@ -447,7 +477,8 @@
     0.86,
     0.56
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 32,
@@ -462,7 +493,8 @@
     2.86,
     1.06
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 33,
@@ -477,7 +509,8 @@
     3.98,
     1.65
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 34,
@@ -492,7 +525,8 @@
     1.07,
     4.55
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 35,
@@ -507,7 +541,8 @@
     2.81,
     0.99
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 36,
@@ -522,7 +557,8 @@
     2.81,
     1.42
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 37,
@@ -537,7 +573,8 @@
     1.88,
     2.92
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 38,
@@ -552,7 +589,8 @@
     -0.25,
     3.54
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 39,
@@ -560,7 +598,8 @@
    "pos": "SP",
    "mlbtr": "two years, $22MM",
    "signed": "Signed with Blue Jays for three years, $30MM",
-   "bref_id": null
+   "bref_id": null,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 40,
@@ -575,7 +614,8 @@
     1.03,
     0.93
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 41,
@@ -590,7 +630,8 @@
     1.81,
     -0.56
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 42,
@@ -605,7 +646,8 @@
     1.5,
     1.61
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 43,
@@ -620,7 +662,8 @@
     0.18,
     0.44
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 44,
@@ -635,7 +678,8 @@
     0.84,
     1.51
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 45,
@@ -650,7 +694,8 @@
     0.28,
     0.03
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 46,
@@ -665,7 +710,8 @@
     0.32,
     1.42
    ],
-   "reliever": true
+   "reliever": true,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 47,
@@ -680,7 +726,8 @@
     0.02,
     0.48
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 48,
@@ -695,7 +742,8 @@
     0.33,
     3.05
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 49,
@@ -710,7 +758,8 @@
     1.27,
     0.68
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   },
   {
    "rank": 50,
@@ -725,7 +774,8 @@
     1.63,
     2.55
    ],
-   "reliever": false
+   "reliever": false,
+   "first_seen": "2026-11-23"
   }
  ]
 }

@@ -73,10 +73,30 @@ def terms(text: str) -> tuple[int | None, float | None]:
     return years, float(m.group(2))
 
 
+MLB_CLUBS = ("Angels", "Astros", "Athletics", "A's", "Blue Jays", "Braves", "Brewers", "Cardinals", "Cubs", "Diamondbacks",
+             "D-backs", "Dodgers", "Giants", "Guardians", "Mariners", "Marlins", "Mets", "Nationals", "Orioles", "Padres",
+             "Phillies", "Pirates", "Rangers", "Rays", "Red Sox", "Reds", "Rockies", "Royals", "Tigers", "Twins",
+             "White Sox", "Yankees")
+SCORE_BY = "2027-04-30"     # a signing line first seen after this date isn't scored (a lockout included)
+
+
+def mlb_deal(text: str) -> bool:
+    """A major league contract with an MLB club, or an accepted qualifying offer. Minor-league deals, overseas
+    clubs and retirements aren't scored."""
+    t = (text or "").lower()
+    if not t or "minor league" in t or "minor-league" in t or "retire" in t:
+        return False
+    if t.startswith("accepted"):
+        return True
+    return any(c.lower() in t for c in MLB_CLUBS)
+
+
 def actual_terms(text: str, qo: float) -> tuple[int | None, float | None]:
     """The signing line MLBTR adds under a player: 'Signed with Mets for nine years, $450MM' or
-    'Accepted $23.15MM qualifying offer from Twins'."""
-    if not text:
+    'Accepted $23.15MM qualifying offer from Twins'. Years and money are MLBTR's stated guarantee at face value
+    (deferrals included); a line that names a player option counts its year, as MLBTR states the years. Anything
+    that isn't a major league deal with an MLB club returns nothing."""
+    if not text or not mlb_deal(text):
         return None, None
     if text.lower().startswith("accepted"):
         m = re.search(r"\$([\d.]+)", text)
@@ -249,16 +269,23 @@ def board(current: pd.DataFrame, coef: np.ndarray, sigma: float, as_of: str) -> 
     return d
 
 
-def score(called: pd.DataFrame) -> dict:
-    """Score the calls that have resolved: AAV error mine vs MLBTR's, and the over/under Brier score."""
+def score(called: pd.DataFrame, by: str = SCORE_BY) -> dict:
+    """Score the calls that have resolved: AAV error mine vs MLBTR's, and the over/under Brier score.
+
+    Rules (set Nov. 23, 2026, before any called player signed): a call resolves on the signing line MLBTR adds to
+    its own list (an agreement counts; the club's announcement isn't awaited), for a major league deal with an MLB
+    club first seen by `by`. AAV is MLBTR's stated guarantee over its stated years, deferrals at face value. A deal
+    at exactly MLBTR's AAV counts as not above it; a tie in distance counts for neither side."""
     s = called[(called.call == "called") & called.actual_aav.notna()]
+    if "first_seen" in s:
+        s = s[s.first_seen.isna() | (s.first_seen.astype(str) <= by)]
     if s.empty:
         return dict(n=0)
     over = (s.actual_aav > s.mlbtr_aav + 1e-9).astype(float)
-    return dict(n=len(s), mae_mine=float((s.my_aav - s.actual_aav).abs().mean()),
-                mae_mlbtr=float((s.mlbtr_aav - s.actual_aav).abs().mean()),
-                closer=int(((s.my_aav - s.actual_aav).abs() < (s.mlbtr_aav - s.actual_aav).abs()).sum()),
-                brier=float(((s.p_over - over) ** 2).mean()))
+    mine, theirs = (s.my_aav - s.actual_aav).abs(), (s.mlbtr_aav - s.actual_aav).abs()
+    return dict(n=len(s), mae_mine=float(mine.mean()), mae_mlbtr=float(theirs.mean()),
+                closer=int((mine < theirs - 1e-9).sum()), mlbtr_closer=int((theirs < mine - 1e-9).sum()),
+                ties=int(((mine - theirs).abs() <= 1e-9).sum()), brier=float(((s.p_over - over) ** 2).mean()))
 
 
 # ------------------------------------------------------------------ pull (writes market/*.json)
@@ -279,9 +306,16 @@ def pull(season: int, raw: Path = RAW, root: Path = MARKET, pulled: str | None =
         get(url, f"war_daily_{k}.txt")
     bat, pit = war_tables(raw)
     players = []
+    when = pulled or date.today().isoformat()
+    prev = root / f"mlbtr_{season}-{(season + 1) % 100:02d}.json"
+    seen = {}
+    if prev.exists():
+        seen = {q["rank"]: (q.get("signed", ""), q.get("first_seen")) for q in json.loads(prev.read_text())["players"]}
     for r in parse_list(page, season):
         f = player_features(r["name"], r["bref_id"], season, bat, pit)
-        players.append({**{k: r[k] for k in ("rank", "name", "pos", "mlbtr", "signed")}, **f})
+        old_line, old_seen = seen.get(r["rank"], ("", None))
+        first = (old_seen if (old_line and old_line == r["signed"] and old_seen) else when) if r["signed"] else None
+        players.append({**{k: r[k] for k in ("rank", "name", "pos", "mlbtr", "signed")}, **f, "first_seen": first})
     out = root / f"mlbtr_{season}-{(season + 1) % 100:02d}.json"
     out.write_text(json.dumps(dict(season=season, source=LISTS[season], published=parse_list(page, season)[0]["published"],
                                    war_source="Baseball-Reference WAR files (war_daily_bat.txt, war_daily_pitch.txt)",
@@ -317,11 +351,14 @@ def load_calls(root: Path = MARKET) -> pd.DataFrame:
 def scored(root: Path = MARKET) -> pd.DataFrame:
     """The frozen calls joined to the latest signing lines (market/mlbtr_2026-27.json, re-pulled)."""
     latest = frame(load(2026, root))[["rank", "signed", "actual_years", "actual_total", "actual_aav"]]
+    seen = {q["rank"]: q.get("first_seen") for q in load(2026, root)["players"]}
+    latest["first_seen"] = latest["rank"].map(seen)
     return load_calls(root).merge(latest, on="rank", how="left")
 
 
 # ------------------------------------------------------------------ report
 MARK_START, MARK_END = "<!-- board:start -->", "<!-- board:end -->"
+DISPLAY = {"Adrian Morejon": "Adrián Morejón"}      # MLBTR's list drops the accents
 
 
 def _money(x) -> str:
@@ -341,7 +378,7 @@ def render_board(root: Path = MARKET) -> str:
                      f"over/under Brier {r['brier']:.3f} (a coin flip scores 0.250).")
     else:
         lines.append(f"**Score so far:** none of the {(s.call == 'called').sum()} called players has signed.")
-    lines += ["", "| # | Player | MLBTR's call (Nov. 2) | MLBTR AAV | My AAV | P(beats MLBTR AAV) | 3-yr WAR, age | Signed | Result |",
+    lines += ["", "| # | Player | MLBTR's call (Nov. 2) | MLBTR AAV | My AAV | P(beats MLBTR AAV) | WAR (5/4/3 average), age | Signed | Result |",
               "|---|---|---|---|---|---|---|---|---|"]
     for _, c in s[s.call == "called"].sort_values("rank").iterrows():
         f = feats.loc[c["rank"]]
@@ -349,7 +386,7 @@ def render_board(root: Path = MARKET) -> str:
         if c["actual_aav"] == c["actual_aav"] and c["actual_aav"] is not None:
             mine, theirs = abs(c["my_aav"] - c["actual_aav"]), abs(c["mlbtr_aav"] - c["actual_aav"])
             res = f"{_money(c['actual_aav'])} AAV; {'mine closer' if mine < theirs else 'MLBTR closer' if theirs < mine else 'tie'}"
-        lines.append(f"| {c['rank']} | {c['name']} | {c['mlbtr']} | {_money(c['mlbtr_aav'])} | {_money(c['my_aav'])} | "
+        lines.append(f"| {c['rank']} | {DISPLAY.get(c['name'], c['name'])} | {c['mlbtr']} | {_money(c['mlbtr_aav'])} | {_money(c['my_aav'])} | "
                      f"{c['p_over']:.2f} | {f['wwar']:.1f}{' (RP)' if f['reliever'] else ''}, {int(f['age'])} | "
                      f"{c['signed'] if isinstance(c['signed'], str) else ''} | {res} |")
     pre = s[s.call != "called"].sort_values("rank")
@@ -364,3 +401,27 @@ def update_report(path, root: Path = MARKET) -> None:
     text = p.read_text()
     a, b = text.index(MARK_START) + len(MARK_START), text.index(MARK_END)
     p.write_text(text[:a] + "\n" + render_board(root) + "\n" + text[b:])
+
+
+# ------------------------------------------------------------------ robustness (the report's Limits section)
+def robustness(train: pd.DataFrame) -> dict:
+    """How much of the backtest edge rests on a few players: leave-one-out errors with Kyle Tucker, and with Tucker
+    and Bo Bichette, left out of the scoring; median errors; and how many relievers set the reliever term."""
+    t = train[modelable(train) & train.actual_aav.notna()].reset_index(drop=True)
+    X, y = design(t), np.log(t.actual_aav.astype(float).to_numpy())
+    loo = np.empty(len(t))
+    for i in range(len(t)):
+        keep = np.arange(len(t)) != i
+        loo[i] = X[i] @ np.linalg.lstsq(X[keep], y[keep], rcond=None)[0]
+    e_mine, e_mlbtr = np.abs(np.exp(loo) - t.actual_aav), np.abs(t.mlbtr_aav - t.actual_aav)
+    out = dict(median_mine=float(np.median(e_mine)), median_mlbtr=float(np.median(e_mlbtr)),
+               relievers=int(t.reliever.astype(bool).sum()), top_wwar=t.nlargest(3, "wwar")[["name", "wwar"]].values.tolist())
+    for label, drop in (("without_tucker", ["Kyle Tucker"]), ("without_tucker_bichette", ["Kyle Tucker", "Bo Bichette"])):
+        k = ~t.name.isin(drop)
+        out[label] = dict(n=int(k.sum()), mae_mine=float(e_mine[k].mean()), mae_mlbtr=float(e_mlbtr[k].mean()))
+    return out
+
+
+def p_above(my_aav: float, threshold: float, sigma: float) -> float:
+    """The board model's chance a player's AAV lands above a dollar threshold (log-normal around my call)."""
+    return float(1 - NormalDist().cdf((math.log(threshold) - math.log(my_aav)) / sigma))

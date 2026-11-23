@@ -11,8 +11,12 @@ Design (regular seasons; hitters with 300+ PA and 150+ competitive swings in sea
   the fastest 90% of a hitter's swings plus any 60+ mph swing that produced 90+ mph).
 - Outcome: ISO in season t+1.
 - Fit on 2024 -> 2025 pairs; score on 2025 -> 2026 pairs, which the fit never saw (out-of-sample R^2 and RMSE).
-- Then the question proper: add each bat-tracking measure to the best batted-ball model and see whether the
-  out-of-sample error falls.
+- The batted-ball model is chosen by 5-fold cross-validation on the 2024 -> 2025 pairs alone, so the 2025 -> 2026
+  pairs stay untouched until scoring.
+- Then the question proper: add each bat-tracking measure to that model and see whether the out-of-sample error
+  falls.
+- Also: whether a change in bat speed warns of lost power (bat_speed_change), and a named hitter's projection under
+  three fits (projection), so a report can show how much the number depends on the fit.
 """
 from __future__ import annotations
 
@@ -119,18 +123,64 @@ def compare(train: pd.DataFrame, test: pd.DataFrame, base: list[str], add: str, 
                 gain_hi=float(np.percentile(diff, 97.5)))
 
 
-def run() -> dict:
+def cv_rmse(df: pd.DataFrame, cols: list[str], k: int = 5, seed: int = 3) -> float:
+    fold = np.random.default_rng(seed).integers(0, k, len(df))
+    err = []
+    for f in range(k):
+        tr, te = df[fold != f], df[fold == f]
+        err.append((_pred(te, cols, _fit(tr, cols)) - te.iso_next.to_numpy()) ** 2)
+    return float(np.sqrt(np.concatenate(err).mean()))
+
+
+def bat_speed_change(tables: dict[int, pd.DataFrame], boot: int = 4000, seed: int = 3) -> dict:
+    """Does a change in bat speed from 2024 to 2025 predict 2026 ISO beyond 2025's ISO and 90th-pct EV?
+    Hitters qualifying (300+ PA, 150+ competitive swings) in 2024 and 2025 and with 300+ PA in 2026."""
+    q = lambda s: tables[s][(tables[s].pa >= MIN_PA) & (tables[s].swings >= MIN_SWINGS)].set_index("batter")
+    a, b = q(2024), q(2025)
+    c = tables[2026][tables[2026].pa >= MIN_PA].set_index("batter")
+    ids = a.index.intersection(b.index).intersection(c.index)
+    d = pd.DataFrame({"iso": b.loc[ids, "iso"], "ev90": b.loc[ids, "ev90"],
+                      "dbs": b.loc[ids, "bat_speed"] - a.loc[ids, "bat_speed"], "y": c.loc[ids, "iso"]}).dropna()
+    X = np.column_stack([np.ones(len(d)), d.iso, d.ev90, d.dbs])
+    coef = np.linalg.lstsq(X, d.y, rcond=None)[0]
+    rng = np.random.default_rng(seed)
+    bs = [np.linalg.lstsq(X[i], d.y.to_numpy()[i], rcond=None)[0][3] for i in (rng.integers(0, len(d), len(d)) for _ in range(boot))]
+    return dict(n=int(len(d)), per_mph=float(coef[3]), lo=float(np.percentile(bs, 2.5)), hi=float(np.percentile(bs, 97.5)))
+
+
+def projection(tables: dict[int, pd.DataFrame], batter: int, cols=("iso", "ev90")) -> dict:
+    """Next-season ISO for one hitter from his 2026 line, three ways: the fit scored out of sample (2024->25
+    pairs only), a refit on both year pairs, and a fit on 2025->26 alone; with the residual spread of the
+    two-pair refit and the chance of matching his 2026 ISO."""
+    from statistics import NormalDist
+    cols = list(cols)
+    x = tables[2026][tables[2026].batter == batter]
+    if x.empty:
+        return {}
+    p24, p25 = pairs(tables, 2024), pairs(tables, 2025)
+    both = pd.concat([p24, p25])
+    fits = {"train_2024_25": _fit(p24, cols), "both_pairs": _fit(both, cols), "pair_2025_26": _fit(p25, cols)}
+    out = {k: float(_pred(x, cols, c)[0]) for k, c in fits.items()}
+    sd = float((both.iso_next - _pred(both, cols, fits["both_pairs"])).std())
+    iso26 = float(x.iso.iloc[0])
+    out.update(resid_sd=sd, iso_2026=iso26,
+               p_match={k: float(1 - NormalDist(v, sd).cdf(iso26)) for k, v in list(out.items())[:3]})
+    return out
+
+
+def run(project: tuple[int, ...] = (668227, 673548)) -> dict:
     tables = {s: seasons_table(load(s)) for s in (2024, 2025, 2026)}
     train, test = pairs(tables, 2024), pairs(tables, 2025)
     out = dict(n_train=int(len(train)), n_test=int(len(test)),
                ball={k: score(train, test, v) for k, v in BALL_MODELS.items()},
-               bat_alone={c: score(train, test, [c]) for c in BAT},
-               year_to_year={c: float(np.corrcoef(test[c], test.merge(tables[2026], on="batter", suffixes=("", "_n"))[c + "_n"])[0, 1])
-                             if False else None for c in []})
-    best = min(out["ball"], key=lambda k: out["ball"][k]["rmse_out"])
+               bat_alone={c: score(train, test, [c]) for c in BAT})
+    # the batted-ball model is chosen on the training pairs alone (5-fold cross-validation), never on the test pairs
+    out["cv_train"] = {k: cv_rmse(train, v) for k, v in BALL_MODELS.items()}
+    best = min(out["cv_train"], key=out["cv_train"].get)
     out["best_ball"] = best
     out["adds"] = {c: compare(train, test, BALL_MODELS[best], c) for c in BAT}
-    both = pd.concat([train, test])
+    out["bat_speed_change"] = bat_speed_change(tables)
+    out["projections"] = {str(b): projection(tables, b, tuple(BALL_MODELS[best])) for b in project}
     out["stability"] = {}
     for c in BAT + ["iso", "barrel", "ev90"]:
         m = tables[2025][(tables[2025].pa >= MIN_PA) & (tables[2025].swings >= MIN_SWINGS)][["batter", c]].merge(

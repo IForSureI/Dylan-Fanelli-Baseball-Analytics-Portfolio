@@ -175,6 +175,32 @@ def agreement(table: pd.DataFrame, sv: pd.DataFrame) -> dict:
                 slope_raw=float(np.polyfit(j.savant_runs, j.raw_runs, 1)[0]))
 
 
+HALF_PLATE_FT = 17 / 24        # half of the 17-inch plate, in feet
+DEEP_FT = 3 / 12               # "well inside / outside": 3 inches past the plate's edge, either way
+DEEP_PZ = (0.2, 0.8)           # well inside vertically: the middle 60% of the batter's zone height
+OUT_PZ = (-0.15, 1.15)         # well outside vertically: more than 15% of the zone height above or below it
+FULL_TIME_TAKES = 7000         # about a full-time catcher's season of takes (the 2025 leaders caught 8,000-9,000)
+DOLLARS_PER_WIN = 11.23        # FanGraphs, Clemens, Feb. 24, 2026 (overall rate)
+
+
+def zone_sharpness(d: pd.DataFrame) -> dict:
+    """How predictable the calls were from location: the share of takes in the uncertain band (model strike
+    probability 10-90%), called balls on pitches well inside the zone, and called strikes well outside it."""
+    inside = (d.plate_x.abs() < HALF_PLATE_FT - DEEP_FT) & d.pz.between(*DEEP_PZ)
+    outside = (d.plate_x.abs() > HALF_PLATE_FT + DEEP_FT) | (d.pz < OUT_PZ[0]) | (d.pz > OUT_PZ[1])
+    return dict(uncertain_share=float(d.p_strike.between(0.1, 0.9).mean()),
+                balls_well_inside=float(1 - d[inside].strike.mean()), n_inside=int(inside.sum()),
+                strikes_well_outside=float(d[outside].strike.mean()), n_outside=int(outside.sum()))
+
+
+def fisher_diff(r1: float, n1: int, r2: float, n2: int) -> dict:
+    """Two correlations compared with Fisher's z, as if independent (the two year pairs share a season, so the
+    true p-value is somewhat smaller; this is the textbook check)."""
+    from statistics import NormalDist
+    z = (np.arctanh(r1) - np.arctanh(r2)) / np.sqrt(1 / (n1 - 3) + 1 / (n2 - 3))
+    return dict(z=float(z), p=float(2 * (1 - NormalDist().cdf(abs(z)))))
+
+
 def run(seasons=SEASONS) -> dict:
     tables, out = [], {"seasons": {}}
     for s in seasons:
@@ -188,15 +214,23 @@ def run(seasons=SEASONS) -> dict:
                                       calibration_max_gap=float((cal.predicted - cal.called).abs().max()),
                                       strike_value_0_0=float(vals.get("0-0")), strike_value_3_2=float(vals.get("3-2")),
                                       mean_strike_value=float((d.value).mean()),
-                                      split_half=split_half(d), savant=agreement(t, sv))
+                                      split_half=split_half(d), savant=agreement(t, sv), zone=zone_sharpness(d))
         tables.append(t.merge(sv[["catcher", "name", "savant_runs"]], on="catcher", how="left"))
     T = pd.concat(tables, ignore_index=True)
     out["year_to_year_adj"] = year_to_year(T, col="adj_runs")
     out["year_to_year_raw"] = year_to_year(T, col="raw_runs")
     q = T[T.takes >= MIN_TAKES_SPLIT]
+    per = q.adj_runs / q.takes * 1000
     out["spread"] = {str(s): dict(catchers=int((q.season == s).sum()), sd_adj=float(q[q.season == s].adj_runs.std()),
+                                  sd_per_1000=float(per[q.season == s].std()), mean_takes=float(q[q.season == s].takes.mean()),
+                                  sd_savant=float(T[(T.season == s) & T.savant_runs.notna()].savant_runs.std()),
+                                  full_time_sd_runs=float(per[q.season == s].std() * FULL_TIME_TAKES / 1000),
+                                  full_time_sd_dollars=float(per[q.season == s].std() * FULL_TIME_TAKES / 1000 / RUNS_PER_WIN * DOLLARS_PER_WIN),
                                   best=float(q[q.season == s].adj_runs.max()), worst=float(q[q.season == s].adj_runs.min()))
                      for s in seasons}
+    y = out["year_to_year_adj"]
+    if "2024->2025" in y and "2025->2026" in y:
+        out["year_to_year_test"] = fisher_diff(y["2024->2025"]["r"], y["2024->2025"]["catchers"], y["2025->2026"]["r"], y["2025->2026"]["catchers"])
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "framing_summary.json").write_text(json.dumps(out, indent=1) + "\n")
     T.round(3).to_json(OUT / "framing_catchers.json", orient="records", indent=0)

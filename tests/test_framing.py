@@ -43,3 +43,16 @@ def test_catcher_table_has_the_headline_cases():
     t = pd.read_json(ROOT / "reports" / "outputs" / "framing_catchers.json")
     bailey = t[t.name == "Bailey, Patrick"].set_index("season").adj_runs.round(1)
     assert bailey[2025] == 27.6 and bailey[2026] == 3.3
+
+
+def test_per_take_spread_zone_and_significance_match_the_report():
+    sp = SUMMARY["spread"]
+    per = {y: sp[y]["sd_per_1000"] for y in ("2024", "2025", "2026")}
+    assert [f"{per[y]:.2f}" for y in per] == ["1.14", "1.03", "0.79"]
+    assert round(100 * (1 - per["2026"] / per["2025"])) == 23 and "23% less" in REPORT
+    assert round(100 * (1 - sp["2026"]["sd_savant"] / sp["2025"]["sd_savant"])) == 27
+    z = {y: SUMMARY["seasons"][y]["zone"] for y in ("2024", "2025", "2026")}
+    assert [f"{100 * z[y]['uncertain_share']:.1f}%" for y in z] == ["21.7%", "20.9%", "15.2%"]
+    assert [f"{100 * z[y]['balls_well_inside']:.2f}%" for y in z] == ["0.17%", "0.12%", "0.02%"]
+    t = SUMMARY["year_to_year_test"]
+    assert t["p"] > 0.05 and "p = 0.14" in REPORT
