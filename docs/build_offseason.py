@@ -161,6 +161,30 @@ for k, v in labs.items():
     v['iso_sd'] = round(pr.get('resid_sd', 0), 3)
     v['iso_2026'] = round(pr.get('iso_2026', 0), 3)
 
+def groupless(b):  # pitchers have no batting line to rank
+    return bool(__import__('re').search(r'HP$|^RHP|^LHP', b['pos'] or ''))
+
+# Savant-style percentile rows: each called hitter's 2026 Statcast numbers ranked against the qualified hitters
+# (502+ PA) in reports/outputs/bat_power_seasons.json; K% is reversed so a high percentile is always the good end.
+QUAL = 502
+PCT_ROWS = (('xwobacon', 'xwOBA on contact', False), ('ev90', 'EV90', False), ('barrel', 'Barrel %', False), ('iso', 'ISO', False),
+            ('bat_speed', 'Bat speed', False), ('squared_up', 'Squared-up %', False), ('k_rate', 'K %', True))
+lg26 = bps[(bps.season == 2026) & (bps.pa >= QUAL)]
+def league_pct(mid):
+    r = bps[(bps.batter == mid) & (bps.season == 2026)]
+    if mid is None or r.empty or r.pa.iloc[0] < QUAL:
+        return None
+    rows = []
+    for col, label, low in PCT_ROWS:
+        v, pool = r[col].iloc[0], lg26[col].dropna()
+        if v != v:
+            continue
+        p = ((pool < v).sum() + 0.5 * (pool == v).sum()) / len(pool)
+        rows.append(dict(key=col, label=label, value=round(float(v), 4), pctl=int(min(100, max(1, round(100 * (1 - p if low else p)))))))
+    return dict(season=2026, n=int(len(lg26)), min_pa=QUAL, rows=rows)
+for b in board:
+    b['league'] = None if b['reliever'] or groupless(b) else league_pct(b['mlbam'])
+
 robust = mk.robustness(mk.frame(mk.load(2025)))
 projections = {k: v for k, v in bp['projections'].items()}
 data = dict(built='2026-11-23', teams=TEAMS, board=board, backtest=calls['backtest'], robust=robust, projections=projections, model=calls['model'], made=calls['made'],

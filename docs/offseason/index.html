@@ -9,151 +9,200 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&display=swap">
 <style>
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-/* Layout: a front-office binder. Sticky masthead with five tabs; each view opens with its answer, then the evidence.
-   One look on purpose (light only, the portfolio's house style): warm paper ground, plate-white working surfaces,
-   ink type, stitch red for my calls, blue for the benchmark, club colours only on club marks. */
+/* Layout: a Baseball Savant-style working page. White ground, a light band with the five views, compact tables
+   with small uppercase headers, light zebra rows and right-aligned tabular numbers, thin section rules, and
+   Savant's percentile bubbles (red high, gray middle, blue low) only where a real rank exists. Light only;
+   club colours only on club marks; my calls in red, MLBTR's in blue. */
 :root{
-  --paper:#f7f4ec; --plate:#fffdf8; --ink:#1a1a1a; --muted:#5b5a55; --soft:#8e8c85; --grid:#e8e4da; --rule:#d9d4c7;
-  --blue:#285d9e; --red:#c8392b; --green:#2a8a6a; --ochre:#b5811a;
-  --blue-soft:#e6edf6; --red-soft:#f8e7e4; --green-soft:#e3f1ec; --ochre-soft:#f5ecd9;
+  --paper:#ffffff; --plate:#ffffff; --ink:#1f2328; --muted:#5f6b73; --soft:#8a959c; --grid:#e7ebee; --rule:#cfd8dc;
+  --zebra:#f6f8f9; --band:#e9f1f3; --bandrule:#c9dde2; --teal:#2e7d8f; --teal-ink:#1d5e6d;
+  --blue:#3661ad; --red:#c8283a; --green:#2a8a6a; --ochre:#b5811a; --mid:#b9b9b9;
+  --blue-soft:#e8eef8; --red-soft:#fbe9eb; --green-soft:#e3f1ec; --ochre-soft:#f7f1e3;
   --display:"Be Vietnam Pro","Segoe UI",system-ui,sans-serif;
   --text:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
-  --r:10px;
+  --r:3px;
   color-scheme:light;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 img{max-width:100%}
 html{background:var(--paper)}
-body{background:var(--paper);color:var(--ink);font-family:var(--text);font-size:15px;line-height:1.5;margin:0}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--ink)}
-a{color:var(--blue);text-underline-offset:2px}
-a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px}
-.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
-h2{font-size:clamp(1.35rem,2.4vw,1.75rem);font-weight:800}
-h3{font-size:1.05rem;font-weight:700}
+body{background:var(--paper);color:var(--ink);font-family:var(--text);font-size:14px;line-height:1.45;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--paper)}
+a{color:var(--teal-ink);text-underline-offset:2px}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-visible,th[data-sort]:focus-visible{outline:2px solid var(--teal);outline-offset:1px;border-radius:2px}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.005em}
+h2{font-size:clamp(1.2rem,2.1vw,1.5rem);font-weight:700}
+h3{font-size:.98rem;font-weight:700}
 p{margin:0}
 .num{font-variant-numeric:tabular-nums}
-.eyebrow{font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.eyebrow{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
 .muted{color:var(--muted)}
-.small{font-size:.86rem}
+.small{font-size:.82rem}
 
-/* masthead */
-header.mast{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--ink);color:#f7f4ec}
-.mast .wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding-block:10px}
-.brand{display:flex;flex-direction:column;line-height:1.15;min-width:0}
-.brand b{font-family:var(--display);font-weight:800;font-size:1.02rem;letter-spacing:.01em}
-.brand span{font-size:.74rem;color:#c9c4b6}
-nav.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
-nav.tabs a{color:#e9e5da;text-decoration:none;font-weight:600;font-size:.88rem;padding:7px 12px;border-radius:999px;border:1px solid transparent}
-nav.tabs a:hover{border-color:#5b5a55}
-nav.tabs a[aria-current="page"]{background:#f7f4ec;color:var(--ink)}
+/* masthead: white title row, then the light band of views */
+header.mast{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper)}
+.mast .top{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;padding-block:12px 10px}
+.brand b{font-family:var(--display);font-weight:800;font-size:1.2rem;color:var(--teal-ink);letter-spacing:-.01em}
+.brand span{font-size:.8rem;color:var(--muted);margin-left:10px}
+.band{background:var(--band);border-top:1px solid var(--bandrule);border-bottom:1px solid var(--bandrule)}
+nav.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs a{color:var(--ink);text-decoration:none;font-weight:500;font-size:.92rem;padding:10px 14px;white-space:nowrap;flex:none}
+nav.tabs a:hover{color:var(--teal-ink);text-decoration:underline}
+nav.tabs a[aria-current="page"]{background:var(--teal);color:#fff;text-decoration:none}
 @media (max-width:700px){
-  .mast .wrap{gap:6px;padding-block:8px}
+  .mast .top{padding-block:8px 6px}
+  .brand b{font-size:1rem}
   .brand span{display:none}
-  nav.tabs{margin-left:0;width:100%;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
-  nav.tabs a{white-space:nowrap;padding:6px 10px;font-size:.84rem}
+  nav.tabs a{padding:9px 10px;font-size:.84rem}
 }
 
 /* view scaffolding */
-main{padding-block:28px 64px}
-section.view{display:grid;gap:22px}
-.lede{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:28px;align-items:end}
-.lede .answer{font-size:1.08rem;max-width:62ch}
+main{padding-block:20px 56px}
+section.view{display:grid;gap:18px;grid-template-columns:minmax(0,1fr)}
+.lede{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:24px;align-items:end}
+.lede .answer{font-size:1rem;max-width:66ch}
 .lede .answer strong{font-weight:700}
 @media (max-width:820px){.lede{grid-template-columns:1fr}}
-.panel{background:var(--plate);border:1px solid var(--rule);border-radius:var(--r);padding:18px}
-.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.tile{background:var(--plate);border:1px solid var(--rule);border-radius:var(--r);padding:12px 14px;display:grid;gap:2px;align-content:start}
-.tile .v{font-family:var(--display);font-size:1.45rem;font-weight:800;font-variant-numeric:tabular-nums}
-.tile .k{font-size:.78rem;color:var(--muted);line-height:1.3}
-@media (max-width:520px){.tiles{grid-template-columns:1fr 1fr}}
+.panel{background:var(--plate);border:1px solid var(--bandrule);border-radius:var(--r);padding:14px}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--bandrule);border-radius:var(--r)}
+.tile{padding:10px 12px;display:grid;gap:2px;align-content:start}
+.tile+.tile{border-left:1px solid var(--grid)}
+.tile .v{font-family:var(--display);font-size:1.35rem;font-weight:800;font-variant-numeric:tabular-nums}
+.tile .k{font-size:.74rem;color:var(--muted);line-height:1.3}
+@media (max-width:520px){.tiles{grid-template-columns:1fr}.tile+.tile{border-left:0;border-top:1px solid var(--grid)}}
+/* Savant section title: centred, with a thin rule either side */
+.sh{display:flex;align-items:center;gap:12px;font-family:var(--display);font-weight:600;font-size:1rem;color:var(--ink);margin:0}
+.sh::before,.sh::after{content:"";flex:1;height:1px;background:var(--rule)}
+.gloss{border-top:1px solid var(--grid);padding-top:8px}
 
-/* filter row (one, above the charts) */
-.filters{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--mast,58px));z-index:10;background:var(--paper);padding-block:10px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;border-bottom:1px solid var(--rule)}
-.seg{display:inline-flex;border:1px solid var(--rule);border-radius:999px;background:var(--plate);overflow:hidden}
-.seg button{font:inherit;font-size:.84rem;font-weight:600;border:0;background:transparent;color:var(--muted);padding:6px 12px;cursor:pointer}
-.seg button[aria-pressed="true"]{background:var(--ink);color:#f7f4ec}
-.filters label{font-size:.8rem;color:var(--muted);display:inline-flex;gap:6px;align-items:center}
-select{font:inherit;font-size:.86rem;padding:5px 8px;border:1px solid var(--rule);border-radius:8px;background:var(--plate);color:var(--ink)}
-.fsum{font-size:.8rem;color:var(--muted);margin-left:auto}
+/* filter row (one, above the table): Savant's boxed pills and search */
+.filters{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--mast,92px));z-index:10;background:var(--paper);padding-block:8px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;border-bottom:1px solid var(--grid)}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:var(--r);background:#fff;overflow:hidden}
+.seg button{font:inherit;font-size:.74rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;border:0;background:transparent;color:var(--ink);padding:6px 11px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--grid)}
+.seg button[aria-pressed="true"]{background:var(--teal);color:#fff}
+.filters label{font-size:.78rem;color:var(--muted);display:inline-flex;gap:6px;align-items:center}
+select,input[type=search]{font:inherit;font-size:.84rem;padding:5px 8px;border:1px solid var(--rule);border-radius:var(--r);background:#fff;color:var(--ink)}
+input[type=search]{width:190px}
+.fsum{font-size:.78rem;color:var(--muted);margin-left:auto}
+@media (max-width:700px){.filters{position:static}input[type=search]{width:100%}.fsum{margin-left:0}}
 
 /* club chip: primary fill, secondary border */
-.club{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:20px;padding:0 6px;border-radius:5px;border:2px solid;font-size:.68rem;font-weight:700;letter-spacing:.04em;color:#fff}
-.head{width:40px;height:40px;border-radius:50%;object-fit:cover;background:var(--grid);border:2px solid;flex:none}
-.head.lg{width:72px;height:72px}
-.ph{display:inline-flex;align-items:center;justify-content:center;font-weight:700;color:var(--muted);font-size:.8rem}
+.club{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:18px;padding:0 5px;border-radius:3px;border:2px solid;font-size:.64rem;font-weight:700;letter-spacing:.04em;color:#fff;flex:none}
+.head{width:32px;height:32px;border-radius:50%;object-fit:cover;background:var(--grid);border:2px solid;flex:none}
+.head.lg{width:76px;height:76px;border-width:3px}
+.ph{display:inline-flex;align-items:center;justify-content:center;font-weight:700;color:var(--muted);font-size:.72rem}
+.head.lg.ph{font-size:1.2rem}
 
-/* board */
-.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.82rem;color:var(--muted);align-items:center}
+/* Savant tables */
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:5px 8px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+thead th{font-size:.68rem;color:var(--muted);font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--ink);vertical-align:bottom;background:#fff}
+tbody td{border-bottom:1px solid var(--grid)}
+tbody tr:nth-child(even) td{background:var(--zebra)}
+th:first-child,td:first-child{text-align:left}
+td.l,th.l{text-align:left}
+.tablewrap{overflow-x:auto}
+.sig{color:var(--red);font-weight:700}
+th[data-sort]{cursor:pointer;user-select:none}
+th[data-sort]:hover{color:var(--ink)}
+th[aria-sort="ascending"]::after{content:" \25B2";font-size:.6rem}
+th[aria-sort="descending"]::after{content:" \25BC";font-size:.6rem}
+
+/* board leaderboard */
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.78rem;color:var(--muted);align-items:center}
 .key{display:inline-flex;align-items:center;gap:6px}
-.dot{width:11px;height:11px;border-radius:50%;display:inline-block}
-.boardwrap{overflow-x:auto}
-.brow{display:grid;grid-template-columns:28px minmax(170px,230px) minmax(240px,1fr) 80px 150px;gap:12px;align-items:center;padding:8px 6px;border-bottom:1px solid var(--grid);cursor:pointer;min-width:700px}
-.brow:hover{background:#fbf8f1}
-.brow[aria-expanded="true"]{background:#f9f5ec}
-.brow .rk{color:var(--soft);font-size:.8rem;text-align:right}
-.who{display:flex;gap:10px;align-items:center;min-width:0}
-.who>span:last-child{min-width:0;overflow:hidden}
-.who .nm{display:block;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.who .meta{font-size:.76rem;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.pcol{text-align:right;font-weight:700}
-.pill{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+table.lbt thead th{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--mast,92px) + var(--filt,46px));z-index:5}
+table.lbt tbody tr.r{cursor:pointer}
+table.lbt tbody tr.r:hover td{background:var(--band)}
+table.lbt tbody tr.r[aria-expanded="true"] td{background:var(--band)}
+table.lbt td{padding-block:6px}
+.who{display:flex;gap:9px;align-items:center;min-width:0}
+.who>span:last-child{min-width:0}
+.who .nm{display:block;font-weight:700;line-height:1.2;white-space:normal}
+.who .meta{font-size:.74rem;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap;white-space:normal}
+.who .line{display:none;font-size:.76rem;line-height:1.3;white-space:normal}
+.line .mb{color:var(--blue);font-weight:600}.line .mr{color:var(--red);font-weight:600}
+.call{color:var(--muted);font-size:.78rem}
+.pill{display:inline-block;font-size:.66rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:3px;white-space:nowrap}
 .pill.open{background:var(--grid);color:var(--muted)}
 .pill.win{background:var(--green-soft);color:var(--green)}
 .pill.lose{background:var(--blue-soft);color:var(--blue)}
+.strip{width:100%;min-width:160px;height:22px;display:block}
+.gap{font-weight:700}
+.gap.up{color:var(--red)}.gap.dn{color:var(--blue)}
+tr.det td{background:#fff!important;padding:0 8px 10px;white-space:normal;text-align:left}
+.detail{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding:10px 4px 4px;border-top:1px solid var(--bandrule)}
+.detail .k{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 @media (max-width:700px){
-  .brow{grid-template-columns:22px minmax(0,1fr) 48px 136px;grid-template-areas:"rk who p st" "ch ch ch ch";min-width:0;row-gap:4px}
-  .brow>.rk{grid-area:rk}.brow>.who{grid-area:who}.brow>svg{grid-area:ch}.brow>.pcol{grid-area:p}.brow>.st{grid-area:st}
-  .brow.axisrow{display:none}
-  .who .nm{white-space:normal;overflow:visible}
-  .lb .row{min-width:0;grid-template-columns:20px minmax(0,1fr) 90px 48px}
+  .detail{grid-template-columns:1fr}
+  table.lbt .hm{display:none}
+  table.lbt td,table.lbt th{padding-inline:4px}
+  .who .line{display:block}
+  table.lbt thead th{position:static}
+  table.lbt .pill{white-space:normal;text-align:center;font-size:.6rem;padding:2px 4px;max-width:78px}
+  .card table td,.card table th{white-space:normal;padding-inline:3px;font-size:.74rem}
+  .pr,.pctl .hdr{grid-template-columns:96px 1fr 48px;gap:0 8px}
 }
-.detail{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding:10px 4px 6px}
-.detail .k{font-size:.74rem;color:var(--muted)}
-@media (max-width:700px){.detail{grid-template-columns:1fr}}
-.axis text{font-size:11px;fill:var(--muted);font-family:var(--text)}
-.axisline{stroke:var(--grid)}
 
-/* player cards */
+/* percentile bubbles, Savant style */
+.pctl{display:grid;gap:5px}
+.pctl .hdr{display:grid;grid-template-columns:minmax(92px,30%) 1fr 64px;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+.pctl .hdr span:nth-child(2){display:flex;justify-content:space-between;padding-inline:2px}
+.pr{display:grid;grid-template-columns:minmax(92px,30%) 1fr 64px;gap:0 10px;align-items:center;font-size:.78rem}
+.pr .lab{text-align:right;color:var(--ink)}
+.pr .val{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.trk{position:relative;height:20px}
+.trk::before{content:"";position:absolute;left:0;right:0;top:9px;height:3px;background:var(--grid);border-radius:2px}
+.trk .fill{position:absolute;left:0;top:4px;height:12px;border-radius:2px}
+.bub{position:absolute;top:-1px;width:22px;height:22px;margin-left:-11px;border-radius:50%;border:2px solid #fff;color:#fff;font-size:.64rem;font-weight:700;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+.bub.solo{position:static;margin:0;display:inline-flex;border-color:transparent}
+
+/* player cards: Savant's player header, then the numbers */
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:16px}
-.card{background:var(--plate);border:1px solid var(--rule);border-radius:var(--r);padding:18px;display:grid;gap:14px;align-content:start;min-width:0}
+.card{background:var(--plate);border:1px solid var(--bandrule);border-radius:var(--r);padding:16px;display:grid;gap:12px;align-content:start;min-width:0}
 .card header{display:flex;gap:14px;align-items:center}
-.card .verdict{font-family:var(--display);font-weight:800;font-size:1.05rem}
-.kv{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.kv div{display:grid}
-.kv .k{font-size:.72rem;color:var(--muted)}
-.kv .v{font-weight:700;font-variant-numeric:tabular-nums}
-@media (max-width:520px){.kv{grid-template-columns:1fr 1fr}}
+.card h3{font-size:1.35rem;font-weight:600;font-family:var(--display)}
+.card .bio{font-size:.8rem;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.card .verdict{font-family:var(--display);font-weight:800;font-size:1rem;color:var(--teal-ink)}
 .card ul{margin:0;padding-left:18px;display:grid;gap:4px}
+.card table td,.card table th{padding-inline:6px}
 
 /* swing lab */
-.labgrid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:18px}
-@media (max-width:900px){.labgrid{grid-template-columns:1fr}}
-.stage{background:var(--plate);border:1px solid var(--rule);border-radius:var(--r);padding:14px;display:grid;gap:10px}
+.labgrid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:16px}
+@media (min-width:901px){.cgrid{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}}
+@media (max-width:900px){.labgrid{grid-template-columns:minmax(0,1fr)}}
+.stage{background:var(--plate);border:1px solid var(--bandrule);border-radius:var(--r);padding:12px;display:grid;gap:10px}
 .stage svg{width:100%;height:auto;display:block}
 .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.btn{font:inherit;font-weight:700;font-size:.86rem;border:1px solid var(--ink);background:var(--ink);color:#f7f4ec;border-radius:999px;padding:7px 14px;cursor:pointer}
-.btn.ghost{background:transparent;color:var(--ink)}
+.btn{font:inherit;font-weight:700;font-size:.76rem;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--teal);background:var(--teal);color:#fff;border-radius:var(--r);padding:7px 14px;cursor:pointer}
 input[type=range]{flex:1;min-width:140px;accent-color:var(--red)}
-.tick-labels{display:flex;justify-content:space-between;font-size:.74rem;color:var(--muted)}
-table{border-collapse:collapse;width:100%;font-size:.86rem}
-th,td{padding:7px 8px;border-bottom:1px solid var(--grid);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-th{font-size:.74rem;color:var(--muted);font-weight:600;letter-spacing:.02em}
-th:first-child,td:first-child{text-align:left}
-.tablewrap{overflow-x:auto}
-.sig{color:var(--red);font-weight:700}
+.tick-labels{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted)}
+@media (max-width:700px){
+  .meas td,.meas th{padding-inline:3px;font-size:.72rem}
+  .meas td:first-child,.meas th:first-child{white-space:normal;min-width:0}
+  .meas td{white-space:normal}
+  .meas .n{display:block}
+}
 
 /* catchers */
-.lb .row{display:grid;grid-template-columns:24px minmax(150px,220px) 1fr 64px;gap:10px;align-items:center;padding:6px 4px;border-bottom:1px solid var(--grid);min-width:520px}
-.callout{background:var(--ochre-soft);border:1px solid #ead9b5;border-radius:var(--r);padding:14px 16px;display:grid;gap:6px}
+table.fr .bar{width:30%}
+table.fr .nm{white-space:nowrap}
+table.fr svg{width:100%;height:14px;display:block}
+.callout{background:var(--ochre-soft);border:1px solid #e6d7b4;border-radius:var(--r);padding:12px 14px;display:grid;gap:6px}
+@media (max-width:700px){table.fr .nm{white-space:normal}table.fr .hm{display:none}table.fr td,table.fr th{padding-inline:4px}table.fr .bar{width:30%}}
 
 /* methods */
 .method{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px}
 .method .panel{display:grid;gap:8px;align-content:start}
+.panel>h3{display:flex;align-items:center;gap:10px}
+.panel>h3::after{content:"";flex:1;height:1px;background:var(--rule)}
 .method ul{margin:0;padding-left:18px;display:grid;gap:4px}
-footer{border-top:1px solid var(--rule);padding-block:20px 32px;font-size:.8rem;color:var(--muted)}
+footer{border-top:1px solid var(--rule);padding-block:18px 30px;font-size:.78rem;color:var(--muted)}
 .loading{padding:40px 0;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -161,8 +210,8 @@ footer{border-top:1px solid var(--rule);padding-block:20px 32px;font-size:.8rem;
 </head>
 <body>
 <header class="mast">
-  <div class="wrap">
-    <div class="brand"><b>2027 Offseason Decision Packet</b><span>Free agents, catchers and swings. Built Nov. 23, 2026 from public data.</span></div>
+  <div class="wrap top"><div class="brand"><b>2027 Offseason Decision Packet</b><span>Free agents, catchers and swings. Built Nov. 23, 2026 from public data.</span></div></div>
+  <div class="band"><div class="wrap">
     <nav class="tabs" aria-label="Views">
       <a href="#board">Market board</a>
       <a href="#players">Decisions</a>
@@ -170,7 +219,7 @@ footer{border-top:1px solid var(--rule);padding-block:20px 32px;font-size:.8rem;
       <a href="#catchers">Catchers</a>
       <a href="#method">Method</a>
     </nav>
-  </div>
+  </div></div>
 </header>
 
 <main class="wrap" id="app"><p class="loading">Loading the packet data.</p></main>
@@ -182,10 +231,10 @@ footer{border-top:1px solid var(--rule);padding-block:20px 32px;font-size:.8rem;
 <script>
 (() => {
 const REPO = "https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/";
-const C = {rule:"#d9d4c7", ink:"#1a1a1a", muted:"#5b5a55", soft:"#8e8c85", grid:"#e8e4da", blue:"#285d9e", red:"#c8392b", green:"#2a8a6a", ochre:"#b5811a", plate:"#fffdf8"};
+const C = {rule:"#cfd8dc", ink:"#1f2328", muted:"#5f6b73", soft:"#8a959c", grid:"#e7ebee", blue:"#3661ad", red:"#c8283a", green:"#2a8a6a", ochre:"#b5811a", plate:"#ffffff"};
 const app = document.getElementById("app");
 let D = null;
-const state = {group:"all", status:"all", sort:"rank", open:null, lab:"arozarena", frame:null, playing:false, speed:0.25, show:{early:true, late:true}, season:2026};
+const state = {group:"all", status:"all", sort:"rank", dir:"asc", q:"", open:null, lab:"arozarena", frame:null, playing:false, speed:0.25, show:{early:true, late:true}, season:2026};
 
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const half = (v, d) => { const f = 10 ** d; return (Math.round(v * f + (v >= 0 ? 1e-9 : -1e-9)) / f).toFixed(d); };  // round half up
@@ -223,16 +272,20 @@ function route() {
 }
 
 /* ---------------- board ---------------- */
+const fold = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+const COLS = [  // key, header, sort value, hide on phones
+  ["rank", "Rk", b => b.rank, false], ["name", "Player", b => fold(b.name), false], ["call", "MLBTR's call (Nov. 2)", null, true],
+  ["mlbtr", "MLBTR AAV", b => b.mlbtr_aav, true], ["mine", "My AAV", b => b.my_aav, true], ["gap", "Gap", b => b.my_aav == null ? null : b.my_aav - b.mlbtr_aav, true],
+  ["strip", "MLBTR vs mine", null, true], ["p", "Chance above MLBTR", b => b.p_over, false], ["signed", "Signed AAV", b => b.actual_aav, true], ["status", "Status", null, false]];
 function boardRows() {
   let rows = D.board.slice();
   if (state.group !== "all") rows = rows.filter(b => b.call === "called" && groupOf(b) === state.group);
   if (state.status === "open") rows = rows.filter(b => b.call === "called" && b.actual_aav == null);
   if (state.status === "signed") rows = rows.filter(b => b.actual_aav != null || b.signed);
   if (state.status === "called") rows = rows.filter(b => b.call === "called");
-  const edge = b => b.my_aav == null ? -1e9 : b.my_aav - b.mlbtr_aav;
-  if (state.sort === "edge") rows.sort((a, b) => Math.abs(edge(b)) - Math.abs(edge(a)));
-  if (state.sort === "p") rows.sort((a, b) => (b.p_over ?? -1) - (a.p_over ?? -1));
-  if (state.sort === "aav") rows.sort((a, b) => (b.my_aav ?? b.mlbtr_aav) - (a.my_aav ?? a.mlbtr_aav));
+  if (state.q) rows = rows.filter(b => fold(b.name).includes(fold(state.q)));
+  const col = COLS.find(c => c[0] === state.sort) || COLS[0], f = col[2], dir = state.dir === "asc" ? 1 : -1;
+  rows.sort((a, b) => { const x = f(a), y = f(b); if (x == null && y == null) return a.rank - b.rank; if (x == null) return 1; if (y == null) return -1; return (x < y ? -1 : x > y ? 1 : 0) * dir || a.rank - b.rank; });
   return rows;
 }
 function scoreNow() {
@@ -263,74 +316,77 @@ function viewBoard() {
   <div class="filters" role="group" aria-label="Board filters">
     <div class="seg" data-k="group">${[["all","All"],["sp","Starters"],["rp","Relievers"],["bat","Hitters"]].map(([k,l]) => `<button type="button" data-v="${k}" aria-pressed="${state.group===k}">${l}</button>`).join("")}</div>
     <div class="seg" data-k="status">${[["all","All 50"],["called","My calls"],["open","Unsigned"],["signed","Signed"]].map(([k,l]) => `<button type="button" data-v="${k}" aria-pressed="${state.status===k}">${l}</button>`).join("")}</div>
-    <label for="sort">Sort <select id="sort">${[["rank","MLBTR rank"],["edge","Biggest disagreement"],["p","Most likely above MLBTR"],["aav","Salary"]].map(([k,l]) => `<option value="${k}" ${state.sort===k?"selected":""}>${l}</option>`).join("")}</select></label>
+    <input type="search" id="q" placeholder="Search player name" aria-label="Search player name" value="${esc(state.q)}">
     <span class="fsum" id="fsum"></span>
   </div>
   <div class="legend">
     <span class="key"><span class="dot" style="background:${C.blue}"></span>MLBTR's call (Nov. 2)</span>
     <span class="key"><span class="dot" style="background:${C.red}"></span>My call (Nov. 23)</span>
-    <span class="key"><span class="dot" style="background:${C.ink}"></span>Signed for</span>
+    <span class="key"><span class="dot" style="background:${C.ink};border-radius:1px;width:4px"></span>Signed for</span>
     <span class="key">Club chip: 2026 club, or new club once signed</span>
+    <span class="key">Choose a column header to sort, a player for the detail</span>
   </div>
+  <div class="panel" style="padding:0 0 2px"><table class="lbt"><thead id="bh"></thead><tbody id="rows"></tbody></table></div>
+  <p class="small muted">Average salary is guaranteed money over guaranteed years; an accepted qualifying offer is one year at $23.15M. MLBTR's call is from its Nov. 2 top-50 list; mine are from Nov. 23, after the qualifying-offer decisions, which gives me three weeks of news MLBTR didn't have. No call on players who signed before my call or have no MLB record. The bubble in the chance column is red when the chance is high and blue when it is low.</p>
   <p class="small muted gloss">Terms: AAV is average annual value, guaranteed money over guaranteed years. Chance above MLBTR is my probability that he signs for more than MLBTR's AAV. A Brier score is the average squared miss of those probabilities (0 is perfect). 5/4/3 WAR weights his 2026, 2025 and 2024 WAR 5, 4 and 3.</p>
-  <div class="panel boardwrap" style="padding:6px 10px"><div id="rows"></div></div>
-  <p class="small muted">Average salary is guaranteed money over guaranteed years; an accepted qualifying offer is one year at $23.15M. MLBTR's call is from its Nov. 2 top-50 list; mine are from Nov. 23, after the qualifying-offer decisions, which gives me three weeks of news MLBTR didn't have. No call on players who signed before my call or have no MLB record. Click a player for the detail.</p>
 </section>`;
 }
-function dumbbell(b, lo, hi, w = 520) {
-  const H = 34, pad = 8, x = v => pad + (v - lo) / (hi - lo) * (w - 2 * pad);
-  const parts = [`<line x1="${x(b.mlbtr_aav)}" x2="${x(b.my_aav ?? b.mlbtr_aav)}" y1="${H/2}" y2="${H/2}" stroke="${C.soft}" stroke-width="2"/>`];
-  parts.push(`<circle cx="${x(b.mlbtr_aav)}" cy="${H/2}" r="6" fill="${C.blue}"><title>MLBTR ${aav(b.mlbtr_aav)}</title></circle>`);
-  if (b.my_aav != null) parts.push(`<circle cx="${x(b.my_aav)}" cy="${H/2}" r="6" fill="${C.red}"><title>Mine ${money(b.my_aav)}</title></circle>`);
-  if (b.actual_aav != null) parts.push(`<rect x="${x(b.actual_aav) - 2}" y="${H/2 - 10}" width="4" height="20" rx="1" fill="${C.ink}"><title>Signed ${aav(b.actual_aav)}</title></rect>`);
-  const vals = [[b.mlbtr_aav, C.blue], [b.my_aav, C.red]].filter(v => v[0] != null).sort((a, c) => a[0] - c[0]);
-  if (vals.length === 2 && x(vals[1][0]) - x(vals[0][0]) > 64) {
-    parts.push(`<text x="${x(vals[0][0]) - 10}" y="${H/2 + 4}" text-anchor="end" font-size="11" fill="${vals[0][1]}" class="num">${aav(vals[0][0])}</text>`);
-    parts.push(`<text x="${x(vals[1][0]) + 10}" y="${H/2 + 4}" font-size="11" fill="${vals[1][1]}" class="num">${aav(vals[1][0])}</text>`);
-  } else {
-    const v = vals[vals.length - 1], left = b.actual_aav != null || x(v[0]) > w - 120;
-    const even = vals.length === 2 && Math.abs(vals[1][0] - vals[0][0]) < 0.05;
-    const txt = (even ? "Even at " + aav(vals[0][0]) : vals.map(z => aav(z[0])).join(" to ")) + (b.actual_aav != null ? ", signed " + aav(b.actual_aav) : "");
-    parts.push(`<text x="${left ? x(vals[0][0]) - 10 : x(v[0]) + 10}" y="${H/2 + 4}" ${left ? 'text-anchor="end"' : ""} font-size="11" fill="${C.muted}" class="num">${txt}</text>`);
+function strip(b, hi, w = 200) {
+  const H = 22, pad = 7, x = v => pad + v / hi * (w - 2 * pad), out = [];
+  out.push(`<line x1="${pad}" x2="${w - pad}" y1="${H/2}" y2="${H/2}" stroke="${C.grid}" stroke-width="1"/>`);
+  if (b.my_aav != null) out.push(`<line x1="${x(b.mlbtr_aav)}" x2="${x(b.my_aav)}" y1="${H/2}" y2="${H/2}" stroke="${C.soft}" stroke-width="2"/>`);
+  out.push(`<circle cx="${x(b.mlbtr_aav)}" cy="${H/2}" r="5" fill="${C.blue}"/>`);
+  if (b.my_aav != null) out.push(`<circle cx="${x(b.my_aav)}" cy="${H/2}" r="5" fill="${C.red}"/>`);
+  if (b.actual_aav != null) out.push(`<rect x="${x(b.actual_aav) - 1.5}" y="2" width="3" height="${H - 4}" fill="${C.ink}"/>`);
+  return `<svg class="strip" viewBox="0 0 ${w} ${H}" width="${w}" height="${H}" aria-hidden="true">${out.join("")}</svg>`;
+}
+const pairText = b => {
+  const even = b.my_aav != null && Math.abs(b.my_aav - b.mlbtr_aav) < 0.05;
+  const t = even ? `Even at ${aav(b.mlbtr_aav)}` : `<span class="mb">MLBTR ${aav(b.mlbtr_aav)}</span>${b.my_aav != null ? `, <span class="mr">mine ${money(b.my_aav)}</span>` : ""}`;
+  return t + (b.actual_aav != null ? `, signed ${aav(b.actual_aav)}` : "");
+};
+function statusOf(b) {
+  if (b.actual_aav != null && b.call === "called") {
+    const mine = Math.abs(b.my_aav - b.actual_aav), th = Math.abs(b.mlbtr_aav - b.actual_aav);
+    return Math.abs(mine - th) < 1e-9 ? `<span class="pill open">Tie</span>` : mine < th ? `<span class="pill win">Mine closer</span>` : `<span class="pill lose">MLBTR closer</span>`;
   }
-  return `<svg viewBox="0 0 ${w} ${H}" preserveAspectRatio="none" style="width:100%;height:${H}px;overflow:visible" role="img" aria-label="MLBTR ${aav(b.mlbtr_aav)}${b.my_aav != null ? ", mine " + money(b.my_aav) : ""}">${parts.join("")}</svg>`;
+  if (b.call !== "called") return `<span class="pill open">${b.call === "no MLB record" ? "No call" : "Signed before my call"}</span>`;
+  return `<span class="pill open">Unsigned</span>`;
 }
 function renderRows() {
   const rows = boardRows();
-  const vals = rows.flatMap(b => [b.mlbtr_aav, b.my_aav, b.actual_aav]).filter(v => v != null);
-  const lo = 0, hi = Math.max(10, Math.ceil(Math.max(...vals, 10) / 5) * 5);
-  const el = document.getElementById("rows");
+  const vals = D.board.flatMap(b => [b.mlbtr_aav, b.my_aav, b.actual_aav]).filter(v => v != null);
+  const hi = Math.max(10, Math.ceil(Math.max(...vals) / 10) * 10);
   document.getElementById("fsum").textContent = `${rows.length} player${rows.length === 1 ? "" : "s"}`;
-  if (!rows.length) { el.innerHTML = `<p class="muted" style="padding:16px">No players match these filters. Choose "All" to see the whole list.</p>`; return; }
-  const ticks = []; for (let v = 0; v <= hi; v += hi > 40 ? 10 : 5) ticks.push(v);
-  const axis = `<div class="brow axisrow" style="cursor:default;border-bottom:1px solid var(--rule)" aria-hidden="true"><span></span><span class="eyebrow">Player</span>
-    <svg viewBox="0 0 520 18" preserveAspectRatio="none" style="width:100%;height:18px;overflow:visible" class="axis">${ticks.map(v => `<text x="${8 + v / hi * 504}" y="13" text-anchor="middle">$${v}M</text>`).join("")}</svg>
-    <span class="eyebrow" style="text-align:right">Chance above MLBTR</span><span class="eyebrow" style="text-align:right">Status</span></div>`;
-  el.innerHTML = axis + rows.map(b => {
-    const open = state.open === b.rank;
-    let status;
-    if (b.actual_aav != null && b.call === "called") {
-      const mine = Math.abs(b.my_aav - b.actual_aav), th = Math.abs(b.mlbtr_aav - b.actual_aav);
-      status = Math.abs(mine - th) < 1e-9 ? `<span class="pill open">Tie</span>` : mine < th ? `<span class="pill win">Mine closer</span>` : `<span class="pill lose">MLBTR closer</span>`;
-    } else if (b.call !== "called") status = `<span class="pill open">${b.call === "no MLB record" ? "No call" : "Signed before my call"}</span>`;
-    else status = `<span class="pill open">Unsigned</span>`;
-    const age = b.age ? `${Math.round(b.age)}` : "";
-    const role = b.reliever ? "RP" : b.pos;
-    return `<div class="brow" role="button" tabindex="0" aria-expanded="${open}" data-rank="${b.rank}">
-      <span class="rk num">${b.rank}</span>
-      <span class="who">${head(b)}<span style="min-width:0"><span class="nm">${esc(b.name)}</span><span class="meta">${club(clubOf(b))}<span>${esc(role)}${age ? ", " + age : ""}${b.note ? ", " + esc(b.note) : ""}</span></span></span></span>
-      ${dumbbell(b, lo, hi)}
-      <span class="pcol num">${b.p_over != null ? pct(b.p_over) : ""}</span>
-      <span class="st" style="text-align:right">${status}</span>
-      ${open ? detail(b) : ""}
-    </div>`;
+  document.getElementById("bh").innerHTML = `<tr>${COLS.map(([k, l, f, hm]) => {
+    const srt = f ? ` data-sort="${k}" tabindex="0" aria-sort="${state.sort === k ? (state.dir === "asc" ? "ascending" : "descending") : "none"}"` : "";
+    const lab = k === "strip" ? `${l} ($0-${hi}M)` : l;
+    return `<th class="${k === "name" || k === "call" || k === "strip" ? "l" : ""}${hm ? " hm" : ""}"${srt}${k === "p" ? ' style="white-space:normal;max-width:84px"' : ""}>${lab}</th>`;
+  }).join("")}</tr>`;
+  const el = document.getElementById("rows");
+  if (!rows.length) { el.innerHTML = `<tr><td colspan="${COLS.length}" class="l muted" style="padding:16px">No players match these filters. Choose "All" or clear the search to see the whole list.</td></tr>`; return; }
+  el.innerHTML = rows.map(b => {
+    const open = state.open === b.rank, role = b.reliever ? "RP" : b.pos, age = b.age ? `${Math.round(b.age)}` : "";
+    const g = b.my_aav == null ? null : b.my_aav - b.mlbtr_aav;
+    return `<tr class="r" tabindex="0" aria-expanded="${open}" data-rank="${b.rank}">
+      <td class="num muted">${b.rank}</td>
+      <td class="l"><span class="who">${head(b)}<span><span class="nm">${esc(b.name)}</span><span class="meta">${club(clubOf(b))}<span>${esc(role)}${age ? ", " + age : ""}${b.note ? ", " + esc(b.note) : ""}</span></span><span class="line num">${pairText(b)}</span></span></span></td>
+      <td class="l hm call">${esc(b.mlbtr)}</td>
+      <td class="hm num" style="color:${C.blue}">${aav(b.mlbtr_aav)}</td>
+      <td class="hm num" style="color:${C.red};font-weight:700">${money(b.my_aav)}</td>
+      <td class="hm num gap ${g == null ? "" : g > 0.05 ? "up" : g < -0.05 ? "dn" : ""}">${g == null ? "" : Math.abs(g) < 0.05 ? "Even" : sgn(g, 1)}</td>
+      <td class="hm l">${strip(b, hi)}</td>
+      <td>${b.p_over != null ? `<span class="bub solo" style="background:${pcol(b.p_over * 100)}">${Math.round(b.p_over * 100)}</span>` : ""}</td>
+      <td class="hm num">${aav(b.actual_aav)}</td>
+      <td style="white-space:normal">${statusOf(b)}</td>
+    </tr>${open ? `<tr class="det"><td colspan="${COLS.length}">${detail(b)}</td></tr>` : ""}`;
   }).join("");
 }
 function detail(b) {
   const war = b.war ? `${b.war[2]?.toFixed(1)}, ${b.war[1]?.toFixed(1)}, ${b.war[0]?.toFixed(1)}` : "no MLB record";
   const why = b.my_aav == null ? "No call: " + (b.call === "no MLB record" ? "no MLB record for the model to read." : "signed before Nov. 23.")
     : `${Math.abs(b.my_aav - b.mlbtr_aav) < 0.05 ? "Even at " + money(b.my_aav) + "." : (b.my_aav > b.mlbtr_aav ? "Above" : "Below") + " MLBTR by " + money(Math.abs(b.my_aav - b.mlbtr_aav)) + " a year."} ${b.reliever ? "Relievers beat their predictions most last winter. " : ""}${b.age >= 33 ? "Age pulls the call down (about 5% a year past 30). " : ""}${b.wwar >= 3.5 ? "Three seasons near " + half(b.wwar, 1) + " WAR a year carry it up. " : ""}`;
-  return `<div class="detail" onclick="event.stopPropagation()">
+  return `<div class="detail">
     <div><p class="k">MLBTR's call (Nov. 2)</p><p>${esc(b.mlbtr)}</p><p class="k" style="margin-top:6px">Signing line</p><p>${esc(b.signed ? b.signed + (b.note ? " (" + b.note + ")" : "") : "Not signed")}</p></div>
     <div><p class="k">Baseball-Reference WAR, 2024 / 2025 / 2026</p><p class="num">${war}</p><p class="k" style="margin-top:6px">Weighted (5/4/3)</p><p class="num">${b.wwar != null ? half(b.wwar, 1) : ""}</p></div>
     <div><p class="k">My read</p><p>${why}</p>${b.my_aav != null ? `<p class="k" style="margin-top:6px">Chance he signs above MLBTR's ${aav(b.mlbtr_aav)}</p><p class="num"><b>${pct(b.p_over)}</b></p>` : ""}</div>
@@ -341,25 +397,53 @@ function bindBoard() {
     const v = e.target.closest("button")?.dataset.v; if (!v) return;
     state[s.dataset.k] = v; s.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x.dataset.v === v)); renderRows();
   }));
-  document.getElementById("sort").addEventListener("change", e => { state.sort = e.target.value; renderRows(); });
+  document.getElementById("q").addEventListener("input", e => { state.q = e.target.value; renderRows(); });
+  const sortBy = k => { if (state.sort === k) state.dir = state.dir === "asc" ? "desc" : "asc"; else { state.sort = k; state.dir = k === "rank" || k === "name" ? "asc" : "desc"; } renderRows(); };
+  const bh = document.getElementById("bh");
+  bh.addEventListener("click", e => { const t = e.target.closest("th[data-sort]"); if (t) sortBy(t.dataset.sort); });
+  bh.addEventListener("keydown", e => { const t = e.target.closest("th[data-sort]"); if (t && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); sortBy(t.dataset.sort); } });
   const rows = document.getElementById("rows");
   const toggle = el => { const r = +el.dataset.rank; state.open = state.open === r ? null : r; renderRows(); };
-  rows.addEventListener("click", e => { const r = e.target.closest(".brow[data-rank]"); if (r) toggle(r); });
-  rows.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { const r = e.target.closest(".brow[data-rank]"); if (r) { e.preventDefault(); toggle(r); } } });
+  rows.addEventListener("click", e => { if (e.target.closest("tr.det")) return; const r = e.target.closest("tr.r"); if (r) toggle(r); });
+  rows.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { const r = e.target.closest("tr.r"); if (r) { e.preventDefault(); toggle(r); } } });
+  const f = document.querySelector(".filters"); if (f) document.documentElement.style.setProperty("--filt", f.offsetHeight + "px");
   renderRows();
 }
 
+/* percentile bubbles: Savant's scale, blue (low) through gray (middle) to red (high) */
+function pcol(p) {
+  const lo = [54, 97, 173], mid = [185, 185, 185], hi = [200, 40, 58], t = Math.max(0, Math.min(100, p)) / 100;
+  const [a, b, u] = t < .5 ? [lo, mid, t * 2] : [mid, hi, (t - .5) * 2];
+  return `rgb(${a.map((v, i) => Math.round(v + (b[i] - v) * u)).join(",")})`;
+}
+const rankPct = (v, pool) => { const n = pool.length; if (!n || v == null) return null; const below = pool.filter(x => x < v).length, eq = pool.filter(x => x === v).length; return Math.max(1, Math.min(100, Math.round(100 * (below + 0.5 * eq) / n))); };
+function pctlBlock(title, rows, ends = ["Poor", "Average", "Great"]) {
+  rows = rows.filter(r => r.p != null); if (!rows.length) return "";
+  return `<div class="pctl"><p class="eyebrow">${title}</p>
+    <div class="hdr" aria-hidden="true"><span></span><span><span style="color:${C.blue}">${ends[0]}</span><span class="muted">${ends[1]}</span><span style="color:${C.red}">${ends[2]}</span></span><span></span></div>
+    ${rows.map(r => `<div class="pr"><span class="lab">${r.label}</span><span class="trk" role="img" aria-label="${esc(r.label)}: ${r.p}th percentile"><span class="fill" style="width:${r.p}%;background:${pcol(r.p)};opacity:.85"></span><span class="bub" style="left:${r.p}%;background:${pcol(r.p)}">${r.p}</span></span><span class="val">${r.val}</span></div>`).join("")}
+  </div>`;
+}
+
 /* ---------------- decisions ---------------- */
+const LFMT = {xwobacon: iso, iso: iso, ev90: v => v.toFixed(1), bat_speed: v => v.toFixed(1), barrel: v => (100 * v).toFixed(1) + "%", squared_up: v => (100 * v).toFixed(1) + "%", k_rate: v => (100 * v).toFixed(1) + "%"};
 function card(rank, verdict, bullets, links) {
   const b = D.board.find(x => x.rank === rank); if (!b) return "";
+  const called = D.board.filter(x => x.call === "called");
+  const boardRowsP = [
+    {label: "5/4/3 WAR", p: rankPct(b.wwar, called.map(x => x.wwar)), val: b.wwar != null ? half(b.wwar, 1) : ""},
+    {label: "My AAV", p: rankPct(b.my_aav, called.map(x => x.my_aav)), val: money(b.my_aav)},
+    {label: "Chance above MLBTR", p: rankPct(b.p_over, called.map(x => x.p_over)), val: pct(b.p_over)}];
+  const lg = b.league;
+  const fc = D.framing.catchers.find(c => c.name === b.name);
+  const frRows = fc ? [2024, 2025, 2026].map(s => { const pool = D.framing.catchers.filter(c => c.seasons[s]).map(c => c.seasons[s].adj); return fc.seasons[s] ? {label: `${s} framing runs`, p: rankPct(fc.seasons[s].adj, pool), val: sgn(fc.seasons[s].adj)} : {label: s, p: null}; }) : [];
   return `<article class="card">
-    <header>${head(b, "lg")}<div style="display:grid;gap:4px;min-width:0"><p class="eyebrow">${esc(b.reliever ? "Reliever" : b.pos)}, ${Math.round(b.age)} ${club(clubOf(b))}</p><h3>${esc(b.name)}</h3><p class="verdict">${verdict}</p></div></header>
-    <div class="kv">
-      <div><span class="k">MLBTR</span><span class="v">${aav(b.mlbtr_aav)}</span></div>
-      <div><span class="k">My call</span><span class="v" style="color:${C.red}">${money(b.my_aav)}</span></div>
-      <div><span class="k">Chance above MLBTR</span><span class="v">${pct(b.p_over)}</span></div>
-      <div><span class="k">WAR, 5/4/3 avg</span><span class="v">${b.wwar != null ? half(b.wwar, 1) : ""}</span></div>
-    </div>
+    <header>${head(b, "lg")}<div style="display:grid;gap:3px;min-width:0"><h3>${esc(b.name)}</h3><p class="bio">${club(clubOf(b))}<span>${esc(b.reliever ? "Reliever" : b.pos)}</span><span>Age ${Math.round(b.age)}</span><span>MLBTR rank ${b.rank}</span></p><p class="verdict">${verdict}</p></div></header>
+    <div class="tablewrap"><table><thead><tr><th class="l">MLBTR's call</th><th>MLBTR AAV</th><th>My AAV</th><th>Chance above MLBTR</th><th>5/4/3 WAR</th></tr></thead>
+      <tbody><tr><td class="l">${esc(b.mlbtr)}</td><td style="color:${C.blue}">${aav(b.mlbtr_aav)}</td><td style="color:${C.red};font-weight:700">${money(b.my_aav)}</td><td>${pct(b.p_over)}</td><td>${b.wwar != null ? half(b.wwar, 1) : ""}</td></tr></tbody></table></div>
+    ${lg ? pctlBlock(`${lg.season} Statcast percentile among ${lg.n} hitters with ${lg.min_pa}+ PA`, lg.rows.map(r => ({label: r.label, p: r.pctl, val: (LFMT[r.key] || (v => v))(r.value)}))) : ""}
+    ${frRows.length ? pctlBlock(`Framing percentile among catchers with 1,500+ takes`, frRows) : ""}
+    ${pctlBlock(`Rank among this winter's ${called.length} called players`, boardRowsP, ["Low", "Middle", "High"])}
     <ul>${bullets.map(x => `<li>${x}</li>`).join("")}</ul>
     <p class="small">${links}</p>
   </article>`;
@@ -415,7 +499,7 @@ function viewSwing() {
   const L = D.labs[state.lab];
   const opts = Object.entries(D.labs).map(([k, v]) => `<button type="button" data-v="${k}" aria-pressed="${state.lab === k}">${esc(v.name)}</button>`).join("");
   const bs = L.by_season;
-  const row = (lab, key, f) => `<tr><td>${lab}</td>${bs.map(s => `<td>${s[key] == null ? "" : f(s[key])}${L.n_by_measure && L.n_by_measure[key] ? ` <span class="small muted">(${L.n_by_measure[key][s.season] ?? 0})</span>` : ""}</td>`).join("")}<td>${testCell(L.tests[key], key)}</td></tr>`;
+  const row = (lab, key, f) => `<tr><td>${lab}</td>${bs.map(s => `<td>${s[key] == null ? "" : f(s[key])}${L.n_by_measure && L.n_by_measure[key] ? ` <span class="small muted n">(${L.n_by_measure[key][s.season] ?? 0})</span>` : ""}</td>`).join("")}<td>${testCell(L.tests[key], key)}</td></tr>`;
   const sc = L.statcast;
   const evs = [2024, 2025, 2026].map(y => half(median(L.swings.filter(s => s.season === y).map(s => s.launch_speed)), 1)).join(", ");
   const foot = state.lab !== "suzuki";
@@ -450,7 +534,7 @@ function viewSwing() {
     </div>
     <div style="display:grid;gap:16px;align-content:start">
       <div class="panel" style="display:grid;gap:8px"><h3>What the camera measures</h3>
-        <div class="tablewrap"><table><thead><tr><th>Measure, median (swings)</th>${bs.map(s => `<th>${s.season}</th>`).join("")}<th>Change</th></tr></thead><tbody>
+        <div class="tablewrap"><table class="meas"><thead><tr><th>Measure, median (swings)</th>${bs.map(s => `<th>${s.season}</th>`).join("")}<th>Change</th></tr></thead><tbody>
           ${state.lab === "suzuki" ? "" : row("Foot down to contact", "down_to_contact_ms", v => Math.round(v) + " ms")}
           ${state.lab === "suzuki" ? "" : row("Leg lift to contact", "lift_to_contact_ms", v => Math.round(v) + " ms")}
           ${row("Hips square before shoulders", "hip_lead_ms", v => Math.round(v) + " ms")}
@@ -556,11 +640,11 @@ function viewCatchers() {
     <div class="seg" data-k="season">${[2024, 2025, 2026].map(s => `<button type="button" data-v="${s}" aria-pressed="${state.season === s}">${s}${s === 2026 ? " (ABS)" : ""}</button>`).join("")}</div>
     <span class="fsum" id="csum"></span>
   </div>
-  <div class="labgrid">
-    <div class="panel lb" style="overflow-x:auto"><div id="lb"></div></div>
+  <div class="labgrid cgrid">
+    <div class="panel lb" style="padding:0 0 2px;overflow-x:auto"><div id="lb"></div></div>
     <div style="display:grid;gap:16px;align-content:start">
       <div class="panel" style="display:grid;gap:8px"><h3>The spread, season by season</h3><svg id="spread" viewBox="0 0 460 260" style="width:100%;height:auto" role="img" aria-label="Framing runs by catcher and season"></svg>
-        <p class="small muted">Each dot is a catcher with 1,500+ takes; pitcher- and park-adjusted runs. Red: Patrick Bailey.</p></div>
+        <p class="small muted">Each dot is a catcher with 1,500+ takes; pitcher- and park-adjusted runs. Red: Patrick Bailey. In the table, Savant is Baseball Savant's own framing runs, and Pctl ranks the catcher among that season's catchers (red high, blue low).</p></div>
       <div class="callout"><h3>This winter's free-agent catchers</h3>
         ${["Tyler Stephenson", "Carson Kelly"].map(n => { const c = F.catchers.find(x => x.name === n); if (!c) return ""; return `<p><b>${n}</b>: ${[2024, 2025, 2026].map(s => c.seasons[s] ? sgn(c.seasons[s].adj) : "n/a").join(" / ")} runs (2024 / 2025 / 2026). ${n === "Tyler Stephenson" ? "Near the bottom of the league the last two seasons. My board's $9.0M a year runs on Baseball-Reference WAR, which carries little framing, so a club that prices framing should pay less." : "About average, and steady."}</p>`; }).join("")}
       </div>
@@ -571,11 +655,11 @@ function viewCatchers() {
 }
 function renderLB() {
   const s = state.season, rows = D.framing.catchers.filter(c => c.seasons[s]).sort((a, b) => b.seasons[s].adj - a.seasons[s].adj);
-  const max = Math.max(5, ...rows.map(c => Math.abs(c.seasons[s].adj)));
+  const max = Math.max(5, ...rows.map(c => Math.abs(c.seasons[s].adj))), pool = rows.map(c => c.seasons[s].adj);
   document.getElementById("csum").textContent = `${rows.length} catchers with 1,500+ takes`;
-  const bar = v => { const w = Math.abs(v) / max * 50; return `<svg viewBox="0 0 100 14" preserveAspectRatio="none" style="width:100%;height:14px"><line x1="50" x2="50" y1="0" y2="14" stroke="${C.grid}"/><rect x="${v < 0 ? 50 - w : 50}" y="2" width="${w}" height="10" rx="2" fill="${v < 0 ? C.blue : C.red}"/></svg>`; };
-  document.getElementById("lb").innerHTML = `<div class="row" style="border-bottom:1px solid var(--rule)"><span></span><span class="eyebrow">Catcher</span><span class="eyebrow" style="text-align:center">Runs lost / gained</span><span class="eyebrow" style="text-align:right">Runs</span></div>` +
-    rows.map((c, i) => `<div class="row"><span class="small muted num">${i + 1}</span><span class="who">${head(c)}<span style="min-width:0"><span class="nm" style="font-weight:600">${esc(c.name)}</span><span class="meta">${club(c.team)}<span class="num">${c.seasons[s].takes.toLocaleString()} takes</span></span></span></span>${bar(c.seasons[s].adj)}<span class="num" style="text-align:right;font-weight:700">${sgn(c.seasons[s].adj)}</span></div>`).join("");
+  const bar = v => { const w = Math.abs(v) / max * 50; return `<svg viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true"><line x1="50" x2="50" y1="0" y2="14" stroke="${C.soft}" stroke-width=".6"/><rect x="${v < 0 ? 50 - w : 50}" y="2" width="${w}" height="10" fill="${v < 0 ? C.blue : C.red}"/></svg>`; };
+  document.getElementById("lb").innerHTML = `<table class="fr"><thead><tr><th>Rk</th><th class="l">Catcher</th><th class="hm">Takes</th><th class="l bar">Runs lost / gained</th><th>Runs</th><th class="hm">Savant</th><th class="hm">Pctl</th></tr></thead><tbody>` +
+    rows.map((c, i) => { const v = c.seasons[s], p = rankPct(v.adj, pool); return `<tr><td class="num muted">${i + 1}</td><td class="l"><span class="who">${head(c)}<span><span class="nm" style="font-weight:600">${esc(c.name)}</span><span class="meta">${club(c.team)}</span></span></span></td><td class="hm">${v.takes.toLocaleString()}</td><td class="bar">${bar(v.adj)}</td><td style="font-weight:700;color:${v.adj < 0 ? C.blue : C.red}">${sgn(v.adj)}</td><td class="hm muted">${v.savant == null ? "\u2014" : sgn(v.savant)}</td><td class="hm"><span class="bub solo" style="background:${pcol(p)}">${p}</span></td></tr>`; }).join("") + `</tbody></table>`;
 }
 function renderSpread() {
   const svg = document.getElementById("spread"); if (!svg) return;

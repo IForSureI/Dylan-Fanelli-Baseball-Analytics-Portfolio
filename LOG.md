@@ -2,6 +2,11 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-23: The packet in a Baseball Savant layout
+**Built**
+- **A Savant-style packet:** a white page with the five views in a light band, the board as a sortable leaderboard (Savant table styling, a search box, a text line of the two calls under each name on phones), player cards with Savant's header and percentile bubbles, and the framing leaderboard as a Savant table with red and blue run bars.
+- **Percentiles only where a rank is real:** hitters' 2026 Statcast numbers ranked against the 137 hitters with 502+ PA in `reports/outputs/bat_power_seasons.json`, catchers' framing runs against that season's catchers with 1,500+ takes, and each card's WAR, salary and chance ranked among this winter's 38 called players.
+
 ## 2026-11-23: Packet corrections
 **Fixed**
 - **Brier label:** the board tile now says what the 0.218 means: a backtest Brier score (lower is better) on "signs above MLBTR's salary", where always guessing last winter's 64% base rate scores 0.231 and a coin flip 0.250 (`market/calls_2026-27.json`).
