@@ -2,6 +2,11 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-23: Bullpen memo figure from the saved run, and one grade corrected
+
+- I reran `bb bullpen-case` on the saved Oct. 17 Edge Board run and the 2024-26 pitch files. 29 of 30 grades match the memo. Morejón's slider present grade comes out 45, not 50: its regressed whiff rate (31.3%) sits at the 40.0th percentile of 279 slider-group pitches, just under the 45/50 line. The 50 came from an earlier fit that wasn't saved.
+- The memo now prints 45, says why in a dated correction, and the figure is drawn from the saved run, so every marker matches the tables. His OFP, role, ranking, price and the recommendation don't change.
+
 ## 2026-11-23: The packet in a Baseball Savant layout
 **Built**
 - **A Savant-style packet:** a white page with the five views in a light band, the board as a sortable leaderboard (Savant table styling, a search box, a text line of the two calls under each name on phones), player cards with Savant's header and percentile bubbles, and the framing leaderboard as a Savant table with red and blue run bars.

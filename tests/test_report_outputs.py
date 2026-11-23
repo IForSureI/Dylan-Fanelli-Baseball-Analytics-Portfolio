@@ -430,7 +430,7 @@ def test_bullpen_memo_model_numbers_are_the_saved_run():
     msl, mch, mff, asl = pitches[mo + "_SL"], pitches[mo + "_CH"], pitches[mo + "_FF"], pitches[ab + "_SL"]
     # single pitches quoted in prose
     assert f"**Stuff grade:** {msl['grade_stuff']} (expected whiff {msl['x_whiff_pct']:.0f}%, {msl['pct_stuff']:.0f}th percentile;" in memo
-    assert f"Graded 50 now and {msl['grade_next']} for 2027" in memo
+    assert f"Graded 45 now and {msl['grade_next']} for 2027" in memo
     assert f"**Stuff:** {pitches[ab + '_FC']['grade_stuff']} (ten refits gave" in memo
     assert f"the four-seamer ({sg(mff['gap'])}) and changeup ({sg(mch['gap'])}) beat their physics, and the slider ({sg(msl['gap'])}) trailed it" in memo
     assert f"got whiffs {mch['gap']:.0f} points above its physics" in memo
@@ -491,13 +491,13 @@ def test_reports_that_quote_pitch_grades_carry_the_refit_range():
     sg = lambda v: f"+{v:.1f}" if v >= 0 else f"\u2212{abs(v):.1f}"
     assert (f"ten refits gave {msl['grade_stuff']['lo']} to {msl['grade_stuff']['hi']} and {msl['x_whiff_pct']['lo']:.1f}% to "
             f"{msl['x_whiff_pct']['hi']:.1f}%)") in memo
-    assert msl["grade_stuff"]["lo"] >= 70 and printed["670970_SL"]["grade_stuff"] >= 70     # "far ahead of its results (50)" holds in every fit
+    assert msl["grade_stuff"]["lo"] >= 70 and printed["670970_SL"]["grade_stuff"] >= 70     # "far ahead of its results (45)" holds in every fit
     assert f"(ten refits gave {afc['grade_stuff']['lo']} to {afc['grade_stuff']['hi']})" in memo
     assert (f"Ten refits gave {sg(mff['gap']['lo'])} to {sg(mff['gap']['hi'])}, {sg(mch['gap']['lo'])} to {sg(mch['gap']['hi'])} and "
             f"{sg(msl['gap']['lo'])} to {sg(msl['gap']['hi'])}, so the signs hold") in memo
     assert mch["gap"]["lo"] > 0 and mff["gap"]["lo"] > 0 and msl["gap"]["hi"] < 0
     assert f"(ten refits gave {mch['proj_whiff_pct']['lo']:.1f}% to {mch['proj_whiff_pct']['hi']:.1f}%)" in memo and mch["pct_next"]["lo"] >= 98.5
-    assert f"ten refits gave {msl['grade_stuff']['lo']} to {msl['grade_stuff']['hi']}) is far ahead of its results (50)" in memo
+    assert f"ten refits gave {msl['grade_stuff']['lo']} to {msl['grade_stuff']['hi']}) is far ahead of its results (45)" in memo
     # no ranking or role rests on a grade that moved: the two best 2027 grades of each pitcher keep the formula OFP at its cap
     for pid, control in (("670970", 60), ("650556", 40), ("664126", 40)):
         lows = sorted((p["grade_next"]["lo"] for k, p in pitches.items() if k.startswith(pid)), reverse=True)

@@ -21,7 +21,7 @@
 
 ![Pitch grades, the reliever market's price per projected win, and fastball velocity by month](figures/2026-bullpen-acquisition-memo.png)
 
-*Figure note (Nov. 15): the hollow stuff markers come from an earlier fit. Three sit 5 points from the tables below (Abreu's slider, Fairbanks's four-seamer and slider). The tables are the saved run.*
+*Figure note (Nov. 23): the figure is redrawn from the saved Oct. 17 run, so every marker matches the tables below.*
 
 ## Decision summary
 
@@ -122,7 +122,7 @@
 | Who misses the most bats next year? | **Edge engine** (validated two-season whiff projection, blends results and stuff): Abreu 33.1%, Morejón 31.0%, Fairbanks 29.8% | **The projection** (2024-26 relief run value, regressed; counts walks, contact and grounders): Morejón +0.83, Abreu +0.37, Fairbanks +0.18 | Both are right about different things. Abreu's gap is walks, which a whiff model can't see. Morejón's edge includes a 55% regressed ground-ball rate (Atlas year-to-year persistence 0.92). I rank on run value and use the whiff projection to establish that Abreu's swing-and-miss survived 2026 |
 | What is Morejón worth? | **Roster engine** ($/WAR tiers): about $30.7M a year | **Reliever market line:** his value is $18.1M; his expected price is $18.4M | They are on different win scales. This memo's wins use a fringe-arm replacement level that isn't calibrated to fWAR, and FanGraphs' $/WAR is set in fWAR (and excludes relievers). The engine column is an order of magnitude, not a price. I price only with the market line, which uses the same projection on both sides |
 | Did Fairbanks's slider get better? | **Levers study:** every confirmed slider lever he moved (drop +3.1 in, speed gap +1.5 mph, slot −1.6°) implies about +2.9 whiff points | **The stuff model** (levers version, fixed hand mix): expected whiff on the slider fell 5.9 points | The levers study's own result is that the single expected-whiff change predicts better than lever lists (pooled +7.5 points of squared error). Its slider-drop and speed-gap gains are also "not shown to last." His slider whiff jump (30.8% → 40.5%, 79 swings) is treated as mostly noise. Usage fell from 40% to 26%, which by itself lowers hitters' familiarity |
-| Is Morejón's slider a weakness? | **Stuff grade:** 70 (expected whiff 41%, 97th percentile; ten refits gave 70 to 75 and 41.6% to 44.4%) | **Present grade:** 50 (30% whiffs, 73 tracked swings) | Slider whiff reaches r = 0.5 at about 41 swings (Atlas), so the regressed rate already carries most of the weight, and it's average. Graded 50 now and 50 for 2027 (the engine's projection). A possible lever, not a flaw |
+| Is Morejón's slider a weakness? | **Stuff grade:** 70 (expected whiff 41%, 97th percentile; ten refits gave 70 to 75 and 41.6% to 44.4%) | **Present grade:** 45 (30% whiffs, 73 tracked swings) | Slider whiff reaches r = 0.5 at about 41 swings (Atlas), so the regressed rate already carries most of the weight, and it's a tick below average. Graded 45 now and 50 for 2027 (the engine's projection). A possible lever, not a flaw |
 | Abreu's cutter (new in 2026) | **Stuff:** 40 (ten refits gave 35 to 40) | **Present:** 65 (36% whiffs, 61 swings) | Results beating stuff carries over between seasons (edge engine, r ≈ 0.55), but 61 swings in one season isn't a pattern. It's 11% of his mix and doesn't drive the grade |
 
 ## 1. The need: why the Rangers, why a reliever
@@ -252,7 +252,7 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 |---|---|---|---|---|---|---|---|---|
 | Sinker | 47.6% (55 / 43) | 99.5 | 9.2 / 16.0 | 19.3 (311) | 65 | 60 | 65 | His primary pitch. 58% ground balls overall |
 | Changeup | 23.1% (2 / 36) | 92.1 | −1.1 / 10.7 | 56.0 (182) | 75 | 75 | 70 | 7% of pitches in 2025, 23% in 2026; almost only to RHH |
-| Slider | 15.2% (27 / 8) | 89.4 | −0.5 / −5.7 | 29.9 (77; 73 tracked) | 50 | 50 | 70 | Results trail the physics (small sample) |
+| Slider | 15.2% (27 / 8) | 89.4 | −0.5 / −5.7 | 29.9 (77; 73 tracked) | 45 | 50 | 70 | Results trail the physics (small sample) |
 | Four-seamer | 14.2% (16 / 13) | 99.3 | 15.2 / 6.0 | 42.3 (123) | 75 | 75 | 70 | A carry four-seamer at 99 |
 | Control | uBB 6.0% (BB 8.0% with 7 intentional) | | | | 60 | 60 | | 2024-25 uBB 7.0% and 4.9% |
 
@@ -304,7 +304,7 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 | Slider slot | −2.2° (lower) | +1.22 per 3° higher | Confirmed | −0.9 | Year-two gain, borderline |
 | Sinker velocity | +1.85 mph | +0.18 per mph | Not detected (sinkers) | +0.3 | Not followed |
 
-- **The open lever is the slider.** Its physics grade (70; ten refits gave 70 to 75) is far ahead of its results (50), and the study can't say which change would close that gap.
+- **The open lever is the slider.** Its physics grade (70; ten refits gave 70 to 75) is far ahead of its results (45), and the study can't say which change would close that gap.
 
 **Familiarity:**
 - **Low exposure:** as a reliever, hitters had seen almost none of his pitches earlier in the game (0.00 same-type pitches in earlier PAs) and 0.30 changeups in earlier games per changeup.
@@ -667,7 +667,9 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 - **Morejón's 2026 gaps:** changeup +15.1 to +12.9, four-seamer +13.6 to +15.2, slider −12.0 to −11.1. The changeup projection went from 48.9% to 49.6%.
 - **Expected whiff and gap by season:** all nine lines moved, by 1.5 points at most. One read changed: Fairbanks's physics no longer "improved every year" (28.3%, 26.6%, 30.8%). They were best in 2026.
 - **Engine whiff projections:** nine of the thirteen in the candidate table moved by 0.1 or 0.2 (Abreu 32.9% to 33.1%, Morejón 30.9% to 31.0%, Fairbanks 29.9% to 29.8%).
-- **What did not move:** the ranking, the roles, the OFPs (each formula value is still 60 before the overrides), the prices and the recommendation. Present grades do not use the model and are unchanged.
+- **What did not move:** the ranking, the roles, the OFPs (each formula value is still 60 before the overrides), the prices and the recommendation. Present grades do not use the model, but they depend on which swings the run tracks: see the Nov. 23 correction.
+
+- **Correction (Nov. 23):** rerunning `bb bullpen-case` on the saved Oct. 17 Edge Board run gives Morejón's slider a present grade of 45, not the 50 I printed. Its regressed whiff rate is 31.3%, the 40.0th percentile of 279 slider-group pitches, just under the 45/50 line (about 40.1). The 50 came from an earlier fit that wasn't saved (40.4th percentile): 39 pitches had different tracked-swing counts between the runs, which shifts the comparison pool. The other 29 present, 2027 and stuff grades match the saved run exactly. His OFP, role, ranking, price and the recommendation don't change, because his OFP rests on the sinker, changeup and four-seamer. The figure is now drawn from the saved run.
 - **The figure** was drawn from the earlier fit and has not been redrawn. Three of its hollow stuff markers sit 5 points from this table: Abreu's slider and Fairbanks's four-seamer and slider.
 
 ## Method
