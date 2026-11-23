@@ -1,0 +1,32 @@
+{
+ "percentile_rankings_batter_2025.csv": {
+  "url": "https://baseballsavant.mlb.com/leaderboard/percentile-rankings?type=batter&year=2025&csv=true",
+  "pulled": "2026-11-23",
+  "rows": 617,
+  "status": 200
+ },
+ "percentile_rankings_batter_2026.csv": {
+  "url": "https://baseballsavant.mlb.com/leaderboard/percentile-rankings?type=batter&year=2026&csv=true",
+  "pulled": "2026-11-23",
+  "rows": 612,
+  "status": 200
+ },
+ "percentile_rankings_pitcher_2025.csv": {
+  "url": "https://baseballsavant.mlb.com/leaderboard/percentile-rankings?type=pitcher&year=2025&csv=true",
+  "pulled": "2026-11-23",
+  "rows": 712,
+  "status": 200
+ },
+ "percentile_rankings_pitcher_2026.csv": {
+  "url": "https://baseballsavant.mlb.com/leaderboard/percentile-rankings?type=pitcher&year=2026&csv=true",
+  "pulled": "2026-11-23",
+  "rows": 706,
+  "status": 200
+ },
+ "player_pages.json": {
+  "url": "https://baseballsavant.mlb.com/savant-player/<id>",
+  "pulled": "2026-11-23",
+  "rows": 47,
+  "status": 200
+ }
+}

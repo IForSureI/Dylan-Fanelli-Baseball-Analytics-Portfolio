@@ -185,10 +185,32 @@ def league_pct(mid):
 for b in board:
     b['league'] = None if b['reliever'] or groupless(b) else league_pct(b['mlbam'])
 
+# Baseball Savant's own percentile rankings (market/savant/, pulled by baseball.ingest.savant_percentiles):
+# the official ranks for every called pitcher and hitter Savant ranks, 2026 with the 2025 rank beside it.
+# The hitters' computed ranks above stay only where Savant has no rank of its own (EV90).
+from baseball.ingest import savant_percentiles as SP
+SV_MAN = json.loads((REPO / 'market/savant/manifest.json').read_text())
+for b in board:
+    kind = 'pitcher' if b['reliever'] or groupless(b) else 'batter'
+    c = SP.card(b['mlbam'], kind, 2026) if b['mlbam'] else None
+    if c:
+        prev = SP.card(b['mlbam'], kind, 2025) or {'rows': []}
+        p25 = {r['label']: r['pctl'] for r in prev['rows']}
+        c['rows'] = [dict(r, pctl25=p25.get(r['label'])) for r in c['rows']]
+        del c['csv'], c['page']
+    b['savant'] = c
+    if b['league']:
+        b['league']['rows'] = [r for r in b['league']['rows'] if r['key'] == 'ev90']
+savant = dict(pulled=SV_MAN['percentile_rankings_pitcher_2026.csv']['pulled'],
+              csv=SP.CSV_URL.format(kind='pitcher', year=2026), csv_batter=SP.CSV_URL.format(kind='batter', year=2026),
+              page=SP.PAGE_URL.replace('{mlbam}', ''),
+              pools={'pitcher': SP.pool_size('pitcher', 2026, 'xera'), 'batter': SP.pool_size('batter', 2026, 'xwoba')},
+              page_only={k: [m[0] for m in v if m[1] is None] for k, v in SP.METRICS.items()})
+
 robust = mk.robustness(mk.frame(mk.load(2025)))
 projections = {k: v for k, v in bp['projections'].items()}
 data = dict(built='2026-11-23', teams=TEAMS, board=board, backtest=calls['backtest'], robust=robust, projections=projections, model=calls['model'], made=calls['made'],
-            framing=dict(summary=fs, catchers=catchers), labs=labs,
+            framing=dict(summary=fs, catchers=catchers), labs=labs, savant=savant,
             bat_power=dict(n_train=bp['n_train'], n_test=bp['n_test'], best=bp['best_ball'], change=bp['bat_speed_change'], ball={k: dict(r2=round(v['r2_out'], 3), rmse=round(v['rmse_out'], 4)) for k, v in bp['ball'].items()},
                            bat_alone={k: dict(r2=round(v['r2_out'], 3), rmse=round(v['rmse_out'], 4)) for k, v in bp['bat_alone'].items()},
                            adds={k: dict(gain=round(v['gain'], 4), lo=round(v['gain_lo'], 4), hi=round(v['gain_hi'], 4),
@@ -201,7 +223,6 @@ print('board', len(board), 'heads', sum(1 for b in board if b['head']), 'catcher
 tpl = (REPO / "docs" / "offseason_template.html").read_text(encoding="utf-8")
 (OUT / "index.html").write_text("<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n"
     "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\">\n"
-    "<meta name=\"description\" content=\"Free-agent salary calls scored against MLB Trade Rumors, buyer decisions, a frame-by-frame swing lab and catcher framing after the ABS challenge system.\">\n"
     + tpl.replace("\n<style>", "\n<style>\n:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}", 1)
       .replace("<header class=\"mast\">", "</head>\n<body>\n<header class=\"mast\">", 1)
     + "\n</body>\n</html>\n", encoding="utf-8")

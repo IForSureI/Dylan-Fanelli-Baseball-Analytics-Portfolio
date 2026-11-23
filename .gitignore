@@ -23,3 +23,6 @@ reports/bayes/out/
 
 # Pose-model weights (downloaded on first use)
 *.pt
+
+# Savant percentile rankings, pulled for the offseason packet (small, committed: market/savant/manifest.json has the URLs and dates)
+!market/savant/*.csv

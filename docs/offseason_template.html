@@ -1,4 +1,22 @@
-<title>2027 Offseason Decision Packet</title>
+<title>2027 Offseason Decision Packet | Dylan Fanelli</title>
+<meta name="description" content="My free-agent salary calls scored against MLB Trade Rumors as players sign, buyer decisions on six free agents with Baseball Savant percentile rankings, a frame-by-frame swing lab and catcher framing after the ABS challenge system.">
+<meta name="author" content="Dylan Fanelli">
+<link rel="canonical" href="https://iforsurei.github.io/Dylan-Fanelli-Baseball-Analytics-Portfolio/offseason/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dylan Fanelli Baseball Analytics Portfolio">
+<meta property="og:title" content="2027 Offseason Decision Packet">
+<meta property="og:description" content="38 free-agent salary calls scored against MLB Trade Rumors, six buyer decisions, a swing lab and catcher framing, built from public data.">
+<meta property="og:url" content="https://iforsurei.github.io/Dylan-Fanelli-Baseball-Analytics-Portfolio/offseason/">
+<meta property="og:image" content="https://iforsurei.github.io/Dylan-Fanelli-Baseball-Analytics-Portfolio/offseason/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The market board of the 2027 Offseason Decision Packet">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="2027 Offseason Decision Packet">
+<meta name="twitter:description" content="38 free-agent salary calls scored against MLB Trade Rumors, six buyer decisions, a swing lab and catcher framing, built from public data.">
+<meta name="twitter:image" content="https://iforsurei.github.io/Dylan-Fanelli-Baseball-Analytics-Portfolio/offseason/og.png">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='29' fill='%23fff' stroke='%231d5e6d' stroke-width='5'/%3E%3Cpath d='M20 9c8 12 8 34 0 46M44 9c-8 12-8 34 0 46' fill='none' stroke='%23c8283a' stroke-width='4'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#ffffff">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&display=swap">
 <style>
@@ -9,7 +27,7 @@
 :root{
   --paper:#ffffff; --plate:#ffffff; --ink:#1f2328; --muted:#5f6b73; --soft:#8a959c; --grid:#e7ebee; --rule:#cfd8dc;
   --zebra:#f6f8f9; --band:#e9f1f3; --bandrule:#c9dde2; --teal:#2e7d8f; --teal-ink:#1d5e6d;
-  --blue:#3661ad; --red:#c8283a; --green:#2a8a6a; --ochre:#b5811a; --mid:#b9b9b9;
+  --blue:#3661ad; --red:#c8283a; --green:#1f7356; --ochre:#b5811a; --mid:#b9b9b9;
   --blue-soft:#e8eef8; --red-soft:#fbe9eb; --green-soft:#e3f1ec;
   --display:"Be Vietnam Pro","Segoe UI",system-ui,sans-serif;
   --text:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
@@ -39,6 +57,9 @@ header.mast{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgrou
 .mast .top{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;padding-block:12px 10px}
 .brand b{font-family:var(--display);font-weight:800;font-size:1.2rem;color:var(--teal-ink);letter-spacing:-.01em}
 .brand span{font-size:.8rem;color:var(--muted);margin-left:10px}
+.printbtn{margin-left:auto;font:inherit;font-size:.74rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--rule);background:#fff;color:var(--ink);border-radius:var(--r);padding:5px 10px;cursor:pointer}
+.printbtn:hover{border-color:var(--teal);color:var(--teal-ink)}
+#print{display:none}
 .band{background:var(--band);border-top:1px solid var(--bandrule);border-bottom:1px solid var(--bandrule)}
 nav.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 nav.tabs::-webkit-scrollbar{display:none}
@@ -49,6 +70,7 @@ nav.tabs a[aria-current="page"]{background:var(--teal);color:#fff;text-decoratio
   .mast .top{padding-block:8px 6px}
   .brand b{font-size:1rem}
   .brand span{display:none}
+  .printbtn{display:none}
   nav.tabs a{padding:9px 10px;font-size:.84rem}
 }
 
@@ -139,7 +161,7 @@ tr.det td{background:#fff!important;padding:0 8px 10px;white-space:normal;text-a
   table.lbt thead th{position:static}
   table.lbt .pill{white-space:normal;text-align:center;font-size:.6rem;padding:2px 4px;max-width:78px}
   .card table td,.card table th{white-space:normal;padding-inline:3px;font-size:.74rem}
-  .pr,.pctl .hdr{grid-template-columns:96px 1fr 48px;gap:0 8px}
+  .pr,.pctl .hdr{grid-template-columns:96px 1fr 60px;gap:0 8px}
 }
 
 /* percentile bubbles, Savant style */
@@ -154,6 +176,12 @@ tr.det td{background:#fff!important;padding:0 8px 10px;white-space:normal;text-a
 .trk .fill{position:absolute;left:0;top:4px;height:12px;border-radius:2px}
 .bub{position:absolute;top:-1px;width:22px;height:22px;margin-left:-11px;border-radius:50%;border:2px solid #fff;color:#fff;font-size:.64rem;font-weight:700;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
 .bub.solo{position:static;margin:0;display:inline-flex;border-color:transparent}
+/* Savant's card: a fourth column with last season's rank */
+.pctl.yr .hdr,.pctl.yr .pr{grid-template-columns:minmax(92px,30%) 1fr 64px 34px}
+.pr .prev,.hdr .prev{text-align:right;font-size:.7rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.pctl .src{font-size:.74rem;color:var(--muted);line-height:1.35}
+.detail .sv{grid-column:1/-1;max-width:660px}
+@media (max-width:700px){.pctl.yr .hdr,.pctl.yr .pr{grid-template-columns:88px 1fr 60px 26px;gap:0 6px}}
 
 /* player cards: Savant's player header, then the numbers */
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:16px}
@@ -163,6 +191,9 @@ tr.det td{background:#fff!important;padding:0 8px 10px;white-space:normal;text-a
 .card .bio{font-size:.8rem;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .card .verdict{font-family:var(--display);font-weight:800;font-size:1rem;color:var(--teal-ink)}
 .card ul{margin:0;padding-left:18px;display:grid;gap:4px}
+/* what I'd do: the six verdicts in one paragraph */
+.summary{display:grid;gap:8px}
+.summary p.do{font-size:1rem;max-width:88ch}
 .card table td,.card table th{padding-inline:6px}
 
 /* swing lab */
@@ -180,6 +211,9 @@ input[type=range]{flex:1;min-width:140px;accent-color:var(--red)}
   .meas td:first-child,.meas th:first-child{white-space:normal;min-width:0}
   .meas td{white-space:normal}
   .meas .n{display:block}
+  table.fit td,table.fit th{padding-inline:2px;font-size:.68rem;white-space:normal;letter-spacing:0}
+  table.fit thead th{font-size:.58rem;letter-spacing:.02em}
+  .pr .lab{font-size:.72rem}
 }
 
 /* catchers */
@@ -194,13 +228,61 @@ table.fr svg{width:100%;height:14px;display:block}
 .panel>h3{display:flex;align-items:center;gap:10px}
 .panel>h3::after{content:"";flex:1;height:1px;background:var(--rule)}
 .method ul{margin:0;padding-left:18px;display:grid;gap:4px}
-footer{border-top:1px solid var(--rule);padding-block:18px 30px;font-size:.78rem;color:var(--muted)}
+footer{border-top:1px solid var(--rule);padding-block:18px 30px;font-size:.78rem;color:var(--muted);display:grid;gap:6px}
+footer .by{color:var(--ink);font-size:.86rem}
+.ponly{display:none}
 .loading{padding:40px 0;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* Print / Save as PDF: a leave-behind with all five views in order, no navigation, a running header on every page */
+@page{size:letter;margin:.62in .5in .55in;
+  @top-left{content:"2027 Offseason Decision Packet";font-family:"Be Vietnam Pro",sans-serif;font-size:8pt;font-weight:700;color:#1d5e6d}
+  @top-right{content:"Dylan Fanelli, built Nov. 23, 2026";font-family:"Bricolage Grotesque",sans-serif;font-size:8pt;color:#5f6b73}
+  @bottom-right{content:"Page " counter(page) " of " counter(pages);font-family:"Bricolage Grotesque",sans-serif;font-size:8pt;color:#5f6b73}
+  @bottom-left{content:"iforsurei.github.io/Dylan-Fanelli-Baseball-Analytics-Portfolio/offseason/";font-family:"Bricolage Grotesque",sans-serif;font-size:7.5pt;color:#5f6b73}}
+@media print{
+  html,body{background:#fff}
+  body{font-size:9.5pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body::before{display:none}
+  header.mast,#app,.filters,.controls,.tick-labels,.printbtn,.noprint{display:none!important}
+  #print{display:block}
+  .ponly{display:block}
+  .wrap{max-width:none;padding:0}
+  main{padding:0}
+  .pcover{display:grid;gap:4px;padding-bottom:10px;margin-bottom:12px;border-bottom:1px solid var(--rule)}
+  .pcover h1{font-size:20pt;color:var(--teal-ink)}
+  section.view{break-before:page;gap:12px;display:grid}
+  #print>section.view:first-of-type{break-before:auto}
+  .lede,.labgrid,.cgrid{grid-template-columns:minmax(0,1fr)!important}
+  .lede .answer{max-width:none}
+  .cards{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+  .card,.tile,.tiles,.pctl,.pr,.summary,.method .panel,.stage,.lede{break-inside:avoid}
+  table.lbt td.call{white-space:normal;width:1.3in}
+  table.lbt td.l .who{min-width:1.75in}
+  .who .nm{white-space:nowrap}
+  svg.spread{max-width:4.2in;display:block;margin:0 auto}
+  .card{padding:10px;gap:8px}
+  .card h3{font-size:12pt}
+  .head.lg{width:52px;height:52px}
+  .cards .card ul{font-size:8.5pt}
+  table{font-size:8pt}
+  th,td{padding:3px 5px}
+  thead{display:table-header-group}
+  tr,tr.r,tr.det{break-inside:avoid;page-break-inside:avoid}
+  table.lbt thead th,.filters{position:static}
+  .tablewrap,.panel.lb{overflow:visible!important}
+  .strip{min-width:110px}
+  .stage svg{max-width:300px;margin:0 auto}
+  .h2,h2{font-size:13pt}
+  h2{break-after:avoid}
+  .method{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  a{color:var(--teal-ink);text-decoration:none}
+  footer{break-inside:avoid;padding-block:10px 0}
+}
 </style>
 
 <header class="mast">
-  <div class="wrap top"><div class="brand"><b>2027 Offseason Decision Packet</b><span>Free agents, catchers and swings. Built Nov. 23, 2026 from public data.</span></div></div>
+  <div class="wrap top"><div class="brand"><b>2027 Offseason Decision Packet</b><span>Free agents, catchers and swings. Built Nov. 23, 2026 from public data.</span></div><button class="printbtn" type="button" id="printbtn">Print / Save as PDF</button></div>
   <div class="band"><div class="wrap">
     <nav class="tabs" aria-label="Views">
       <a href="#board">Market board</a>
@@ -213,15 +295,17 @@ footer{border-top:1px solid var(--rule);padding-block:18px 30px;font-size:.78rem
 </header>
 
 <main class="wrap" id="app"><p class="loading">Loading the packet data.</p></main>
+<div class="wrap" id="print"></div>
 
 <footer class="wrap">
-  <p>Dylan Fanelli. Data: Statcast and Baseball Savant, MLB Stats API (including MLB's highlight clips, measured but never reproduced here), Baseball-Reference WAR, MLB Trade Rumors' top-50 lists, FanGraphs' price of a win. Every study, its code and its tests are in <a href="https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio" target="_blank" rel="noopener">the public portfolio</a>.</p>
+  <p class="by"><b>Dylan Fanelli</b>, baseball operations. <a href="https://www.linkedin.com/in/dylanfanelli/" target="_blank" rel="noopener">LinkedIn</a>, <a href="https://iforsurei.github.io/Dylan-Fanelli-Baseball-Analytics-Portfolio/portfolio.html">portfolio</a>, <a href="https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio" target="_blank" rel="noopener">code on GitHub</a>.</p>
+  <p>Data: Statcast and Baseball Savant (percentile rankings pulled Nov. 23, 2026), MLB Stats API (including MLB's highlight clips, measured but never reproduced here), Baseball-Reference WAR, MLB Trade Rumors' top-50 lists, FanGraphs' price of a win. Every study, its code and its tests are in <a href="https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio" target="_blank" rel="noopener">the public portfolio</a>.</p>
 </footer>
 
 <script>
 (() => {
 const REPO = "https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/";
-const C = {rule:"#cfd8dc", ink:"#1f2328", muted:"#5f6b73", soft:"#8a959c", grid:"#e7ebee", blue:"#3661ad", red:"#c8283a", green:"#2a8a6a", ochre:"#b5811a", plate:"#ffffff"};
+const C = {rule:"#cfd8dc", ink:"#1f2328", muted:"#5f6b73", soft:"#8a959c", grid:"#e7ebee", blue:"#3661ad", red:"#c8283a", green:"#1f7356", ochre:"#b5811a", plate:"#ffffff"};
 const app = document.getElementById("app");
 let D = null;
 const state = {group:"all", status:"all", sort:"rank", dir:"asc", q:"", open:null, lab:"arozarena", frame:null, playing:false, speed:0.25, show:{early:true, late:true}, season:2026};
@@ -239,11 +323,16 @@ const median = a => { const v = a.filter(x => x != null).sort((x, y) => x - y), 
 const clubOf = p => p.new_team || p.team;
 const pct = v => v == null ? "" : Math.round(v * 100) + "%";
 const sgn = (v, d = 1) => v == null ? "" : (v > 0 ? "+" : "") + v.toFixed(d);
-const club = t => { if (!t || !D.teams[t]) return ""; const [a, b] = D.teams[t]; return `<span class="club" style="background:${a};border-color:${b}">${esc(t)}</span>`; };
+/* text on a fill: white or ink, whichever reads better (WCAG contrast) */
+const lum = c => { const v = c.startsWith("#") ? [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16)) : c.match(/\d+/g).slice(0, 3).map(Number);
+  const [r, g, b] = v.map(x => { x /= 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+const onFill = c => { const l = lum(c); return 1.05 / (l + 0.05) >= (l + 0.05) / (lum(C.ink) + 0.05) ? "#fff" : C.ink; };
+const club = t => { if (!t || !D.teams[t]) return ""; const [a, b] = D.teams[t]; return `<span class="club" style="background:${a};border-color:${b};color:${onFill(a)}">${esc(t)}</span>`; };
+const ord = n => n + (n % 100 >= 11 && n % 100 <= 13 ? "th" : ["th", "st", "nd", "rd"][n % 10] || "th");
 const head = (p, cls = "") => {
   const t = clubOf(p), ring = t && D.teams[t] ? D.teams[t][0] : C.rule;
-  return p.head ? `<img class="head ${cls}" src="${p.head}" alt="" style="border-color:${ring}" loading="lazy">`
-                : `<span class="head ph ${cls}" style="border-color:${C.grid}">${esc((p.name || "").split(" ").map(w => w[0]).join("").slice(0, 2))}</span>`;
+  return p.head ? `<img class="head ${cls}" src="${p.head}" alt="${esc(p.name)} headshot" style="border-color:${ring}" loading="lazy">`
+                : `<span class="head ph ${cls}" style="border-color:${C.grid}" aria-hidden="true">${esc((p.name || "").split(" ").map(w => w[0]).join("").slice(0, 2))}</span>`;
 };
 const groupOf = b => b.reliever ? "rp" : (/HP$|^RHP|^LHP/.test(b.pos) ? "sp" : "bat");
 
@@ -314,7 +403,7 @@ function viewBoard() {
     <span class="key"><span class="dot" style="background:${C.red}"></span>My call (Nov. 23)</span>
     <span class="key"><span class="dot" style="background:${C.ink};border-radius:1px;width:4px"></span>Signed for</span>
     <span class="key">Club chip: 2026 club, or new club once signed</span>
-    <span class="key">Choose a column header to sort, a player for the detail</span>
+    <span class="key noprint">Choose a column header to sort, a player for the detail</span>
   </div>
   <div class="panel" style="padding:0 0 2px"><table class="lbt"><thead id="bh"></thead><tbody id="rows"></tbody></table></div>
   <p class="small muted">Average salary is guaranteed money over guaranteed years; an accepted qualifying offer is one year at $23.15M. MLBTR's call is from its Nov. 2 top-50 list; mine are from Nov. 23, after the qualifying-offer decisions, which gives me three weeks of news MLBTR didn't have. No call on players who signed before my call or have no MLB record. The bubble in the chance column is red when the chance is high and blue when it is low.</p>
@@ -343,17 +432,18 @@ function statusOf(b) {
   if (b.call !== "called") return `<span class="pill open">${b.call === "no MLB record" ? "No call" : "Signed before my call"}</span>`;
   return `<span class="pill open">Unsigned</span>`;
 }
-function renderRows() {
+const $ = (root, id) => root.querySelector("#" + id);
+function renderRows(root = document) {
   const rows = boardRows();
   const vals = D.board.flatMap(b => [b.mlbtr_aav, b.my_aav, b.actual_aav]).filter(v => v != null);
   const hi = Math.max(10, Math.ceil(Math.max(...vals) / 10) * 10);
-  document.getElementById("fsum").textContent = `${rows.length} player${rows.length === 1 ? "" : "s"}`;
-  document.getElementById("bh").innerHTML = `<tr>${COLS.map(([k, l, f, hm]) => {
+  $(root, "fsum").textContent = `${rows.length} player${rows.length === 1 ? "" : "s"}`;
+  $(root, "bh").innerHTML = `<tr>${COLS.map(([k, l, f, hm]) => {
     const srt = f ? ` data-sort="${k}" tabindex="0" aria-sort="${state.sort === k ? (state.dir === "asc" ? "ascending" : "descending") : "none"}"` : "";
     const lab = k === "strip" ? `${l} ($0-${hi}M)` : l;
-    return `<th class="${k === "name" || k === "call" || k === "strip" ? "l" : ""}${hm ? " hm" : ""}"${srt}${k === "p" ? ' style="white-space:normal;max-width:84px"' : ""}>${lab}</th>`;
+    return `<th scope="col" class="${k === "name" || k === "call" || k === "strip" ? "l" : ""}${hm ? " hm" : ""}"${srt}${f ? ` aria-label="${esc(lab)}, sortable"` : ""}${k === "p" ? ' style="white-space:normal;max-width:84px"' : ""}>${lab}</th>`;
   }).join("")}</tr>`;
-  const el = document.getElementById("rows");
+  const el = $(root, "rows");
   if (!rows.length) { el.innerHTML = `<tr><td colspan="${COLS.length}" class="l muted" style="padding:16px">No players match these filters. Choose "All" or clear the search to see the whole list.</td></tr>`; return; }
   el.innerHTML = rows.map(b => {
     const open = state.open === b.rank, role = b.reliever ? "RP" : b.pos, age = b.age ? `${Math.round(b.age)}` : "";
@@ -366,7 +456,7 @@ function renderRows() {
       <td class="hm num" style="color:${C.red};font-weight:700">${money(b.my_aav)}</td>
       <td class="hm num gap ${g == null ? "" : g > 0.05 ? "up" : g < -0.05 ? "dn" : ""}">${g == null ? "" : Math.abs(g) < 0.05 ? "Even" : sgn(g, 1)}</td>
       <td class="hm l">${strip(b, hi)}</td>
-      <td>${b.p_over != null ? `<span class="bub solo" style="background:${pcol(b.p_over * 100)}">${Math.round(b.p_over * 100)}</span>` : ""}</td>
+      <td>${b.p_over != null ? `<span class="bub solo" style="background:${pcol(b.p_over * 100)};color:${onFill(pcol(b.p_over * 100))}">${Math.round(b.p_over * 100)}</span>` : ""}</td>
       <td class="hm num">${aav(b.actual_aav)}</td>
       <td style="white-space:normal">${statusOf(b)}</td>
     </tr>${open ? `<tr class="det"><td colspan="${COLS.length}">${detail(b)}</td></tr>` : ""}`;
@@ -380,6 +470,7 @@ function detail(b) {
     <div><p class="k">MLBTR's call (Nov. 2)</p><p>${esc(b.mlbtr)}</p><p class="k" style="margin-top:6px">Signing line</p><p>${esc(b.signed ? b.signed + (b.note ? " (" + b.note + ")" : "") : "Not signed")}</p></div>
     <div><p class="k">Baseball-Reference WAR, 2024 / 2025 / 2026</p><p class="num">${war}</p><p class="k" style="margin-top:6px">Weighted (5/4/3)</p><p class="num">${b.wwar != null ? half(b.wwar, 1) : ""}</p></div>
     <div><p class="k">My read</p><p>${why}</p>${b.my_aav != null ? `<p class="k" style="margin-top:6px">Chance he signs above MLBTR's ${aav(b.mlbtr_aav)}</p><p class="num"><b>${pct(b.p_over)}</b></p>` : ""}</div>
+    ${b.savant ? `<div class="sv">${svBlock(b)}</div>` : ""}
   </div>`;
 }
 function bindBoard() {
@@ -407,12 +498,24 @@ function pcol(p) {
   return `rgb(${a.map((v, i) => Math.round(v + (b[i] - v) * u)).join(",")})`;
 }
 const rankPct = (v, pool) => { const n = pool.length; if (!n || v == null) return null; const below = pool.filter(x => x < v).length, eq = pool.filter(x => x === v).length; return Math.max(1, Math.min(100, Math.round(100 * (below + 0.5 * eq) / n))); };
-function pctlBlock(title, rows, ends = ["Poor", "Average", "Great"]) {
+function pctlBlock(title, rows, ends = ["Poor", "Average", "Great"], o = {}) {
   rows = rows.filter(r => r.p != null); if (!rows.length) return "";
-  return `<div class="pctl"><p class="eyebrow">${title}</p>
-    <div class="hdr" aria-hidden="true"><span></span><span><span style="color:${C.blue}">${ends[0]}</span><span class="muted">${ends[1]}</span><span style="color:${C.red}">${ends[2]}</span></span><span></span></div>
-    ${rows.map(r => `<div class="pr"><span class="lab">${r.label}</span><span class="trk" role="img" aria-label="${esc(r.label)}: ${r.p}th percentile"><span class="fill" style="width:${r.p}%;background:${pcol(r.p)};opacity:.85"></span><span class="bub" style="left:${r.p}%;background:${pcol(r.p)}">${r.p}</span></span><span class="val">${r.val}</span></div>`).join("")}
+  const yr = o.prev;
+  return `<div class="pctl${yr ? " yr" : ""}"><p class="eyebrow">${title}</p>${o.sub ? `<p class="src">${o.sub}</p>` : ""}
+    <div class="hdr" aria-hidden="true"><span></span><span><span style="color:${C.blue}">${ends[0]}</span><span class="muted">${ends[1]}</span><span style="color:${C.red}">${ends[2]}</span></span><span></span>${yr ? `<span class="prev">${yr}</span>` : ""}</div>
+    ${rows.map(r => `<div class="pr"><span class="lab">${r.label}</span><span class="trk" role="img" aria-label="${esc(r.label)}: ${ord(r.p)} percentile${r.val ? ", " + esc(String(r.val).replace(/<[^>]+>/g, "")) : ""}${yr && r.prev != null ? ", " + ord(r.prev) + " in " + yr : ""}"><span class="fill" style="width:${r.p}%;background:${pcol(r.p)};opacity:.85"></span><span class="bub" style="left:${r.p}%;background:${pcol(r.p)};color:${onFill(pcol(r.p))}" aria-hidden="true">${r.p}</span></span><span class="val">${r.val}</span>${yr ? `<span class="prev" aria-hidden="true">${r.prev ?? "\u2014"}</span>` : ""}</div>`).join("")}
   </div>`;
+}
+/* Baseball Savant's own percentile card for one player (market/savant/, pulled by baseball.ingest.savant_percentiles) */
+const SVF = {"2f": v => v.toFixed(2), avg: iso, pct: v => v.toFixed(1) + "%", mph: v => v.toFixed(1) + " mph", ft: v => v.toFixed(1) + " ft", fts: v => v.toFixed(1) + " ft/s"};
+function svBlock(b) {
+  const s = b.savant; if (!s || !s.rows.length) return "";
+  const P = s.kind === "pitcher", lead = P ? "xERA" : "xwOBA", ranked = s.rows.some(r => r.label === lead);
+  const pageOnly = s.rows.filter(r => !r.from_csv).map(r => r.label);
+  const who = ranked ? `Savant's own ranks among the ${D.savant.pools[s.kind]} ${P ? "pitchers" : "hitters"} it ranks on ${lead} in 2026 (${s.pa} ${P ? "batters faced" : "PA"}).` : `Savant ranks him only on the rows shown for 2026.`;
+  const src = `${pageOnly.length ? pageOnly.join(" and ") + " from his <a href=\"" + D.savant.page + b.mlbam + "\" target=\"_blank\" rel=\"noopener\">Savant player page</a>, the rest from Savant's <a href=\"" + (P ? D.savant.csv : D.savant.csv_batter) + "\" target=\"_blank\" rel=\"noopener\">percentile-rankings export</a>" : "From Savant's <a href=\"" + (P ? D.savant.csv : D.savant.csv_batter) + "\" target=\"_blank\" rel=\"noopener\">percentile-rankings export</a>"}, pulled ${day(D.savant.pulled)}.`;
+  return pctlBlock("Baseball Savant percentile rankings, 2026", s.rows.map(r => ({label: r.label, p: r.pctl, prev: r.pctl25, val: r.value == null ? "\u2014" : (SVF[r.fmt] || String)(r.value)})), ["Poor", "Average", "Great"],
+    {prev: "2025", sub: `${who} The right column is his 2025 rank. ${src}`});
 }
 
 /* ---------------- decisions ---------------- */
@@ -431,16 +534,24 @@ function card(rank, verdict, bullets, links) {
     <header>${head(b, "lg")}<div style="display:grid;gap:3px;min-width:0"><h3>${esc(b.name)}</h3><p class="bio">${club(clubOf(b))}<span>${esc(b.reliever ? "Reliever" : b.pos)}</span><span>Age ${Math.round(b.age)}</span><span>MLBTR rank ${b.rank}</span></p><p class="verdict">${verdict}</p></div></header>
     <div class="tablewrap"><table><thead><tr><th class="l">MLBTR's call</th><th>MLBTR AAV</th><th>My AAV</th><th>Chance above MLBTR</th><th>5/4/3 WAR</th></tr></thead>
       <tbody><tr><td class="l">${esc(b.mlbtr)}</td><td style="color:${C.blue}">${aav(b.mlbtr_aav)}</td><td style="color:${C.red};font-weight:700">${money(b.my_aav)}</td><td>${pct(b.p_over)}</td><td>${b.wwar != null ? half(b.wwar, 1) : ""}</td></tr></tbody></table></div>
-    ${lg ? pctlBlock(`${lg.season} Statcast percentile among ${lg.n} hitters with ${lg.min_pa}+ PA`, lg.rows.map(r => ({label: r.label, p: r.pctl, val: (LFMT[r.key] || (v => v))(r.value)}))) : ""}
+    ${svBlock(b)}
+    ${lg && lg.rows.length ? pctlBlock(`My rank where Savant has none: ${lg.season} percentile among ${lg.n} hitters with ${lg.min_pa}+ PA`, lg.rows.map(r => ({label: r.label, p: r.pctl, val: (LFMT[r.key] || (v => v))(r.value)}))) : ""}
     ${frRows.length ? pctlBlock(`Framing percentile among catchers with 1,500+ takes`, frRows) : ""}
     ${pctlBlock(`Rank among this winter's ${called.length} called players`, boardRowsP, ["Low", "Middle", "High"])}
     <ul>${bullets.map(x => `<li>${x}</li>`).join("")}</ul>
     <p class="small">${links}</p>
   </article>`;
 }
+function whatIdDo() {
+  const P = r => D.board.find(x => x.rank === r) || {};
+  const sz = P(4), gz = P(18), st = P(40);
+  return `<div class="panel summary"><p class="eyebrow">What I'd do</p>
+    <p class="do">I'd bid on Adri\u00e1n Morej\u00f3n up to $60M over four years and stop there, with the elbow medical gating any multi-year deal. If his price runs past that, Bryan Abreu is the likely signing, and I'd walk away above $25M over two years; Raisel Iglesias on one year is the target the board doesn't push up. I wouldn't pay Randy Arozarena for his 2026: the ISO rise came from fewer strikeouts, and those won't add power. I'd price Tyler Stephenson's framing in and pay him less than the board's ${money(st.my_aav)} a year. On Seiya Suzuki, whose power projects down too, and Kevin Gausman I have market forecasts only: ${money(sz.my_aav)} and ${money(gz.my_aav)} a year against MLBTR's ${aav(sz.mlbtr_aav)} and ${aav(gz.mlbtr_aav)}, and I haven't priced either for a buyer.</p></div>`;
+}
 function viewPlayers() {
   const a = D.labs.arozarena;
   return `<section class="view">
+  ${whatIdDo()}
   <div class="lede"><div style="display:grid;gap:10px"><p class="eyebrow">Decisions</p>
     <h2>Where my forecast and my price part ways</h2>
     <p class="answer">The board forecasts what the market will pay. A club still has to decide what it should pay. Where a card gives a buyer's verdict, a report sits behind it; where it doesn't, the card says it's a market forecast only. The Morej\u00f3n and Abreu cards share one problem: if the board is right about relievers, both of my bullpen targets price out at my walk-aways, and Raisel Iglesias on one year is the target the board doesn't push up.</p></div></div>
@@ -534,7 +645,7 @@ function viewSwing() {
         <p class="small muted">${state.lab === "arozarena" ? "Head drop is the one significant difference, and I can't tell whether it's him or the cameras: 7 of the 11 measured 2024 swings are at Tropicana Field, and camera height changes how a vertical drop looks. In the three parks with swings in both seasons, the gap shows only at Tropicana, on one 2026 swing (Seattle 0.34 vs 0.25 and 0.52; Fenway 0.45 vs 0.42 and 0.48). Smallest timing changes this sample could detect: " + Math.round(L.detectable.down_to_contact_ms) + " ms at foot down, " + Math.round(L.detectable.lift_to_contact_ms) + " ms at leg lift, one frame for hip lead." : "His load is a toe tap, so his front foot barely lifts, and foot-down timing can't be read reliably from this camera. I left those rows out. Two clips were removed by eye: a side replay and an off-axis camera. Permutation tests on the median, 2026 against 2024-25."}</p>
       </div>
       <div class="panel" style="display:grid;gap:8px"><h3>What Statcast says, all swings</h3>
-        <div class="tablewrap"><table><thead><tr><th>Season</th><th>PA</th><th>ISO</th><th>Barrel</th><th>EV90</th><th>Bat speed</th><th>Length</th><th>Attack</th></tr></thead><tbody>
+        <div class="tablewrap"><table class="fit"><thead><tr><th>Season</th><th>PA</th><th>ISO</th><th>Barrel</th><th>EV90</th><th>Bat speed</th><th>Length</th><th>Attack</th></tr></thead><tbody>
         ${sc.map(s => `<tr><td>${s.season}</td><td>${s.pa}</td><td>${iso(s.iso)}</td><td>${(s.barrel * 100).toFixed(1)}%</td><td>${s.ev90.toFixed(1)}</td><td>${s.bat_speed != null ? s.bat_speed.toFixed(1) : dash}</td><td>${s.swing_length != null ? s.swing_length.toFixed(2) : dash}</td><td>${s.attack_angle != null ? s.attack_angle.toFixed(1) + "&deg;" : dash}</td></tr>`).join("")}
         </tbody></table></div>
         <p class="small muted">Bat speed, length and attack angle on competitive swings. Across the league, adding them to ISO plus barrel rate (the model chosen on training data) cuts about 1% of the error in next season's ISO (${D.bat_power.adds.bat_speed.pct.toFixed(1)}% for bat speed, ${D.bat_power.adds.swing_length.pct.toFixed(1)}% for swing length; ${D.bat_power.n_test} hitters, scored on 2025 to 2026).</p>
@@ -543,7 +654,7 @@ function viewSwing() {
   </div>
   <div class="panel" style="display:grid;gap:10px"><h3>Every home run, with the clip</h3>
     <p class="small muted">A dash means the camera couldn't measure that swing.${foot ? "" : " Foot down is left out for him: his toe-tap load can't be read from this camera."}</p>
-    <div class="tablewrap"><table><thead><tr><th>Date</th><th>Pitch</th><th>EV</th><th>LA</th><th>Bat speed</th>${foot ? "<th>Foot down</th>" : ""}<th>Head drop</th><th>Clip</th></tr></thead><tbody>
+    <div class="tablewrap"><table class="fit"><thead><tr><th>Date</th><th>Pitch</th><th>EV</th><th>LA</th><th>Bat speed</th>${foot ? "<th>Foot down</th>" : ""}<th>Head drop</th><th>Clip</th></tr></thead><tbody>
     ${L.swings.slice().sort((a, b) => String(b.date).localeCompare(String(a.date))).map(s => `<tr><td>${day(s.date)}</td><td>${esc(s.pitch_type ?? "")} ${s.pitch_speed ? s.pitch_speed.toFixed(0) : ""}</td><td>${s.launch_speed != null ? s.launch_speed.toFixed(1) : dash}</td><td>${s.launch_angle ?? dash}</td><td>${s.bat_speed != null ? s.bat_speed.toFixed(1) : dash}</td>${foot ? `<td>${s.measured && s.down_to_contact_ms != null ? Math.round(s.down_to_contact_ms) + " ms" : dash}</td>` : ""}<td>${s.measured && s.head_drop != null ? s.head_drop.toFixed(2) : dash}</td><td>${s.page ? `<a href="${esc(s.page)}" target="_blank" rel="noopener">MLB.com</a>` : ""}</td></tr>`).join("")}
     </tbody></table></div>
   </div>
@@ -555,8 +666,8 @@ function testCell(t, key) {
   const f = key === "head_drop" ? t.diff.toFixed(2) : key === "shoulder_tilt" ? t.diff.toFixed(1) + "\u00b0" : Math.round(t.diff) + " ms";
   return `<span class="${t.p < 0.05 ? "sig" : ""}">${t.diff > 0 ? "+" : ""}${f}</span><br><span class="small muted">p ${t.p < 0.001 ? "&lt;0.001" : t.p.toFixed(t.p < 0.01 ? 3 : 2)}</span>`;
 }
-function drawSkel(i) {
-  const L = D.labs[state.lab], svg = document.getElementById("skel"); if (!svg) return;
+function drawSkel(i, root = document) {
+  const L = D.labs[state.lab], svg = $(root, "skel"); if (!svg) return;
   const X = x => 200 + x * 85, Y = y => 160 - y * 85;
   const out = [];
   out.push(`<rect x="0" y="0" width="400" height="420" fill="${C.plate}"/>`);
@@ -574,10 +685,10 @@ function drawSkel(i) {
   }
   const pre = L.traj.pre, ms = Math.round((i - pre) * 1000 / L.traj.fps);
   out.push(`<text x="20" y="400" font-size="13" fill="${C.muted}" font-family="Bricolage Grotesque, system-ui">${i === pre ? "Contact" : (ms < 0 ? ms + " ms before contact" : "+" + ms + " ms after contact")}</text>`);
-  out.push(`<text x="380" y="400" font-size="12" text-anchor="end" fill="${C.soft}" font-family="Bricolage Grotesque, system-ui">Dashed: head height at the start</text>`);
+  out.push(`<text x="380" y="400" font-size="12" text-anchor="end" fill="${C.muted}" font-family="Bricolage Grotesque, system-ui">Dashed: head height at the start</text>`);
   svg.innerHTML = out.join("");
-  const lab = document.getElementById("flabel"); if (lab) lab.textContent = (ms > 0 ? "+" : "") + ms + " ms";
-  const sc = document.getElementById("scrub"); if (sc && +sc.value !== i) sc.value = i;
+  const lab = $(root, "flabel"); if (lab) lab.textContent = (ms > 0 ? "+" : "") + ms + " ms";
+  const sc = $(root, "scrub"); if (sc && +sc.value !== i) sc.value = i;
 }
 function bindSwing() {
   const L = D.labs[state.lab];
@@ -633,7 +744,7 @@ function viewCatchers() {
   <div class="labgrid cgrid">
     <div class="panel lb" style="padding:0 0 2px;overflow-x:auto"><div id="lb"></div></div>
     <div style="display:grid;gap:16px;align-content:start">
-      <div class="panel" style="display:grid;gap:8px"><h3>The spread, season by season</h3><svg id="spread" viewBox="0 0 460 260" style="width:100%;height:auto" role="img" aria-label="Framing runs by catcher and season"></svg>
+      <div class="panel" style="display:grid;gap:8px"><h3>The spread, season by season</h3><svg id="spread" class="spread" viewBox="0 0 460 260" style="width:100%;height:auto" role="img" aria-label="Framing runs by catcher and season"></svg>
         <p class="small muted">Each dot is a catcher with 1,500+ takes; pitcher- and park-adjusted runs. Red: Patrick Bailey. In the table, Savant is Baseball Savant's own framing runs, and Pctl ranks the catcher among that season's catchers (red high, blue low).</p></div>
       <div class="panel" style="display:grid;gap:6px"><h3>This winter's free-agent catchers</h3>
         ${["Tyler Stephenson", "Carson Kelly"].map(n => { const c = F.catchers.find(x => x.name === n); if (!c) return ""; return `<p><b>${n}</b>: ${[2024, 2025, 2026].map(s => c.seasons[s] ? sgn(c.seasons[s].adj) : "n/a").join(" / ")} runs (2024 / 2025 / 2026). ${n === "Tyler Stephenson" ? "Near the bottom of the league the last two seasons. My board's $9.0M a year runs on Baseball-Reference WAR, which carries little framing, so a club that prices framing should pay less." : "About average, and steady."}</p>`; }).join("")}
@@ -643,16 +754,16 @@ function viewCatchers() {
   <p class="small muted gloss">Terms: framing runs are the runs a catcher saves by getting extra called strikes on takes, against an average catcher on the same pitches. A take is a pitch the batter doesn't swing at. r is a correlation (1 means the two lists agree exactly, 0 means no relation). SD is the standard deviation, the typical gap from average.</p>
 </section>`;
 }
-function renderLB() {
+function renderLB(root = document) {
   const s = state.season, rows = D.framing.catchers.filter(c => c.seasons[s]).sort((a, b) => b.seasons[s].adj - a.seasons[s].adj);
   const max = Math.max(5, ...rows.map(c => Math.abs(c.seasons[s].adj))), pool = rows.map(c => c.seasons[s].adj);
-  document.getElementById("csum").textContent = `${rows.length} catchers with 1,500+ takes`;
+  $(root, "csum").textContent = `${rows.length} catchers with 1,500+ takes`;
   const bar = v => { const w = Math.abs(v) / max * 50; return `<svg viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true"><line x1="50" x2="50" y1="0" y2="14" stroke="${C.soft}" stroke-width=".6"/><rect x="${v < 0 ? 50 - w : 50}" y="2" width="${w}" height="10" fill="${v < 0 ? C.blue : C.red}"/></svg>`; };
-  document.getElementById("lb").innerHTML = `<table class="fr"><thead><tr><th>Rk</th><th class="l">Catcher</th><th class="hm">Takes</th><th class="l bar">Runs lost / gained</th><th>Runs</th><th class="hm">Savant</th><th class="hm">Pctl</th></tr></thead><tbody>` +
-    rows.map((c, i) => { const v = c.seasons[s], p = rankPct(v.adj, pool); return `<tr><td class="num muted">${i + 1}</td><td class="l"><span class="who">${head(c)}<span><span class="nm" style="font-weight:600">${esc(c.name)}</span><span class="meta">${club(c.team)}</span></span></span></td><td class="hm">${v.takes.toLocaleString()}</td><td class="bar">${bar(v.adj)}</td><td style="font-weight:700;color:${v.adj < 0 ? C.blue : C.red}">${sgn(v.adj)}</td><td class="hm muted">${v.savant == null ? "\u2014" : sgn(v.savant)}</td><td class="hm"><span class="bub solo" style="background:${pcol(p)}">${p}</span></td></tr>`; }).join("") + `</tbody></table>`;
+  $(root, "lb").innerHTML = `<table class="fr"><caption class="ponly" style="text-align:left;font-weight:700;padding-bottom:4px">${s} framing leaderboard</caption><thead><tr><th scope="col">Rk</th><th scope="col" class="l">Catcher</th><th scope="col" class="hm">Takes</th><th scope="col" class="l bar">Runs lost / gained</th><th scope="col">Runs</th><th scope="col" class="hm">Savant</th><th scope="col" class="hm">Pctl</th></tr></thead><tbody>` +
+    rows.map((c, i) => { const v = c.seasons[s], p = rankPct(v.adj, pool); return `<tr><td class="num muted">${i + 1}</td><td class="l"><span class="who">${head(c)}<span><span class="nm" style="font-weight:600">${esc(c.name)}</span><span class="meta">${club(c.team)}</span></span></span></td><td class="hm">${v.takes.toLocaleString()}</td><td class="bar">${bar(v.adj)}</td><td style="font-weight:700;color:${v.adj < 0 ? C.blue : C.red}">${sgn(v.adj)}</td><td class="hm muted">${v.savant == null ? "\u2014" : sgn(v.savant)}</td><td class="hm"><span class="bub solo" style="background:${pcol(p)};color:${onFill(pcol(p))}">${p}</span></td></tr>`; }).join("") + `</tbody></table>`;
 }
-function renderSpread() {
-  const svg = document.getElementById("spread"); if (!svg) return;
+function renderSpread(root = document) {
+  const svg = $(root, "spread"); if (!svg) return;
   const xs = {2024: 110, 2025: 230, 2026: 350}, Y = v => 130 - v * 4.2, out = [];
   for (const v of [-10, 0, 10, 20]) out.push(`<line x1="44" x2="440" y1="${Y(v)}" y2="${Y(v)}" stroke="${C.grid}"/><text x="38" y="${Y(v) + 4}" text-anchor="end" font-size="11" fill="${C.muted}">${v > 0 ? "+" : ""}${v}</text>`);
   let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
@@ -716,6 +827,35 @@ function viewMethod() {
 </section>`;
 }
 
+/* ---------------- print: every view in order, in a container only print shows ---------------- */
+function buildPrint() {
+  const keep = JSON.stringify(state), box = document.createElement("div");
+  Object.assign(state, {group: "all", status: "all", sort: "rank", dir: "asc", q: "", open: null, season: 2026, show: {early: true, late: true}});
+  const frag = html => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+  box.append(frag(`<div class="pcover"><h1>2027 Offseason Decision Packet</h1><p class="muted">Dylan Fanelli. Free agents, catchers and swings, built Nov. 23, 2026 from public data. The interactive version: iforsurei.github.io/Dylan-Fanelli-Baseball-Analytics-Portfolio/offseason/</p></div>`));
+  for (const name of Object.keys(VIEWS)) {
+    if (name === "swing") {
+      for (const k of Object.keys(D.labs)) { state.lab = k; const el = frag(viewSwing()); box.append(el); drawSkel(D.labs[k].traj.pre, el); }
+      continue;
+    }
+    const el = frag(VIEWS[name]()); box.append(el);
+    if (name === "board") renderRows(el);
+    if (name === "catchers") { renderLB(el); renderSpread(el); }
+  }
+  Object.assign(state, JSON.parse(keep));
+  box.querySelectorAll("[id]").forEach(e => e.removeAttribute("id"));
+  box.querySelectorAll("[tabindex]").forEach(e => e.removeAttribute("tabindex"));
+  const pr = document.getElementById("print"); pr.replaceChildren(...box.childNodes); pr.setAttribute("aria-hidden", "true");
+}
+document.getElementById("printbtn").addEventListener("click", () => window.print());
+
+/* view tabs: arrow keys, Home and End move between them */
+document.querySelector("nav.tabs").addEventListener("keydown", e => {
+  const tabs = [...document.querySelectorAll("nav.tabs a")], i = tabs.indexOf(document.activeElement); if (i < 0) return;
+  const j = {ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1}[e.key]; if (j == null) return;
+  e.preventDefault(); const t = tabs[(j + tabs.length) % tabs.length]; t.focus(); location.hash = t.getAttribute("href");
+});
+
 /* ---------------- boot ---------------- */
 const mast = document.querySelector("header.mast");
 const setMast = () => document.documentElement.style.setProperty("--mast", mast.offsetHeight + "px");
@@ -725,6 +865,7 @@ fetch("data.json").then(r => { if (!r.ok) throw new Error(r.status); return r.js
   if (!location.hash) { try { const v = localStorage.getItem("packet-view"); if (v && VIEWS[v]) history.replaceState(null, "", "#" + v); } catch (e) {} }
   route();
   window.addEventListener("hashchange", route);
+  buildPrint();
 }).catch(() => { app.innerHTML = `<p class="loading">The packet data didn't load. Reload the page to try again.</p>`; });
 })();
 </script>

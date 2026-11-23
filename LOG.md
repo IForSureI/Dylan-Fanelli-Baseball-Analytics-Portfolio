@@ -2,6 +2,18 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-23: Savant's own percentiles in the packet, and the packet ready to hand a club
+**Built**
+- **Baseball Savant percentile rankings, pulled Nov. 23, 2026** (`baseball/ingest/savant_percentiles.py`, saved in `market/savant/` with each file's URL, date and row count in `manifest.json`):
+  - Savant's percentile-rankings CSVs for pitchers and hitters, 2025 and 2026, as Savant sends them (`leaderboard/percentile-rankings?type=pitcher&year=2026&csv=true` and the batter and 2025 versions).
+  - The season rows from the Savant player pages of the 47 board players Savant ranks (`savant-player/<id>`): the values behind each rank, plus the three ranks the CSV leaves out (GB %, Extension, LA Sweet-Spot %). On all 1,080 ranks the two share, the CSV and the player pages agree.
+- **Pitcher cards with Savant's card:** Morejón, Gausman and Abreu now show Savant's own percentile bubbles under Savant's names (xERA, xBA, xwOBA, Fastball Velo, Avg Exit Velocity, Chase %, Whiff %, K %, BB %, Barrel %, Hard-Hit %, GB %, Extension), each with its value and the 2025 rank beside it. Savant ranks 339 pitchers on xERA in 2026; Morejón is in the 99th percentile on xERA (2.34) and chase (38.6%), Abreu in the 1st on walks (15.3%).
+- **Hitters:** the cards and board details use Savant's ranks now. My computed ranks among the 137 hitters with 502+ PA stay only for EV90, which Savant doesn't rank, and the card says so.
+- **Every board detail** for a player Savant ranks opens his Savant card.
+- **What I'd do:** the Decisions view opens with one paragraph built from the six cards' verdicts.
+- **Turn-in polish:** a byline with LinkedIn and the portfolio in the footer; a title, description, link-preview tags and a 1200x630 preview image (`docs/offseason/og.png`, rendered from the board); a favicon; a print layout that puts all five views in order with a running header and page numbers, keeps table rows whole and drops the navigation; arrow keys move between the views; headshots carry alt text; club chips and bubbles pick white or dark text by contrast, and the green text now passes AA on its tint. The swing lab's two wide tables fit a phone.
+- **The portfolio page leads with the packet:** a featured card in the page's own card style, above the bullpen memo, and a link under the opening paragraph.
+
 ## 2026-11-23: Bullpen memo figure from the saved run, and one grade corrected
 
 - I reran `bb bullpen-case` on the saved Oct. 17 Edge Board run and the 2024-26 pitch files. 29 of 30 grades match the memo. Morejón's slider present grade comes out 45, not 50: its regressed whiff rate (31.3%) sits at the 40.0th percentile of 279 slider-group pitches, just under the 45/50 line. The 50 came from an earlier fit that wasn't saved.
