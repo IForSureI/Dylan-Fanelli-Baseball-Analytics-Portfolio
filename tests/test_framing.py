@@ -49,8 +49,12 @@ def test_per_take_spread_zone_and_significance_match_the_report():
     sp = SUMMARY["spread"]
     per = {y: sp[y]["sd_per_1000"] for y in ("2024", "2025", "2026")}
     assert [f"{per[y]:.2f}" for y in per] == ["1.14", "1.03", "0.79"]
-    assert round(100 * (1 - per["2026"] / per["2025"])) == 23 and "23% less" in REPORT
-    assert round(100 * (1 - sp["2026"]["sd_savant"] / sp["2025"]["sd_savant"])) == 27
+    assert round(100 * (1 - per["2026"] / per["2025"])) == 23 and round(100 * (1 - per["2025"] / per["2024"])) == 10
+    sv = {y: sp[y]["sd_savant_per_1000"] for y in ("2024", "2025", "2026")}
+    assert round(100 * (1 - sv["2026"] / sv["2025"])) == 10 and round(100 * (1 - sv["2025"] / sv["2024"])) == 8
+    assert "**-23%**" in REPORT and "**-10%**" in REPORT
+    pr = SUMMARY["year_to_year_paired"]
+    assert pr["catchers"] == 37 and pr["diff_lo"] < 0 < pr["diff_hi"]
     z = {y: SUMMARY["seasons"][y]["zone"] for y in ("2024", "2025", "2026")}
     assert [f"{100 * z[y]['uncertain_share']:.1f}%" for y in z] == ["21.7%", "20.9%", "15.2%"]
     assert [f"{100 * z[y]['balls_well_inside']:.2f}%" for y in z] == ["0.17%", "0.12%", "0.02%"]

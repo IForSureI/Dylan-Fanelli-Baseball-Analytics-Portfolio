@@ -62,7 +62,11 @@ def seasons_table(d: pd.DataFrame) -> pd.DataFrame:
         "hits_tb": ab.events.map(TB).fillna(0).groupby(ab.batter).sum(),
         "hits": ab.events.isin(TB).groupby(ab.batter).sum(),
         "hr": (pa.events == "home_run").groupby(pa.batter).sum(),
+        "so": pa.events.isin({"strikeout", "strikeout_double_play"}).groupby(pa.batter).sum(),
     })
+    g["k_rate"] = g.so / g.pa
+    g["xb"] = g.hits_tb - g.hits
+    g["xb_per_contact_ab"] = g.xb / (g.ab - g.so)          # extra bases per at-bat that didn't end in a strikeout
     g["iso"] = (g.hits_tb - g.hits) / g.ab
     bip = d[d.description.eq("hit_into_play") & d.launch_speed.notna()]
     g["barrel"] = (bip.launch_speed_angle == 6).groupby(bip.batter).mean()

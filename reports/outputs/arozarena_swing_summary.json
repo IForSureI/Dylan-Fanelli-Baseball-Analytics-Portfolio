@@ -117,5 +117,39 @@
    "swing_length": 7.55,
    "launch_speed": 102.7
   }
- ]
+ ],
+ "detectable_change": {
+  "down_to_contact_ms": 78.45884678286761,
+  "lift_to_contact_ms": 163.6365356902701,
+  "hip_lead_ms": 16.683350016683352,
+  "head_drop": 0.1677681710174855,
+  "shoulder_tilt": 7.917944175633776
+ },
+ "n_by_measure": {
+  "down_to_contact_ms": {
+   "2024": 10,
+   "2025": 1,
+   "2026": 9
+  },
+  "lift_to_contact_ms": {
+   "2024": 8,
+   "2025": 2,
+   "2026": 9
+  },
+  "hip_lead_ms": {
+   "2024": 11,
+   "2025": 2,
+   "2026": 10
+  },
+  "head_drop": {
+   "2024": 11,
+   "2025": 2,
+   "2026": 10
+  },
+  "shoulder_tilt": {
+   "2024": 11,
+   "2025": 2,
+   "2026": 10
+  }
+ }
 }

@@ -527,6 +527,9 @@ def cmd_market(a: argparse.Namespace) -> None:
         print("rewrote the board section of reports/2027-market-board.md")
     else:
         s = mk.scored()
+        bad = mk.unparsed(mk.load(2026)["players"])
+        if bad:
+            print("CHECK BY HAND, signing lines I can't read: " + ", ".join(bad))
         r = mk.score(s)
         if not r["n"]:
             print(f"{(s.call == 'called').sum()} calls, none signed yet")

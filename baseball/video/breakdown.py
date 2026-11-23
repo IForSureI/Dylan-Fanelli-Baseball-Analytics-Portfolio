@@ -86,6 +86,20 @@ def permutation(t: pd.DataFrame, col: str, a=(2024, 2025), b=(2026,), reps: int 
     return dict(n_a=int(len(x)), n_b=int(len(y)), diff=float(obs), p=float(hits / reps))
 
 
+def detectable(t: pd.DataFrame, col: str, a=(2024, 2025), b=(2026,), reps: int = 4000, seed: int = 1,
+               frame_ms: float = 1000 / 59.94) -> float:
+    """The smallest change in a median this sample would detect about 80% of the time: 2.8 times the bootstrap
+    spread of the median difference, and never less than one frame."""
+    m = t[t.measured & t[col].notna()]
+    x, y = m[m.season.isin(a)][col].to_numpy(), m[m.season.isin(b)][col].to_numpy()
+    if len(x) < 5 or len(y) < 5:
+        return float("nan")
+    rng = np.random.default_rng(seed)
+    d = [np.median(rng.choice(y, len(y))) - np.median(rng.choice(x, len(x))) for _ in range(reps)]
+    v = 2.8 * float(np.std(d))
+    return max(v, frame_ms) if col.endswith("_ms") else v
+
+
 def normalized(kp: np.ndarray, frame: int, height: float, stance_hips: np.ndarray, flip: bool) -> np.ndarray:
     """Joints at `frame` in batter heights, origin at the stance hip center, y up; mirrored for a left-handed hitter."""
     p = kp[frame, :, :2].copy()
@@ -142,7 +156,7 @@ def figure(t: pd.DataFrame, name: str, path: Path, early=(2024, 2025), late=(202
         ax.axis("off")
     fig.axes[0].legend(handles=[plt.Line2D([], [], color=c, lw=2.5, label=l) for l, c in cols.items()], loc="lower left",
                        fontsize=9, frameon=False)
-    fig.axes[3].text(0, -2.85, "Dashed: head height. He stays taller\nthrough contact in 2026.", ha="center", fontsize=8.5,
+    fig.axes[3].text(0, -2.85, "Dashed: head height. Smaller drop in 2026;\ncamera or him, unresolved.", ha="center", fontsize=8.5,
                      color=house.MUTED)
     labels = {"down_to_contact_ms": "Foot down to contact (ms)", "hip_lead_ms": "Hips ahead of shoulders (ms)",
               "head_drop": "Head drop (torso lengths)", "shoulder_tilt": "Shoulder tilt at contact (deg)"}

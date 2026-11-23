@@ -62,3 +62,23 @@ def test_report_board_is_rendered_from_the_calls():
     rows = [l for l in board.splitlines() if re.match(r"\| \d+ \|", l)]
     assert len(rows) == 38
     assert board.strip().endswith(mk.render_board().strip().splitlines()[-1].strip())
+
+
+def test_scoring_rules_edge_cases():
+    # clubs outside MLB that share an MLB nickname, minor-league deals and retirements aren't scored
+    assert not mk.mlb_deal("Signed with Yomiuri Giants for two years, $10MM")
+    assert not mk.mlb_deal("Signed with Hanshin Tigers for one year, $3MM")
+    assert not mk.mlb_deal("Signed minor league deal with Twins")
+    assert mk.mlb_deal("Signed with the Red Sox for four years, $58MM") and mk.mlb_deal("Accepted $23.15MM qualifying offer from Twins")
+    assert mk.actual_terms("Signed with Tigers for one-year, $11.5MM", 23.15) == (1, 11.5)
+    # a deal exactly at MLBTR's AAV is not "above", and an equal distance counts for neither side
+    import pandas as pd
+    s = pd.DataFrame([dict(call="called", actual_aav=16.0, mlbtr_aav=16.0, my_aav=16.0, p_over=0.5, first_seen="2026-12-01"),
+                      dict(call="called", actual_aav=20.0, mlbtr_aav=18.0, my_aav=22.0, p_over=0.8, first_seen="2027-05-02")])
+    r = mk.score(s)
+    assert r["n"] == 1 and r["ties"] == 1 and r["closer"] == 0 and r["mlbtr_closer"] == 0 and r["brier"] == 0.25
+
+
+def test_every_signed_line_parses():
+    assert mk.unparsed(mk.load(2026)["players"]) == []
+    assert mk.unparsed([dict(name="X", signed="Signed with Mets for an undisclosed deal")]) == ["X"]

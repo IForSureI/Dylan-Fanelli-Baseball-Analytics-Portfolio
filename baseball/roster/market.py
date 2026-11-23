@@ -65,7 +65,7 @@ NUMBER_WORDS = dict(one=1, two=2, three=3, four=4, five=5, six=6, seven=7, eight
 # ------------------------------------------------------------------ parsing
 def terms(text: str) -> tuple[int | None, float | None]:
     """'Nine years, $425MM' -> (9, 425.0); 'One year $23.15MM' -> (1, 23.15)."""
-    m = re.search(r"(\w+)\s+years?,?\s*\$([\d.]+)\s*MM", text or "", re.I)
+    m = re.search(r"(\w+)[\s-]+years?,?\s*\$([\d.]+)\s*MM", text or "", re.I)
     if not m:
         return None, None
     word = m.group(1).lower()
@@ -80,15 +80,26 @@ MLB_CLUBS = ("Angels", "Astros", "Athletics", "A's", "Blue Jays", "Braves", "Bre
 SCORE_BY = "2027-04-30"     # a signing line first seen after this date isn't scored (a lockout included)
 
 
+_CLUB_RX = re.compile(r"(?:with|from) (?:the )?(" + "|".join(re.escape(c) for c in sorted(MLB_CLUBS, key=len, reverse=True)) + r")\b(?! of)", re.I)
+FOREIGN = ("yomiuri", "hanshin", "chunichi", "yakult", "hiroshima", "yokohama", "orix", "softbank", "rakuten", "seibu",
+           "nippon-ham", "nippon ham", "lotte", "kia", "lg ", "lg twins", "doosan", "samsung", "kiwoom", "hanwha", "kt wiz",
+           "ssg", "nc dinos", "npb", "kbo", "cpbl", "mexican league", "japan", "korea", "taiwan")
+
+
 def mlb_deal(text: str) -> bool:
-    """A major league contract with an MLB club, or an accepted qualifying offer. Minor-league deals, overseas
-    clubs and retirements aren't scored."""
+    """A major league contract with an MLB club, or an accepted qualifying offer. Minor-league deals, clubs outside
+    MLB (including NPB and KBO clubs that share an MLB nickname, like the Yomiuri Giants or Hanshin Tigers) and
+    retirements aren't scored. The club must follow "with" or "from", as in MLBTR's signing lines."""
     t = (text or "").lower()
-    if not t or "minor league" in t or "minor-league" in t or "retire" in t:
+    if not t or "minor league" in t or "minor-league" in t or "retire" in t or any(f in t for f in FOREIGN):
         return False
-    if t.startswith("accepted"):
-        return True
-    return any(c.lower() in t for c in MLB_CLUBS)
+    return bool(_CLUB_RX.search(text))
+
+
+def unparsed(players: list[dict]) -> list[str]:
+    """Signing lines that name an MLB club but whose years or money can't be read. They would drop out of the
+    score silently, so `bb market score` lists them for a hand check."""
+    return [p["name"] for p in players if p.get("signed") and mlb_deal(p["signed"]) and None in actual_terms(p["signed"], QO_2026)]
 
 
 def actual_terms(text: str, qo: float) -> tuple[int | None, float | None]:
@@ -314,8 +325,12 @@ def pull(season: int, raw: Path = RAW, root: Path = MARKET, pulled: str | None =
     for r in parse_list(page, season):
         f = player_features(r["name"], r["bref_id"], season, bat, pit)
         old_line, old_seen = seen.get(r["rank"], ("", None))
-        first = (old_seen if (old_line and old_line == r["signed"] and old_seen) else when) if r["signed"] else None
-        players.append({**{k: r[k] for k in ("rank", "name", "pos", "mlbtr", "signed")}, **f, "first_seen": first})
+        # the first date any signing line appeared stays, even if MLBTR later edits the line (to add an opt-out, say)
+        first = (old_seen or when) if r["signed"] else None
+        rec = {**{k: r[k] for k in ("rank", "name", "pos", "mlbtr", "signed")}, **f, "first_seen": first}
+        if old_line and r["signed"] and old_line != r["signed"]:
+            rec["revised"] = when
+        players.append(rec)
     out = root / f"mlbtr_{season}-{(season + 1) % 100:02d}.json"
     out.write_text(json.dumps(dict(season=season, source=LISTS[season], published=parse_list(page, season)[0]["published"],
                                    war_source="Baseball-Reference WAR files (war_daily_bat.txt, war_daily_pitch.txt)",

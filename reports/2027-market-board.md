@@ -138,7 +138,7 @@ No call from me (signed before Nov. 23, or no MLB record):
 
 Three of my documents forecast the same market, and they don't agree.
 
-| Player | Prediction log (Oct. 18) | Probability in the log | The board's model at the same line |
+| Player | Prediction log (Oct. 18) | Probability in the log | The board's model at the same AAV line (it doesn't call years) |
 |---|---|---|---|
 | Adrián Morejón | AAV above $18.0M, two or more years | 0.55 | 0.86 |
 | Randy Arozarena | AAV above $21.7M, two or more years | 0.65 | 0.92 |
@@ -147,7 +147,12 @@ Three of my documents forecast the same market, and they don't agree.
 - **Where the log comes from:** the log and the bullpen memo price relievers with a market line fit on the 21 relief signings of 2025-26. That line puts Morejón's expected price at $18.4M a year.
 - **Where the board comes from:** it uses MLBTR's number moved by the model above. Its reliever term rests on 14 relievers in one winter, and its edge rests on one hitter.
 - **Which I stand behind:** for a buying decision, the memo. Its market line is built for relievers, and the board's reliever term is its least certain part.
-  - On the board's model, the market pays Morejón more than $15M a year about 95% of the time. If that's right, the memo's $60M walk-away lands him about 5% of the time, not 26%, and Bryan Abreu goes from the fallback to the plan. The memo now carries a dated note saying so.
+  - **If the board is right, both of the memo's targets price out:**
+    - On the board's model, Morejón's market pays him more than $15M a year about 95% of the time, so the memo's $60M walk-away would land him about 5% of the time, not 26%.
+    - Abreu's board price is $15.4M a year. The memo's walk-away for him (above $25M over two years, $12.5M a year) would land him about 24% of the time.
+    - The memo's third name is Raisel Iglesias on one year. The board has him at $15.8M against MLBTR's $17.0M, so he's the one target whose price the board doesn't push up.
+    - A club that believes the board has to raise its walk-aways or move to Iglesias. The memo now carries a dated note saying so.
+  - The board's "about 5%" uses the AAV condition only; the memo's 26% is for four years and $60M.
 - **How each is scored:** the log's probabilities stay frozen and are scored as written; the board is scored separately against MLBTR. When both resolve, they'll show which forecast was better. Dated Nov. 23 notes in the log record the board's numbers next to calls 1, 3 and 4.
 
 ## Limits
@@ -158,6 +163,7 @@ Three of my documents forecast the same market, and they don't agree.
 - **What the model doesn't know:** health, opt-outs, who is bidding, and draft-pick cost. Rogers, Morejón and Arozarena all declined qualifying offers, so a club that signs them gives up a pick, and the model has no term for it.
 - **The calls are one linked bet:** 23 of the 38 lean above MLBTR, 13 below, and 2 sit at 0.50. If last winter's "MLBTR ran low" doesn't repeat, or a lockout moves the whole market, most of the calls miss together.
 - **The model doesn't call years.** Last winter MLBTR's years ran long, but my years model wasn't better than MLBTR's left-out, so I only call AAV.
+- **The backtest is partly in-sample.** The spread behind the probabilities (0.298) comes from the same left-out errors the 0.218 Brier score is computed on, and I chose the reliever and age terms after looking at the same winter. This winter's score is the clean test.
 
 ## Sources
 

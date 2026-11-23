@@ -201,6 +201,37 @@ def fisher_diff(r1: float, n1: int, r2: float, n2: int) -> dict:
     return dict(z=float(z), p=float(2 * (1 - NormalDist().cdf(abs(z)))))
 
 
+def paired_yoy(T: pd.DataFrame, min_takes: int = MIN_TAKES_YOY, boot: int = 4000, seed: int = 5) -> dict:
+    """The two year-to-year correlations on the same catchers (2,000+ takes in all three seasons), and a bootstrap
+    over catchers of their difference, so the shared 2025 season is accounted for."""
+    t = T[T.takes >= min_takes].assign(rate=lambda x: x.adj_runs / x.takes * 1000).pivot_table(index="catcher", columns="season", values="rate")
+    t = t.dropna()
+    if len(t) < 10:
+        return dict(catchers=int(len(t)))
+    a, b, c = t[2024].to_numpy(), t[2025].to_numpy(), t[2026].to_numpy()
+    r1, r2 = np.corrcoef(a, b)[0, 1], np.corrcoef(b, c)[0, 1]
+    rng = np.random.default_rng(seed)
+    diffs = []
+    for _ in range(boot):
+        i = rng.integers(0, len(t), len(t))
+        diffs.append(np.corrcoef(a[i], b[i])[0, 1] - np.corrcoef(b[i], c[i])[0, 1])
+    diffs = np.array(diffs)
+    return dict(catchers=int(len(t)), r_24_25=float(r1), r_25_26=float(r2), diff_lo=float(np.percentile(diffs, 2.5)),
+                diff_hi=float(np.percentile(diffs, 97.5)), share_diff_le_0=float((diffs <= 0).mean()))
+
+
+def bref_catcher_term(T: pd.DataFrame, war_file: Path = ROOT / "data" / "raw" / "market" / "war_daily_bat.txt") -> dict:
+    """How much framing Baseball-Reference's catcher term (runs_catcher) carries: its correlation with my framing
+    runs, unadjusted and adjusted, catchers with 1,500+ takes."""
+    if not war_file.exists():
+        return {}
+    b = pd.read_csv(war_file, na_values="NULL", low_memory=False, usecols=["mlb_ID", "year_ID", "runs_catcher"])
+    g = b[b.year_ID.isin(list(SEASONS))].groupby(["mlb_ID", "year_ID"]).runs_catcher.sum().reset_index()
+    j = T[T.takes >= MIN_TAKES_SPLIT].merge(g, left_on=["catcher", "season"], right_on=["mlb_ID", "year_ID"])
+    return {str(s): dict(catchers=int(len(x)), r_unadjusted=float(np.corrcoef(x.runs_catcher, x.raw_runs)[0, 1]),
+                         r_adjusted=float(np.corrcoef(x.runs_catcher, x.adj_runs)[0, 1])) for s, x in j.groupby("season")}
+
+
 def run(seasons=SEASONS) -> dict:
     tables, out = [], {"seasons": {}}
     for s in seasons:
@@ -215,15 +246,17 @@ def run(seasons=SEASONS) -> dict:
                                       strike_value_0_0=float(vals.get("0-0")), strike_value_3_2=float(vals.get("3-2")),
                                       mean_strike_value=float((d.value).mean()),
                                       split_half=split_half(d), savant=agreement(t, sv), zone=zone_sharpness(d))
-        tables.append(t.merge(sv[["catcher", "name", "savant_runs"]], on="catcher", how="left"))
+        tables.append(t.merge(sv[["catcher", "name", "savant_runs", "savant_pitches"]], on="catcher", how="left"))
     T = pd.concat(tables, ignore_index=True)
     out["year_to_year_adj"] = year_to_year(T, col="adj_runs")
     out["year_to_year_raw"] = year_to_year(T, col="raw_runs")
     q = T[T.takes >= MIN_TAKES_SPLIT]
     per = q.adj_runs / q.takes * 1000
+    sv_all = T[T.savant_runs.notna() & T.savant_pitches.notna()] if "savant_pitches" in T else T.iloc[:0]
     out["spread"] = {str(s): dict(catchers=int((q.season == s).sum()), sd_adj=float(q[q.season == s].adj_runs.std()),
                                   sd_per_1000=float(per[q.season == s].std()), mean_takes=float(q[q.season == s].takes.mean()),
                                   sd_savant=float(T[(T.season == s) & T.savant_runs.notna()].savant_runs.std()),
+                                  sd_savant_per_1000=float((sv_all[sv_all.season == s].savant_runs / sv_all[sv_all.season == s].savant_pitches * 1000).std()) if len(sv_all) else None,
                                   full_time_sd_runs=float(per[q.season == s].std() * FULL_TIME_TAKES / 1000),
                                   full_time_sd_dollars=float(per[q.season == s].std() * FULL_TIME_TAKES / 1000 / RUNS_PER_WIN * DOLLARS_PER_WIN),
                                   best=float(q[q.season == s].adj_runs.max()), worst=float(q[q.season == s].adj_runs.min()))
@@ -231,6 +264,8 @@ def run(seasons=SEASONS) -> dict:
     y = out["year_to_year_adj"]
     if "2024->2025" in y and "2025->2026" in y:
         out["year_to_year_test"] = fisher_diff(y["2024->2025"]["r"], y["2024->2025"]["catchers"], y["2025->2026"]["r"], y["2025->2026"]["catchers"])
+        out["year_to_year_paired"] = paired_yoy(T)
+    out["bref_catcher_term"] = bref_catcher_term(T)
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "framing_summary.json").write_text(json.dumps(out, indent=1) + "\n")
     T.round(3).to_json(OUT / "framing_catchers.json", orient="records", indent=0)

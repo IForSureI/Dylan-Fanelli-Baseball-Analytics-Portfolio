@@ -10,7 +10,7 @@
 **At a glance**
 
 - **The question:** Is Randy Arozarena's 2026 power real, and did his swing change?
-- **The answer:** Not as power: his extra bases were flat (115, 116) in 41 fewer at-bats while barrels, hard-hit exit velocity and bat speed fell, and his strikeout rate dropped to 21.6%. The league model chosen on training data puts his 2027 ISO at .169-.180. Frame by frame on MLB's clips, his home-run swing shows no timing change the camera could detect (about 80 ms).
+- **The answer:** Not as power. The ISO rise is fewer strikeouts (26.8% to 21.6%) with flat damage per contact at-bat (.272 both years), while barrels, hard-hit exit velocity and bat speed fell. The league model chosen on training data puts his 2027 ISO at .169-.180. Frame by frame on MLB's clips, his home-run swing shows no timing change the camera could detect (about 80 ms).
 - **For a club:** Video used the way a front office should: to rule a mechanical change in or out, with the camera's limits stated.
 <!-- /portfolio:glance -->
 
@@ -18,14 +18,15 @@ Dylan Fanelli. Data: MLB's highlight clips of all 73 of his 2024-26 home runs (M
 
 **The question:** Arozarena posted a 151 wRC+ in 2026 and is one of this winter's top free agents. My [prediction log](2027-prediction-log.md) says his 2027 wRC+ will be 130 or lower (call 6, 0.70), and my [market board](2027-market-board.md) has him at $33.0M a year against MLB Trade Rumors' $25.0M. Did something change that a club should pay for?
 
-**The answer: what changed is his approach, not his power.**
-- **The ISO rise is at-bats, not damage.** He had 115 extra bases in 2025 and 116 in 2026, in 41 fewer at-bats (613 to 572). His strikeout rate fell from 26.8% to 21.6%.
+**The answer: the ISO rise is fewer strikeouts, not harder contact.**
+- **Damage per contact at-bat was flat.** Extra bases per at-bat that didn't end in a strikeout were .272 in both 2025 and 2026 (115 in 422, then 116 in 427). His strikeout rate fell from 26.8% to 21.6%, so more at-bats reached contact, and ISO, which divides by all at-bats, rose.
+- **The at-bats fell with playing time:** 712 plate appearances in 2025, 671 in 2026.
 - **The inputs that predict power went down:** barrel rate 11.5% to 8.1%, and 90th-percentile exit velocity 106.7 to 104.4 mph. On competitive swings, bat speed fell from 72.3 to 70.9 mph and swing length from 7.4 to 7.2 ft.
 - **His home runs were hit softer and higher:** median exit velocity 102.7 mph in 2026 against 104.9 in 2024, and median launch angle 30° against 26.5°.
 - **Projection:** the league model chosen on training data alone puts his 2027 ISO at **.169 to .180**, depending on which seasons it's fit on. That's about a 19-27% chance he matches .203.
 - **The video:** from the center-field camera, I found no change in his home-run swing's timing or sequence larger than the camera and sample can detect. That limit is about 80 ms at foot down, five frames, so the video rules out a big mechanical overhaul. It can't confirm a small one.
 
-So 2026 reads as more contact and fewer strikeouts, with the same extra-base output spread over fewer at-bats. That supports call 6. A club paying for his 2026 line is paying for an ISO his inputs don't back, which is a reason to bid below my board's market forecast, not at it.
+So 2026 reads as a better contact rate with the same damage when he made contact, while the inputs that predict power fell. Fewer strikeouts are worth something, but they don't make him a .200-ISO hitter. That supports call 6. A club paying for his 2026 line is paying for an ISO his inputs don't back, which is a reason to bid below my board's market forecast, not at it.
 
 ![His home-run swings measured frame by frame, 2024-25 against 2026](figures/2026-arozarena-swing.png)
 
@@ -48,9 +49,9 @@ Before reading one hitter's bat speed, I checked what bat speed is worth for any
 - **Adding bat tracking to the chosen model:** bat speed and swing length help a little.
   - Bat speed cuts the error by .0002 (95% range .0001 to .0004).
   - Swing length cuts it by .0005 (.0001 to .0010).
-  - That's about 1% of the error. Detectable, too small to change a decision.
+  - That's about 1% of the error (0.5% for bat speed, 1.4% for swing length). Detectable, too small to change a decision.
   - Attack angle, squared-up rate and blast rate add nothing; their ranges include zero or point the wrong way.
-- **Bat speed is still the steadiest number in the set.** It correlates 0.94 with itself year to year, against 0.61 for ISO and 0.91 for 90th-percentile exit velocity. The hard-hit exit velocities carry most of what it knows.
+- **Bat speed is among the steadiest numbers in the set.** It correlates 0.94 with itself year to year (swing length 0.95), against 0.61 for ISO and 0.91 for 90th-percentile exit velocity. The hard-hit exit velocities carry most of what it knows.
 - **A drop in bat speed doesn't add a warning of its own.** On the 151 hitters with three straight qualifying seasons, a change in bat speed from 2024 to 2025 predicted -0.002 ISO per mph in 2026, 95% range -0.008 to +0.004. That's beyond what 2025's ISO and exit velocity already said.
 
 **For Arozarena:**
@@ -58,8 +59,10 @@ Before reading one hitter's bat speed, I checked what bat speed is worth for any
 | | 2024 | 2025 | 2026 |
 |---|---|---|---|
 | ISO | .169 | .188 | .203 |
-| At-bats, extra bases | 549, 93 | 613, 115 | 572, 116 |
+| Plate appearances, at-bats | 650, 549 | 712, 613 | 671, 572 |
+| Extra bases | 93 | 115 | 116 |
 | Strikeout rate | 26.0% | 26.8% | 21.6% |
+| Extra bases per at-bat without a strikeout | .245 | .272 | .272 |
 | Barrel rate (per batted ball) | 8.4% | 11.5% | 8.1% |
 | 90th-percentile exit velocity | 105.1 | 106.7 | 104.4 |
 | Bat speed, competitive swings | 72.7 | 72.3 | 70.9 |
@@ -98,20 +101,28 @@ All three use the same residual spread (.038, from the both-pairs fit).
 
 | His home-run swing, center-field view | 2024-25 | 2026 | Difference (permutation p) | Smallest change detectable |
 |---|---|---|---|---|
-| Foot down to contact, median (range) | 200 ms (150-234), 11 | 200 ms (167-400), 9 | 0 ms (p = 1.0) | about 80 ms |
-| Leg lift to contact, clips that open before the lift | 759 ms (584-934), 10 | 717 ms (467-734), 9 | -42 ms (p = 0.07) | about 160 ms |
-| Hips square ahead of shoulders | 17 ms (0-67), 13 | 17 ms (0-33), 10 | 0 ms (p = 1.0) | about 15 ms |
-| Head drop from stance to contact (torso lengths) | 0.57, 13 | 0.41, 10 | -0.15 (p = 0.007) | |
-| Shoulder tilt at contact (rear shoulder lower) | 22.5°, 13 | 19.7°, 10 | -2.8° (p = 0.37) | |
+| Foot down to contact, median (range) | 200 ms (150-234), 11 | 200 ms (167-400), 9 | 0 ms (p = 1.0) | 78 ms |
+| Leg lift to contact, clips that open before the lift | 759 ms (584-934), 10 | 717 ms (467-734), 9 | -42 ms (p = 0.07) | 164 ms |
+| Hips square ahead of shoulders | 17 ms (0-67), 13 | 17 ms (0-33), 10 | 0 ms (p = 1.0) | one frame (17 ms) |
+| Head drop from stance to contact (torso lengths) | 0.57, 13 | 0.41, 10 | -0.15 (p = 0.007) | 0.17 |
+| Shoulder tilt at contact (rear shoulder lower) | 22.5°, 13 | 19.7°, 10 | -2.8° (p = 0.37) | 7.9° |
 
-"Smallest change detectable" is 2.8 times the bootstrap spread of the median difference, which is the size a test like this would catch about 80% of the time.
+- **"Smallest change detectable":** 2.8 times the bootstrap spread of the median difference, which is the size a test like this would catch about 80% of the time. It never goes below one frame. The values are saved in `arozarena_swing_summary.json`.
+- **The 2024-25 column** pools both seasons. 2025 adds only one or two swings to each measure; the per-measure counts are in the same file.
 
 - **Timing:** I found no change. But with 9 to 11 swings and one-frame resolution (16.7 ms), the test only catches a shift in foot-down timing of about 80 ms or more. In 2026 the foot-down times also spread wider, with two late plants (334 and 400 ms) that 2024 didn't have. And the hips squared in the same frame as the shoulders on 3 of the 10 swings.
-- **Posture can't be compared across these parks.** Head drop is the one significant difference, and I can't tell whether it's him or the cameras:
-  - At Fenway Park, the one park in both seasons, it reads 0.45 in 2024 against 0.42 and 0.48 in 2026.
-  - Outside Tropicana the gap shrinks (0.50 against 0.41, on six swings), but it doesn't vanish.
-  - A camera mounted higher or lower changes how a vertical drop looks.
-  - The 2024-25 group also includes two 2025 swings with unusually large drops (0.87 and 0.65).
+- **Posture can't be compared across these parks.** Head drop is the one significant difference, and I can't tell whether it's him or the cameras. Three parks have measured swings in both 2024 and 2026:
+
+  | Park | 2024 | 2026 |
+  |---|---|---|
+  | Tropicana Field | 0.57 (median of 7) | 0.40 (1 swing) |
+  | T-Mobile Park | 0.34 (1) | 0.25, 0.52 |
+  | Fenway Park | 0.45 (1) | 0.42, 0.48 |
+
+  - **Inside a park:** the gap shows only at Tropicana, on a single 2026 swing.
+  - **Outside Tropicana:** the 2024-25 median is 0.50 against 2026's 0.42 (six swings and nine).
+  - **The comparison group:** 2024-25 includes two 2025 swings with unusually large drops (0.87 and 0.65).
+  - **Why the camera matters:** a camera mounted higher or lower changes how a vertical drop looks.
   - I leave it unresolved, not explained away.
 
 **Statcast on all 73 home runs** (not only the measured 23), medians:
@@ -127,7 +138,7 @@ His home-run swings got slightly slower and steeper in 2026, even as his attack 
 
 ## What a club should do with this
 
-1. **Price the 2024-25 hitter, not the 2026 line.** The 2026 ISO comes from the same extra-base output in fewer at-bats, while the inputs that predict power fell. My log's call 6 (130 wRC+ or lower in 2027, 0.70) stands.
+1. **Price the 2024-25 hitter, not the 2026 line.** The 2026 ISO comes from fewer strikeouts with the same damage per contact at-bat, while the inputs that predict power fell. Credit the contact gain; don't credit it as power. My log's call 6 (130 wRC+ or lower in 2027, 0.70) stands.
 2. **On the market board:** my model's $33.0M a year is a forecast of what the market will pay. That call is frozen and scored as made. For a club bidding, the walk-away belongs below it. My log's call 4 threshold was $21.7M a year at two or more years.
 3. **Use video as a check, not a source.** A broadcast camera times a swing to within a frame, but a season's worth of home-run clips only detects big changes. It can't measure stride length (it points down the stride), and its posture numbers move with the park. Use it to rule large changes in or out, and say which parks a number came from.
 

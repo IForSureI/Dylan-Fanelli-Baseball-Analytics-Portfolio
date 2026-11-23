@@ -9,7 +9,7 @@ Newest first. One entry per working session: what was built, what was decided, w
 - **Bat tracking vs power** (`bb bat-power`): fit on 2024 to 2025, scored on 2025 to 2026, with the batted-ball model chosen by cross-validation on the training pairs (ISO + barrel rate). Bat speed and swing length add about 1% of the error; nothing moves it by 0.001 ISO.
 
 **Learned**
-- His 2026 ISO rise is at-bats, not damage: 115 then 116 extra bases in 41 fewer at-bats, with his strikeout rate down to 21.6% while barrels, hard-hit exit velocity and bat speed fell. The league model puts his 2027 ISO at .169-.180, which supports prediction-log call 6. The video found no timing change larger than it could detect (about 80 ms at foot down). Head drop differs, but the parks are too lopsided to say whether it's him or the cameras.
+- His 2026 ISO rise is fewer strikeouts (26.8% to 21.6%) with flat damage per contact at-bat (.272 both years), while barrels, hard-hit exit velocity and bat speed fell. The league model puts his 2027 ISO at .169-.180, which supports prediction-log call 6. The video found no timing change larger than it could detect (78 ms at foot down). Head drop differs, but the parks are too lopsided to say whether it's him or the cameras.
 - Savant's own clip host sits behind a bot check, so I didn't use it. MLB's content feed serves the same broadcast clips openly.
 
 ## 2026-11-23: Catcher framing after the ABS challenge system
@@ -18,7 +18,7 @@ Newest first. One entry per working session: what was built, what was decided, w
 - **League data on the cloud machine:** I pulled 2024-26 Statcast and wrote the sequence files there too, so studies that need every pitch no longer wait for the Mac.
 
 **Learned**
-- In 2026, the first ABS challenge season, the spread of framing fell 23% per 1,000 takes (27% on Savant's numbers; the 36% drop in season totals is partly playing time). The uncertain band of the zone shrank from 21% of takes to 15%, and called balls well inside the zone nearly disappeared. Patrick Bailey went from +27.6 to +3.3. Framing still repeats within a season (0.73). The year-to-year correlation fell from 0.58 to 0.33, but on one transition that isn't significant (p = 0.14).
+- In 2026, the first ABS challenge season, calls got clearly more predictable: the uncertain band shrank from 21% of takes to 15%, and called balls well inside the zone nearly disappeared. Framing's spread per pitch fell 23% on my model and 10% on Savant's, after a 8-10% drop the year before, so I can't separate an ABS effect from the trend on one season. Patrick Bailey went from +27.6 to +3.3. Framing still repeats within a season (0.73). The year-to-year drop (0.61 to 0.34 on the same 37 catchers) isn't significant.
 - Baseball Savant's leaderboard CSV ignores `year=` and returns the current season; the season has to go in `seasonStart` and `seasonEnd`. A test keeps it that way.
 
 ## 2026-11-23: The 2026-27 market board
