@@ -1,0 +1,481 @@
+{
+ "made": "2026-11-23",
+ "by": "Dylan Fanelli",
+ "model": {
+  "const": 0.0089,
+  "wwar": 0.1584,
+  "war0": 0.0038,
+  "reliever": 0.262,
+  "age30": -0.0533,
+  "log_mlbtr": 0.8916
+ },
+ "sigma": 0.2982,
+ "backtest": {
+  "n": 44,
+  "mae_mine": 3.2373,
+  "mae_mlbtr": 3.7917,
+  "edge": 0.5545,
+  "edge_lo": -0.6605,
+  "edge_hi": 2.0522,
+  "closer": 21,
+  "sigma": 0.2982,
+  "brier": 0.218,
+  "base_rate": 0.6364,
+  "brier_base": 0.2314,
+  "mlbtr_bias": -2.0372,
+  "years_bias": 0.8182,
+  "total_bias": 10.6216
+ },
+ "calls": [
+  {
+   "rank": 1,
+   "name": "Tarik Skubal",
+   "mlbtr": "Nine years, $425MM",
+   "mlbtr_aav": 47.222,
+   "call": "signed before the board",
+   "my_aav": null,
+   "p_over": null
+  },
+  {
+   "rank": 2,
+   "name": "Trevor Rogers",
+   "mlbtr": "Five years, $115MM",
+   "mlbtr_aav": 23.0,
+   "call": "called",
+   "my_aav": 29.0,
+   "p_over": 0.8
+  },
+  {
+   "rank": 3,
+   "name": "Freddy Peralta",
+   "mlbtr": "Five years, $110MM",
+   "mlbtr_aav": 22.0,
+   "call": "called",
+   "my_aav": 24.6,
+   "p_over": 0.65
+  },
+  {
+   "rank": 4,
+   "name": "Seiya Suzuki",
+   "mlbtr": "Four years, $105MM",
+   "mlbtr_aav": 26.25,
+   "call": "called",
+   "my_aav": 33.2,
+   "p_over": 0.8
+  },
+  {
+   "rank": 5,
+   "name": "Randy Arozarena",
+   "mlbtr": "Four years, $100MM",
+   "mlbtr_aav": 25.0,
+   "call": "called",
+   "my_aav": 33.0,
+   "p_over": 0.8
+  },
+  {
+   "rank": 6,
+   "name": "Michael King",
+   "mlbtr": "Four years, $92MM",
+   "mlbtr_aav": 23.0,
+   "call": "called",
+   "my_aav": 26.4,
+   "p_over": 0.7
+  },
+  {
+   "rank": 7,
+   "name": "Teruaki Sato",
+   "mlbtr": "Five years, $80MM",
+   "mlbtr_aav": 16.0,
+   "call": "no MLB record",
+   "my_aav": null,
+   "p_over": null
+  },
+  {
+   "rank": 8,
+   "name": "Adrian Morejon",
+   "mlbtr": "Five years, $80MM",
+   "mlbtr_aav": 16.0,
+   "call": "called",
+   "my_aav": 24.8,
+   "p_over": 0.95
+  },
+  {
+   "rank": 9,
+   "name": "Ryan Jeffers",
+   "mlbtr": "Four years, $75MM",
+   "mlbtr_aav": 18.75,
+   "call": "signed before the board",
+   "my_aav": null,
+   "p_over": null
+  },
+  {
+   "rank": 10,
+   "name": "Kaima Taira",
+   "mlbtr": "Four years, $72MM (with at least one opt-out)",
+   "mlbtr_aav": 18.0,
+   "call": "no MLB record",
+   "my_aav": null,
+   "p_over": null
+  },
+  {
+   "rank": 11,
+   "name": "Brandon Lowe",
+   "mlbtr": "Three years, $69MM",
+   "mlbtr_aav": 23.0,
+   "call": "called",
+   "my_aav": 27.5,
+   "p_over": 0.7
+  },
+  {
+   "rank": 12,
+   "name": "David Bednar",
+   "mlbtr": "Four years, $68MM",
+   "mlbtr_aav": 17.0,
+   "call": "signed before the board",
+   "my_aav": null,
+   "p_over": null
+  },
+  {
+   "rank": 13,
+   "name": "Sonny Gray",
+   "mlbtr": "Two years, $55MM",
+   "mlbtr_aav": 27.5,
+   "call": "signed before the board",
+   "my_aav": null,
+   "p_over": null
+  },
+  {
+   "rank": 14,
+   "name": "Tyler Mahle",
+   "mlbtr": "Three years, $54MM",
+   "mlbtr_aav": 18.0,
+   "call": "called",
+   "my_aav": 15.9,
+   "p_over": 0.35
+  },
+  {
+   "rank": 15,
+   "name": "Luis Arraez",
+   "mlbtr": "Three years, $48MM",
+   "mlbtr_aav": 16.0,
+   "call": "called",
+   "my_aav": 17.3,
+   "p_over": 0.6
+  },
+  {
+   "rank": 16,
+   "name": "Clay Holmes",
+   "mlbtr": "Three years, $45MM",
+   "mlbtr_aav": 15.0,
+   "call": "called",
+   "my_aav": 12.7,
+   "p_over": 0.3
+  },
+  {
+   "rank": 17,
+   "name": "Ian Happ",
+   "mlbtr": "Three years, $45MM",
+   "mlbtr_aav": 15.0,
+   "call": "called",
+   "my_aav": 18.6,
+   "p_over": 0.75
+  },
+  {
+   "rank": 18,
+   "name": "Kevin Gausman",
+   "mlbtr": "Two years, $44MM",
+   "mlbtr_aav": 22.0,
+   "call": "called",
+   "my_aav": 16.9,
+   "p_over": 0.2
+  },
+  {
+   "rank": 19,
+   "name": "Nick Martinez",
+   "mlbtr": "Two years, $42MM",
+   "mlbtr_aav": 21.0,
+   "call": "called",
+   "my_aav": 20.1,
+   "p_over": 0.45
+  },
+  {
+   "rank": 20,
+   "name": "Jazz Chisholm Jr.",
+   "mlbtr": "Two years, $40MM (with an opt-out)",
+   "mlbtr_aav": 20.0,
+   "call": "called",
+   "my_aav": 25.5,
+   "p_over": 0.8
+  },
+  {
+   "rank": 21,
+   "name": "Shota Imanaga",
+   "mlbtr": "Two years, $40MM",
+   "mlbtr_aav": 20.0,
+   "call": "called",
+   "my_aav": 18.4,
+   "p_over": 0.4
+  },
+  {
+   "rank": 22,
+   "name": "Foster Griffin",
+   "mlbtr": "Three years, $39MM",
+   "mlbtr_aav": 13.0,
+   "call": "called",
+   "my_aav": 12.5,
+   "p_over": 0.45
+  },
+  {
+   "rank": 23,
+   "name": "Ty France",
+   "mlbtr": "Two years, $32MM",
+   "mlbtr_aav": 16.0,
+   "call": "called",
+   "my_aav": 16.0,
+   "p_over": 0.5
+  },
+  {
+   "rank": 24,
+   "name": "Dustin May",
+   "mlbtr": "Two years, $30MM (with an opt-out)",
+   "mlbtr_aav": 15.0,
+   "call": "signed before the board",
+   "my_aav": null,
+   "p_over": null
+  },
+  {
+   "rank": 25,
+   "name": "Casey Mize",
+   "mlbtr": "Two years, $28MM (opt-out)",
+   "mlbtr_aav": 14.0,
+   "call": "called",
+   "my_aav": 13.5,
+   "p_over": 0.45
+  },
+  {
+   "rank": 26,
+   "name": "Michael Soroka",
+   "mlbtr": "Two years, $26MM (opt-out)",
+   "mlbtr_aav": 13.0,
+   "call": "called",
+   "my_aav": 13.6,
+   "p_over": 0.55
+  },
+  {
+   "rank": 27,
+   "name": "Alex Vesia",
+   "mlbtr": "Two years, $26MM",
+   "mlbtr_aav": 13.0,
+   "call": "called",
+   "my_aav": 16.2,
+   "p_over": 0.75
+  },
+  {
+   "rank": 28,
+   "name": "Nick Pivetta",
+   "mlbtr": "Two years, $26MM",
+   "mlbtr_aav": 13.0,
+   "call": "called",
+   "my_aav": 12.5,
+   "p_over": 0.45
+  },
+  {
+   "rank": 29,
+   "name": "Evan Phillips",
+   "mlbtr": "Two years, $24MM",
+   "mlbtr_aav": 12.0,
+   "call": "signed before the board",
+   "my_aav": null,
+   "p_over": null
+  },
+  {
+   "rank": 30,
+   "name": "David Peterson",
+   "mlbtr": "Two years, $24MM",
+   "mlbtr_aav": 12.0,
+   "call": "called",
+   "my_aav": 11.2,
+   "p_over": 0.4
+  },
+  {
+   "rank": 31,
+   "name": "Jake Bauers",
+   "mlbtr": "One year $23.15MM",
+   "mlbtr_aav": 23.15,
+   "call": "signed before the board",
+   "my_aav": null,
+   "p_over": null
+  },
+  {
+   "rank": 32,
+   "name": "Bryan Abreu",
+   "mlbtr": "Two years, $22MM (opt-out)",
+   "mlbtr_aav": 11.0,
+   "call": "called",
+   "my_aav": 15.4,
+   "p_over": 0.85
+  },
+  {
+   "rank": 33,
+   "name": "Carson Kelly",
+   "mlbtr": "Two years, $20MM",
+   "mlbtr_aav": 10.0,
+   "call": "called",
+   "my_aav": 10.5,
+   "p_over": 0.55
+  },
+  {
+   "rank": 34,
+   "name": "Daulton Varsho",
+   "mlbtr": "Two years, $20MM",
+   "mlbtr_aav": 10.0,
+   "call": "called",
+   "my_aav": 12.2,
+   "p_over": 0.75
+  },
+  {
+   "rank": 35,
+   "name": "Emilio Pagán",
+   "mlbtr": "Two years, $20MM",
+   "mlbtr_aav": 10.0,
+   "call": "signed before the board",
+   "my_aav": null,
+   "p_over": null
+  },
+  {
+   "rank": 36,
+   "name": "Hiromi Itoh",
+   "mlbtr": "Two years, $20MM",
+   "mlbtr_aav": 10.0,
+   "call": "no MLB record",
+   "my_aav": null,
+   "p_over": null
+  },
+  {
+   "rank": 37,
+   "name": "Mauricio Dubón",
+   "mlbtr": "Two years, $18MM",
+   "mlbtr_aav": 9.0,
+   "call": "called",
+   "my_aav": 9.3,
+   "p_over": 0.55
+  },
+  {
+   "rank": 38,
+   "name": "Raisel Iglesias",
+   "mlbtr": "One year, $17MM",
+   "mlbtr_aav": 17.0,
+   "call": "called",
+   "my_aav": 15.8,
+   "p_over": 0.4
+  },
+  {
+   "rank": 39,
+   "name": "J.P. Crawford",
+   "mlbtr": "Two years, $16MM",
+   "mlbtr_aav": 8.0,
+   "call": "called",
+   "my_aav": 8.7,
+   "p_over": 0.6
+  },
+  {
+   "rank": 40,
+   "name": "Tyler Stephenson",
+   "mlbtr": "Two years, $15MM",
+   "mlbtr_aav": 7.5,
+   "call": "called",
+   "my_aav": 9.0,
+   "p_over": 0.75
+  },
+  {
+   "rank": 41,
+   "name": "Paul Blackburn",
+   "mlbtr": "Two years, $15MM",
+   "mlbtr_aav": 7.5,
+   "call": "called",
+   "my_aav": 8.8,
+   "p_over": 0.7
+  },
+  {
+   "rank": 42,
+   "name": "Steven Okert",
+   "mlbtr": "Two years, $14MM",
+   "mlbtr_aav": 7.0,
+   "call": "called",
+   "my_aav": 7.5,
+   "p_over": 0.6
+  },
+  {
+   "rank": 43,
+   "name": "Luis Robert Jr.",
+   "mlbtr": "One year, $14MM",
+   "mlbtr_aav": 14.0,
+   "call": "called",
+   "my_aav": 14.3,
+   "p_over": 0.55
+  },
+  {
+   "rank": 44,
+   "name": "Joc Pederson",
+   "mlbtr": "One year, $14MM",
+   "mlbtr_aav": 14.0,
+   "call": "called",
+   "my_aav": 10.6,
+   "p_over": 0.2
+  },
+  {
+   "rank": 45,
+   "name": "Jonathan Loáisiga",
+   "mlbtr": "Two years, $13MM",
+   "mlbtr_aav": 6.5,
+   "call": "signed before the board",
+   "my_aav": null,
+   "p_over": null
+  },
+  {
+   "rank": 46,
+   "name": "JoJo Romero",
+   "mlbtr": "Two years, $13MM",
+   "mlbtr_aav": 6.5,
+   "call": "called",
+   "my_aav": 8.8,
+   "p_over": 0.85
+  },
+  {
+   "rank": 47,
+   "name": "Matthew Boyd",
+   "mlbtr": "One year, $13MM",
+   "mlbtr_aav": 13.0,
+   "call": "called",
+   "my_aav": 9.6,
+   "p_over": 0.15
+  },
+  {
+   "rank": 48,
+   "name": "Kris Bubic",
+   "mlbtr": "One year, $12.5MM",
+   "mlbtr_aav": 12.5,
+   "call": "called",
+   "my_aav": 13.9,
+   "p_over": 0.65
+  },
+  {
+   "rank": 49,
+   "name": "Taylor Ward",
+   "mlbtr": "One year, $12MM",
+   "mlbtr_aav": 12.0,
+   "call": "called",
+   "my_aav": 12.0,
+   "p_over": 0.5
+  },
+  {
+   "rank": 50,
+   "name": "Robbie Ray",
+   "mlbtr": "One year, $12MM",
+   "mlbtr_aav": 12.0,
+   "call": "called",
+   "my_aav": 10.3,
+   "p_over": 0.3
+  }
+ ]
+}

@@ -1,5 +1,5 @@
 <!-- portfolio:header -->
-<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Draft analytics](2026-mlb-draft-analytics.md) &nbsp;|&nbsp; [Edge Board →](2026-edge-board.md)</sub>
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Market board](2027-market-board.md) &nbsp;|&nbsp; [Edge Board →](2026-edge-board.md)</sub>
 <!-- /portfolio:header -->
 
 # Tarik Skubal (DET, LHP): 2025 arsenal read
@@ -153,7 +153,7 @@ League whiff rates below are approximate league-wide figures: changeup ~31%, fou
 
 <!-- portfolio:footer -->
 ---
-<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Draft analytics](2026-mlb-draft-analytics.md) &nbsp;|&nbsp; [Edge Board →](2026-edge-board.md)</sub>
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Market board](2027-market-board.md) &nbsp;|&nbsp; [Edge Board →](2026-edge-board.md)</sub>
 
 <sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Tarik Skubal (DET, LHP): 2025 arsenal read*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2025-skubal-arsenal.md</sub>
 <!-- /portfolio:footer -->

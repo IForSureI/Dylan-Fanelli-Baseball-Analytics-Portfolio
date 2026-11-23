@@ -1,0 +1,738 @@
+{
+ "season": 2026,
+ "source": "https://www.mlbtraderumors.com/2026/11/2026-27-top-50-free-agents-with-predictions.html",
+ "published": "2026-11-02",
+ "war_source": "Baseball-Reference WAR files (war_daily_bat.txt, war_daily_pitch.txt)",
+ "pulled": "2026-11-23",
+ "players": [
+  {
+   "rank": 1,
+   "name": "Tarik Skubal",
+   "pos": "LHP",
+   "mlbtr": "Nine years, $425MM",
+   "signed": "Signed with Mets for nine years, $450MM",
+   "bref_id": "skubata01",
+   "age": 29.0,
+   "war": [
+    4.63,
+    6.39,
+    6.66
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 2,
+   "name": "Trevor Rogers",
+   "pos": "LHP",
+   "mlbtr": "Five years, $115MM",
+   "signed": "",
+   "bref_id": "rogertr01",
+   "age": 28.0,
+   "war": [
+    2.22,
+    5.28,
+    0.59
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 3,
+   "name": "Freddy Peralta",
+   "pos": "RHP",
+   "mlbtr": "Five years, $110MM",
+   "signed": "",
+   "bref_id": "peralfr01",
+   "age": 30.0,
+   "war": [
+    0.73,
+    5.53,
+    2.41
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 4,
+   "name": "Seiya Suzuki",
+   "pos": "OF",
+   "mlbtr": "Four years, $105MM",
+   "signed": "",
+   "bref_id": "suzukse01",
+   "age": 31.0,
+   "war": [
+    5.11,
+    2.58,
+    3.53
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 5,
+   "name": "Randy Arozarena",
+   "pos": "OF",
+   "mlbtr": "Four years, $100MM",
+   "signed": "",
+   "bref_id": "arozara01",
+   "age": 31.0,
+   "war": [
+    5.7,
+    3.87,
+    1.71
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 6,
+   "name": "Michael King",
+   "pos": "RHP",
+   "mlbtr": "Four years, $92MM",
+   "signed": "",
+   "bref_id": "kingmi01",
+   "age": 31.0,
+   "war": [
+    4.26,
+    1.19,
+    4.07
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 7,
+   "name": "Teruaki Sato",
+   "pos": "3B/OF",
+   "mlbtr": "Five years, $80MM",
+   "signed": "",
+   "bref_id": null
+  },
+  {
+   "rank": 8,
+   "name": "Adrian Morejon",
+   "pos": "LHP",
+   "mlbtr": "Five years, $80MM",
+   "signed": "",
+   "bref_id": "morejad01",
+   "age": 27.0,
+   "war": [
+    1.92,
+    2.32,
+    1.3
+   ],
+   "reliever": true
+  },
+  {
+   "rank": 9,
+   "name": "Ryan Jeffers",
+   "pos": "C",
+   "mlbtr": "Four years, $75MM",
+   "signed": "Accepted $23.15MM qualifying offer from Twins",
+   "bref_id": "jeffery01",
+   "age": 29.0,
+   "war": [
+    2.79,
+    1.28,
+    2.06
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 10,
+   "name": "Kaima Taira",
+   "pos": "RHP",
+   "mlbtr": "Four years, $72MM (with at least one opt-out)",
+   "signed": "",
+   "bref_id": null
+  },
+  {
+   "rank": 11,
+   "name": "Brandon Lowe",
+   "pos": "2B",
+   "mlbtr": "Three years, $69MM",
+   "signed": "",
+   "bref_id": "lowebr01",
+   "age": 31.0,
+   "war": [
+    5.34,
+    1.81,
+    2.35
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 12,
+   "name": "David Bednar",
+   "pos": "RHP",
+   "mlbtr": "Four years, $68MM",
+   "signed": "Accepted $23.15MM qualifying offer from Yankees",
+   "bref_id": "bednada01",
+   "age": 31.0,
+   "war": [
+    1.91,
+    2.29,
+    -0.9
+   ],
+   "reliever": true
+  },
+  {
+   "rank": 13,
+   "name": "Sonny Gray",
+   "pos": "RHP",
+   "mlbtr": "Two years, $55MM",
+   "signed": "Signed with Twins for two years, $55MM. Includes second-year player option",
+   "bref_id": "grayso01",
+   "age": 36.0,
+   "war": [
+    4.31,
+    1.32,
+    1.58
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 14,
+   "name": "Tyler Mahle",
+   "pos": "RHP",
+   "mlbtr": "Three years, $54MM",
+   "signed": "",
+   "bref_id": "mahlety01",
+   "age": 31.0,
+   "war": [
+    1.66,
+    2.18,
+    0.02
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 15,
+   "name": "Luis Arraez",
+   "pos": "2B/1B",
+   "mlbtr": "Three years, $48MM",
+   "signed": "",
+   "bref_id": "arraelu01",
+   "age": 29.0,
+   "war": [
+    2.92,
+    1.38,
+    1.07
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 16,
+   "name": "Clay Holmes",
+   "pos": "RHP",
+   "mlbtr": "Three years, $45MM",
+   "signed": "",
+   "bref_id": "holmecl01",
+   "age": 33.0,
+   "war": [
+    1.97,
+    2.14,
+    0.62
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 17,
+   "name": "Ian Happ",
+   "pos": "OF",
+   "mlbtr": "Three years, $45MM",
+   "signed": "",
+   "bref_id": "happia01",
+   "age": 31.0,
+   "war": [
+    2.74,
+    3.96,
+    3.92
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 18,
+   "name": "Kevin Gausman",
+   "pos": "RHP",
+   "mlbtr": "Two years, $44MM",
+   "signed": "",
+   "bref_id": "gausmke01",
+   "age": 35.0,
+   "war": [
+    1.1,
+    3.96,
+    1.09
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 19,
+   "name": "Nick Martinez",
+   "pos": "RHP",
+   "mlbtr": "Two years, $42MM",
+   "signed": "",
+   "bref_id": "martini01",
+   "age": 35.0,
+   "war": [
+    3.89,
+    2.19,
+    3.98
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 20,
+   "name": "Jazz Chisholm Jr.",
+   "pos": "2B",
+   "mlbtr": "Two years, $40MM (with an opt-out)",
+   "signed": "",
+   "bref_id": "chishja01",
+   "age": 28.0,
+   "war": [
+    1.7,
+    4.12,
+    2.92
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 21,
+   "name": "Shota Imanaga",
+   "pos": "LHP",
+   "mlbtr": "Two years, $40MM",
+   "signed": "",
+   "bref_id": "imanash01",
+   "age": 32.0,
+   "war": [
+    2.02,
+    1.48,
+    3.01
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 22,
+   "name": "Foster Griffin",
+   "pos": "LHP",
+   "mlbtr": "Three years, $39MM",
+   "signed": "",
+   "bref_id": "grifffo01",
+   "age": 30.0,
+   "war": [
+    3.27,
+    0.0,
+    0.0
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 23,
+   "name": "Ty France",
+   "pos": "1B",
+   "mlbtr": "Two years, $32MM",
+   "signed": "",
+   "bref_id": "francty01",
+   "age": 31.0,
+   "war": [
+    4.48,
+    1.03,
+    -0.63
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 24,
+   "name": "Dustin May",
+   "pos": "RHP",
+   "mlbtr": "Two years, $30MM (with an opt-out)",
+   "signed": "Signed with White Sox for three years, $52.5MM",
+   "bref_id": "maydu01",
+   "age": 28.0,
+   "war": [
+    0.36,
+    -0.68,
+    0.0
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 25,
+   "name": "Casey Mize",
+   "pos": "RHP",
+   "mlbtr": "Two years, $28MM (opt-out)",
+   "signed": "",
+   "bref_id": "mizeca01",
+   "age": 29.0,
+   "war": [
+    1.33,
+    1.66,
+    0.26
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 26,
+   "name": "Michael Soroka",
+   "pos": "RHP",
+   "mlbtr": "Two years, $26MM (opt-out)",
+   "signed": "",
+   "bref_id": "sorokmi01",
+   "age": 28.0,
+   "war": [
+    2.18,
+    0.64,
+    0.62
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 27,
+   "name": "Alex Vesia",
+   "pos": "LHP",
+   "mlbtr": "Two years, $26MM",
+   "signed": "",
+   "bref_id": "vesiaal01",
+   "age": 30.0,
+   "war": [
+    1.48,
+    1.07,
+    1.77
+   ],
+   "reliever": true
+  },
+  {
+   "rank": 28,
+   "name": "Nick Pivetta",
+   "pos": "RHP",
+   "mlbtr": "Two years, $26MM",
+   "signed": "",
+   "bref_id": "pivetni01",
+   "age": 33.0,
+   "war": [
+    1.02,
+    5.0,
+    1.46
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 29,
+   "name": "Evan Phillips",
+   "pos": "RHP",
+   "mlbtr": "Two years, $24MM",
+   "signed": "Signed with Braves for three years, $35MM",
+   "bref_id": "phillev01",
+   "age": 31.0,
+   "war": [
+    0.43,
+    0.41,
+    -0.53
+   ],
+   "reliever": true
+  },
+  {
+   "rank": 30,
+   "name": "David Peterson",
+   "pos": "LHP",
+   "mlbtr": "Two years, $24MM",
+   "signed": "",
+   "bref_id": "peterda01",
+   "age": 30.0,
+   "war": [
+    -0.13,
+    1.59,
+    2.87
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 31,
+   "name": "Jake Bauers",
+   "pos": "1B/OF",
+   "mlbtr": "One year $23.15MM",
+   "signed": "Signed with Red Sox for four years, $58MM",
+   "bref_id": "bauerja01",
+   "age": 30.0,
+   "war": [
+    3.26,
+    0.57,
+    -0.31
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 32,
+   "name": "Bryan Abreu",
+   "pos": "RHP",
+   "mlbtr": "Two years, $22MM (opt-out)",
+   "signed": "",
+   "bref_id": "abreubr01",
+   "age": 29.0,
+   "war": [
+    1.03,
+    2.52,
+    1.76
+   ],
+   "reliever": true
+  },
+  {
+   "rank": 33,
+   "name": "Carson Kelly",
+   "pos": "C",
+   "mlbtr": "Two years, $20MM",
+   "signed": "",
+   "bref_id": "kellyca02",
+   "age": 31.0,
+   "war": [
+    1.89,
+    3.53,
+    0.51
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 34,
+   "name": "Daulton Varsho",
+   "pos": "CF",
+   "mlbtr": "Two years, $20MM",
+   "signed": "",
+   "bref_id": "varshda01",
+   "age": 29.0,
+   "war": [
+    0.75,
+    2.74,
+    4.83
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 35,
+   "name": "Emilio Pagán",
+   "pos": "RHP",
+   "mlbtr": "Two years, $20MM",
+   "signed": "Signed with Tigers for one year, $11.5MM",
+   "bref_id": "paganem01",
+   "age": 35.0,
+   "war": [
+    1.28,
+    1.93,
+    0.32
+   ],
+   "reliever": true
+  },
+  {
+   "rank": 36,
+   "name": "Hiromi Itoh",
+   "pos": "RHP",
+   "mlbtr": "Two years, $20MM",
+   "signed": "",
+   "bref_id": null
+  },
+  {
+   "rank": 37,
+   "name": "Mauricio Dubón",
+   "pos": "SS/2B/3B/OF",
+   "mlbtr": "Two years, $18MM",
+   "signed": "",
+   "bref_id": "dubonma01",
+   "age": 31.0,
+   "war": [
+    2.66,
+    1.72,
+    0.97
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 38,
+   "name": "Raisel Iglesias",
+   "pos": "RHP",
+   "mlbtr": "One year, $17MM",
+   "signed": "",
+   "bref_id": "iglesra01",
+   "age": 36.0,
+   "war": [
+    1.44,
+    1.25,
+    2.86
+   ],
+   "reliever": true
+  },
+  {
+   "rank": 39,
+   "name": "J.P. Crawford",
+   "pos": "3B/2B/SS",
+   "mlbtr": "Two years, $16MM",
+   "signed": "",
+   "bref_id": "crawfjp01",
+   "age": 31.0,
+   "war": [
+    0.92,
+    3.58,
+    2.66
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 40,
+   "name": "Tyler Stephenson",
+   "pos": "C",
+   "mlbtr": "Two years, $15MM",
+   "signed": "",
+   "bref_id": "stephty01",
+   "age": 29.0,
+   "war": [
+    2.45,
+    1.32,
+    2.4
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 41,
+   "name": "Paul Blackburn",
+   "pos": "RHP",
+   "mlbtr": "Two years, $15MM",
+   "signed": "",
+   "bref_id": "blackpa01",
+   "age": 32.0,
+   "war": [
+    3.1,
+    -0.49,
+    0.47
+   ],
+   "reliever": true
+  },
+  {
+   "rank": 42,
+   "name": "Steven Okert",
+   "pos": "LHP",
+   "mlbtr": "Two years, $14MM",
+   "signed": "",
+   "bref_id": "okertst01",
+   "age": 34.0,
+   "war": [
+    2.29,
+    1.46,
+    -0.22
+   ],
+   "reliever": true
+  },
+  {
+   "rank": 43,
+   "name": "Luis Robert Jr.",
+   "pos": "CF",
+   "mlbtr": "One year, $14MM",
+   "signed": "",
+   "bref_id": "roberlu01",
+   "age": 28.0,
+   "war": [
+    0.96,
+    1.36,
+    1.32
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 44,
+   "name": "Joc Pederson",
+   "pos": "DH",
+   "mlbtr": "One year, $14MM",
+   "signed": "",
+   "bref_id": "pederjo01",
+   "age": 34.0,
+   "war": [
+    1.7,
+    -0.31,
+    2.82
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 45,
+   "name": "Jonathan Loáisiga",
+   "pos": "RHP",
+   "mlbtr": "Two years, $13MM",
+   "signed": "Signed with Yankees for two years, $18MM",
+   "bref_id": "loaisjo01",
+   "age": 31.0,
+   "war": [
+    1.66,
+    0.23,
+    0.34
+   ],
+   "reliever": true
+  },
+  {
+   "rank": 46,
+   "name": "JoJo Romero",
+   "pos": "LHP",
+   "mlbtr": "Two years, $13MM",
+   "signed": "",
+   "bref_id": "romerjo01",
+   "age": 29.0,
+   "war": [
+    0.88,
+    1.71,
+    0.83
+   ],
+   "reliever": true
+  },
+  {
+   "rank": 47,
+   "name": "Matthew Boyd",
+   "pos": "LHP",
+   "mlbtr": "One year, $13MM",
+   "signed": "",
+   "bref_id": "boydma01",
+   "age": 35.0,
+   "war": [
+    1.05,
+    2.58,
+    0.67
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 48,
+   "name": "Kris Bubic",
+   "pos": "LHP",
+   "mlbtr": "One year, $12.5MM",
+   "signed": "",
+   "bref_id": "bubickr01",
+   "age": 28.0,
+   "war": [
+    1.08,
+    3.09,
+    0.71
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 49,
+   "name": "Taylor Ward",
+   "pos": "OF",
+   "mlbtr": "One year, $12MM",
+   "signed": "",
+   "bref_id": "wardta01",
+   "age": 32.0,
+   "war": [
+    1.73,
+    2.97,
+    2.25
+   ],
+   "reliever": false
+  },
+  {
+   "rank": 50,
+   "name": "Robbie Ray",
+   "pos": "LHP",
+   "mlbtr": "One year, $12MM",
+   "signed": "",
+   "bref_id": "rayro02",
+   "age": 34.0,
+   "war": [
+    2.26,
+    3.0,
+    0.01
+   ],
+   "reliever": false
+  }
+ ]
+}

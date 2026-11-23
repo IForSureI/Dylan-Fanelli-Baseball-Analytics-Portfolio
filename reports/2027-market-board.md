@@ -1,0 +1,142 @@
+<!-- portfolio:header -->
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Draft analytics](2026-mlb-draft-analytics.md) &nbsp;|&nbsp; [Skubal arsenal →](2025-skubal-arsenal.md)</sub>
+<!-- /portfolio:header -->
+
+# The 2026-27 market board: my free-agent calls against MLB Trade Rumors, scored as they sign
+
+<!-- portfolio:glance -->
+<p><img src="https://img.shields.io/badge/status-open:%20scored%20as%20players%20sign-1d5c3f" alt="status: open: scored as players sign"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-GM%20and%20pro%20personnel-6b6b6b" alt="for: GM and pro personnel"> <img src="https://img.shields.io/badge/method-forecasting-b4532a" alt="method: forecasting"> <img src="https://img.shields.io/badge/method-benchmark-b4532a" alt="method: benchmark"> <img src="https://img.shields.io/badge/method-Brier%20score-b4532a" alt="method: Brier score"></p>
+
+**At a glance**
+
+- **The question:** Can I call this winter's free-agent contracts better than MLB Trade Rumors, before they sign?
+- **The answer:** 38 dated calls (Nov. 23, 2026), scored against MLBTR's as players sign. On last winter's class my model missed by \$3.24M a year against MLBTR's \$3.79M, an edge too small to be sure of; this winter is the test.
+- **For a club:** A forecast a front office can check: every call dated and frozen, every miss counted against the public benchmark.
+<!-- /portfolio:glance -->
+
+Dylan Fanelli. Calls made Nov. 23, 2026, and never edited after that date. Data: MLB Trade Rumors' top-50 lists (2025-26 and 2026-27, with the signings they record), Baseball-Reference WAR files; all pulled Nov. 23, 2026.
+
+**The question:** can I call this winter's free-agent contracts better than the public benchmark, in public, before the players sign?
+
+**The answer so far:** on last winter's class, a little, and not by enough to be sure. My model starts from MLBTR's number and moves it on each player's three-year WAR, age and role. Each player was left out of the fit that predicted him. On that test the model's average-salary (AAV) error was $3.24M against MLBTR's $3.79M. That $0.55M edge has a 95% range of -$0.66M to +$2.05M, so it could be zero. So I made 38 dated calls on this winter's open free agents, and they get scored against MLBTR's calls as each player signs.
+
+## What I learned from last winter
+
+On the 44 signed 2025-26 free agents with an MLB record:
+
+- **Players took shorter deals at higher salaries than predicted.** MLBTR's average salaries ran **$2.0M a year low**, and 64% of the players signed above MLBTR's AAV. Its years ran **0.8 years long**, and its total guarantees ran **$10.6M high**. Kyle Tucker (MLBTR: 11 years, $400M; signed four years, $240M) and Bo Bichette (eight years, $208M; signed three years, $126M) are the extreme cases.
+- **Relievers beat their predictions most.** With WAR, age and MLBTR's number held equal, a reliever signed for about 30% more per year than the formula gave a starter or hitter. Tyler Rogers (MLBTR: two years, $18M; signed three years, $37M) is the clearest case. That rests on a dozen relievers, so it is the least certain part of the model.
+- **Age matters beyond what MLBTR already priced in:** about 5% less per year for each year of age past 30.
+
+| Last winter, each player left out of his own fit | My model | MLBTR |
+|---|---|---|
+| Average error in AAV | $3.24M | $3.79M |
+| Closer to the actual AAV | 21 of 44 | 23 of 44 |
+| Brier score on "signs above MLBTR's AAV" (coin flip 0.250; always guessing the base rate 0.231) | 0.218 | n/a |
+
+So the edge is in the size of the misses, not in how often I'm closer. When MLBTR misses badly, it's usually because a player took a short, rich deal, and the model catches part of that.
+
+## How the board is scored
+
+- **AAV:** guaranteed money divided by guaranteed years. An accepted qualifying offer counts as one year at $23.15M.
+  - The answer key is the signing line MLBTR adds under each player on its own list page.
+  - The headline is average error, mine against MLBTR's, on the same players.
+- **Over/under:** my probability, in steps of 0.05, that a player signs above MLBTR's AAV, scored with the Brier score.
+  - The probability comes from the gap between my AAV and MLBTR's, measured against how far off my model's left-out predictions were last winter (a log spread of 0.30).
+- **Fairness:** MLBTR made its calls on Nov. 2; mine are three weeks later.
+  - I had the qualifying-offer decisions (Nov. 17) and three weeks of reporting that MLBTR didn't. That's a real advantage, and I note it here rather than hide it.
+  - Players who signed before Nov. 23 aren't scored at all.
+- **No call:** I make no call on players without an MLB record (Teruaki Sato, Kaima Taira, Hiromi Itoh), because the model has nothing to work from.
+
+`uv run bb market score` scores whatever has signed. `uv run bb market pull` re-reads the signing lines. `uv run bb market render` rewrites the table below.
+
+## The board
+
+<!-- board:start -->
+**Score so far:** none of the 38 called players has signed.
+
+| # | Player | MLBTR's call (Nov. 2) | MLBTR AAV | My AAV | P(beats MLBTR AAV) | 3-yr WAR, age | Signed | Result |
+|---|---|---|---|---|---|---|---|---|
+| 2 | Trevor Rogers | Five years, $115MM | $23.0M | $29.0M | 0.80 | 2.8, 28 |  |  |
+| 3 | Freddy Peralta | Five years, $110MM | $22.0M | $24.6M | 0.65 | 2.8, 30 |  |  |
+| 4 | Seiya Suzuki | Four years, $105MM | $26.2M | $33.2M | 0.80 | 3.9, 31 |  |  |
+| 5 | Randy Arozarena | Four years, $100MM | $25.0M | $33.0M | 0.80 | 4.1, 31 |  |  |
+| 6 | Michael King | Four years, $92MM | $23.0M | $26.4M | 0.70 | 3.2, 31 |  |  |
+| 8 | Adrian Morejon | Five years, $80MM | $16.0M | $24.8M | 0.95 | 1.9 (RP), 27 |  |  |
+| 11 | Brandon Lowe | Three years, $69MM | $23.0M | $27.5M | 0.70 | 3.4, 31 |  |  |
+| 14 | Tyler Mahle | Three years, $54MM | $18.0M | $15.9M | 0.35 | 1.4, 31 |  |  |
+| 15 | Luis Arraez | Three years, $48MM | $16.0M | $17.3M | 0.60 | 1.9, 29 |  |  |
+| 16 | Clay Holmes | Three years, $45MM | $15.0M | $12.7M | 0.30 | 1.7, 33 |  |  |
+| 17 | Ian Happ | Three years, $45MM | $15.0M | $18.6M | 0.75 | 3.4, 31 |  |  |
+| 18 | Kevin Gausman | Two years, $44MM | $22.0M | $16.9M | 0.20 | 2.1, 35 |  |  |
+| 19 | Nick Martinez | Two years, $42MM | $21.0M | $20.1M | 0.45 | 3.3, 35 |  |  |
+| 20 | Jazz Chisholm Jr. | Two years, $40MM (with an opt-out) | $20.0M | $25.5M | 0.80 | 2.8, 28 |  |  |
+| 21 | Shota Imanaga | Two years, $40MM | $20.0M | $18.4M | 0.40 | 2.1, 32 |  |  |
+| 22 | Foster Griffin | Three years, $39MM | $13.0M | $12.5M | 0.45 | 1.4, 30 |  |  |
+| 23 | Ty France | Two years, $32MM | $16.0M | $16.0M | 0.50 | 2.1, 31 |  |  |
+| 25 | Casey Mize | Two years, $28MM (opt-out) | $14.0M | $13.5M | 0.45 | 1.2, 29 |  |  |
+| 26 | Michael Soroka | Two years, $26MM (opt-out) | $13.0M | $13.6M | 0.55 | 1.3, 28 |  |  |
+| 27 | Alex Vesia | Two years, $26MM | $13.0M | $16.2M | 0.75 | 1.4 (RP), 30 |  |  |
+| 28 | Nick Pivetta | Two years, $26MM | $13.0M | $12.5M | 0.45 | 2.5, 33 |  |  |
+| 30 | David Peterson | Two years, $24MM | $12.0M | $11.2M | 0.40 | 1.2, 30 |  |  |
+| 32 | Bryan Abreu | Two years, $22MM (opt-out) | $11.0M | $15.4M | 0.85 | 1.7 (RP), 29 |  |  |
+| 33 | Carson Kelly | Two years, $20MM | $10.0M | $10.5M | 0.55 | 2.1, 31 |  |  |
+| 34 | Daulton Varsho | Two years, $20MM | $10.0M | $12.2M | 0.75 | 2.4, 29 |  |  |
+| 37 | Mauricio Dubón | Two years, $18MM | $9.0M | $9.3M | 0.55 | 1.9, 31 |  |  |
+| 38 | Raisel Iglesias | One year, $17MM | $17.0M | $15.8M | 0.40 | 1.7 (RP), 36 |  |  |
+| 39 | J.P. Crawford | Two years, $16MM | $8.0M | $8.7M | 0.60 | 2.2, 31 |  |  |
+| 40 | Tyler Stephenson | Two years, $15MM | $7.5M | $9.0M | 0.75 | 2.1, 29 |  |  |
+| 41 | Paul Blackburn | Two years, $15MM | $7.5M | $8.8M | 0.70 | 1.2 (RP), 32 |  |  |
+| 42 | Steven Okert | Two years, $14MM | $7.0M | $7.5M | 0.60 | 1.4 (RP), 34 |  |  |
+| 43 | Luis Robert Jr. | One year, $14MM | $14.0M | $14.3M | 0.55 | 1.2, 28 |  |  |
+| 44 | Joc Pederson | One year, $14MM | $14.0M | $10.6M | 0.20 | 1.3, 34 |  |  |
+| 46 | JoJo Romero | Two years, $13MM | $6.5M | $8.8M | 0.85 | 1.1 (RP), 29 |  |  |
+| 47 | Matthew Boyd | One year, $13MM | $13.0M | $9.6M | 0.15 | 1.5, 35 |  |  |
+| 48 | Kris Bubic | One year, $12.5MM | $12.5M | $13.9M | 0.65 | 1.7, 28 |  |  |
+| 49 | Taylor Ward | One year, $12MM | $12.0M | $12.0M | 0.50 | 2.3, 32 |  |  |
+| 50 | Robbie Ray | One year, $12MM | $12.0M | $10.3M | 0.30 | 1.9, 34 |  |  |
+
+No call from me (signed before Nov. 23, or no MLB record):
+
+- 1. Tarik Skubal: signed before the board; Signed with Mets for nine years, $450MM.
+- 7. Teruaki Sato: no MLB record.
+- 9. Ryan Jeffers: signed before the board; Accepted $23.15MM qualifying offer from Twins.
+- 10. Kaima Taira: no MLB record.
+- 12. David Bednar: signed before the board; Accepted $23.15MM qualifying offer from Yankees.
+- 13. Sonny Gray: signed before the board; Signed with Twins for two years, $55MM. Includes second-year player option.
+- 24. Dustin May: signed before the board; Signed with White Sox for three years, $52.5MM.
+- 29. Evan Phillips: signed before the board; Signed with Braves for three years, $35MM.
+- 31. Jake Bauers: signed before the board; Signed with Red Sox for four years, $58MM.
+- 35. Emilio Pagán: signed before the board; Signed with Tigers for one year, $11.5MM.
+- 36. Hiromi Itoh: no MLB record.
+- 45. Jonathan Loáisiga: signed before the board; Signed with Yankees for two years, $18MM.
+<!-- board:end -->
+
+## Where the board disagrees most with MLBTR
+
+- **Adrián Morejón (MLBTR $16.0M a year; mine $24.8M; 0.95 over).** It's the reliever effect plus a young age (27). My Oct. 18 prediction log (call 1: above $18M a year on two or more years, 0.55) and my bullpen memo's walk-away price ($60M over four years) are judgments made for a buyer. This board is a forecast of the market. They can disagree: the market can pay more than I would.
+- **Suzuki and Arozarena (MLBTR about $25-26M; mine about $33M).** Both are 31 with about 4 WAR a year over three seasons. Last winter, players like that took shorter deals at higher salaries.
+- **Kevin Gausman (MLBTR $22.0M; mine $16.9M; 0.20 over).** At 35, with WAR of 1.1, 4.0 and 1.1 over the last three seasons, he gets the age penalty.
+
+## Limits
+
+- **One winter of history, 44 players.** That's why the edge's 95% range includes zero, and why this winter is the test.
+- **I could only backtest on one winter.** MLBTR's 2022-23 to 2024-25 list pages don't record the signings. Pulling those from news posts gave inconsistent wording (some posts give a total, some only salaries by year), so I left them out rather than mix answer keys.
+- **WAR is Baseball-Reference's**, and none of it is a projection system's. The model has no information on health, opt-outs, or who is bidding.
+- **The model doesn't call years.** Last winter MLBTR's years ran long, but my years model wasn't better than MLBTR's left-out, so I only call AAV.
+
+## Sources
+
+- MLB Trade Rumors, "2025-26 Top 50 MLB Free Agents With Predictions" (Nov. 6, 2025), with the signings recorded on the page; pulled Nov. 23, 2026.
+- MLB Trade Rumors, "2026-27 Top 50 Free Agents With Predictions" (Nov. 2, 2026); pulled Nov. 23, 2026.
+- Baseball-Reference WAR files (war_daily_bat.txt, war_daily_pitch.txt); pulled Nov. 23, 2026.
+- Qualifying offer, $23.15M for 2027: MLB.com.
+
+Code: `baseball/roster/market.py`. Data: `market/` (players, calls, signing lines; facts only, no page text). Tests: `tests/test_market.py`.
+
+<!-- portfolio:footer -->
+---
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Draft analytics](2026-mlb-draft-analytics.md) &nbsp;|&nbsp; [Skubal arsenal →](2025-skubal-arsenal.md)</sub>
+
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *The 2026-27 market board: my free-agent calls against MLB Trade Rumors, scored as they sign*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2027-market-board.md</sub>
+<!-- /portfolio:footer -->

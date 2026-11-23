@@ -2,6 +2,17 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-23: The 2026-27 market board
+**Built**
+- **Market board** (`reports/2027-market-board.md`, `bb market`): 38 dated calls on this winter's open free agents, each an average salary and a probability of signing above MLB Trade Rumors' predicted salary, scored against MLBTR's Nov. 2 calls as players sign. The calls are frozen in `market/calls_2026-27.json`.
+- **The model:** it starts from MLBTR's number and moves it on Baseball-Reference WAR (three seasons, weighted 5/4/3), platform-season WAR, age and role. It is fit on the 2025-26 class, the one past winter whose signings MLBTR records on its list page. In the leave-one-out backtest my average error was $3.24M a year against MLBTR's $3.79M (95% range of the edge -$0.66M to +$2.05M; closer on 21 of 44), and the over/under Brier score was 0.218 (coin flip 0.250).
+
+**Learned**
+- Last winter's free agents took shorter deals at higher salaries than MLBTR predicted: salaries $2.0M a year low, years 0.8 long, total guarantees $10.6M high. Relievers beat their predictions most.
+
+**Not done**
+- MLBTR's 2022-23 to 2024-25 lists don't record the signings, and news posts word the terms too inconsistently to use as one answer key, so the backtest is one winter.
+
 ## 2026-11-18: Morejón declined the qualifying offer
 **Built**
 - **Bullpen memo, one-page and Morejón report:** he turned down the Padres' $23.15M qualifying offer on Nov. 17 and is a free agent (MLB.com, AJ Cassavell; NBC Sports; both Nov. 17, 2026). The pages now say so, the memo has a dated Nov. 18 update, and the "if he accepts" branch is marked as not having happened. The price, grades, ranking and recommendation did not change: the Nov. 14 numbers already assumed the offer was attached.

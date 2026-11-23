@@ -508,6 +508,32 @@ def cmd_predictions(a: argparse.Namespace) -> None:
         print(f"rewrote the calls section of {a.report}")
 
 
+
+def cmd_market(a: argparse.Namespace) -> None:
+    from baseball.roster import market as mk
+
+    if a.action == "pull":
+        for season in (2025, 2026):
+            print(f"wrote {mk.pull(season)}")
+    elif a.action == "backtest":
+        bt = mk.backtest(mk.frame(mk.load(2025)))
+        print(f"{bt['n']} signed 2025-26 free agents, leave one out: AAV error mine ${bt['mae_mine']:.2f}M vs MLBTR "
+              f"${bt['mae_mlbtr']:.2f}M (edge ${bt['edge']:.2f}M, 95% ${bt['edge_lo']:.2f}M to ${bt['edge_hi']:.2f}M); "
+              f"closer on {bt['closer']}; over/under Brier {bt['brier']:.3f} (coin flip 0.250, base rate {bt['brier_base']:.3f})")
+    elif a.action == "freeze":
+        print(f"wrote {mk.freeze(a.as_of)}")
+    elif a.action == "render":
+        mk.update_report("reports/2027-market-board.md")
+        print("rewrote the board section of reports/2027-market-board.md")
+    else:
+        s = mk.scored()
+        r = mk.score(s)
+        if not r["n"]:
+            print(f"{(s.call == 'called').sum()} calls, none signed yet")
+            return
+        print(f"{r['n']} signed: AAV error mine ${r['mae_mine']:.2f}M vs MLBTR ${r['mae_mlbtr']:.2f}M; closer on {r['closer']}; "
+              f"over/under Brier {r['brier']:.3f}")
+
 def cmd_sql(a: argparse.Namespace) -> None:
     from baseball import sqlkit
 
@@ -783,6 +809,10 @@ def main(argv: list[str] | None = None) -> None:
     go.add_argument("grades", nargs="+")
     gr.set_defaults(func=cmd_grade)
 
+    mk_ = sub.add_parser("market", help="the 2026-27 market board: my free-agent calls vs MLB Trade Rumors', scored as players sign")
+    mk_.add_argument("action", choices=["pull", "backtest", "freeze", "score", "render"])
+    mk_.add_argument("--as-of", default=None, help="freeze: the date the calls are made (YYYY-MM-DD)")
+    mk_.set_defaults(func=cmd_market)
     pd_ = sub.add_parser("predictions", help="the dated, scored prediction log: check the file, score resolved calls, rewrite the report")
     pd_.add_argument("action", choices=["check", "score", "render"])
     pd_.add_argument("--file", default="predictions/2027.yaml")
