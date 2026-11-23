@@ -1,0 +1,121 @@
+{
+ "clips": 73,
+ "measured": 23,
+ "by_season": [
+  {
+   "season": 2024,
+   "n": 11,
+   "down_to_contact_ms": 200.2,
+   "down_to_contact_ms_n": 10,
+   "lift_to_contact_ms": 742.4083,
+   "lift_to_contact_ms_n": 8,
+   "hip_lead_ms": 16.6833,
+   "hip_lead_ms_n": 11,
+   "head_drop": 0.5454,
+   "head_drop_n": 11,
+   "shoulder_tilt": 22.5476,
+   "shoulder_tilt_n": 11,
+   "bat_speed": 75.5,
+   "bat_speed_n": 9,
+   "attack_angle": 10.4623,
+   "attack_angle_n": 9,
+   "launch_speed": 103.7,
+   "launch_speed_n": 11
+  },
+  {
+   "season": 2025,
+   "n": 2,
+   "down_to_contact_ms": 233.5667,
+   "down_to_contact_ms_n": 1,
+   "lift_to_contact_ms": 867.5333,
+   "lift_to_contact_ms_n": 2,
+   "hip_lead_ms": 8.3417,
+   "hip_lead_ms_n": 2,
+   "head_drop": 0.7599,
+   "head_drop_n": 2,
+   "shoulder_tilt": 17.8476,
+   "shoulder_tilt_n": 2,
+   "bat_speed": 74.95,
+   "bat_speed_n": 2,
+   "attack_angle": 9.2534,
+   "attack_angle_n": 2,
+   "launch_speed": 105.95,
+   "launch_speed_n": 2
+  },
+  {
+   "season": 2026,
+   "n": 10,
+   "down_to_contact_ms": 200.2,
+   "down_to_contact_ms_n": 9,
+   "lift_to_contact_ms": 717.3833,
+   "lift_to_contact_ms_n": 9,
+   "hip_lead_ms": 16.6833,
+   "hip_lead_ms_n": 10,
+   "head_drop": 0.4136,
+   "head_drop_n": 10,
+   "shoulder_tilt": 19.7126,
+   "shoulder_tilt_n": 10,
+   "bat_speed": 76.7,
+   "bat_speed_n": 9,
+   "attack_angle": 13.4325,
+   "attack_angle_n": 9,
+   "launch_speed": 102.15,
+   "launch_speed_n": 10
+  }
+ ],
+ "tests": {
+  "down_to_contact_ms": {
+   "n_a": 11,
+   "n_b": 9,
+   "diff": 0.0,
+   "p": 1.0
+  },
+  "lift_to_contact_ms": {
+   "n_a": 10,
+   "n_b": 9,
+   "diff": -41.70833333333337,
+   "p": 0.07015
+  },
+  "hip_lead_ms": {
+   "n_a": 13,
+   "n_b": 10,
+   "diff": 0.0,
+   "p": 1.0
+  },
+  "head_drop": {
+   "n_a": 13,
+   "n_b": 10,
+   "diff": -0.15350677421666115,
+   "p": 0.00685
+  },
+  "shoulder_tilt": {
+   "n_a": 13,
+   "n_b": 10,
+   "diff": -2.834978261581682,
+   "p": 0.3672
+  }
+ },
+ "statcast_hr_medians": [
+  {
+   "season": 2024,
+   "bat_speed": 75.85,
+   "attack_angle": 11.421,
+   "swing_length": 7.6,
+   "launch_speed": 104.85
+  },
+  {
+   "season": 2025,
+   "bat_speed": 75.4,
+   "attack_angle": 10.245,
+   "swing_length": 7.6,
+   "launch_speed": 106.5
+  },
+  {
+   "season": 2026,
+   "bat_speed": 74.15,
+   "attack_angle": 12.967,
+   "swing_length": 7.55,
+   "launch_speed": 102.7
+  }
+ ]
+}

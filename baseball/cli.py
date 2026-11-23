@@ -545,6 +545,48 @@ def cmd_framing(a: argparse.Namespace) -> None:
     print(f"year to year (adjusted): {out['year_to_year_adj']}")
     print(f"figure -> {fr.figure()}")
 
+
+def cmd_bat_power(a: argparse.Namespace) -> None:
+    from baseball.evaluation import bat_power as bp
+
+    o = bp.run()
+    print(f"{o['n_train']} pairs to fit (2024->25), {o['n_test']} to score (2025->26); best batted-ball model: {o['best_ball']}")
+    for k, v in o["adds"].items():
+        print(f"  + {k}: RMSE {v['rmse_base']:.4f} -> {v['rmse_with']:.4f} (95% gain {v['gain_lo']:+.4f} to {v['gain_hi']:+.4f})")
+
+
+def cmd_swing_video(a: argparse.Namespace) -> None:
+    """Every home-run clip of one hitter: find, download, track, measure, figure. Needs the optional video tools."""
+    import json
+    import glob
+    import numpy as np
+    import pandas as pd
+    from pathlib import Path
+    from baseball.video import breakdown as bk, clips as cl, pose as po
+
+    rows_path = cl.RAW / f"{a.name}_hr.json"
+    if not rows_path.exists():
+        d = pd.concat([pd.read_parquet(p, columns=["game_pk", "batter", "events"]) for p in glob.glob("data/seq/seq_*.parquet")])
+        rows = []
+        for gp in d[(d.batter == a.batter) & (d.events == "home_run")].game_pk.unique():
+            for pl in cl.plays(int(gp), a.batter):
+                rows.append({**pl, **(cl.clip_for(int(gp), pl["play_id"]) or {})})
+        rows_path.write_text(json.dumps(rows, indent=1))
+    rows = json.loads(rows_path.read_text())
+    tr = po.Tracker()
+    for r in rows:
+        if "mp4" not in r:
+            continue
+        out = cl.RAW / "pose" / f"{r['play_id']}.npz"
+        if out.exists():
+            continue
+        out.parent.mkdir(parents=True, exist_ok=True)
+        res = po.clip_pose(cl.download(r["play_id"], r["mp4"]), tr)
+        np.savez_compressed(out, **{k: np.asarray(v) for k, v in res.items()})
+    t = bk.table(a.name, a.batter, a.stand)
+    print(bk.by_season(t).round(3).to_string())
+    print(f"figure -> {bk.figure(t, a.title or a.name, Path(f'reports/figures/2026-{a.name}-swing.png'), stand=a.stand)}")
+
 def cmd_sql(a: argparse.Namespace) -> None:
     from baseball import sqlkit
 
@@ -820,6 +862,14 @@ def main(argv: list[str] | None = None) -> None:
     go.add_argument("grades", nargs="+")
     gr.set_defaults(func=cmd_grade)
 
+    bp_ = sub.add_parser("bat-power", help="does bat tracking predict next season's ISO beyond ISO and exit velocity? (2024-26)")
+    bp_.set_defaults(func=cmd_bat_power)
+    sv_ = sub.add_parser("swing-video", help="a hitter's home-run clips, frame by frame (needs: uv pip install ultralytics opencv-python-headless)")
+    sv_.add_argument("name", help="short name for files, e.g. arozarena")
+    sv_.add_argument("batter", type=int, help="MLBAM id, e.g. 668227")
+    sv_.add_argument("--stand", default="R", choices=["R", "L"])
+    sv_.add_argument("--title", default=None)
+    sv_.set_defaults(func=cmd_swing_video)
     fr_ = sub.add_parser("framing", help="catcher framing 2024-26: the call model, framing runs, Savant check, the 2026 ABS change")
     fr_.set_defaults(func=cmd_framing)
     mk_ = sub.add_parser("market", help="the 2026-27 market board: my free-agent calls vs MLB Trade Rumors', scored as players sign")

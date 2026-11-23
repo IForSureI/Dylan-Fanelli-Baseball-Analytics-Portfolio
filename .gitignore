@@ -20,3 +20,6 @@ data/**
 # Cloned external data (never committed)
 data/people/register/
 reports/bayes/out/
+
+# Pose-model weights (downloaded on first use)
+*.pt

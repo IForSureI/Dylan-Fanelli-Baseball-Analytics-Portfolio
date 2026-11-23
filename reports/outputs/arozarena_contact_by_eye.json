@@ -1,0 +1,41 @@
+{
+ "rule": "Contact read by eye: the first frame where the barrel is out in front of the plate on the ball's line, on 10 consecutive frames around the detected shoulders-square frame (59.94 fps). Offsets are frames after shoulders square.",
+ "read_on": "2026-11-23",
+ "offsets": [
+  {
+   "play_id": "e9d1468d-66a1-3dfe-a880-d549eade4923",
+   "page": "https://www.mlb.com/video/randy-arozarena-homers-13-on-a-fly-ball-to-center-field-x9390",
+   "offset_frames": 6
+  },
+  {
+   "play_id": "2061bd50-2c6e-33a7-8515-1dc932fc1731",
+   "page": "https://www.mlb.com/video/randy-arozarena-homers-12-on-a-fly-ball-to-right-center-field-2dfmmr",
+   "offset_frames": 7
+  },
+  {
+   "play_id": "e887a468-0696-330e-a797-9ab97d522efc",
+   "page": "https://www.mlb.com/video/cole-sulser-in-play-run-s-to-randy-arozarena",
+   "offset_frames": 5
+  },
+  {
+   "play_id": "ee545233-5411-3731-8ea1-e91ae6618cac",
+   "page": "https://www.mlb.com/video/randy-arozarena-homers-14-on-a-fly-ball-to-left-field-3f1f6d",
+   "offset_frames": 7
+  },
+  {
+   "play_id": "5ab34057-d5b8-3e53-ac6e-c0c1231a736b",
+   "page": "https://www.mlb.com/video/mackenzie-gore-in-play-run-s-to-randy-arozarena",
+   "offset_frames": 6
+  },
+  {
+   "play_id": "aa449e20-ef30-3345-b80d-872f0942fa4b",
+   "page": "https://www.mlb.com/video/jedixson-paez-in-play-run-s-to-randy-arozarena",
+   "offset_frames": 7
+  },
+  {
+   "play_id": "628164f8-321b-335b-a754-8547dab8236e",
+   "page": "https://www.mlb.com/video/payton-tolle-in-play-run-s-to-randy-arozarena",
+   "offset_frames": 6
+  }
+ ]
+}

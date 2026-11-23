@@ -1,5 +1,5 @@
 <!-- portfolio:header -->
-<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Catcher framing](2026-catcher-framing.md) &nbsp;|&nbsp; [Market board →](2027-market-board.md)</sub>
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Swing breakdown](2026-arozarena-swing-breakdown.md) &nbsp;|&nbsp; [Market board →](2027-market-board.md)</sub>
 <!-- /portfolio:header -->
 
 # MLB Draft Analytics: what a pick is worth, and what a college line still tells you
@@ -69,7 +69,7 @@ I pulled 590,044 Hawk-Eye pitches from 1,874 amateur games at pro parks (MLB Dra
 
 <!-- portfolio:footer -->
 ---
-<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Catcher framing](2026-catcher-framing.md) &nbsp;|&nbsp; [Market board →](2027-market-board.md)</sub>
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Swing breakdown](2026-arozarena-swing-breakdown.md) &nbsp;|&nbsp; [Market board →](2027-market-board.md)</sub>
 
 <sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *MLB Draft Analytics: what a pick is worth, and what a college line still tells you*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-mlb-draft-analytics.md</sub>
 <!-- /portfolio:footer -->

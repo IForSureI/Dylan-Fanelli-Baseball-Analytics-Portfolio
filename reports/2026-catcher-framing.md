@@ -1,5 +1,5 @@
 <!-- portfolio:header -->
-<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Hitter evaluation](2026-hitter-evaluation-torres.md) &nbsp;|&nbsp; [Draft analytics →](2026-mlb-draft-analytics.md)</sub>
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Hitter evaluation](2026-hitter-evaluation-torres.md) &nbsp;|&nbsp; [Swing breakdown →](2026-arozarena-swing-breakdown.md)</sub>
 <!-- /portfolio:header -->
 
 # Catcher framing after the ABS challenge system: what it was worth, what it is worth now
@@ -113,7 +113,7 @@ Code: `baseball/evaluation/framing.py` (`uv run bb framing`). Outputs: `reports/
 
 <!-- portfolio:footer -->
 ---
-<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Hitter evaluation](2026-hitter-evaluation-torres.md) &nbsp;|&nbsp; [Draft analytics →](2026-mlb-draft-analytics.md)</sub>
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Hitter evaluation](2026-hitter-evaluation-torres.md) &nbsp;|&nbsp; [Swing breakdown →](2026-arozarena-swing-breakdown.md)</sub>
 
 <sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Catcher framing after the ABS challenge system: what it was worth, what it is worth now*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-catcher-framing.md</sub>
 <!-- /portfolio:footer -->

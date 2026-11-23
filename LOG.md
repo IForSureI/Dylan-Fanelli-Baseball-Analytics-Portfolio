@@ -2,6 +2,16 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-23: Randy Arozarena, frame by frame
+**Built**
+- **Video lab** (`baseball/video/`, `bb swing-video`): it finds MLB's own highlight clip of every play through the MLB Stats API content feed (matched by Statcast play id). It cuts the clip into camera shots, finds the center-field pitch view, and tracks the batter frame by frame with a pose model at 59.94 fps. Then it measures timing and posture from the big joints, and draws the figures from the measured joints, so no MLB frame is reproduced.
+- **Arozarena breakdown** (`reports/2026-arozarena-swing-breakdown.md`): all 73 of his 2024-26 home-run clips, 23 measurable. Contact is timed from the moment his shoulders square, with the offset read by eye on seven swings (5 to 7 frames, median 6).
+- **Bat tracking vs power** (`bb bat-power`): fit on 2024 to 2025, scored on 2025 to 2026. No bat-tracking measure improves ISO plus 90th-percentile exit velocity as a forecast of next season's ISO.
+
+**Learned**
+- His 2026 home-run swing has the same timing (foot down 200 ms before contact) and hip-shoulder order as 2024. The one significant posture difference, head drop, mostly goes away when parks are matched. His competitive swings got slower, shorter and flatter, and his home runs came softer and higher while his ISO rose. The league model puts his 2027 ISO at .181, which supports prediction-log call 6.
+- Savant's own clip host sits behind a bot check, so I didn't use it. MLB's content feed serves the same broadcast clips openly.
+
 ## 2026-11-23: Catcher framing after the ABS challenge system
 **Built**
 - **Framing study** (`reports/2026-catcher-framing.md`, `bb framing`): a called-strike model on every 2024-26 take (1.11 million), fit out of fold by game; extra strikes valued count by count from run expectancy; a pitcher- and park-adjusted version. It matches Baseball Savant's framing runs at r 0.97, 0.98 and 0.92.
