@@ -1,6 +1,6 @@
 {
  "clips": 78,
- "measured": 17,
+ "measured": 15,
  "by_season": [
   {
    "season": 2024,
@@ -24,23 +24,23 @@
   },
   {
    "season": 2025,
-   "n": 6,
-   "down_to_contact_ms": 250.25,
-   "down_to_contact_ms_n": 5,
-   "lift_to_contact_ms": 750.75,
-   "lift_to_contact_ms_n": 5,
+   "n": 4,
+   "down_to_contact_ms": 291.9584,
+   "down_to_contact_ms_n": 4,
+   "lift_to_contact_ms": 775.775,
+   "lift_to_contact_ms_n": 4,
    "hip_lead_ms": 16.6833,
-   "hip_lead_ms_n": 6,
-   "head_drop": 0.3091,
-   "head_drop_n": 6,
-   "shoulder_tilt": 22.8501,
-   "shoulder_tilt_n": 6,
-   "bat_speed": 76.7,
-   "bat_speed_n": 6,
-   "attack_angle": 10.385,
-   "attack_angle_n": 6,
-   "launch_speed": 104.65,
-   "launch_speed_n": 6
+   "hip_lead_ms_n": 4,
+   "head_drop": 0.3092,
+   "head_drop_n": 4,
+   "shoulder_tilt": 23.5188,
+   "shoulder_tilt_n": 4,
+   "bat_speed": 74.55,
+   "bat_speed_n": 4,
+   "attack_angle": 9.4986,
+   "attack_angle_n": 4,
+   "launch_speed": 105.35,
+   "launch_speed_n": 4
   },
   {
    "season": 2026,
@@ -65,22 +65,22 @@
  ],
  "tests": {
   "hip_lead_ms": {
-   "n_a": 10,
+   "n_a": 8,
    "n_b": 7,
    "diff": 0.0,
    "p": 1.0
   },
   "head_drop": {
-   "n_a": 10,
+   "n_a": 8,
    "n_b": 7,
-   "diff": -0.09071883814099066,
-   "p": 0.4609
+   "diff": -0.09074999999999997,
+   "p": 0.4189
   },
   "shoulder_tilt": {
-   "n_a": 10,
+   "n_a": 8,
    "n_b": 7,
-   "diff": 2.7055311282333285,
-   "p": 0.13865
+   "diff": 2.1953499999999977,
+   "p": 0.2258
   }
  }
 }

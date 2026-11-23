@@ -10,6 +10,16 @@
    "play_id": "69e371d2-3545-3655-bffe-f3c04c777f29",
    "page": "https://www.mlb.com/video/andrew-abbott-in-play-run-s-to-seiya-suzuki-9mzcjj",
    "reason": "an off-axis camera well to the first-base side of center (checked by eye, Nov. 23, 2026)"
+  },
+  {
+   "play_id": "feadbd89-d27b-32a6-8ff5-3403c0f7c508",
+   "page": "https://www.mlb.com/video/seiya-suzuki-homers-8-on-a-fly-ball-to-left-field-jxkcfo",
+   "reason": "the tracker followed the home-plate umpire through the swing and only picked up the batter as he ran out of the box; the measured contact frame (267) is him running to first, about 75 frames after the real contact (checked by eye, Nov. 23, 2026)"
+  },
+  {
+   "play_id": "47f3c953-138d-3047-aad4-165a595c9a5e",
+   "page": "https://www.mlb.com/video/seiya-suzuki-homers-23-on-a-fly-ball-to-left-center-field",
+   "reason": "the tracker followed the home-plate umpire for the whole shot; the measured contact frame (42) comes before the pitch is thrown, about 60 frames before the real contact (checked by eye, Nov. 23, 2026)"
   }
  ]
 }

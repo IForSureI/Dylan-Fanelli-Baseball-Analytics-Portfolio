@@ -5,7 +5,8 @@
 
 Needs the league sequence files (data/seq) for teams and the video pose files (data/raw/video/pose) for the swing lab.
 Without them it refreshes the previous data.json: ids, 2026 clubs, headshots and swing-lab figures are kept, and
-everything read from market/ and reports/outputs/ is rebuilt.
+everything read from market/ and reports/outputs/ is rebuilt. A clip removed by eye since the last full build is taken
+out of the swing lab and its counts, medians and tests are recomputed (the median skeleton too, given the pose files).
 """
 import json, glob, base64, urllib.request, sys
 from pathlib import Path
@@ -131,6 +132,49 @@ def lab(name, mlbam, stand, title):
                 by_season=B.by_season(t).round(4).replace({np.nan: None}).to_dict('records'), tests=tests,
                 traj=dict(early=rnd(early), late=rnd(late), n_early=ne, n_late=nl, pre=60, post=12, fps=59.94), swings=swings)
 
+def refresh_lab(name, L, stand='R'):
+    """Refresh a swing lab without the league files when clips have been removed by eye since the last full build:
+    take them out of the previous build's swing table and recompute the counts, medians and tests the way lab()
+    does. With the pose files (data/raw/video/pose) for every measured swing the median skeleton is recomputed too;
+    without them the previous skeleton is kept."""
+    from baseball.video import measure as M
+    ex_file = REPO / 'reports/outputs' / f'{name}_excluded_by_eye.json'
+    excluded = {e['play_id'] for e in json.loads(ex_file.read_text())['excluded']} if ex_file.exists() else set()
+    newly = [s for s in L['swings'] if s['play_id'] in excluded and s.get('measured')]
+    if not newly:
+        return L
+    for s in newly:
+        s['measured'] = False
+        for c in ['contact_frame'] + B.MEASURES:
+            s[c] = None
+    t = pd.DataFrame(L['swings'])
+    for c in ['contact_frame'] + B.MEASURES + ['bat_speed', 'attack_angle', 'launch_speed']:
+        t[c] = pd.to_numeric(t[c], errors='coerce')
+    t['measured'] = t.measured.astype(bool)
+    if all((B.RAW / 'pose' / f'{p}.npz').exists() for p in t[t.measured].play_id):
+        for i in t.index[t.measured]:
+            z = np.load(B.RAW / 'pose' / f'{t.at[i, "play_id"]}.npz')
+            m = M.measure(z['keypoints'], float(z['fps']), stand)
+            assert m and m['contact_frame'] == t.at[i, 'contact_frame'], t.at[i, 'play_id']
+            for k in ('shoulders_square', 'hips_square', 'torso_px'):     # what the skeleton needs beyond the table
+                t.loc[i, k] = m[k]
+        early, ne = B.trajectory(t, (2024, 2025), stand=stand)
+        late, nl = B.trajectory(t, (2026,), stand=stand)
+        rnd = lambda a: [[[None if not np.isfinite(v) else round(float(v), 3) for v in j] for j in f] for f in a]
+        L['traj'] = dict(L['traj'], early=rnd(early), late=rnd(late), n_early=ne, n_late=nl)
+    else:
+        print(f'{name}: no pose files here, so the median skeleton is kept from the last full build')
+    m = t[t.measured]
+    L['measured'] = int(t.measured.sum())
+    L['n_by_measure'] = {c: {str(int(s)): int(m[m.season == s][c].notna().sum()) for s in sorted(m.season.dropna().unique())} for c in B.MEASURES}
+    # a season that lost no clip keeps its row (the table is stored to four places, the full build used more)
+    hit = {s.get('season') for s in newly}
+    prev = {r['season']: r for r in L['by_season']}
+    L['by_season'] = [prev[r['season']] if r['season'] not in hit and r['season'] in prev else r
+                      for r in B.by_season(t).round(4).replace({np.nan: None}).to_dict('records')]
+    L['tests'] = {c: B.permutation(t, c) for c in B.MEASURES}
+    return L
+
 if FULL:
     labs = {'arozarena': lab('arozarena', 668227, 'R', 'Randy Arozarena')}
     summary_aro = json.loads((REPO / 'reports/outputs/arozarena_swing_summary.json').read_text())
@@ -139,7 +183,7 @@ if FULL:
     if _sz.exists() and all((REPO / 'data/raw/video/pose' / f"{r['play_id']}.npz").exists() for r in json.loads(_sz.read_text()) if 'mp4' in r):
         labs['suzuki'] = lab('suzuki', 673548, 'R', 'Seiya Suzuki')
 else:
-    labs = PREV['labs']
+    labs = {k: refresh_lab(k, v) for k, v in PREV['labs'].items()}
 for k, v in labs.items():   # clips removed by eye after looking at the frame (counted on the method view)
     ex = REPO / 'reports/outputs' / f'{k}_excluded_by_eye.json'
     v['excluded_by_eye'] = len(json.loads(ex.read_text())['excluded']) if ex.exists() else 0

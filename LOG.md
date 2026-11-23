@@ -2,6 +2,13 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-23: Two Suzuki swings removed by eye
+**Fixed**
+- **Two home runs where the tracker followed the umpire:** two of Suzuki's measured 2025 swings had numbers no swing produces (May 1, his 8th: head drop 1.39, hips 334 ms ahead, foot down 0 ms; July 1, his 23rd: head drop -0.65). I pulled both clips again, reran the tracker and drew the joints over the frames. On May 1 it sat on the home-plate umpire through the swing and only found Suzuki as he ran out of the box, so the "contact" frame (267) is him running to first, about 75 frames after the real one. On July 1 it sat on the umpire for the whole shot, and the "contact" frame (42) comes before the pitch is thrown. Both are center-field clips that start before his load, so the camera wasn't the problem; the measurement never saw his swing. I removed them by eye along with the earlier two (`reports/outputs/suzuki_excluded_by_eye.json`). His other May 1 home run tracks him cleanly and stays, and the other 15 measured swings show the joints on him at contact. Rerunning the tracker reproduced all 17 stored measurements.
+- **What changed:** 15 of 78 clips measurable, four removed by eye. The 2024-25 group drops from 10 swings to 8 (2025 from 6 to 4), and the 2024-25 median skeleton from 7 swings to 6. The 2026 vs 2024-25 tests: head drop -0.09 (p 0.46 before, 0.42 now), shoulder tilt +2.7° (p 0.14) now +2.2° (p 0.23), hips ahead of shoulders 0 ms (p 1.00) both ways, and foot down, which the page doesn't show for him, +184 ms (p 0.18) now +167 ms (p 0.21). His 2025 median shoulder tilt moves from 22.9° to 23.5°; head drop stays 0.31.
+- **The conclusion holds with or without them:** no measure differs significantly either way, so "no significant change in his swing" stands. His home-run exit velocity (104.9, 105.7, 105.0) uses every home run and doesn't change.
+- **Builder:** `docs/build_offseason.py` in refresh mode now applies clips removed by eye since the last full build and recomputes the swing lab's counts, medians and tests (and the median skeleton, given the pose files). Seasons that lost no clip keep their rows. The packet's Suzuki card now reads its clip count from the data.
+
 ## 2026-11-23: Savant's own percentiles in the packet, and the packet ready to hand a club
 **Built**
 - **Baseball Savant percentile rankings, pulled Nov. 23, 2026** (`baseball/ingest/savant_percentiles.py`, saved in `market/savant/` with each file's URL, date and row count in `manifest.json`):
