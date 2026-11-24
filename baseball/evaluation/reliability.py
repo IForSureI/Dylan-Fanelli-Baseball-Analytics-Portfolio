@@ -158,6 +158,8 @@ def competitive_swings(d: pd.DataFrame, col: str = "bat_speed") -> np.ndarray:
     in `col`. (The 90% cut uses the batter's whole season, so it is shared by both halves of a split and
     by both halves of the within-season validation; add_prior_cut() builds the leak-free version.)"""
     tracked = d["bat_speed"].notna() & d[col].notna() & d["swing"] & ~d["description"].isin(BUNTS)
+    if "events" in d:                                   # a sacrifice bunt put in play is a bunt too
+        tracked &= ~d["events"].isin(("sac_bunt", "sac_bunt_double_play"))
     q10 = d["bat_speed"].where(tracked).groupby([d["batter"], d["season"]]).transform(lambda s: s.quantile(0.10))
     fast_enough = d["bat_speed"] >= q10
     hard_contact = (d["bat_speed"] >= 60) & (d["launch_speed"] >= 90)
@@ -241,7 +243,7 @@ def load(seasons: list[int]) -> pd.DataFrame:
     for s in seasons:
         parts = seq_parts(s)
         if not parts:
-            raise FileNotFoundError(f"No sequence data for {s} in data/seq/ (bb seq {s} writes it on the Mac).")
+            raise FileNotFoundError(f"No sequence data for {s} in data/seq/ (run `bb seq {s}` first; it builds data/seq/ from the league files).")
         frames.append(prepare(pd.concat([pd.read_parquet(x, columns=SOURCE_COLUMNS) for x in parts], ignore_index=True)))
     return pd.concat(frames, ignore_index=True)
 

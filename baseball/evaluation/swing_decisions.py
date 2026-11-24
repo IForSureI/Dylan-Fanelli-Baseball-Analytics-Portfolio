@@ -695,12 +695,21 @@ def tool_grade(value: float, mean: float, sd: float, higher_is_better: bool = Tr
 
 
 def _ages(batters) -> pd.Series | None:
-    """Birth years from the people table (data/people/), or None without it."""
+    """Birth years from the people table (data/people/), shifted so season - value is baseball age (age on June 30):
+    a player born after June 30 counts as born the next year. None without the table."""
     path = DATA / "people" / "people.parquet"
     if not path.exists():
         return None
-    p = pd.read_parquet(path, columns=["key_mlbam", "birth_year"]).dropna()
-    return p.drop_duplicates("key_mlbam").set_index("key_mlbam")["birth_year"].reindex(batters).astype(float)
+    p = pd.read_parquet(path, columns=["key_mlbam", "birth_year", "birth_month", "birth_day"]).dropna(subset=["key_mlbam", "birth_year"])
+    p = p.drop_duplicates("key_mlbam").set_index("key_mlbam")
+    return (p["birth_year"] + baseball_age_shift(p["birth_month"], p["birth_day"])).reindex(batters).astype(float)
+
+
+def baseball_age_shift(month: pd.Series, day: pd.Series) -> pd.Series:
+    """1 for a birthday after June 30 (that player is a year younger on June 30 than the calendar subtraction says),
+    else 0; 0 when the date is missing."""
+    late = (month.fillna(0) > 6) | ((month.fillna(0) == 6) & (day.fillna(0) > 30))
+    return late.astype(int)
 
 
 # ---------------------------------------------------------------- projection and price (the report's contract)

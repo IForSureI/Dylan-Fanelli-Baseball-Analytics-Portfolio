@@ -148,7 +148,10 @@ def flag(p: pd.DataFrame) -> pd.DataFrame:
     d["k"] = ev.isin(("strikeout", "strikeout_double_play"))
     d["bb"] = ev.isin(("walk", "intent_walk"))
     d["ubb"] = ev.eq("walk")                          # unintentional walks: the control input
-    d["outs"] = ev.map(OUTS).fillna(0) + ev.str.startswith(("caught_stealing", "pickoff_caught")).astype(int)
+    # an inning-ending caught stealing or pickoff is logged as "truncated_pa" with two out: the third out. Outs on the
+    # bases that don't end an inning have no row of their own, so IP from pitch files stays slightly short.
+    third = ev.eq("truncated_pa") & d["outs_when_up"].eq(2) if "outs_when_up" in d else False
+    d["outs"] = ev.map(OUTS).fillna(0) + pd.Series(third, index=d.index).astype(int)
     # xwOBA per PA: the expected value on balls in play, the actual wOBA value otherwise (walks, strikeouts)
     d["xwoba_pa"] = np.where(d["bip"], d["estimated_woba_using_speedangle"], d["woba_value"]).astype(float)
     d["xwoba_den"] = d["woba_denom"].fillna(0).astype(float)

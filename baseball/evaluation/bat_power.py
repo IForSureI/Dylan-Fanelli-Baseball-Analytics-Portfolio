@@ -31,8 +31,8 @@ SEQ = ROOT / "data" / "seq"
 OUT = ROOT / "reports" / "outputs"
 COLS = ["game_type", "game_date", "batter", "description", "events", "woba_denom", "launch_speed", "launch_angle",
         "launch_speed_angle", "bat_speed", "swing_length", "attack_angle", "release_speed", "estimated_woba_using_speedangle"]
-SWINGS = {"swinging_strike", "swinging_strike_blocked", "foul", "foul_tip", "hit_into_play", "foul_bunt",
-          "missed_bunt", "bunt_foul_tip"}
+SWINGS = {"swinging_strike", "swinging_strike_blocked", "foul", "foul_tip", "hit_into_play"}   # a bunt is never a
+BUNT_EVENTS = {"sac_bunt", "sac_bunt_double_play"}                       # competitive swing (Statcast's rule)
 NOT_AB = {"walk", "intent_walk", "hit_by_pitch", "sac_fly", "sac_bunt", "catcher_interf", "sac_fly_double_play",
           "sac_bunt_double_play", "truncated_pa"}
 TB = {"single": 1, "double": 2, "triple": 3, "home_run": 4}
@@ -74,7 +74,7 @@ def seasons_table(d: pd.DataFrame) -> pd.DataFrame:
     g["ev"] = bip.groupby("batter").launch_speed.mean()
     g["ev90"] = bip.groupby("batter").launch_speed.quantile(0.9)
     g["xwobacon"] = bip.groupby("batter").estimated_woba_using_speedangle.mean()
-    sw = d[d.description.isin(SWINGS) & d.bat_speed.notna()].copy()
+    sw = d[d.description.isin(SWINGS) & d.bat_speed.notna() & ~d.events.isin(BUNT_EVENTS)].copy()
     q10 = sw.groupby("batter").bat_speed.transform(lambda x: x.quantile(0.10))
     comp = sw[(sw.bat_speed >= q10) | ((sw.bat_speed >= 60) & (sw.launch_speed >= 90))].copy()
     mx = 1.23 * comp.bat_speed + 0.23 * 0.92 * comp.release_speed
