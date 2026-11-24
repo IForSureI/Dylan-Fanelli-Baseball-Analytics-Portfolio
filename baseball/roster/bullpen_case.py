@@ -73,11 +73,11 @@ FACTS = {
 OTHER_ROSTER_SPOTS = 14                 # ASSUMPTION: the rest of the 26/40-man at the 2026 minimum ($0.78M)
 RANGERS_SECOND_PICK = 55                # ESTIMATE: 2nd-round pick of a club with the ~15th-worst record (80-82)
 STRUCTURES = {                          # contract shapes priced in the report (AAV $M, years)
-    670970: [(15.0, 4), (16.5, 4), (18.0, 4), (20.0, 4), (20.0, 5)],   # opening, walk-away with QO, walk-away, stretch, "nine figures"
+    670970: [(15.0, 4), (16.0, 4), (16.5, 4), (18.0, 4), (20.0, 4), (20.0, 5)],   # opening, walk-away with QO, first version's QO case, walk-away, stretch, "nine figures"
     650556: [(9.0, 2), (12.5, 2)],                           # opening, walk-away
     664126: [(3.0, 2), (5.0, 2)],                            # a two-year rehab deal (2027 partial, 2028)
 }
-WALK_AWAYS = (16.4, 17.5, 18.0, 20.0, 22.0)
+WALK_AWAYS = (16.0, 16.4, 17.5, 18.0, 20.0, 22.0)
 
 
 def rangers_payroll_2027() -> dict:

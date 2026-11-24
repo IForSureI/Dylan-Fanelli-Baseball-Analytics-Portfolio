@@ -109,6 +109,7 @@ def signed_club(text: str) -> str | None:
 # Status notes on a signing line that MLBTR's one-line entry doesn't carry, each with its source.
 SIGNING_NOTES = {
     "Tarik Skubal": "agreed Nov. 22; official after physical",   # MLBTR, Nov. 22, 2026; MLB.com: pending a physical
+    "Trevor Rogers": "agreed Nov. 23, after my calls; official after physical",   # MLBTR, Nov. 23, 2026, 9:50 PM CT; ESPN
 }
 
 

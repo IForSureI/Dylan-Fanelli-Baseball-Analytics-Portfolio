@@ -80,12 +80,14 @@ PICK_VALUE_2019 = {45: 6.7, 46: 6.6, 47: 6.4, 48: 6.3, 49: 6.1, 50: 5.9, 51: 5.8
                    56: 5.2, 57: 5.0, 58: 4.9, 59: 4.8, 60: 4.7}
 
 # Draft-pick value, my own: what picks 45-60 returned in the 2000-2016 drafts (first six MLB seasons priced at
-# $11.23M per win, less salaries, discounted 7% to draft day, 2026 dollars; recent drafts weighted more), less the
-# pick's 2026 slot value. Source: the Dylan-Fanelli-Draft-Analytics repo, backtest/results/pick_table_2000_2016.csv
-# (column market_all), and MLB's 2026 slot values. About twice Edwards' 2019 figures: the 2000-2016 drafts returned
-# more in rounds 2-4 than the curves behind those figures assumed. This is the house value.
-PICK_VALUE_OWN = {45: 11.06, 46: 10.92, 47: 10.80, 48: 10.69, 49: 10.58, 50: 10.49, 51: 10.40, 52: 10.31, 53: 10.23,
-                  54: 10.16, 55: 10.09, 56: 10.02, 57: 9.95, 58: 9.89, 59: 9.82, 60: 9.76}
+# $11.23M per win, less salaries, discounted 7% to draft day, 2026 dollars; every draft weighted equally, no floor at
+# zero), less the pick's 2026 slot value. Source: the Dylan-Fanelli-Draft-Analytics repo,
+# backtest/results/pick_table_2000_2016.csv (column market_all), and MLB's 2026 slot values. About 1.05 to 1.4 times
+# Edwards' 2019 figures (1.26 at pick 55): the 2000-2016 drafts returned a little more in rounds 2-4 than the curves
+# behind those figures assumed. This is the house value. Corrected Nov. 24, 2026: the first version read a floored
+# column and ran about 1.4 times too high.
+PICK_VALUE_OWN = {45: 7.03, 46: 6.97, 47: 6.92, 48: 6.88, 49: 6.85, 50: 6.82, 51: 6.79, 52: 6.77, 53: 6.74,
+                  54: 6.72, 55: 6.70, 56: 6.68, 57: 6.66, 58: 6.63, 59: 6.61, 60: 6.58}
 
 
 # ------------------------------------------------------------------ relief seasons and replacement
