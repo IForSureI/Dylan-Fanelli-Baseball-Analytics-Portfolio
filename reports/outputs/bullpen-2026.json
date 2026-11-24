@@ -1,5 +1,5 @@
 {
- "source": "Built 2026-11-14 from the relief-season tables (data/edge/backtest/relief_seasons_2024..2026.csv) with baseball.roster.bullpen_case.money().",
+ "source": "Built 2026-11-14 from the relief-season tables (data/edge/backtest/relief_seasons_2024..2026.csv) with baseball.roster.bullpen_case.money(). Nov. 24, 2026: qo recomputed with the corrected house pick value (acquisition.PICK_VALUE_OWN, pick 55 = $6.70M) and the $16.0M landing row added from the saved line and price; nothing else rerun.",
  "line": {
   "intercept": 0.9336,
   "slope": 9.5994,
@@ -155,8 +155,8 @@
    "signing_club_forfeits_pool": 0.5,
    "note": null,
    "pick_number": 55,
-   "pick_value": 10.09,
-   "total_value": 10.59
+   "pick_value": 6.7,
+   "total_value": 7.2
   },
   "650556": {
    "losing_club_gets": "pick after Competitive Balance Round B",
@@ -166,11 +166,16 @@
    "signing_club_forfeits_pool": 0.5,
    "note": null,
    "pick_number": 55,
-   "pick_value": 10.09,
-   "total_value": 10.59
+   "pick_value": 6.7,
+   "total_value": 7.2
   }
  },
  "landing": [
+  {
+   "walk_away_aav": 16.0,
+   "total_4y": 64.0,
+   "chance_price_at_or_below": 0.328
+  },
   {
    "walk_away_aav": 16.4,
    "total_4y": 65.6,

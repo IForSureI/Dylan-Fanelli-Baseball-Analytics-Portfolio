@@ -1,6 +1,6 @@
 # Saved outputs
 
-Small tables behind seven reports, so a reader can check the headline numbers without the pitch data. Added 2026-11-14.
+Small tables behind nine reports and the offseason packet, so a reader can check the headline numbers without the pitch data. Added 2026-11-14; the bat-tracking, framing and swing-lab files were added Nov. 22-24.
 
 | File | Report | Built from |
 |---|---|---|
@@ -17,8 +17,13 @@ Small tables behind seven reports, so a reader can check the headline numbers wi
 | `familiarity-2024-26.json` | [Pitch familiarity](../2026-league-pitch-familiarity.md) | the `bb familiarity 2026` coefficient table and sample counts |
 | `familiarity-checks-2024-26.json` | [Pitch familiarity](../2026-league-pitch-familiarity.md) | `python -m baseball.edge.familiarity_checks`: the shuffle null (1,000 shuffles per design and pitch group) and the leave-own-game-out refits |
 | `il-warning-2026.json` | [IL early warning](../2026-il-early-warning.md) | the `bb il-warning 2026` summary (added 2026-11-15): sample counts, the noise model, every outcome row's scores and intervals, every alert rule, the velocity bins and the calibration deciles |
+| `bat_power_seasons.json` | [Arozarena breakdown](../2026-arozarena-swing-breakdown.md), the packet's swing lab and percentile rows | `bb bat-power`: one row per hitter-season, 2024-26 (PA, AB, ISO, barrel rate, EV90, xwOBA on contact, K%, bat speed, swing length, attack angle, squared-up and blast rates). Plate appearances follow MLB's count (a truncated PA isn't one); the Nov. 24 correction is in the log |
+| `bat_power_summary.json` | [Arozarena breakdown](../2026-arozarena-swing-breakdown.md) | `bb bat-power`: the train and test pairs, each model's out-of-sample fit, what bat tracking adds, the bat-speed-change test, year-to-year stability and the four swing-lab hitters' 2027 ISO projections (`add_projections` for Chisholm and Lowe) |
+| `framing_catchers.json`, `framing_summary.json` | [Catcher framing](../2026-catcher-framing.md) | `bb framing`: each catcher-season's takes, raw and adjusted framing runs and Savant's runs; the call model's checks, split-half and year-to-year reliability and the 2026 ABS change |
+| `<hitter>_swings.json`, `<hitter>_swing_summary.json` | [Arozarena breakdown](../2026-arozarena-swing-breakdown.md) and the packet's swing lab (Arozarena, Suzuki, Chisholm, Lowe) | `bb swing-video` (`baseball.video.breakdown.save`): one row per home run (play id, date, pitch, exit velocity, launch angle, bat speed, each measured timing and posture value, the MLB.com clip page) and the season medians, tests and detection limits |
+| `<hitter>_contact_by_eye.json`, `<hitter>_excluded_by_eye.json` | the same | written by hand while checking the clips: the frames from shoulders square to contact read by eye, and the clips removed by eye with the reason for each |
 | `skenes-checks-2026.json` | [Roster and CBA memo](../2026-roster-cba-engine.md) | `python -m baseball.roster.cases` (added 2026-11-15): the break-even grid on both prices of a win, the published surgery shares read two ways with the grid at 25% and 33%, the walk-away by place on a 2006 win curve, and the Nov. 3 cap offer against the memo's cap path |
 
-- **What these are:** aggregates only. No pitch-level rows are in this repository.
+- **What these are:** aggregates, plus one row per home run for the four swing-lab hitters (the pitch's type, speed, exit velocity and launch angle, already public on each MLB.com clip page). No other pitch-level rows are in this repository.
 - **What checks them:** `tests/test_report_outputs.py` reads each report and fails if a headline number no longer matches its table.
-- **What isn't here yet:** the other studies' outputs. They stay in `data/` with the pitch data.
+- **What isn't here yet:** the other studies' full outputs. They stay in `data/` with the pitch data.
