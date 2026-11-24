@@ -91,6 +91,7 @@ footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-
 #numtip td + td { text-align: right; font-family: var(--mono); font-size: 12px; padding-left: 10px; }
 #numtip .nt-n { color: var(--muted); font-size: 13px; margin-top: 8px; }
 #numtip .nt-a { font-family: var(--mono); font-size: 11px; margin-top: 8px; display: inline-block; }
+@media print { #numtip { display: none !important; } }
 @media (max-width: 640px) { #numtip { left: 12px !important; right: 12px; top: auto !important; bottom: 12px; width: auto; } }
 @media (prefers-reduced-motion: reduce) { #numtip { transition: none; } }
 </style>
@@ -101,6 +102,7 @@ footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-
     <h1>Baseball research <span>a club can use</span></h1>
     <p class="lede">These are original questions a front office pays to answer, built on every public pitch of 2024–2026 and every MLB trade since 2009. Each one is validated out of sample, checked number by number in a separate review pass, and shipped as code a club could run tomorrow. When the answer is no, the report says no.</p>
     <p class="read"><a href="offseason/">Start with the 2027 Offseason Decision Packet, my interactive turn-in for this winter →</a></p>
+    <p class="read">Also interactive: the <a href="edge-board.html">Edge Board</a>, 1,889 pitches thrown in 2026 (50+ tracked swings each), searchable, with its 2027 projection and grades, and <a href="postseason.html">the 2026 postseason</a>, every player's numbers by round and pitch type.</p>
     <div class="stats">
       <div class="stat"><b>2.14M</b><span>regular-season pitches, 2024–26, with batter, location, base-out state and bat tracking</span></div>
       <div class="stat"><b>15</b><span>finished studies, decision memos and scouting reports, each with its code and figures</span></div>
@@ -127,7 +129,7 @@ footer { font-family: var(--mono); font-size: 12px; color: var(--muted); border-
       <div class="memohead"><span>To: General manager, Texas Rangers</span><span>Re: Bullpen, 2026-27 offseason</span><span>Data-informed; not a live look</span></div>
       <p class="col"><b>The need is late-inning run prevention.</b> Texas relievers fell from 4th in run value per 100 pitches in 2025 to 24th in 2026, and from 6th to 26th in late, close spots. Relievers now free agents or on a mutual option threw 35% of those late, close plate appearances. The memo ranks three free-agent relievers using every tool on this page: regressed results with intervals, stuff vs. results, velocity against the league, pitch-design levers, data-informed 20-80 grades, and prices from the reliever market's own line.</p>
       <div class="calls">
-        <div class="call a"><span class="tier">Tier A, pursue</span><b>Adrián Morejón</b><p>Bid up to 4 years, $60M and no higher. He has a qualifying offer (Nov. 2), and the pick it costs takes the walk-away from $72M to $60M. That lands him about one time in four.</p></div>
+        <div class="call a"><span class="tier">Tier A, pursue</span><b>Adrián Morejón</b><p>Bid up to 4 years, $64M and no higher. He declined the qualifying offer (Nov. 17), and the pick it costs a signing club takes the walk-away from $72M to $64M. That lands him about one time in three.</p></div>
         <div class="call"><span class="tier">Tier B, if he signs elsewhere</span><b>Bryan Abreu</b><p>Open at 2 years, $18M; walk away above $25M. His walk rate fell from 19.7% to 11.3% in the second half of 2026, but that drop is borderline (p = 0.058), so it's priced as a lean.</p></div>
         <div class="call"><span class="tier">Tier C, not for 2027</span><b>Pete Fairbanks</b><p>Thoracic outlet surgery, announced Sept. 19, 2026. At most a two-year rehab deal.</p></div>
       </div>

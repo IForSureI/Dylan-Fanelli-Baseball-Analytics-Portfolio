@@ -14,7 +14,7 @@ The terms used across the reports, in plain words first and the formal version s
 | **Run value** | How much a pitch changed the expected runs in the inning | Statcast `delta_run_exp` (from the offense's side; a pitcher's runs saved is its negative) |
 | **xwOBA** | The quality of contact, from exit velocity and launch angle, on the wOBA scale | Statcast expected wOBA |
 | **wOBA** | One number for a hitter's offense, each outcome weighted by its run value | Weighted on-base average |
-| **Bat speed, attack angle, swing path tilt** | How fast the bat moves and how it comes through the zone | Statcast bat tracking: bat speed and swing length from 2024; attack angle and swing path from 2025 |
+| **Bat speed, attack angle, swing path tilt** | How fast the bat moves and how it comes through the zone | Statcast bat tracking: bat speed, swing length and attack angle from 2024; swing path from 2025 |
 | **Stuff** | How good a pitch is from its physics alone (velocity, movement, release) | A model of whiff or run value from pitch characteristics |
 
 ## Reliability and evidence

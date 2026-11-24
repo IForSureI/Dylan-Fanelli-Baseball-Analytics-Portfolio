@@ -4,7 +4,8 @@
     uv run python docs/build_offseason.py
 
 Needs the league sequence files (data/seq) for teams and the video pose files (data/raw/video/pose) for the swing lab.
-Without them it refreshes the previous data.json: ids, 2026 clubs, headshots and swing-lab figures are kept, and
+Without them it refreshes the previous data.json: ids, 2026 clubs, headshots and swing-lab figures are kept (a missing
+headshot is fetched from MLB's photo server), and
 everything read from market/ and reports/outputs/ is rebuilt. A clip removed by eye since the last full build is taken
 out of the swing lab and its counts, medians and tests are recomputed (the median skeleton too, given the pose files).
 """
@@ -70,7 +71,7 @@ else:
             heads[x.get('mlbam') or x.get('id')] = x['head']
 
 def headshot(mid):
-    if mid in heads or not FULL: return heads.get(mid)
+    if mid in heads: return heads[mid]   # a refresh fetches only the headshots the previous build didn't have
     url = f"https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_120,q_auto:best/v1/people/{mid}/headshot/67/current"
     try:
         b = urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'}), timeout=30).read()
@@ -108,9 +109,8 @@ for cid, g in fr.groupby('catcher'):
     seasons = {int(r.season): dict(takes=int(r.takes), adj=round(float(r.adj_runs), 1), raw=round(float(r.raw_runs), 1),
                savant=None if r.savant_runs != r.savant_runs else round(float(r.savant_runs), 1)) for r in g.itertuples()}
     catchers.append(dict(id=int(cid), name=g.nm.iloc[0], team=team_of.get(int(cid)), seasons=seasons))
-for c in catchers:
-    if 2026 in c['seasons'] and (abs(c['seasons'][2026]['adj']) >= 5 or c['name'] in ('Patrick Bailey', 'Cal Raleigh', 'Tyler Stephenson', 'Carson Kelly')):
-        c['head'] = headshot(c['id'])
+for c in catchers:   # every catcher in the table gets his photo
+    c['head'] = headshot(c['id'])
 
 # ---------------- swing lab
 def lab(name, mlbam, stand, title):

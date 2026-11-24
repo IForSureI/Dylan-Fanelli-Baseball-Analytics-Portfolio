@@ -25,7 +25,8 @@ Public data only. Raw data is pulled locally and never committed (`data/` is in 
 | `delta_run_exp` | Change in run expectancy on the pitch, from the offense's side |
 | `estimated_woba_using_speedangle` | xwOBA on batted balls |
 | `bat_speed`, `swing_length` | Bat tracking (2024 on) |
-| `attack_angle`, `attack_direction`, `swing_path_tilt` | Bat tracking (2025 on) |
+| `attack_angle` | Bat tracking (2024 on in this repo's pitch files) |
+| `attack_direction`, `swing_path_tilt` | Bat tracking (2025 on) |
 | `game_type` | `R` for regular season; analyses default to the regular season |
 
 ## Conventions

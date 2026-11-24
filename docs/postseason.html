@@ -91,6 +91,7 @@ svg.dim .hit:not(.active) text { opacity: .35; }
 .bar-label { font-size: 12px; font-weight: 600; fill: var(--ink); }
 .bar-val { font-size: 12px; font-weight: 600; fill: var(--ink); }
 .bar-right { font-size: 11.5px; fill: var(--muted); }
+.ws-legend { font-size: 12.5px; color: var(--muted); margin: 2px 0 0; }
 .ws-title { font-size: 12.5px; font-weight: 600; fill: var(--ink); }
 .ws-line { fill: none; stroke: var(--ink); stroke-width: 1.8; }
 .ws-big { fill: var(--red); }
@@ -172,6 +173,12 @@ footer ul { padding-left: 18px; margin: 0; }
   #tip.on { pointer-events: auto; }
 }
 @media (prefers-reduced-motion: reduce) { #tip, .hit .mark { transition: none; } }
+@media print {
+  section.chart { break-inside: avoid; page-break-inside: avoid; }
+  section.chart h2 { break-after: avoid; }
+  .filterbar, #hint, details.tbl { display: none !important; }
+  #tip { display: none !important; }
+}
 </style>
 </head>
 <body>
@@ -537,13 +544,15 @@ function worldSeries(wrap, games) {
       const step = e.shiftKey ? 10 : 1;
       if (e.key === "ArrowRight") { go(idx + step); e.preventDefault(); }
       if (e.key === "ArrowLeft") { go(idx - step); e.preventDefault(); }
+      if (e.key === "Escape") { cur.setAttribute("opacity", 0); dot.setAttribute("opacity", 0); }
     });
   });
   fillTable(wrap, [["Game"], ["Date"], ["Score"], ["Winner"], ["Biggest swing"], ["MIL win prob. change", 1]],
     games.map(g => { const p = g.pts[g.big]; return [g.game, g.date, `${g.away} ${g.as}, ${g.home} ${g.hs}${g.innings > 9 ? ` (${g.innings})` : ""}`, g.winner,
       `${p[1][0] === "T" ? "Top" : "Bottom"} ${p[1].slice(1)}: ${esc(p[2])}, ${esc(p[7])}`, sg(100 * p[9], 1) + " pts"]; }));
-  const lg = el("text", {x: m.l, y: Hh - 4, class: "bar-right"}, svg);
+  const lg = document.createElement("p"); lg.className = "ws-legend";   // HTML, so it wraps on a phone
   lg.textContent = "Line = Brewers' win probability after every pitch. Gold = Brewers favored, light blue = Rays favored. Dot = the game's biggest single swing. Numbers under each game = inning.";
+  svg.after(lg);
 }
 
 // ---------------------------------------------------------------- filters
@@ -809,8 +818,8 @@ const veloChart = (n, who) => chart(n, who === "p" ? "October Velocity Leaders" 
   if (!rows.length) return {sub, says: "", empty: `No one has ${need} ${what} in this cut.`};
   const nmf = who === "p" ? pName : hName, tmf = who === "p" ? pTeam : hTeam;
   bars(wrap, rows, {aria: who === "p" ? "Top 20 by fastball velocity" : "Top 20 by exit velocity", zoom: true, ref, refLabel: `avg ${ref}`, team: r => tmf(r.id), name: r => nmf(r.id),
-    fv: v => v.toFixed(1), fx: v => v.toFixed(0), right: r => r.right, rightHead: "Max", xt: who === "p" ? "Average four-seam and sinker velocity (mph)" : "Average exit velocity (mph)",
-    card: r => withSlice(sliceBlock(st, [[r.v.toFixed(1), "avg mph"], [r.right, "max"], [r.n, who === "p" ? "fastballs" : "batted balls"]]),
+    fv: v => v.toFixed(1), fx: v => v.toFixed(0), right: r => r.right.toFixed(1), rightHead: "Max", xt: who === "p" ? "Average four-seam and sinker velocity (mph)" : "Average exit velocity (mph)",
+    card: r => withSlice(sliceBlock(st, [[r.v.toFixed(1), "avg mph"], [r.right.toFixed(1), "max"], [r.n, who === "p" ? "fastballs" : "batted balls"]]),
       () => who === "p" ? (P[r.id] ? pitcherCard(r.id, "velo") : minimal(nmf(r.id), tmf(r.id))) : (H[r.id] ? hitterCard(r.id, "ev") : minimal(nmf(r.id), tmf(r.id)))), labelW: 130});
   const r0 = rows[0];
   return {sub, says: who === "p" ? `${nmf(r0.id)} averaged ${r0.v.toFixed(1)} mph${cut ? " in this cut" : ""}. Dots, not bars: the axis starts near the leaders' range.`
