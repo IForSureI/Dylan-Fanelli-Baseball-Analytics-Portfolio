@@ -64,7 +64,8 @@ METRICS = {               # name -> (column, scale): game means are of column * 
 }
 UNITS = {"velo": "mph", "spin": "rpm", "ivb": "in", "ext": "ft", "relz": "in", "arm": "deg"}
 PITCH_COLUMNS = ["game_pk", "game_date", "game_year", "at_bat_number", "pitch_number", "pitcher", "inning_topbot",
-                 "home_team", "away_team", "pitch_type", "age_pit"] + [c for c, _ in METRICS.values()]
+                 "home_team", "away_team", "pitch_type", "age_pit", "description"] + [c for c, _ in METRICS.values()]
+NO_PITCH = ("automatic_ball", "automatic_strike")     # pitch-clock violations: no pitch was thrown
 NAIVE = ["starter", "age", "il_365", "pitches100", "pitch_ratio", "log_rest", "m5", "m6", "m7", "m8", "m9"]
 TRACK_VELO = ["z_velo_1", "z_velo_3"]
 TRACK = TRACK_VELO + ["z_spin_1", "z_spin_3", "z_ivb_3", "z_ext_3", "z_relz_3", "z_arm_3"]
@@ -76,7 +77,8 @@ TEAMS = 30
 
 ARM = re.compile(r"elbow|\bucl\b|ulnar|tommy john|forearm|flexor|pronator|extensor|shoulder|\bshould\b|rotator|"
                  r"labrum|labral|capsul|\blat\b|lats\b|latissimus|teres|triceps|biceps|\barm\b|thoracic outlet|"
-                 r"scapul|median nerve|radial nerve|subscap")
+                 r"scapul|median nerve|radial nerve|subscap|\bulna\b|brachial|\bac joint\b|acromio|"
+                 r"\belnow\b|\bunar\b")   # the last two are misspellings that appear in MLB's own transaction text
 HAND = re.compile(r"finger|blister|\bnail|thumb|wrist|\bhand\b")
 TRUNK = re.compile(r"oblique|back|lumbar|spine|\brib|intercostal|abdom|neck|\bside\b|pectoral|trapez|\bcore\b")
 LOWER = re.compile(r"hamstring|groin|adductor|\bhip\b|knee|ankle|calf|\bfoot|\btoe|quad|glute|achilles|plantar|"
@@ -152,7 +154,7 @@ def il_placements(seasons, raw: Path = TX_DIR) -> pd.DataFrame:
 def load_pitches(season: int) -> pd.DataFrame:
     parts = seq_parts(season)
     if not parts:
-        raise FileNotFoundError(f"No sequence data for {season} in data/seq/. Run `bb seq {season}` on the Mac.")
+        raise FileNotFoundError(f"No sequence data for {season} in data/seq/. Run `bb seq {season}` first; it builds data/seq/ from the league files.")
     cols = PITCH_COLUMNS
     return pd.concat([pd.read_parquet(p, columns=cols) for p in parts], ignore_index=True)
 
@@ -161,12 +163,13 @@ def appearances(p: pd.DataFrame) -> pd.DataFrame:
     """One row per pitcher outing: season, date, team (the fielding side), starter (threw his team's first pitch),
     pitches thrown and age."""
     p = p.copy()
+    p["thrown"] = ~p["description"].isin(NO_PITCH) if "description" in p else True
     p["team"] = np.where(p["inning_topbot"].eq("Top"), p["home_team"], p["away_team"])
     p = p.sort_values(["game_pk", "at_bat_number", "pitch_number"])
     first = p.drop_duplicates(["game_pk", "team"])[["game_pk", "team", "pitcher"]].rename(columns={"pitcher": "first_p"})
     a = (p.groupby(["pitcher", "game_pk"], as_index=False)
          .agg(game_date=("game_date", "first"), season=("game_year", "first"), team=("team", "first"),
-              pitches=("pitch_number", "size"), age=("age_pit", "first")))
+              pitches=("thrown", "sum"), age=("age_pit", "first")))
     a = a.merge(first, on=["game_pk", "team"], how="left")
     a["starter"] = (a["pitcher"] == a["first_p"]).astype(int)
     a["game_date"] = pd.to_datetime(a["game_date"])
@@ -804,7 +807,7 @@ def figure(summary: dict | None = None, out_path: Path | None = None) -> Path:
     c.plot([0, hi], [0, hi], color=GRID, lw=1.2)
     c.set_xlabel("Predicted risk, decile mean (%)")
     c.set_ylabel("Observed rate in 2026 (%)")
-    c.set_title("2026: the tracking model ranks risk no better", loc="left", fontsize=12, fontweight="bold")
+    c.set_title("2026: the tracking model ranks risk no detectably better", loc="left", fontsize=12, fontweight="bold")
     c.legend(fontsize=8.5, loc="upper left")
     _style(c)
     fig.text(0.01, 0.005, "Sources: Statcast via Baseball Savant (regular season); MLB Stats API transactions. "
