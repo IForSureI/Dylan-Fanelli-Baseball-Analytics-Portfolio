@@ -139,7 +139,7 @@ PAGES = [
     dict(slug="2026-arozarena-swing-breakdown", short="Swing breakdown", dept="Pro personnel and hitting",
          status="reviewed", tags=["video, frame by frame", "pose estimation", "bat tracking"],
          question="Is Randy Arozarena's 2026 power real, and did his swing change?",
-         answer="Not as power. The ISO rise is fewer strikeouts (26.8% to 21.6%) with flat damage per contact at-bat (.272 both years), while barrels, hard-hit exit velocity and bat speed fell. The league model chosen on training data puts his 2027 ISO at .169-.180. Frame by frame on MLB's clips, his home-run swing shows no timing change the camera could detect (about 80 ms).",
+         answer="Not as power. The ISO rise is fewer strikeouts (26.9% to 21.6%) with flat damage per contact at-bat (.272 both years), while barrels, hard-hit exit velocity and bat speed fell. The league model chosen on training data puts his 2027 ISO at .169-.180. Frame by frame on MLB's clips, his home-run swing shows no timing change the camera could detect (about 80 ms).",
          club="Video used the way a front office should: to rule a mechanical change in or out, with the camera's limits stated."),
     dict(slug="2026-mlb-draft-analytics", short="Draft analytics", dept="Amateur scouting",
          status="summary", tags=["pick values", "out-of-sample", "bonus pools"],
