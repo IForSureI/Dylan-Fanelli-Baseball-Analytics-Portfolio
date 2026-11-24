@@ -40,7 +40,7 @@ def pitcher_season(mlbam_id: int, season: int, refresh: bool = False) -> pd.Data
     from pybaseball import cache, statcast_pitcher
 
     cache.enable()
-    df = statcast_pitcher(f"{season}-03-01", f"{season}-11-30", player_id=mlbam_id)
+    df = statcast_pitcher(f"{season}-02-15", f"{season}-11-30", player_id=mlbam_id)   # spring games start in late February
     if df is None or df.empty:
         raise RuntimeError(
             f"Statcast returned no rows for pitcher {mlbam_id} in {season}. "

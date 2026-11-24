@@ -29,16 +29,16 @@ COLUMNS = ["PitchNo", "RelSpeed", "SpinRate", "Tilt", "InducedVertBreak", "HorzB
 
 
 def feet(s: str) -> float | None:
-    """'6\\'4"' -> 6.333, '1\\'11"' -> 1.917, '11"' -> 0.917, '7\\'' -> 7.0, '-' -> None."""
+    """'6\\'4"' -> 6.333, '1\\'11"' -> 1.917, '11"' -> 0.917, '7\\'' -> 7.0, '-0\\'5"' -> -0.417, '-11"' -> -0.917, '-' -> None."""
     s = s.strip()
     if s in ("-", ""):
         return None
-    m = re.fullmatch(r"(?:(-?\d+)')?\s*(?:(\d+(?:\.\d+)?)\")?", s)
+    neg = s.startswith("-")                        # the sign belongs to the whole length: -0'5" is -0.417 ft
+    m = re.fullmatch(r"(?:(\d+)')?\s*(?:(\d+(?:\.\d+)?)\")?", s[1:].strip() if neg else s)
     if not m or (m.group(1) is None and m.group(2) is None):
         raise ValueError(f"Can't read a length from {s!r}")
-    ft = float(m.group(1) or 0)
-    inch = float(m.group(2) or 0)
-    return ft + (inch / 12 if ft >= 0 else -inch / 12)
+    v = float(m.group(1) or 0) + float(m.group(2) or 0) / 12
+    return -v if neg else v
 
 
 def _num(s: str) -> float | None:

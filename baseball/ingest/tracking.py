@@ -438,7 +438,7 @@ def normalize_trackman(df: pd.DataFrame, force_flip: bool = False) -> tuple[pd.D
     if x0.notna().sum() >= 5 and relside.notna().sum() >= 5:
         both = x0.notna() & relside.notna()
         same = float(np.nanmedian(np.sign(x0[both]) * np.sign(relside[both])))
-        pfx_m = 1.0 if (same < 0) == (m == -1) else m   # x0 opposite RelSide -> already catcher frame
+        pfx_m = m if same > 0 else -m   # x0 on release_pos_x's side (catcher frame) -> keep; else flip
         pfx_frame = "catcher-view (kept)" if pfx_m == 1 else "pitcher-view (flipped)"
     else:
         pfx_m = 1.0
