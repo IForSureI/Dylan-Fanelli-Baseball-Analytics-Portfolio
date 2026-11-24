@@ -867,7 +867,7 @@ def main(argv: list[str] | None = None) -> None:
 
     bp_ = sub.add_parser("bat-power", help="does bat tracking predict next season's ISO beyond ISO and exit velocity? (2024-26)")
     bp_.set_defaults(func=cmd_bat_power)
-    sv_ = sub.add_parser("swing-video", help="a hitter's home-run clips, frame by frame (needs: uv pip install ultralytics opencv-python-headless)")
+    sv_ = sub.add_parser("swing-video", help="a hitter's home-run clips, frame by frame (needs the video tools: uv sync --group video)")
     sv_.add_argument("name", help="short name for files, e.g. arozarena")
     sv_.add_argument("batter", type=int, help="MLBAM id, e.g. 668227")
     sv_.add_argument("--stand", default="R", choices=["R", "L"])
@@ -920,7 +920,14 @@ def main(argv: list[str] | None = None) -> None:
         (cmd_advance if raw[0] == "advance" else cmd_swing_decisions)(ns)
         return
     a = ap.parse_args(argv)
-    a.func(a)
+    if argv is not None:          # called from code or a test: let errors raise
+        a.func(a)
+        return
+    try:
+        a.func(a)
+    except (FileNotFoundError, KeyError, ValueError) as e:   # missing data or a bad argument: say so, no traceback
+        msg = e.args[0] if e.args else type(e).__name__
+        ap.exit(2, f"bb {a.cmd}: {msg}\n")
 
 
 if __name__ == "__main__":

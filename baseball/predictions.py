@@ -339,7 +339,7 @@ def render_markdown(calls) -> str:
         out.append("")
     else:
         out += [f"- **No call has resolved yet.** {n_open} open, {n_void} void. "
-                f"The first contract calls can resolve once free agency opens after the World Series.", ""]
+                f"The contract calls resolve as the players sign; free agency opened after the World Series.", ""]
 
     out += ["## The calls", "",
             "| # | Category | Claim | Probability | Resolves by | Outcome |", "|---|---|---|---|---|---|"]
