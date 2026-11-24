@@ -670,7 +670,7 @@ The mapping is 50 + 10z of the percentile, to the nearest 5 (Method).
 - **What did not move:** the ranking, the roles, the OFPs (each formula value is still 60 before the overrides), the prices and the recommendation. Present grades do not use the model, but they depend on which swings the run tracks: see the Nov. 23 correction.
 
 - **Correction (Nov. 23):** rerunning `bb bullpen-case` on the saved Oct. 17 Edge Board run gives Morejón's slider a present grade of 45, not the 50 I printed. Its regressed whiff rate is 31.3%, the 40.0th percentile of 279 slider-group pitches, just under the 45/50 line (about 40.1). The 50 came from an earlier fit that wasn't saved (40.4th percentile): 39 pitches had different tracked-swing counts between the runs, which shifts the comparison pool. The other 29 present, 2027 and stuff grades match the saved run exactly. His OFP, role, ranking, price and the recommendation don't change, because his OFP rests on the sinker, changeup and four-seamer. The figure is now drawn from the saved run.
-- **The figure** was drawn from the earlier fit and has not been redrawn. Three of its hollow stuff markers sit 5 points from this table: Abreu's slider and Fairbanks's four-seamer and slider.
+- **The figure** was drawn from the earlier fit until Nov. 23, when I redrew it from the saved Oct. 17 run. Every marker now matches this table, including the three that sat 5 points off (Abreu's slider and Fairbanks's four-seamer and slider).
 
 ## Method
 
