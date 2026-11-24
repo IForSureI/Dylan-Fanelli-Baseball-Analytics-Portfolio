@@ -33,6 +33,7 @@ WITH tracked AS (
       AND bat_speed IS NOT NULL
       AND description IN ('swinging_strike', 'swinging_strike_blocked', 'foul', 'foul_tip',
                           'hit_into_play', 'hit_into_play_no_out', 'hit_into_play_score')
+      AND COALESCE(events, '') NOT IN ('sac_bunt', 'sac_bunt_double_play')   -- a sacrifice bunt in play is a bunt
 ),
 
 with_cut AS (
