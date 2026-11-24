@@ -69,11 +69,11 @@ So the edge is in one big miss, not in the typical player. MLBTR's worst miss la
 ## The board
 
 <!-- board:start -->
-**Score so far:** none of the 38 called players has signed.
+**Score so far (1 of 38 signed):** AAV error mine $5.0M vs MLBTR $1.0M; mine closer on 0; over/under Brier 0.040 (a coin flip scores 0.250).
 
 | # | Player | MLBTR's call (Nov. 2) | MLBTR AAV | My AAV | P(beats MLBTR AAV) | WAR (5/4/3 average), age | Signed | Result |
 |---|---|---|---|---|---|---|---|---|
-| 2 | Trevor Rogers | Five years, $115MM | $23.0M | $29.0M | 0.80 | 2.8, 28 |  |  |
+| 2 | Trevor Rogers | Five years, $115MM | $23.0M | $29.0M | 0.80 | 2.8, 28 | Signed with Cubs for five years, $120MM (agreed Nov. 23, after my calls; official after physical) | $24.0M AAV; MLBTR closer |
 | 3 | Freddy Peralta | Five years, $110MM | $22.0M | $24.6M | 0.65 | 2.8, 30 |  |  |
 | 4 | Seiya Suzuki | Four years, $105MM | $26.25M | $33.2M | 0.80 | 3.9, 31 |  |  |
 | 5 | Randy Arozarena | Four years, $100MM | $25.0M | $33.0M | 0.80 | 4.1, 31 |  |  |
@@ -148,11 +148,11 @@ Three of my documents forecast the same market, and they don't agree.
 - **Where the board comes from:** it uses MLBTR's number moved by the model above. Its reliever term rests on 14 relievers in one winter, and its edge rests on one hitter.
 - **Which I stand behind:** for a buying decision, the memo. Its market line is built for relievers, and the board's reliever term is its least certain part.
   - **If the board is right, both of the memo's targets price out:**
-    - On the board's model, Morejón's market pays him more than $15M a year about 95% of the time, so the memo's $60M walk-away would land him about 5% of the time, not 26%.
+    - On the board's model, Morejón's market pays him more than $15M a year about 95% of the time, so the memo's $64M walk-away would land him about 7% of the time, not 33% (Nov. 24; at the earlier $60M walk-away it was 5% against 26%).
     - Abreu's board price is $15.4M a year. The memo's walk-away for him (above $25M over two years, $12.5M a year) would land him about 24% of the time.
     - The memo's third name is Raisel Iglesias on one year. The board has him at $15.8M against MLBTR's $17.0M, so he's the one target whose price the board doesn't push up.
     - A club that believes the board has to raise its walk-aways or move to Iglesias. The memo now carries a dated note saying so.
-  - The board's "about 5%" uses the AAV condition only; the memo's 26% is for four years and $60M.
+  - The board's "about 7%" uses the AAV condition only; the memo's 33% is for four years and $64M.
 - **How each is scored:** the log's probabilities stay frozen and are scored as written; the board is scored separately against MLBTR. When both resolve, they'll show which forecast was better. Dated Nov. 23 notes in the log record the board's numbers next to calls 1, 3 and 4.
 
 ## Limits

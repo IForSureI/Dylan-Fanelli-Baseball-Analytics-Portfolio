@@ -4,9 +4,9 @@
 
 # Rangers bullpen, 2026-27: sign Adrián Morejón
 
-*To: the general manager. From: Dylan Fanelli. Oct. 18, 2026; revised Nov. 14, 2026 for the qualifying offer and Nov. 18 for his decision. The one-page version of the [full memo](2026-bullpen-acquisition-memo.md); every number below is derived there.*
+*To: the general manager. From: Dylan Fanelli. Oct. 18, 2026; revised Nov. 14, 2026 for the qualifying offer, Nov. 18 for his decision and Nov. 24 for the pick's value. The one-page version of the [full memo](2026-bullpen-acquisition-memo.md); every number below is derived there.*
 
-**The call.** Bid on Adrián Morejón, up to four years, $60M, with a 2031 club option, and no higher. The Padres made him a qualifying offer on Nov. 2, so signing him costs our second-round pick and pool money worth about $10.6M. That takes the walk-away from $72M to $60M. He declined the offer on Nov. 17 and is a free agent (MLB.com and NBC Sports, Nov. 17, 2026), so the bid is live.
+**The call.** Bid on Adrián Morejón: open at four years, $60M, with a 2031 club option, and go no higher than $64M. The Padres made him a qualifying offer on Nov. 2, so signing him costs our second-round pick and pool money worth about $7.2M. That takes the walk-away from $72M to $64M (corrected Nov. 24: I had the pick at $10.6M and the walk-away at $60M). He declined the offer on Nov. 17 and is a free agent (MLB.com and NBC Sports, Nov. 17, 2026), so the bid is live.
 
 **Why him.**
 - **The need:** late-inning run prevention. Texas relievers fell from 4th to 24th in run value per 100 pitches, and the pitchers leaving threw 35% of the late, close plate appearances.
@@ -18,11 +18,11 @@
 **The risks.**
 - **The elbow:** Tommy John in 2021 and an elbow sprain in 2023. A club medical review gates the offer.
 - **What's new:** the 92 mph changeup is one season old, and the sinker gained 1.8 mph. Expect about half the changeup's edge over its physics to carry into 2027.
-- **The price:** $72M is about the middle of his likely market. At our $60M ceiling we land him about one time in four.
-- **Availability:** heavy-use relievers kept 63% of their workload a year later and 48% two years later. On that pattern four years are worth about $45M at market prices, so $60M is a ceiling.
+- **The price:** $72M is about the middle of his likely market. At our $64M ceiling we land him about one time in three.
+- **Availability:** heavy-use relievers kept 63% of their workload a year later and 48% two years later. On that pattern four years are worth about $45M at market prices, so $64M is a ceiling.
 
 **What would change the call.**
-- **A price above $60M, a fifth guaranteed year or an opt-out:** sign Abreu.
+- **A price above $64M, a fifth guaranteed year or an opt-out:** sign Abreu.
 - **A relief budget under about $15M a year:** Abreu, or Raisel Iglesias on one year.
 - **A decision that 2027 wins near the wild-card line are worth more to us than the market rate:** raise the walk-away. At $72M we land him about 47% of the time and at $80M about 62%, on top of the pick.
 

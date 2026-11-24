@@ -348,6 +348,7 @@ index = 3.83 × Σ over pitch types T of usage_T × seen_T × cost_T
 - **The card's baselines are league averages,** not the club's actual bullpen, and the composition caveats in finding 6 apply.
 - **Lineup slots** miss double switches made before a hitter bats. That's rare for the opponent's lineup before the hook.
 - **2026** runs through September 27 (the regular season in the data). Postseason hooks weren't tested.
+- **Pitch counts (Nov. 24, 2026 code check):** the per-PA pitch counts counted pitch-clock automatic balls and strikes, where no pitch is thrown (about 0.2% of rows). The code now leaves them out; the numbers above are from the saved run before that fix.
 
 ## Reproduce
 ```bash

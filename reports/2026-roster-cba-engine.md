@@ -327,7 +327,7 @@
 | Group | Share with a UCL reconstruction in their history | Source |
 |---|---|---|
 | Major league pitchers, survey of all 30 organizations (mean age 28.8) | 25% (96 of 382) | Conte et al., Am J Sports Med, 2015 |
-| Major league pitchers in the 2007-12 pitch-tracking data | 26.8% (309 of 1,327) | Chalmers et al., Am J Sports Med, 2016 |
+| Major league pitchers in the 2007-12 pitch-tracking data | 23.3% (309 of 1,327) | Chalmers et al., Am J Sports Med, 2016 |
 | Pitchers drafted in the first five rounds, 2011-20 | 33.0% (281 of 851) | Kriz et al., JSES International, 2026 |
 
 - **Velocity:** peak velocity was the leading predictor of the surgery (93.3 mph before it, against 92.1 for pitchers who never had it), but the model explained 7% of the variance (Chalmers et al.). So no source turns one pitcher's velocity into a higher rate.

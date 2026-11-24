@@ -27,7 +27,7 @@
 - **More future heads came through Cleveland than any other club.**
   - **Cleveland:** 15 people worked in its front office before their first head job, and 9 of them hold a club's top baseball-operations job today.
   - **Next:** Colorado with 11, then Tampa Bay and the A's with 10, and Boston, Washington and the Yankees with 9.
-  - **Today's top jobs:** 38 people hold them (president of baseball operations or GM) at the 27 clubs with a permanent one. At 11 clubs a president and a GM both count.
+  - **Today's top jobs:** 38 people hold them (president of baseball operations or GM) at the 27 clubs with a permanent one, as of the research cutoff, Oct. 13, 2026. At 11 clubs a president and a GM both count. Five permanent hires since then aren't in the data yet (see Limits).
 - **John Hart's tree is the largest across generations and on PageRank.**
   - **Directly:** 14 future heads worked under him in Cleveland (GM 1991-2001) or Texas (2002-05). Four of them shared a single season with him.
   - **Counting two or more shared seasons:** he and Theo Epstein are tied at 10.
@@ -151,6 +151,7 @@ Five of the 15 without an assistant GM title came up through Tampa Bay: Bloom, N
 - **Front offices have grown.** Recent biographies list more junior jobs, so recent bosses have more juniors on record. The entry-level share is a floor and isn't comparable across eras.
 - **Hire dates follow the career records.** A few late-season hires are counted from the hire year and others from the next season, which can move a path by one year.
 - **Trees overlap and aren't additive.** The 21 of today's heads in Hart's tree also appear in other trees.
+- **"Today" means Oct. 13, 2026, the research cutoff.** Five permanent hires came after it and aren't in the data: Jared Banner, Orioles GM (Oct. 19; [MLB.com](https://www.mlb.com/news/jared-banner-named-orioles-general-manager)); Taylor Smith, A's president of baseball operations (Oct. 19); Randy Flores, Astros GM (Oct. 30; [MLB.com](https://www.mlb.com/news/randy-flores-astros-general-manager)); Cam Castro, A's GM (Nov. 4; [MLB.com](https://www.mlb.com/news/cam-castro-new-a-s-gm)); and Rob Cerfolio, Cardinals GM (Nov. 6; [MLB.com](https://mlb.com/cardinals/news/rob-cerfolio-cardinals-general-manager)). Smith came from the Red Sox, Banner from the Cubs and Flores from the Cardinals, so adding them would change those trees' counts. The Angels' head job is still interim (John Mozeliak).
 
 ## Neo4j
 The study runs from the CSV tables in Python. The same graph loads into Neo4j next to the trade graph:

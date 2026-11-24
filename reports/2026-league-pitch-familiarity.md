@@ -35,7 +35,7 @@
   - **Every group:** net of the general effect, what stays on the times-through term is the larger piece.
 - **It carries across games, and partly across pitchers.**
   - **Across games:** a hitter who saw this pitcher's changeup 1–3 times in earlier games this season whiffs 3.5 points less on it.
-  - **Across pitchers:** each changeup he saw from a same-handed pitcher earlier today goes with 0.79 fewer whiff points on the next pitcher's changeup. That is about 40% of the same-pitcher effect.
+  - **Across pitchers:** each changeup he saw from a same-handed pitcher earlier today goes with 0.79 fewer whiff points on the next pitcher's changeup. That is about 42% of the same-pitcher effect (0.79 / 1.87).
 - **Familiarity shows up as contact, not discipline.** Hitters chase familiar fastballs and breaking balls *more* (+0.75 and +0.61 points per earlier pitch), and the misses fall anyway.
 - **Read the sizes with care (added Nov. 14, 2026).**
   - **The placebo is larger than the effect.** The same pitch type thrown to the hitter in later plate appearances, which he hasn't seen yet, carries +2.0 to +3.2 whiff points. The main estimates are −0.70 to −1.87. Selection by the pitcher is that strong in this data.
@@ -354,7 +354,7 @@ Change in whiff% per swing against a hitter who has seen none of this pitch type
 
 ## Reproduce
 ```bash
-uv run bb seq 2026          # on the Mac: sequence copy (batter ids, location) from the monthly league files -> data/seq/
+uv run bb seq 2026          # sequence copy (batter ids, location) from the monthly league files -> data/seq/
 uv run bb familiarity 2026  # pools 2024-26; tables, page and figure -> data/edge/familiarity/ (this report keeps its reviewed figure)
 uv run python -m baseball.edge.familiarity_checks --jobs 2  # shuffle null and leave-own-game-out -> reports/outputs/familiarity-checks-2024-26.json (about an hour)
 ```

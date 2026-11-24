@@ -37,7 +37,7 @@
 ## Two cases, one method
 Both filings sit $0.07M above the comp line, for the same reason: a comp each player clearly matches sets the floor (Romano for Smith, A.J. Ramos for Varland). The difference is how far the market projection sits from the comps:
 - **Smith:** MLB Trade Rumors' $5.5M is $0.92M above his $4.58M line. A panel that reads the market wins his case, and the club is the favorite only until the panel leans about three-to-one toward the market view.
-- **Varland:** MLB Trade Rumors' $3.8M is $0.22M above his $3.58M line. The two views nearly agree, so the club is the favorite under every weighting of them (57% to 65%). The exception is the era: on the 2020-26 market alone the club's chance is 40%. Across everything tested it runs 40% to 77%, and losing costs $1.39M over four years against $3.42M over three for Smith.
+- **Varland:** MLB Trade Rumors' $3.8M is $0.22M above his $3.58M line. The two views nearly agree, so the club is the favorite under every weighting of them (54% to 69%). The exception is the era: on the 2020-26 market alone the club's chance is 40%. Across everything tested it runs 40% to 77%, and losing costs $1.39M over four years against $3.42M over three for Smith.
 - **The shared lesson:** the comp line and the market projection are two readings of the same salaries. A filing is safest when they agree, and the hearing question is whatever separates them. For Smith that is the ERA, strikeouts and All-Star selection the market prices; for Varland it is whether a panel pays the recent market's higher level for one season of closing.
 
 ## The case as a panel sees it

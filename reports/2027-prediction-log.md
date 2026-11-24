@@ -18,17 +18,20 @@
 ## Notes added after Oct. 18
 The calls, probabilities and bases below are not edited. These notes record facts that arrived later.
 - **Nov. 14, 2026, qualifying offers:** eight players got the $23.15M offer on Nov. 2 (AP). Three are in this log: Adrián Morejón (call 1), Trevor Rogers (call 3) and Randy Arozarena (call 4). Tarik Skubal (call 2) and Jazz Chisholm Jr. (call 5) are not among the eight. Players have until 4 p.m. ET on Nov. 17 to accept; none had been reported as of Nov. 14.
-- **What that does to call 1:** its basis used my walk-away without a qualifying offer, four years and $72M. With the offer, the bullpen memo's walk-away is $60M. The claim and its 0.55 stand as written on Oct. 18. If Morejón accepts the offer, he signs for one year, and the claim (two or more guaranteed years above $18.0M a year) resolves false.
+- **What that does to call 1:** its basis used my walk-away without a qualifying offer, four years and $72M. With the offer, the bullpen memo's walk-away is $60M (Nov. 24: $64M, after I corrected the pick's value). The claim and its 0.55 stand as written on Oct. 18. If Morejón accepts the offer, he signs for one year, and the claim (two or more guaranteed years above $18.0M a year) resolves false.
 - **Calls 3 and 4:** the same holds. A player who accepts signs for one year at $23.15M, and a claim that needs two or more guaranteed years resolves false.
 - **Nov. 18, 2026, the decisions:** Morejón (call 1), Rogers (call 3) and Arozarena (call 4) all declined the offer by the 4 p.m. ET deadline on Nov. 17 and are free agents (MLB.com, "Arozarena turns down Mariners' qualifying offer, will test free agency," and "Qualifying offer candidates and decisions 2026-27"; NBC Sports, Nov. 17, 2026). David Bednar and Ryan Jeffers were the two who accepted. None of the three can now resolve false through an accepted offer; each call stays open, at the probability set on Oct. 18, until he signs. Whichever club signs any of the three gives up draft-pick compensation, which the walk-away prices in the bases already assumed.
 - **Nov. 23, 2026, call 2 (Skubal):** he agreed with the Mets on Nov. 22 to nine years and $450M, with no opt-outs, a $45M signing bonus and $30M deferred (MLB Trade Rumors, Nov. 22, 2026). That is above the $365M line, but the call resolves on the club's official announcement, and the deal becomes official only after his physical. I'll mark it once it is announced.
 - **Nov. 23, 2026, calls 1, 3 and 4 against my market board:** my [market board](2027-market-board.md) forecasts the same players with a different model (MLBTR's prediction moved by three-year WAR, age and role). At these calls' lines it gives 0.86 for Morejón (log: 0.55), 0.92 for Arozarena (0.65) and 0.48 for Rogers (0.60). The calls and probabilities here stay as written and are scored as written; the board is scored separately, so the two will show which forecast was better. The board explains why I still lean on this log's reliever line for buying decisions.
 - **Call 9, the changeup projection:** the whiff projection behind it was later scored on a season it never saw. It cut error 6.4% against a regressed baseline (4.9 to 8.0), a smaller edge than the 8.1% leave-one-out figure quoted when the call was made.
+- **Nov. 24, 2026, call 3 (Rogers):** he agreed with the Cubs on Nov. 23 to five years and $120M, $24.0M a year, pending a physical (MLB Trade Rumors, Nov. 23, 2026; ESPN, Nov. 23, 2026). That is under the $29.5M line, so the call will resolve no once the club announces it; I'll mark it then.
+- **Nov. 24, 2026, call 8 (Peralta), a correction to the basis:** the wOBA figures in its basis came from my own sum over the pitch files. Baseball Savant, which resolves the call, has him at .323 in 2026 (not .328) and .270 in 2025 (not .277), with the same xwOBA (.302 and .289; Savant's expected-statistics leaderboard, pulled Nov. 24, 2026). The claim (.320 or lower in 2027) and its 0.60 stand as written.
+- **Nov. 24, 2026, call 9:** the saved stuff-model run the bullpen memo now uses (Nov. 15) puts the changeup's projection at 49.6% and the gap at +12.9 points, against 48.9% and 15 points when the call was made. The claim stands as written.
 
 <!-- calls:start -->
 ## Score
 
-- **No call has resolved yet.** 15 open, 0 void. The first contract calls can resolve once free agency opens after the World Series.
+- **No call has resolved yet.** 15 open, 0 void. The contract calls resolve as the players sign; free agency opened after the World Series.
 
 ## The calls
 
@@ -143,7 +146,7 @@ The calls, probabilities and bases below are not edited. These notes record fact
 - **If both come true,** a club paid for 2026's line and got the projection. That's the scenario this log is built to catch.
 
 **Where does Abreu's 11.6% come from?**
-- **The rule:** weight his last three seasons 2026/2025/2024 = 5/4/3, scaled so 2026 counts in full; that's 870 effective batters faced. Add 170 batters at the 2026 relief average (9.1%), where walk rate stabilizes. The result is 11.6%.
+- **The rule:** weight his last three seasons 2026/2025/2024 = 5/4/3, scaled so 2026 counts in full; that's about 700 effective batters faced. Adding 170 batters at the 2026 relief average (9.1%), where walk rate stabilizes, makes 870. The result is 11.6%.
 - **The spread:** the uncertainty in his true rate plus the noise of about 260 batters next year, 2.3 points. P(11.0% or lower) = 0.40.
 - **It's in code:** `abreu_walk_rate()` in `baseball/predictions.py` holds the counts and prints each step.
 

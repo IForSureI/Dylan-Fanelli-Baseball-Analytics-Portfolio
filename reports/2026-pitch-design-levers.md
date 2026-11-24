@@ -315,7 +315,7 @@ Plans are YAML (`examples/`), validated before anything runs, and checked for po
 - **Recommendation:** review priority 3 with the coach: its guard is breached, so the risk the plan named is showing.
 
 **What an analyst adds to the engine's call:**
-- **Both shape priorities landed; velocity landed late.** It sat at 95.3 in mid-May and climbed all summer (figure), so the "step" assumption was wrong for this pitcher. A real plan would have moved the date at the July checkpoint.
+- **Both shape priorities landed; velocity landed late.** It sat at 95.3 in mid-May and climbed all summer (figure): about 96.2 from mid-May to July and 97.0 after. The season-to-date reading still said flat on July 1, so the step pace or the measuring window was wrong, and part of it may be the normal early-season curve. A real plan would read a recent window and could have moved the date at the July checkpoint.
 - **This is a velocity return, not a new gain.** By the study's placebo, part of a velocity payoff is recovery, so the four-seamer's whiff gain shouldn't be credited to the plan. His four-seam whiffs went from 20.6% to 22.7%, against +0.6 predicted (−0.8 drift + 1.4 for the mph); on one pitcher-season that isn't evidence of anything.
 - **The slider whiff priority was underpowered by design.**
   - **The physics read:** his slider's expected whiff rose 3.0 points (38.4% → 41.4% in the study's pooled model at a fixed hand mix), so the shape moved the right way.

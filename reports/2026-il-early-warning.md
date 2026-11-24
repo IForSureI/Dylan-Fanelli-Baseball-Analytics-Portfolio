@@ -5,35 +5,37 @@
 # Velocity drops as an injured-list warning: what public pitch data can tell a medical staff (MLB 2024–26)
 
 <!-- portfolio:glance -->
-<p><img src="https://img.shields.io/badge/status-awaiting%20review-1d5c3f" alt="status: awaiting review"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Medical%20and%20performance%20staff-6b6b6b" alt="for: Medical and performance staff"> <img src="https://img.shields.io/badge/method-out--of--sample-b4532a" alt="method: out-of-sample"> <img src="https://img.shields.io/badge/method-calibration-b4532a" alt="method: calibration"> <img src="https://img.shields.io/badge/method-alert%20rule-b4532a" alt="method: alert rule"></p>
+<p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Medical%20and%20performance%20staff-6b6b6b" alt="for: Medical and performance staff"> <img src="https://img.shields.io/badge/method-out--of--sample-b4532a" alt="method: out-of-sample"> <img src="https://img.shields.io/badge/method-calibration-b4532a" alt="method: calibration"> <img src="https://img.shields.io/badge/method-alert%20rule-b4532a" alt="method: alert rule"></p>
 
 **At a glance**
 
 - **The question:** Does a drop in a pitcher's velocity or stuff, against his own regressed baseline, warn of an injured-list stint?
-- **The answer:** Late, not early. A fastball 2+ mph below his baseline was followed by an arm IL stint within 14 days 10.4% of the time in 2026 (base rate 3.6%), mostly from the last outing before the stint. As a forecast, tracking data adds nothing detectable to role, workload and IL history (AUC +0.005, -0.022 to +0.031).
+- **The answer:** Mostly late. A fastball 2+ mph below his baseline was followed by an arm IL stint within 14 days 10.4% of the time in 2026 (base rate 3.6%), mostly from the last outing before the stint. An earlier signal showed in 2024–25 but wasn't detected in 2026, and one test season can't settle it. As a forecast, tracking data adds no detectable gain to role, workload and IL history (AUC +0.005, -0.022 to +0.031).
 - **For a club:** A same-day trainer check that costs about five false alarms per club-season, and a reason not to buy an injury forecast built on public pitch data.
 <!-- /portfolio:glance -->
 
 **League study from public pitch data and public transactions.**
 - **Scope:** every regular-season outing by a pitcher in 2024–26 (Statcast), matched to every IL placement in the MLB Stats API transactions.
-- **Out of sample:** every parameter (noise model, month curve, both forecasting models, the alert threshold) is fit on 2024–25 only. 2026 is the test.
+- **Out of sample:** every parameter (noise model, month curve, the three forecasting models, the alert threshold) is fit on 2024–25 only. 2026 is the test.
 - **Observational:** a velocity drop and an IL placement can share a cause the data can't see. Nothing here says a drop causes an injury.
 
-*Written 2026-11-15; Dylan Fanelli; Data: Statcast via Baseball Savant, 2,141,219 regular-season pitches, 7,288 games, 62,361 pitcher outings, 1,310 pitchers; MLB Stats API transactions 2023–26; Code: `baseball/health/il_warning.py` (`bb il-warning 2026`); Saved outputs: [`reports/outputs/il-warning-2026.json`](outputs/il-warning-2026.json); Builds on [the Reliability Atlas](2026-reliability-atlas.md); Separate review pass: not yet run*
+*Written 2026-11-15, updated 2026-11-24 after a separate review pass; Dylan Fanelli; Data: Statcast via Baseball Savant, 2,141,219 regular-season pitches, 7,288 games, 62,361 pitcher outings, 1,310 pitchers; MLB Stats API transactions 2023–26; Code: `baseball/health/il_warning.py` (`bb il-warning 2026`); Saved outputs: [`reports/outputs/il-warning-2026.json`](outputs/il-warning-2026.json); Builds on [the Reliability Atlas](2026-reliability-atlas.md); Separate review pass: not yet run*
 
 ![IL rate by velocity drop, and 2026 calibration of the two models](figures/2026-il-early-warning.png)
+
+*Figure note (Nov. 24): read the right panel's "no better" as "no detectably better" (finding 2 gives the interval). The figure is from the saved Nov. 15 run and is redrawn with the next one.*
 
 ## Answer
 - **A big velocity drop is a real warning sign, but it comes late.**
   - **The association replicates on 2026.** After an outing whose fastball sat 2–3 mph below the pitcher's own regressed baseline, 9.4% went on the IL for an arm injury within 14 days (14 of 149; 95% interval 5.7% to 15.2%). The 2026 base rate is 3.6%.
-  - **Refit on 2026 alone,** each standard deviation of this outing's drop goes with 1.18 times the odds of an arm IL placement within 14 days (1.07 to 1.30, p < 0.001). In the 2024–25 fit it was 1.29.
-  - **It is mostly the last outing before the IL.** Leave out each stint's final outing and the 2026 association is not detected: 1.02 (0.91 to 1.14). The drop flags an injury that is already happening, not one weeks away.
-- **As a forecast, tracking data adds nothing detectable to what a club already knows.**
+  - **Refit on 2026 alone,** each standard deviation of this outing's drop goes with 1.18 times the odds of an arm IL placement within 14 days (1.07 to 1.30, p < 0.001). In the 2024–25 fit the same velocity-only model gave 1.28.
+  - **It is mostly the last outing before the IL.** Leave out each stint's final outing and the 2026 association is not detected: 1.02 (0.91 to 1.14). On 2024–25 the same check did find it (1.16 per SD, p = 0.001), and the early version of the flag held its lift in both periods (1.96 times the base rate on 2024–25, 1.94 on 2026, p = 0.07). So the drop mostly flags an injury that is already happening; an early signal of about twice the base rate is possible but not confirmed on 2026.
+- **As a forecast, tracking data adds no detectable gain to what a club already knows.**
   - **The naive model** uses role, age, an IL stint in the last year, pitches thrown, the outing's length against his norm, rest and month. It has a 2026 AUC of 0.571.
   - **The tracking model** adds the drops in velocity, spin, ride, extension, release height and arm angle. AUC 0.576. The gain is +0.005, 95% interval −0.022 to +0.031. Log loss is no better (+0.0001, −0.0014 to +0.0017).
   - **Velocity alone** does the same: +0.009 (−0.013 to +0.032).
   - **Both models are too spread out on 2026** (calibration slopes 0.63 and 0.56, where 1 is calibrated). They rank risk weakly and overstate the gap between high and low.
-- **Spin, ride, extension, release height and arm angle add no confirmed signal.** None survives the Benjamini–Hochberg correction across the eight tracking terms. The closest is release height (p = 0.036, q = 0.15).
+- **Spin, ride, extension, release height and arm angle add no confirmed signal in the main row.** None survives the Benjamini–Hochberg correction across its eight tracking terms; the closest is release height (p = 0.036, q = 0.15). In the 7-day row, release height over the last three outings does pass its own row's correction (1.20 per SD, p = 0.002, q = 0.007). Corrected across all 36 non-velocity terms in the six rows it doesn't (q = 0.065), and it isn't tested on 2026, so I treat it as a lead.
 - **A simple rule works as a same-day check.**
   - **The rule:** flag any outing whose fastball is 2.0 mph or more below his regressed baseline. The 2.0 was chosen on 2024–25 as the lowest threshold with no more than 10 false alarms per club-season.
   - **2026:** 164 flags, 5.5 per club-season. 17 were followed by an arm IL placement within 14 days: 10.4% (6.6% to 16.0%), 2.9 times the base rate (p < 0.001). False alarms: 4.9 per club-season (0 to 12 by club, median 4).
@@ -43,9 +45,9 @@
 1. **Use the 2 mph flag as a same-day trainer check, not a forecast.**
    - When a pitcher's fastball sits 2+ mph below his regressed baseline, the athletic trainer talks to him before his next throwing day.
    - Expect about five flags per club-season. About one in ten will end in an arm IL stint within two weeks. Nine in ten won't.
-   - In 2026 the flag was sharpest for starters: 9 of 24 flags (37.5%; 21.2% to 57.3%) against 8 of 140 for relievers (5.7%; 2.9% to 10.9%). That split was added after the main results and rests on 24 starter flags, so treat it as a lead, not a rule.
-2. **Don't build or buy an injury forecast on public pitch data.** On a season it never saw, a model with every velocity, spin, shape and release drop ranks risk no better than one built on role, workload and IL history.
-3. **Don't treat a spin, ride or release change as an injury sign on its own.** None carries a confirmed association once velocity is in the model.
+   - In 2026 the flag was sharpest for starters: 9 of 24 flags (37.5%; 21.2% to 57.3%), which were 7 stints, against 8 of 140 for relievers (5.7%; 2.9% to 10.9%). That split was added after the main results and rests on 7 starter stints, so treat it as a lead, not a rule. Relievers make most of the flags (about 4.7 of the 5.5 per club-season), and their 2026 precision didn't beat their base rate.
+2. **Don't build or buy an injury forecast on public pitch data.** On a season it never saw, a model with every velocity, spin, shape and release drop ranked risk no detectably better than one built on role, workload and IL history. Gains up to about 0.03 AUC aren't ruled out, and at the top 1% it caught 20 stints to the naive model's 15; that is too small a gain to build or buy on.
+3. **Don't treat a spin, ride or release change as an injury sign on its own.** None carries a confirmed association once velocity is in the model; a release-height drop is the one lead worth scoring on 2027.
 4. **For weeks-ahead warning, look past game data.** The public signal lives in the outing where something already went wrong. Earlier warning needs what the club has and the public doesn't: bullpen and catch-play velocity, strength and range-of-motion screens, and what the pitcher reports.
 
 ## Findings
@@ -79,7 +81,7 @@
 - **Intervals:** 1,000 bootstrap resamples of pitchers on the 2026 outings.
 - **Log loss** (the tracking model against the naive one) is not better in any row. Across the six rows the smallest Benjamini–Hochberg q is 0.80.
 - **The 7-day row is the closest** (+0.030, p = 0.11). It is not confirmed, and it is the row most dominated by the last outing before the stint.
-- **The specificity check behaves:** the drop has no association with lower-body or illness placements (1.00, 0.86 to 1.17), so the arm signal isn't a general "something is off" marker.
+- **The specificity check is mixed:** on 2026 the drop has no association with lower-body or illness placements (1.00, 0.86 to 1.17, 253 events), but in the 2024–25 fit it had one (1.15 per SD, p = 0.010, q = 0.08). So part of the signal may be a general "something is off" marker, which is one more reason to treat a flag as a question for the trainer, not an arm diagnosis.
 - **The last column** refits the velocity model on 2026 alone. It shows the association is there; the AUC columns show it doesn't rank enough outings to matter as a forecast. Fewer than 200 outings a season have a drop of 2 mph or more (164 in 2026).
 - **Calibration on 2026** (main row): slope 0.63 (SE 0.10) naive, 0.56 (SE 0.08) tracking; mean predicted 3.4% and 3.5% against 3.6% observed.
 
@@ -114,7 +116,7 @@
 
 - **The chosen rule held its training numbers:** on 2024–25 it gave 5.5 flags and 4.9 false alarms per club-season at 10.9% precision (8.0% to 14.7%). On 2026: 5.5, 4.9 and 10.4%.
 - **At the very top, the tracking list is the velocity flag again.** Its top 1% caught 20 stints against the naive list's 15, a median 1 day before the placement. That comparison is descriptive; the two lists weren't tested against each other.
-- **Lower thresholds don't buy warning, they buy noise.** At 1.0 mph a club gets 59 flags a season to catch 67 of 175 stints, with 1 in 18 flags followed by an arm IL placement.
+- **Lower thresholds don't buy warning, they buy noise.** At 1.0 mph a club gets 59 flags a season to catch about 2 of its own arm stints (67 of 175 league-wide), with 1 in 18 flags followed by an arm IL placement.
 
 **Splits of the chosen rule** (exploratory: added after the main results):
 
@@ -126,10 +128,10 @@
 | Short outing | 150, 10.0% | 71, 8.5% (3.9–17.2%) | 1 |
 | Stint's last outing left out | 310, 4.8% | 155, 5.2% (2.6–9.9%), p vs base rate 0.07 | 7 |
 
-- **Starters:** a starter's fastball mean comes from more pitches, and his rest is regular, so a drop is less often noise. The starter base rate is 4.0% in 2026.
+- **Starters:** a possible reason, not tested here: a starter's fastball mean comes from more pitches, and his rest is regular, so a drop is less often noise. The starter base rate is 4.0% in 2026.
 - **Relievers:** a reliever's drop is noisier (fewer fastballs, back-to-back days), and in 2026 the flag was not distinguishable from his base rate.
 - **The flag is not just an injury exit:** in a normal-length outing it still ran 11.8% in 2026. It isn't only the pitcher who left the game hurt.
-- **Without the last outing,** the rule is borderline at best (p = 0.07), a median 7 days ahead.
+- **Without the last outing,** the rule is borderline on 2026 (p = 0.07), a median 7 days ahead, after 4.8% (lift 1.96, p = 0.015) on 2024–25. That's about twice the base rate in both periods, on 7 and 13 stints.
 
 ### 4. Who the study can see
 - **2026 arm placements:** 205 took effect between the first and last game of the season for pitchers who pitched in the majors that year. 175 (85%) had a scored outing in the 14 days before. 2024: 174 of 241. 2025: 167 of 231.
@@ -158,7 +160,7 @@
 - **Dropped:** transfers from the 15-day to the 60-day list, and activations.
 - **The date:** the effective date, which is the retroactive date when a club backdates the move.
 - **Category:** from the reason text.
-  - **Arm:** elbow, UCL, forearm, flexor, shoulder, rotator cuff, labrum (not hip), lat, teres, biceps, triceps, thoracic outlet.
+  - **Arm:** elbow, UCL, ulnar, Tommy John, forearm, flexor, pronator, extensor, shoulder, rotator cuff, labrum or labral (not hip), capsule, lat or latissimus, teres, biceps, triceps, "arm", thoracic outlet, scapula, median or radial nerve, subscapularis, acromioclavicular, plus the misspelling "should" for shoulder. The Nov. 24 fix added ulna, brachialis, AC joint and the misspellings "elnow" and "unar"; the saved numbers come from the list before those five.
   - **The other categories:** hand and finger, trunk, lower body, illness, other, and unspecified (no reason given).
   - **2026 placements by pitchers who pitched in the majors that year, calendar year:** arm 249, lower body 88, trunk 56, unspecified 22, other 17, hand 17, illness 8.
 
@@ -173,13 +175,14 @@
 - **Measures:** AUC, log loss and Brier score.
 - **Model differences:** a bootstrap that resamples pitchers (1,000 draws).
 - **Calibration:** the slope of the observed outcome on the logit of the forecast.
-- **Rules:** Wilson intervals, and an exact binomial test against the base rate (the base rate taken as known).
+- **Rules:** Wilson intervals, and an exact binomial test against the base rate (the base rate taken as known). Both treat flags as independent; several flags can precede one stint (the 17 true flags were 15 stints), so these intervals and p-values are somewhat too narrow.
 - **Multiple tests:** Benjamini–Hochberg across the six outcome rows and across the eight tracking terms.
 
 **Fixed before the test season was scored:** the specifications, the 14-day main horizon, the six outcome rows and the threshold rule (lowest threshold on a 0.5 mph grid with at most 10 false alarms per club-season on 2024–25). Added after the first scoring of 2026: the 2026 refit of the velocity term (a check on the association, not a forecast), the rule on the early sample, and the starter, reliever and outing-length splits. The splits are labeled exploratory.
 
-**Tests.** 30 in `tests/test_il_warning.py`, on hand-built fictional data with the arithmetic in comments. They cover:
-- the injury categories (including a hip labrum and "inflammation" not reading as a lat)
+**Tests.** 36 in `tests/test_il_warning.py`, on hand-built fictional data with the arithmetic in comments. They cover:
+- the injury categories (including a hip labrum and "inflammation" not reading as a lat, and the Nov. 24 wordings)
+- pitch-clock automatic balls and strikes not counted as pitches
 - placements against transfers and activations, and the retroactive date
 - outings, starters and teams; game means and within-game sums of squares
 - the two noise terms; the month curve
@@ -199,8 +202,10 @@
 - **The public sees only major-league games.** Bullpen sessions, catch play, minor-league rehab games and the trainer's notes are where a club would see a problem first. Pitchers optioned and hurt in the minors never get a label here.
 - **Lead time is measured to the placement, not to when the club knew.** The flag's median 3 days to the announcement is not 3 days of new information. The club may have known as soon as the outing ended.
 - **The 2024 baselines are weaker.** There's no 2023 pitch data in the study, so 2024 baselines start from the league mean and need three games.
-- **One test season.** 175 arm stints in 2026. The starter split rests on 24 flags.
+- **One test season.** 175 arm stints in 2026. The starter split rests on 24 flags from 7 stints.
+- **Many checks.** Six outcome rows, nine rules and five splits are read off one season; only the model comparisons and tracking terms carry a multiple-test correction.
 - **Nothing here is a diagnosis.** A flag is a reason to ask, and the answer comes from the medical staff.
+- **Found after the run (Nov. 24, 2026 code check):** the arm classifier missed a few wordings in MLB's own transaction text ("brachialis," "ulna," "AC joint" and the misspellings "elnow" and "unar"), so those placements were filed as "other." One is a 2026 test-season arm stint (Matt Waldron, May 15). The outing pitch counts also included pitch-clock automatic balls and strikes. Both are fixed in the code; the numbers above are from the saved run before the fix, and the next run with the pitch files recomputes them. What moves: the reclassified stints change the arm counts (249, 205, 175), the arm base rate and every arm row, rule and AUC, by about one stint in 175 in 2026; any in 2024–25 also shift the training labels and could move the threshold choice. The any-IL and lower-body or illness rows don't change. The pitch-count fix changes pitches thrown and the outing-length ratio, so it moves every model's AUC, calibration and top-% rule and the normal/short-outing split, but not the velocity bins or the 2.0 mph rule's flags, which use fastballs only. I expect small moves; the counts by season come with the rerun.
 
 ## Next steps
 - **Score 2027 with the rule and the threshold as they stand.** A second held-out season would tighten the 10.4% and test the starter split.

@@ -11,7 +11,7 @@
 
 - **The question:** How much is catcher framing worth, and did the ABS challenge system change it?
 - **The answer:** My public model matches Baseball Savant's framing runs (r 0.92-0.98). In 2026, the first ABS challenge season, calls got clearly more predictable from location. Framing's spread per pitch fell 23% on my model and 10% on Savant's, after an 8-10% drop the year before, so the ABS share can't be pinned down yet. Patrick Bailey went from +27.6 to +3.3.
-- **For a club:** Discount a catcher's pre-2026 framing by 10-25% when pricing him, and measure challenge decisions without counting challenge wins twice.
+- **For a club:** Discount a catcher's pre-2026 framing by 10-23% when pricing him, and measure challenge decisions without counting challenge wins twice.
 <!-- /portfolio:glance -->
 
 Dylan Fanelli. Data: every regular-season take in Statcast, 2024-26 (1.11 million), and Baseball Savant's catcher framing leaderboard for each season; both pulled Nov. 23, 2026.
@@ -31,7 +31,7 @@ Dylan Fanelli. Data: every regular-season take in Statcast, 2024-26 (1.11 millio
 - **The best framers fell hardest:** Patrick Bailey added 20-28 runs a year through 2025, and 3.3 in 2026 (Savant: 25.1, then 4.1). Part of any drop from an extreme season is regression.
 - **The skill still repeats within a season:** odd against even games, a full-season reliability of 0.73 in 2026.
 - **In money:** for a full-time catcher (about 7,000 takes), one standard deviation of framing on my numbers was worth about $8-9M a year through 2025, and about $6.2M in 2026.
-- **What that means for a club:** discount a catcher's pre-2026 framing by 10-25% when pricing him. Use the low end if you trust Savant's model, the high end if you trust mine. A second ABS season will narrow it.
+- **What that means for a club:** discount a catcher's pre-2026 framing by 10-23% when pricing him. Use the low end if you trust Savant's model, the high end if you trust mine. A second ABS season will narrow it.
 
 The spread of season totals fell further, from 5.6 runs to 3.6, about 36%. But that's partly playing time: 77 catchers shared the 2026 takes, against 71 in 2025, so each caught fewer. The per-pitch numbers above take that out.
 
@@ -121,7 +121,7 @@ At 10 runs a win and FanGraphs' $11.23M per win on the 2025-26 market (Ben Cleme
 
 ## What a club should do with this
 
-1. **Discount pre-2026 framing by 10-25%** when pricing a catcher, until a second ABS season shows whether 2026 is the new level.
+1. **Discount pre-2026 framing by 10-23%** when pricing a catcher, until a second ABS season shows whether 2026 is the new level.
 2. **Don't count challenge wins twice.**
    - If Statcast logs the call that stood after a challenge, a strike a catcher wins on challenge is already in his framing runs here. I believe it does, from the near-disappearance of deep-zone balls, but I haven't confirmed it against Savant's ABS challenge leaderboard.
    - The new skill worth measuring is the decision itself: which pitches and counts a catcher challenges, and what a lost challenge costs his club later in the game.

@@ -169,7 +169,7 @@
 
 **Preference statement:**
 - **The ranking:** I prefer Morejón to Bryan Abreu (#2, Tier B) for that job. He projects for more wins (2.3 vs. 1.6 at the same leverage) and has the higher floor (1.3 vs. 0.7 at the low end of the rate interval). Abreu misses bats as well; his 2026 walk rate is the question.
-- **The condition:** a contract at or under four years and $60M. The Padres made him a qualifying offer on Nov. 2 (AP), and the pick and pool cost takes the memo's price from $72M to about $60M (the bullpen memo's Nov. 14 update). The $72M is the market's expected price for his projection, not a surplus.
+- **The condition:** a contract at or under four years and $64M. The Padres made him a qualifying offer on Nov. 2 (AP), which he declined on Nov. 17, and the pick and pool cost takes the memo's price from $72M to about $64M (the bullpen memo's Nov. 24 update; it read $60M from Nov. 14 to Nov. 23, on a pick value that ran high). The $72M is the market's expected price for his projection, not a surplus.
   - **Added Nov. 14:** the pitch grades here are built from one model of whiffs on swings. On a season it never saw, that model cut error 6.4% against a regressed baseline (see the [Edge Board](2026-edge-board.md)). Read each grade as a half-grade band, not a point. **Added Nov. 15:** a refit of that model moves a grade too. Across ten refits in different row orders, the memo's stuff and 2027 grades for his four pitches stayed within 5 points of the printed ones (ranges in [`outputs/edge-grade-noise-2026.json`](outputs/edge-grade-noise-2026.json)).
 - **The alternative objective:** if the club wants the most wins per dollar with no commitment past 2028, Abreu at $25M or less ranks first instead (the memo's statement).
 - **What moves him below Abreu:**
@@ -195,7 +195,7 @@ The [bullpen memo](2026-bullpen-acquisition-memo.md) graded each pitch on whiffs
 | Sinker | 70 / 70 | 65 / 60 | The memo reports his 58% ground-ball rate but doesn't grade on it. Here velocity and ground balls count |
 | Changeup | 70 / 70 | 75 / 75 | This report docks it for being thrown to left-handers 2% of the time |
 | Four-seamer | 70 / 70 | 75 / 75 | Close. The memo called it "a carry four-seamer," but 15.2 in of IVB is about league average, so this report docks the shape and credits the results |
-| Slider | 50 / 55 | 50 / 50 | Same present grade. The memo's 2027 grade is the engine's projection, reset to the saved run on Nov. 15 (it was 55). This report keeps 55 on the 2024–25 record and the stuff grade |
+| Slider | 50 / 55 | 45 / 50 | Five points apart now: the memo's present grade is 45 since the Nov. 23 rerun (a 31.3% regressed whiff rate, 40th percentile of slider-group pitches), and this report grades the stuff and the 2024–25 record too. The memo's 2027 grade is the engine's projection, reset to the saved run on Nov. 15 (it was 55). This report keeps 55 on the 2024–25 record and the stuff grade |
 | Control | 60 / 60 | 60 / 60 | Same measure (unintentional walk rate) |
 | Command | NG | Not graded | Neither has a look |
 | OFP / role | 60, B1 | 60, B1 | Same conclusion |
