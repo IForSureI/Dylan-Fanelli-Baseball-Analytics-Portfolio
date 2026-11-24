@@ -75,7 +75,7 @@ def load_season(season: int, columns: list[str] | None = None) -> pd.DataFrame:
 
     parts = seq_parts(season)
     if not parts:
-        raise FileNotFoundError(f"No sequence data for {season} in data/seq/. Run `bb seq {season}` on the Mac.")
+        raise FileNotFoundError(f"No sequence data for {season} in data/seq/. Run `bb seq {season}` first; it builds data/seq/ from the league files.")
     columns = columns or COLUMNS
     have = set(pq.ParquetFile(parts[0]).schema_arrow.names)
     cols = [c for c in columns if c in have]
