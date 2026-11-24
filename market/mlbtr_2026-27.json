@@ -3,7 +3,7 @@
  "source": "https://www.mlbtraderumors.com/2026/11/2026-27-top-50-free-agents-with-predictions.html",
  "published": "2026-11-02",
  "war_source": "Baseball-Reference WAR files (war_daily_bat.txt, war_daily_pitch.txt)",
- "pulled": "2026-11-23",
+ "pulled": "2026-11-24",
  "players": [
   {
    "rank": 1,
@@ -26,7 +26,7 @@
    "name": "Trevor Rogers",
    "pos": "LHP",
    "mlbtr": "Five years, $115MM",
-   "signed": "",
+   "signed": "Signed with Cubs for five years, $120MM",
    "bref_id": "rogertr01",
    "age": 28.0,
    "war": [
@@ -35,7 +35,7 @@
     0.59
    ],
    "reliever": false,
-   "first_seen": null
+   "first_seen": "2026-11-24"
   },
   {
    "rank": 3,
