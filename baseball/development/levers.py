@@ -100,7 +100,7 @@ def load(seasons: list[int]) -> pd.DataFrame:
     for s in seasons:
         parts = seq_parts(s)
         if not parts:
-            raise FileNotFoundError(f"No sequence data for {s} in data/seq/. The monthly update writes it on the Mac.")
+            raise FileNotFoundError(f"No sequence data for {s} in data/seq/. Run `bb seq {s}` first; it builds data/seq/ from the league files.")
         frames += [pd.read_parquet(p, columns=COLUMNS) for p in parts]
     p = pd.concat(frames, ignore_index=True)
     p["pitcher"] = p["pitcher"].astype("int64")
