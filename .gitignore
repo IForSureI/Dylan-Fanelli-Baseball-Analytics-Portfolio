@@ -26,3 +26,14 @@ reports/bayes/out/
 
 # Savant percentile rankings, pulled for the offseason packet (small, committed: market/savant/manifest.json has the URLs and dates)
 !market/savant/*.csv
+
+# Secrets, node and R artifacts, video
+.env
+.env.*
+node_modules/
+.Rhistory
+.RData
+.Rproj.user/
+*_cache/
+*.mp4
+*.mov

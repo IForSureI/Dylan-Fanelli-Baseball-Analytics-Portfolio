@@ -2,6 +2,34 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-24: Five sweeps through the repo, catcher photos, the $64M walk-away
+**Fixed: numbers a reader sees**
+- **Morejón's walk-away is $64M, not $60M.** My house draft-pick values (`acquisition.PICK_VALUE_OWN`) were read from a column of my draft table that floors each season at zero, so they ran about 1.4 times too high. The unfloored, equally weighted column puts pick 55 at $6.70M after its slot; with $0.5M of pool the QO costs $7.2M, not $10.6M, and the walk-away with the QO is $16.0M a year. The odds of landing him at that price are 33% on the memo's market line (7% on the board's). Memo (dated Nov. 24 update; older updates kept as history), one-page, scouting report and its PDF, packet, portfolio, README, at-a-glance image, market board and prediction-log note all changed. `bullpen-2026.json` got the new QO cost and a $16.0M landing row; nothing else in it was rerun.
+- **Contrast and focus:** percentile bubbles and club chips now darken until white text reaches 4.5:1; sorting, row toggles, the Edge Board's pitcher panel (Escape closes it) and "Show more" keep keyboard focus. Print styles on the Edge Board and postseason page.
+- **Names:** Blas Castaño and Elmer Rodríguez had lost their accents on the Edge Board.
+- **Text that didn't match its source:** framing discount 10-23% (not 25%), the familiarity share (42%, 0.79 / 1.87), the roster engine's 23.3% (309 of 1,327), the Varland range (54% to 69%), the Morejón slider row, the Torres injury link (a dead SI link replaced by MLB.com), bat-tracking start years in the data dictionary and glossary, the GM tree's research cutoff (Oct. 13, with five later hires named).
+- **The Rogers signing** (Cubs, reported Nov. 23, after my calls) is on the market board; call 3 resolves no once it's announced. Call 8's wOBA is .323 / .270 on Savant, not .328 / .277; my own wOBA sum over the pitch files runs a few points above Savant's, so a basis that quotes wOBA should cite Savant.
+
+**Fixed: code (saved outputs need the pitch files to rerun; each report says so)**
+- **IL early warning:** the arm classifier missed "ulna," "brachialis," "AC joint" and MLB's own misspellings "elnow" and "unar"; pitch counts included pitch-clock automatic balls and strikes. Same pitch-count fix in the exposure-aware hook.
+- **Reliever innings:** an inning-ending `truncated_pa` is now an out.
+- **Bunts:** swing and bat-tracking leaders drop bunts and sacrifice bunts (Python and SQL).
+- **Ages:** swing decisions use the June 30 baseball age.
+- **TrackMan PDF parser** kept the sign on only part of a negative length; **the tracking loader** flipped horizontal break in the wrong frame. Both fixed with tests.
+- **CLI:** a missing file or bad argument now exits with a message, not a traceback; error messages no longer say "on the Mac"; Statcast pulls start Feb. 15 (spring games).
+- **CI:** installs from the lockfile and runs the browser tests (Node 22, Playwright Chromium); a browser test now fails instead of skipping when it breaks for any reason but a missing browser. Dependencies match the imports (seaborn out; numpy, scipy, requests, joblib, pillow in; video tools in their own group). `.gitignore` covers env files, R files and video.
+
+**Built**
+- **Headshots for all 104 catchers** in the packet's Catchers view.
+- **Photo credits reworded:** the photos are of me, taken by family and teammates, used with their permission.
+
+**Reviewed**
+- **IL early warning and development plan,** separate review passes. Both now marked reviewed. What changed: the IL report no longer says "not early" flatly (2024-25 did show an early signal, about twice the base rate, that 2026 didn't confirm), the specificity check is called mixed, a 7-day release-height lead is named, the starter split is read as 7 stints, and the refit compares like with like (1.28, not 1.29). The development plan now reads velocity as late and season-to-date (by segment he was near target from mid-May), shows the slider drop fading after July, says most of the whiff target was expected regression, and says the usage guard's floor held back a May warning.
+
+**Learned**
+- **Read the column definition before trusting a value table.** One floored column moved a recommendation by $4M.
+- **A season-to-date verdict lags.** For anything that should move early, read a recent window too.
+
 ## 2026-11-24: Packet fixes: plate appearances, role filters, the swing-lab timeline
 **Fixed**
 - **Plate appearances counted a truncated PA** (`baseball/evaluation/bat_power.py`). Statcast logs an at-bat cut short when the inning ends on the bases as `truncated_pa`; MLB doesn't count it as a plate appearance, and my season tables did. At-bats, ISO and every rate on contact were already right. The swing-lab PA column now matches MLB's counts: Arozarena 648, 709 and 670 (was 650, 712, 671), Chisholm 532 in 2026 (534), Lowe 553 in 2025 (556), so Lowe's card now reads 656 against 553 and 425. Arozarena's 2025 strikeout rate is 26.9% (was 26.8%) and 2024's 26.1% (26.0%), in the report, the README and the packet.
