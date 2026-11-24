@@ -73,6 +73,7 @@ header.mast{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgrou
 .band{background:var(--band);border-top:1px solid var(--bandrule);border-bottom:1px solid var(--bandrule)}
 nav.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 nav.tabs::-webkit-scrollbar{display:none}
+@media (max-width:520px){nav.tabs{-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent);padding-right:24px}}
 nav.tabs a{color:var(--ink);text-decoration:none;font-weight:500;font-size:.92rem;padding:10px 14px;white-space:nowrap;flex:none}
 nav.tabs a:hover{color:var(--teal-ink);text-decoration:underline}
 nav.tabs a[aria-current="page"]{background:var(--teal);color:#fff;text-decoration:none}
@@ -391,7 +392,14 @@ const sgn = (v, d = 1) => v == null ? "" : (v > 0 ? "+" : "") + v.toFixed(d);
 const lum = c => { const v = c.startsWith("#") ? [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16)) : c.match(/\d+/g).slice(0, 3).map(Number);
   const [r, g, b] = v.map(x => { x /= 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
 const onFill = c => { const l = lum(c); return 1.05 / (l + 0.05) >= (l + 0.05) / (lum(C.ink) + 0.05) ? "#fff" : C.ink; };
-const club = t => { if (!t || !D.teams[t]) return ""; const [a, b] = D.teams[t]; return `<span class="club" style="background:${a};border-color:${b};color:${onFill(a)}">${esc(t)}</span>`; };
+/* a fill dark enough that small white text on it reaches 4.5:1 (WCAG AA); fills that already pass are unchanged */
+const readable = c => { let v = c.startsWith("#") ? [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16)) : c.match(/\d+/g).slice(0, 3).map(Number);
+  const css = () => `rgb(${v.map(Math.round).join(",")})`;
+  if (onFill(css()) !== "#fff" && (lum(css()) + 0.05) / (lum(C.ink) + 0.05) >= 4.5) return css();
+  for (let k = 0; k < 40 && 1.05 / (lum(css()) + 0.05) < 4.5; k++) v = v.map(x => x * 0.97);
+  return css(); };
+const fillText = c => { const f = readable(c); return `background:${f};color:${onFill(f)}`; };
+const club = t => { if (!t || !D.teams[t]) return ""; const [a, b] = D.teams[t]; return `<span class="club" style="${fillText(a)};border-color:${b}">${esc(t)}</span>`; };
 const ord = n => n + (n % 100 >= 11 && n % 100 <= 13 ? "th" : ["th", "st", "nd", "rd"][n % 10] || "th");
 const head = (p, cls = "") => {
   const t = clubOf(p), ring = t && D.teams[t] ? D.teams[t][0] : C.rule;
@@ -498,6 +506,7 @@ function statusOf(b) {
   return `<span class="pill open">Unsigned</span>`;
 }
 const $ = (root, id) => root.querySelector("#" + id);
+const NA = `<span class="muted" aria-label="none">\u2014</span>`;   /* no call: a dash, as in the other tables */
 function renderRows(root = document) {
   const rows = boardRows();
   const vals = D.board.flatMap(b => [b.mlbtr_aav, b.my_aav, b.actual_aav]).filter(v => v != null);
@@ -518,10 +527,10 @@ function renderRows(root = document) {
       <td class="l"><span class="who">${head(b)}<span><span class="nm">${esc(b.name)}</span><span class="meta">${club(clubOf(b))}<span>${esc(role)}${age ? ", " + age : ""}${b.note ? ", " + esc(b.note) : ""}</span></span><span class="line num"${hvM("b", b.rank)}>${pairText(b)}</span></span></span></td>
       <td class="l hm call">${esc(b.mlbtr)}</td>
       <td class="hm num" style="color:${C.blue}"${hvM("b", b.rank)}>${aav(b.mlbtr_aav)}</td>
-      <td class="hm num" style="color:${C.red};font-weight:700"${hvM("bm", b.rank)}>${money(b.my_aav)}</td>
-      <td class="hm num gap ${g == null ? "" : g > 0.05 ? "up" : g < -0.05 ? "dn" : ""}">${g == null ? "" : Math.abs(g) < 0.05 ? "Even" : sgn(g, 1)}</td>
+      <td class="hm num" style="color:${C.red};font-weight:700"${hvM("bm", b.rank)}>${b.my_aav == null ? NA : money(b.my_aav)}</td>
+      <td class="hm num gap ${g == null ? "" : g > 0.05 ? "up" : g < -0.05 ? "dn" : ""}">${g == null ? NA : Math.abs(g) < 0.05 ? "Even" : sgn(g, 1)}</td>
       <td class="hm l">${strip(b, hi)}</td>
-      <td>${b.p_over != null ? `<span class="bub solo" style="background:${pcol(b.p_over * 100)};color:${onFill(pcol(b.p_over * 100))}"${hvA("bp", b.rank)} aria-label="Chance above MLBTR, ${Math.round(b.p_over * 100)}%">${Math.round(b.p_over * 100)}</span>` : ""}</td>
+      <td>${b.p_over != null ? `<span class="bub solo" style="${fillText(pcol(b.p_over * 100))}"${hvA("bp", b.rank)} aria-label="Chance above MLBTR, ${Math.round(b.p_over * 100)}%">${Math.round(b.p_over * 100)}</span>` : NA}</td>
       <td class="hm num"${b.actual_aav != null ? hvM("bs", b.rank) : ""}>${aav(b.actual_aav)}</td>
       <td style="white-space:normal"><span${hvA("bs", b.rank)}>${statusOf(b)}</span></td>
     </tr>${open ? `<tr class="det"><td colspan="${COLS.length}">${detail(b)}</td></tr>` : ""}`;
@@ -545,12 +554,14 @@ function bindBoard() {
     state[s.dataset.k] = v; s.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x.dataset.v === v)); renderRows();
   }));
   document.getElementById("q").addEventListener("input", e => { state.q = e.target.value; renderRows(); });
-  const sortBy = k => { if (state.sort === k) state.dir = state.dir === "asc" ? "desc" : "asc"; else { state.sort = k; state.dir = k === "rank" || k === "name" ? "asc" : "desc"; } renderRows(); };
+  const sortBy = k => { if (state.sort === k) state.dir = state.dir === "asc" ? "desc" : "asc"; else { state.sort = k; state.dir = k === "rank" || k === "name" ? "asc" : "desc"; } renderRows();
+    document.querySelector(`#bh th[data-sort="${k}"]`)?.focus(); };
   const bh = document.getElementById("bh");
   bh.addEventListener("click", e => { const t = e.target.closest("th[data-sort]"); if (t) sortBy(t.dataset.sort); });
   bh.addEventListener("keydown", e => { const t = e.target.closest("th[data-sort]"); if (t && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); sortBy(t.dataset.sort); } });
   const rows = document.getElementById("rows");
-  const toggle = el => { const r = +el.dataset.rank; state.open = state.open === r ? null : r; renderRows(); };
+  const toggle = el => { const r = +el.dataset.rank, kb = document.activeElement === el; state.open = state.open === r ? null : r; renderRows();
+    if (kb) document.querySelector(`#rows tr.r[data-rank="${r}"]`)?.focus(); };
   /* a tap on a number inside a row opens its card; a tap anywhere else on the row (or any click) opens the detail */
   rows.addEventListener("click", e => { if (e.target.closest("tr.det")) return; const r = e.target.closest("tr.r"); if (!r || (hvTouch && e.target.closest("[data-hv]") !== r)) return; toggle(r); });
   rows.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { const r = e.target.closest("tr.r"); if (r) { e.preventDefault(); toggle(r); } } });
@@ -570,7 +581,7 @@ function pctlBlock(title, rows, ends = ["Poor", "Average", "Great"], o = {}) {
   const yr = o.prev;
   return `<div class="pctl${yr ? " yr" : ""}"><p class="eyebrow">${title}</p>${o.sub ? `<p class="src">${o.sub}</p>` : ""}
     <div class="hdr" aria-hidden="true"><span></span><span><span style="color:${C.blue}">${ends[0]}</span><span class="muted">${ends[1]}</span><span style="color:${C.red}">${ends[2]}</span></span><span></span>${yr ? `<span class="prev">${yr}</span>` : ""}</div>
-    ${rows.map(r => `<div class="pr"${r.hv || ""}><span class="lab">${r.label}</span><span class="trk" role="img" aria-label="${esc(r.label)}: ${ord(r.p)} percentile${r.val ? ", " + esc(String(r.val).replace(/<[^>]+>/g, "")) : ""}${yr && r.prev != null ? ", " + ord(r.prev) + " in " + yr : ""}"><span class="fill" style="width:${r.p}%;background:${pcol(r.p)};opacity:.85"></span><span class="bub" style="left:${r.p}%;background:${pcol(r.p)};color:${onFill(pcol(r.p))}" aria-hidden="true">${r.p}</span></span><span class="val">${r.val}</span>${yr ? `<span class="prev" aria-hidden="true">${r.prev ?? "\u2014"}</span>` : ""}</div>`).join("")}
+    ${rows.map(r => `<div class="pr"${r.hv || ""}><span class="lab">${r.label}</span><span class="trk" role="img" aria-label="${esc(r.label)}: ${ord(r.p)} percentile${r.val ? ", " + esc(String(r.val).replace(/<[^>]+>/g, "")) : ""}${yr && r.prev != null ? ", " + ord(r.prev) + " in " + yr : ""}"><span class="fill" style="width:${r.p}%;background:${pcol(r.p)};opacity:.85"></span><span class="bub" style="left:${r.p}%;${fillText(pcol(r.p))}" aria-hidden="true">${r.p}</span></span><span class="val">${r.val}</span>${yr ? `<span class="prev" aria-hidden="true">${r.prev ?? "\u2014"}</span>` : ""}</div>`).join("")}
   </div>`;
 }
 /* Baseball Savant's own percentile card for one player (market/savant/, pulled by baseball.ingest.savant_percentiles) */
@@ -612,7 +623,7 @@ function card(rank, verdict, bullets, links) {
 function whatIdDo() {
   const sz = P(4), gz = P(18), st = P(40);
   return `<div class="panel summary"><p class="eyebrow">What I'd do</p>
-    <p class="do">I'd bid on Adri\u00e1n Morej\u00f3n up to $60M over four years and stop there, with the elbow medical gating any multi-year deal. If his price runs past that, Bryan Abreu is the likely signing, and I'd walk away above $25M over two years; Raisel Iglesias on one year is the target the board doesn't push up. I wouldn't pay Randy Arozarena for his 2026: the ISO rise came from fewer strikeouts, and those won't add power. I'd price Tyler Stephenson's framing in and pay him less than the board's ${money(st.my_aav)} a year. On Seiya Suzuki, whose power projects down too, and Kevin Gausman I have market forecasts only: ${money(sz.my_aav)} and ${money(gz.my_aav)} a year against MLBTR's ${aav(sz.mlbtr_aav)} and ${aav(gz.mlbtr_aav)}, and I haven't priced either for a buyer. On Jazz Chisholm Jr. I'd stop at four years and $87M, about $21.75M a year, while the board expects ${money(P(20).my_aav)}, because his 2026 power drop projects to stay. Brandon Lowe's power held steady, but the board's ${money(P(11).my_aav)} leans on a platform year more than twice his WAR in either season before, and I haven't priced him for a buyer either.</p></div>`;
+    <p class="do">I'd bid on Adri\u00e1n Morej\u00f3n up to $64M over four years and stop there, with the elbow medical gating any multi-year deal. If his price runs past that, Bryan Abreu is the likely signing, and I'd walk away above $25M over two years; Raisel Iglesias on one year is the target the board doesn't push up. I wouldn't pay Randy Arozarena for his 2026: the ISO rise came from fewer strikeouts, and those won't add power. I'd price Tyler Stephenson's framing in and pay him less than the board's ${money(st.my_aav)} a year. On Seiya Suzuki, whose power projects down too, and Kevin Gausman I have market forecasts only: ${money(sz.my_aav)} and ${money(gz.my_aav)} a year against MLBTR's ${aav(sz.mlbtr_aav)} and ${aav(gz.mlbtr_aav)}, and I haven't priced either for a buyer. On Jazz Chisholm Jr. I'd stop at four years and $87M, about $21.75M a year, while the board expects ${money(P(20).my_aav)}, because his 2026 power drop projects to stay. Brandon Lowe's power held steady, but the board's ${money(P(11).my_aav)} leans on a platform year more than twice his WAR in either season before, and I haven't priced him for a buyer either.</p></div>`;
 }
 const P = r => D.board.find(x => x.rank === r) || {};
 const lab = r => Object.values(D.labs).find(L => L.mlbam === P(r).mlbam);
@@ -627,9 +638,9 @@ function viewPlayers() {
     <h2>Where my forecast and my price part ways</h2>
     <p class="answer">The board forecasts what the market will pay. A club still has to decide what it should pay. Where a card gives a buyer's verdict, a report sits behind it; where it doesn't, the card says it's a market forecast only. The Morej\u00f3n and Abreu cards share one problem: if the board is right about relievers, both of my bullpen targets price out at my walk-aways, and Raisel Iglesias on one year is the target the board doesn't push up.</p></div></div>
   <div class="cards">
-  ${card(8, "Bid to $60M over four years and stop", [
+  ${card(8, "Bid to $64M over four years and stop", [
     "The board expects the market to pay about $24.8M a year, well above MLBTR's $16.0M, because relievers beat their predictions most last winter. That reliever term rests on 14 relievers in one winter.",
-    "My bullpen memo prices him for a buyer: four years and $60M, with the qualifying-offer pick already taken off. Its market line, fit on 21 relief signings, gives that bid about a 26% chance; the board's model would make it about 5%.",
+    "My bullpen memo prices him for a buyer: four years and $64M, with the qualifying-offer pick already taken off. Its market line, fit on 21 relief signings, gives that bid about a 33% chance; the board's model would make it about 7%.",
     "If an early reliever deal clears $20M a year, I'd read it as evidence for the board, and raise the walk-away or move to Iglesias on one year.",
     "Age: 27 here is Baseball-Reference's season age; the memo's 28 is his age next season. The elbow medical gates any multi-year deal."],
     `<a href="${REPO}2026-bullpen-acquisition-memo.md" target="_blank" rel="noopener">Bullpen memo</a>, <a href="${REPO}2026-morejon-pro-scouting-report.md" target="_blank" rel="noopener">scouting report</a>`)}
@@ -660,7 +671,7 @@ function viewPlayers() {
     "I give him a 20% chance to sign above MLBTR's average salary. This is what I expect the market to pay; I haven't priced him for a buyer."],
     `<a href="${REPO}2027-market-board.md" target="_blank" rel="noopener">Board report</a>`)}
   ${card(32, "The likely signing for a club that can't pay Morej\u00f3n's price", [
-    "No qualifying offer, so no pick lost. My bullpen memo names him the most likely signing once Morej\u00f3n's price runs past $60M.",
+    "No qualifying offer, so no pick lost. My bullpen memo names him the most likely signing once Morej\u00f3n's price runs past $64M.",
     "But the board puts him at $15.4M a year. My memo's walk-away (above $25M over two years) would land him about 24% of the time on the board's model.",
     "The board forecasts $15.4M a year against MLBTR's $11.0M: relievers again.",
     "Prediction-log call 10: walk rate 11.0% or lower in 2027 (2026: 15.3%). I give it 40%."],
@@ -861,7 +872,7 @@ function renderLB(root = document) {
   $(root, "csum").textContent = `${rows.length} catchers with 1,500+ takes`;
   const bar = v => { const w = Math.abs(v) / max * 50; return `<svg viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true"><line x1="50" x2="50" y1="0" y2="14" stroke="${C.soft}" stroke-width=".6"/><rect x="${v < 0 ? 50 - w : 50}" y="2" width="${w}" height="10" fill="${v < 0 ? C.blue : C.red}"/></svg>`; };
   $(root, "lb").innerHTML = `<table class="fr"><caption class="ponly" style="text-align:left;font-weight:700;padding-bottom:4px">${s} framing leaderboard</caption><thead><tr><th scope="col">Rk</th><th scope="col" class="l">Catcher</th><th scope="col" class="hm">Takes</th><th scope="col" class="l bar">Runs lost / gained</th><th scope="col">Runs</th><th scope="col" class="hm">Savant</th><th scope="col" class="hm">Pctl</th></tr></thead><tbody>` +
-    rows.map((c, i) => { const v = c.seasons[s], p = rankPct(v.adj, pool); return `<tr${hvA("c", c.id, s)}><td class="num muted">${i + 1}</td><td class="l"><span class="who">${head(c)}<span><span class="nm" style="font-weight:600">${esc(c.name)}</span><span class="meta">${club(c.team)}</span></span></span></td><td class="hm">${v.takes.toLocaleString()}</td><td class="bar">${bar(v.adj)}</td><td style="font-weight:700;color:${v.adj < 0 ? C.blue : C.red}">${sgn(v.adj)}</td><td class="hm muted">${v.savant == null ? "\u2014" : sgn(v.savant)}</td><td class="hm"><span class="bub solo" style="background:${pcol(p)};color:${onFill(pcol(p))}">${p}</span></td></tr>`; }).join("") + `</tbody></table>`;
+    rows.map((c, i) => { const v = c.seasons[s], p = rankPct(v.adj, pool); return `<tr${hvA("c", c.id, s)}><td class="num muted">${i + 1}</td><td class="l"><span class="who">${head(c)}<span><span class="nm" style="font-weight:600">${esc(c.name)}</span><span class="meta">${club(c.team)}</span></span></span></td><td class="hm">${v.takes.toLocaleString()}</td><td class="bar">${bar(v.adj)}</td><td style="font-weight:700;color:${v.adj < 0 ? C.blue : C.red}">${sgn(v.adj)}</td><td class="hm muted">${v.savant == null ? "\u2014" : sgn(v.savant)}</td><td class="hm"><span class="bub solo" style="${fillText(pcol(p))}">${p}</span></td></tr>`; }).join("") + `</tbody></table>`;
   hvGone();
 }
 function renderSpread(root = document) {
