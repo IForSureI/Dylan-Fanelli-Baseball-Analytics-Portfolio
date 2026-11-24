@@ -11,7 +11,7 @@ Steps, for one clip:
    and keep the person nearest his last box. Keypoints (17, COCO order) are returned in full-frame pixels with a
    confidence each.
 
-Needs the optional video tools: `uv pip install ultralytics opencv-python-headless` (the YOLO weights download on
+Needs the optional video tools: `uv sync --group video` (the YOLO weights download on
 first use). Keypoints are 2-D estimates from a camera behind the pitcher: good on head, shoulders, hips and knees
 at a batter 150+ pixels tall, noisier on wrists and ankles, and blind to depth (toward or away from the camera).
 """
