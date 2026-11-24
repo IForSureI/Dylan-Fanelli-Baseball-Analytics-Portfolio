@@ -10,7 +10,7 @@
 **At a glance**
 
 - **The question:** Is Randy Arozarena's 2026 power real, and did his swing change?
-- **The answer:** Not as power. The ISO rise is fewer strikeouts (26.8% to 21.6%) with flat damage per contact at-bat (.272 both years), while barrels, hard-hit exit velocity and bat speed fell. The league model chosen on training data puts his 2027 ISO at .169-.180. Frame by frame on MLB's clips, his home-run swing shows no timing change the camera could detect (about 80 ms).
+- **The answer:** Not as power. The ISO rise is fewer strikeouts (26.9% to 21.6%) with flat damage per contact at-bat (.272 both years), while barrels, hard-hit exit velocity and bat speed fell. The league model chosen on training data puts his 2027 ISO at .169-.180. Frame by frame on MLB's clips, his home-run swing shows no timing change the camera could detect (about 80 ms).
 - **For a club:** Video used the way a front office should: to rule a mechanical change in or out, with the camera's limits stated.
 <!-- /portfolio:glance -->
 
@@ -19,8 +19,8 @@ Dylan Fanelli. Data: MLB's highlight clips of all 73 of his 2024-26 home runs (M
 **The question:** Arozarena posted a 151 wRC+ in 2026 and is one of this winter's top free agents. My [prediction log](2027-prediction-log.md) says his 2027 wRC+ will be 130 or lower (call 6, 0.70), and my [market board](2027-market-board.md) has him at $33.0M a year against MLB Trade Rumors' $25.0M. Did something change that a club should pay for?
 
 **The answer: the ISO rise is fewer strikeouts, not harder contact.**
-- **Damage per contact at-bat was flat.** Extra bases per at-bat that didn't end in a strikeout were .272 in both 2025 and 2026 (115 in 422, then 116 in 427). His strikeout rate fell from 26.8% to 21.6%, so more at-bats reached contact, and ISO, which divides by all at-bats, rose.
-- **The at-bats fell with playing time:** 712 plate appearances in 2025, 671 in 2026.
+- **Damage per contact at-bat was flat.** Extra bases per at-bat that didn't end in a strikeout were .272 in both 2025 and 2026 (115 in 422, then 116 in 427). His strikeout rate fell from 26.9% to 21.6%, so more at-bats reached contact, and ISO, which divides by all at-bats, rose.
+- **The at-bats fell with playing time:** 709 plate appearances in 2025, 670 in 2026.
 - **The inputs that predict power went down:** barrel rate 11.5% to 8.1%, and 90th-percentile exit velocity 106.7 to 104.4 mph. On competitive swings, bat speed fell from 72.3 to 70.9 mph and swing length from 7.4 to 7.2 ft.
 - **His home runs were hit softer and higher:** median exit velocity 102.7 mph in 2026 against 104.9 in 2024, and median launch angle 30° against 26.5°.
 - **Projection:** the league model chosen on training data alone puts his 2027 ISO at **.169 to .180**, depending on which seasons it's fit on. That's about a 19-27% chance he matches .203.
@@ -59,9 +59,9 @@ Before reading one hitter's bat speed, I checked what bat speed is worth for any
 | | 2024 | 2025 | 2026 |
 |---|---|---|---|
 | ISO | .169 | .188 | .203 |
-| Plate appearances, at-bats | 650, 549 | 712, 613 | 671, 572 |
+| Plate appearances, at-bats | 648, 549 | 709, 613 | 670, 572 |
 | Extra bases | 93 | 115 | 116 |
-| Strikeout rate | 26.0% | 26.8% | 21.6% |
+| Strikeout rate | 26.1% | 26.9% | 21.6% |
 | Extra bases per at-bat without a strikeout | .245 | .272 | .272 |
 | Barrel rate (per batted ball) | 8.4% | 11.5% | 8.1% |
 | 90th-percentile exit velocity | 105.1 | 106.7 | 104.4 |
