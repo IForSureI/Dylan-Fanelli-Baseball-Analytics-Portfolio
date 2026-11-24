@@ -215,7 +215,12 @@ tr.det td{background:#fff!important;padding:0 8px 10px;white-space:normal;text-a
 .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .btn{font:inherit;font-weight:700;font-size:.76rem;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--teal);background:var(--teal);color:#fff;border-radius:var(--r);padding:7px 14px;cursor:pointer}
 input[type=range]{flex:1;min-width:140px;accent-color:var(--red)}
-.tick-labels{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted)}
+.scrubwrap{flex:1;min-width:140px;display:grid;gap:2px}
+.scrubwrap input[type=range]{width:100%;margin:0}
+.tick-labels{position:relative;height:1.1em;font-size:.72rem;color:var(--muted)}
+.tick-labels span{position:absolute;top:0;white-space:nowrap}
+.tick-labels .at{transform:translateX(-50%)}
+.tick-labels .at::before{content:"";position:absolute;left:50%;top:-5px;width:1px;height:4px;background:var(--muted)}
 @media (max-width:700px){
   .meas td,.meas th{padding-inline:3px;font-size:.72rem}
   .meas td:first-child,.meas th:first-child{white-space:normal;min-width:0}
@@ -417,8 +422,9 @@ const COLS = [  // key, header, sort value, hide on phones
   ["strip", "MLBTR vs mine", null, true], ["p", "Chance above MLBTR", b => b.p_over, false], ["signed", "Signed AAV", b => b.actual_aav, true], ["status", "Status", null, false]];
 function boardRows() {
   let rows = D.board.slice();
-  if (state.group !== "all") rows = rows.filter(b => b.call === "called" && groupOf(b) === state.group);
-  if (state.status === "open") rows = rows.filter(b => b.call === "called" && b.actual_aav == null);
+  /* a role needs an MLB record, except for a position player: a pitcher from Japan has no starter/reliever label yet */
+  if (state.group !== "all") rows = rows.filter(b => (b.mlbam || groupOf(b) === "bat") && groupOf(b) === state.group);
+  if (state.status === "open") rows = rows.filter(b => b.actual_aav == null && !b.signed);
   if (state.status === "signed") rows = rows.filter(b => b.actual_aav != null || b.signed);
   if (state.status === "called") rows = rows.filter(b => b.call === "called");
   if (state.q) rows = rows.filter(b => fold(b.name).includes(fold(state.q)));
@@ -628,7 +634,7 @@ function viewPlayers() {
     "Age: 27 here is Baseball-Reference's season age; the memo's 28 is his age next season. The elbow medical gates any multi-year deal."],
     `<a href="${REPO}2026-bullpen-acquisition-memo.md" target="_blank" rel="noopener">Bullpen memo</a>, <a href="${REPO}2026-morejon-pro-scouting-report.md" target="_blank" rel="noopener">scouting report</a>`)}
   ${card(5, "Don't pay for 2026", [
-    `The ISO rise came from fewer strikeouts: extra bases per at-bat without a strikeout were .272 in both 2025 and 2026, while his strikeout rate fell from 26.8% to 21.6% and barrels, hard-hit exit velocity and bat speed fell.`,
+    `The ISO rise came from fewer strikeouts: extra bases per at-bat without a strikeout were .272 in both 2025 and 2026, while his strikeout rate fell from 26.9% to 21.6% and barrels, hard-hit exit velocity and bat speed fell.`,
     `The league model chosen on training data puts his 2027 ISO at <b>${iso(a.iso_range[0])}-${iso(a.iso_range[1])}</b>. Frame by frame, his home-run swing shows no timing change the camera could detect.`,
     "Call 6 in my prediction log stands: 130 wRC+ or lower in 2027, and I give it 70%. The board's $33.0M is what the market may pay; a buyer's walk-away belongs below it. Fewer strikeouts are worth paying for, but they won't add power."],
     `<a href="#swing">Swing lab</a>, <a href="${REPO}2026-arozarena-swing-breakdown.md" target="_blank" rel="noopener">report</a>`)}
@@ -721,9 +727,9 @@ function viewSwing() {
     <div class="stage">
       <svg id="skel" viewBox="0 0 400 420" role="img" aria-label="Median skeleton of his home-run swings, drawn from measured joints"${hvA("lk", state.lab)}></svg>
       <div class="controls"><button class="btn" id="play" type="button">Play swing</button>
-        <input type="range" id="scrub" min="0" max="${L.traj.pre + L.traj.post}" step="1" aria-label="Frame">
+        <div class="scrubwrap"><input type="range" id="scrub" min="0" max="${L.traj.pre + L.traj.post}" step="1" aria-label="Time from contact">
+          <div class="tick-labels" aria-hidden="true"><span>${half(L.traj.pre / L.traj.fps, 1)} s before</span><span class="at" style="left:calc(${(100 * L.traj.pre / (L.traj.pre + L.traj.post)).toFixed(2)}% + ${(8 - 16 * L.traj.pre / (L.traj.pre + L.traj.post)).toFixed(2)}px)">Contact</span></div></div>
         <span class="small num" id="flabel" style="min-width:9ch;text-align:right"></span></div>
-      <div class="tick-labels"><span>1.0 s before contact</span><span>Contact</span><span>0.2 s after</span></div>
       <p class="small muted">The median skeleton over ${L.traj.n_early} swings (2024-25, blue) and ${L.traj.n_late} (2026, red), aligned on contact and scaled to torso length. Drawn from the joints I measured, not from MLB's frames. The center-field camera looks down the stride, so the stride toward the pitcher is invisible here by design.</p>
     </div>
     <div style="display:grid;gap:16px;align-content:start">
@@ -748,7 +754,7 @@ function viewSwing() {
   <div class="panel" style="display:grid;gap:10px"><h3>Every home run, with the clip</h3>
     <p class="small muted">Point at or tap a home run for the full breakdown and the clip. A dash means the camera couldn't measure that swing.${foot ? "" : " Foot down is left out for him: his toe-tap load can't be read from this camera."}</p>
     <div class="tablewrap"><table class="fit"><thead><tr><th>Date</th><th>Pitch</th><th>EV</th><th>LA</th><th>Bat speed</th>${foot ? "<th>Foot down</th>" : ""}<th>Head drop</th><th>Clip</th></tr></thead><tbody>
-    ${L.swings.slice().sort((a, b) => String(b.date).localeCompare(String(a.date))).map(s => `<tr${hvA("ls", state.lab, s.play_id)}><td>${day(s.date)}</td><td>${esc(s.pitch_type ?? "")} ${s.pitch_speed ? s.pitch_speed.toFixed(0) : ""}</td><td>${s.launch_speed != null ? s.launch_speed.toFixed(1) : dash}</td><td>${s.launch_angle ?? dash}</td><td>${s.bat_speed != null ? s.bat_speed.toFixed(1) : dash}</td>${foot ? `<td>${s.measured && s.down_to_contact_ms != null ? Math.round(s.down_to_contact_ms) + " ms" : dash}</td>` : ""}<td>${s.measured && s.head_drop != null ? s.head_drop.toFixed(2) : dash}</td><td>${s.page ? `<a href="${esc(s.page)}" target="_blank" rel="noopener">MLB.com</a>` : ""}</td></tr>`).join("")}
+    ${L.swings.slice().sort((a, b) => String(b.date).localeCompare(String(a.date))).map(s => `<tr${hvA("ls", state.lab, s.play_id)}><td>${day(s.date)}</td><td>${s.pitch_type || s.pitch_speed ? `${esc(s.pitch_type ?? "")} ${s.pitch_speed ? s.pitch_speed.toFixed(0) : ""}` : dash}</td><td>${s.launch_speed != null ? s.launch_speed.toFixed(1) : dash}</td><td>${s.launch_angle ?? dash}</td><td>${s.bat_speed != null ? s.bat_speed.toFixed(1) : dash}</td>${foot ? `<td>${s.measured && s.down_to_contact_ms != null ? Math.round(s.down_to_contact_ms) + " ms" : dash}</td>` : ""}<td>${s.measured && s.head_drop != null ? s.head_drop.toFixed(2) : dash}</td><td>${s.page ? `<a href="${esc(s.page)}" target="_blank" rel="noopener">MLB.com</a>` : ""}</td></tr>`).join("")}
     </tbody></table></div>
   </div>
   <p class="small muted gloss">Terms: ISO is slugging minus batting average. EV90 is his 90th-percentile exit velocity, a read on his hardest contact. Barrel is the share of batted balls with the speed and angle that usually go for extra bases. p is the chance of a gap this large if nothing changed (red when under 0.05).</p>
@@ -778,11 +784,11 @@ function drawSkel(i, root = document) {
     }
   }
   const pre = L.traj.pre, ms = Math.round((i - pre) * 1000 / L.traj.fps);
-  out.push(`<text x="20" y="400" font-size="13" fill="${C.muted}" font-family="Roboto Condensed, Helvetica Neue, Arial, sans-serif">${i === pre ? "Contact" : (ms < 0 ? ms + " ms before contact" : "+" + ms + " ms after contact")}</text>`);
+  out.push(`<text x="20" y="400" font-size="13" fill="${C.muted}" font-family="Roboto Condensed, Helvetica Neue, Arial, sans-serif">${i === pre ? "Contact" : (ms < 0 ? -ms + " ms before contact" : ms + " ms after contact")}</text>`);
   out.push(`<text x="380" y="400" font-size="12" text-anchor="end" fill="${C.muted}" font-family="Roboto Condensed, Helvetica Neue, Arial, sans-serif">Dashed: head height at the start</text>`);
   svg.innerHTML = out.join("");
   const lab = $(root, "flabel"); if (lab) lab.textContent = (ms > 0 ? "+" : "") + ms + " ms";
-  const sc = $(root, "scrub"); if (sc && +sc.value !== i) sc.value = i;
+  const sc = $(root, "scrub"); if (sc) { if (+sc.value !== i) sc.value = i; sc.setAttribute("aria-valuetext", ms === 0 ? "contact" : `${Math.abs(ms)} ms ${ms < 0 ? "before" : "after"} contact`); }
   if (hvActive && hvActive === svg) hvShow(svg, hvX, !!hvPinned);
 }
 function bindSwing() {
