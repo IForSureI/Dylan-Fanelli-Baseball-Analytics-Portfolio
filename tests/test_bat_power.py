@@ -38,3 +38,28 @@ def test_video_sample_and_tests_match_the_report():
 def test_every_measured_swing_links_its_clip():
     t = pd.read_json(ROOT / "reports" / "outputs" / "arozarena_swings.json")
     assert t[t.measured].page.str.startswith("https://www.mlb.com/video/").all()
+
+
+def test_a_truncated_pa_is_not_a_plate_appearance():
+    # the inning can end on the bases mid-at-bat; Statcast logs that as "truncated_pa", MLB doesn't count it
+    from baseball.evaluation import bat_power as BPM
+    d = pd.DataFrame({"batter": [1, 1, 1, 1], "events": ["single", "strikeout", "truncated_pa", None],
+                      "description": ["hit_into_play", "swinging_strike", "ball", "ball"], "woba_denom": [1, 1, None, None],
+                      "launch_speed": [100.0, None, None, None], "launch_angle": [20.0, None, None, None],
+                      "launch_speed_angle": [4, None, None, None], "bat_speed": [72.0, 70.0, None, None],
+                      "swing_length": [7.2, 7.0, None, None], "attack_angle": [10.0, 8.0, None, None],
+                      "release_speed": [95.0] * 4, "estimated_woba_using_speedangle": [0.5, None, None, None],
+                      "game_type": ["R"] * 4, "game_date": ["2026-05-01"] * 4, "season": [2026] * 4})
+    t = BPM.seasons_table(d).set_index("batter")
+    assert t.loc[1, "pa"] == 2 and t.loc[1, "ab"] == 2 and t.loc[1, "k_rate"] == 0.5
+
+
+def test_lab_plate_appearances_are_mlb_counts():
+    # MLB Stats API season totals, pulled Nov. 24, 2026 (the swing-lab hitters)
+    official = {(668227, 2024): 648, (668227, 2025): 709, (668227, 2026): 670, (673548, 2024): 585, (673548, 2025): 651,
+                (673548, 2026): 634, (665862, 2024): 621, (665862, 2025): 531, (665862, 2026): 532, (664040, 2024): 425,
+                (664040, 2025): 553, (664040, 2026): 656}
+    s = pd.read_json(ROOT / "reports" / "outputs" / "bat_power_seasons.json")
+    for (b, y), pa in official.items():
+        assert s[(s.batter == b) & (s.season == y)].pa.iloc[0] == pa, (b, y)
+    assert "| Plate appearances, at-bats | 648, 549 | 709, 613 | 670, 572 |" in REPORT

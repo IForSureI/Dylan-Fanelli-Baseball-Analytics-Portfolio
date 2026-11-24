@@ -101,6 +101,11 @@ const { chromium } = require('playwright');
 
 
 def _browser_cards(keys):
+    return _run_node(NODE_SCRIPT, "offseason/", json.dumps(keys))
+
+
+def _run_node(script, page, *args):
+    """Serve docs/ locally and run a Playwright script on the page; skip when node or Playwright isn't here."""
     node = shutil.which("node")
     if not node:
         pytest.skip("node isn't on this machine")
@@ -114,7 +119,7 @@ def _browser_cards(keys):
     srv = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     try:
-        r = subprocess.run([node, "-e", NODE_SCRIPT, f"http://127.0.0.1:{srv.server_port}/offseason/", json.dumps(keys)],
+        r = subprocess.run([node, "-e", script, f"http://127.0.0.1:{srv.server_port}/{page}", *args],
                            env={**os.environ, "NODE_PATH": root}, capture_output=True, text=True, timeout=180)
     finally:
         srv.shutdown()
