@@ -67,7 +67,7 @@ def test_qo_cost_for_a_club_neither_payor_nor_recipient():
     # Signing club "other": its 2nd-highest pick and $0.5M of pool; the payor losing him gets a pick after Round 4
     assert q["signing_club_forfeits_picks"] == ["2nd-highest"] and q["signing_club_forfeits_pool"] == 0.5
     assert q["losing_club_gets"] == "pick after Round 4"
-    assert q["pick_value"] == 10.09 and q["total_value"] == pytest.approx(10.59)   # house value at pick 55 + $0.5M pool
+    assert q["pick_value"] == 6.70 and q["total_value"] == pytest.approx(7.20)     # house value at pick 55 + $0.5M pool
     e = A.qo_cost("other", "payor", 64.0, 55, pick_values=A.PICK_VALUE_2019)
     assert e["pick_value"] == 5.3 and e["total_value"] == pytest.approx(5.8)      # Edwards (2019), pick 55
 
@@ -112,10 +112,10 @@ def test_walk_away_with_a_qo_uses_the_house_pick_value():
          "qo": {670970: A.qo_cost("other", "payor", 64.0, 55)}}
     w = B.walk_away(m)
     annuity4 = 1 + 1 / 1.1 + 1 / 1.1 ** 2 + 1 / 1.1 ** 3          # 3.4869
-    # house: $10.09M pick + $0.5M pool = $10.59M of present value -> $3.04M a year off $18.1M
-    assert w["qo_value_pv"] == pytest.approx(10.59)
-    assert w["walkaway_with_qo_aav"] == pytest.approx(18.1 - 10.59 / annuity4)
-    assert 4 * w["walkaway_with_qo_aav"] == pytest.approx(60.25, abs=0.01)
+    # house: $6.70M pick + $0.5M pool = $7.20M of present value -> $2.06M a year off $18.1M
+    assert w["qo_value_pv"] == pytest.approx(7.20)
+    assert w["walkaway_with_qo_aav"] == pytest.approx(18.1 - 7.20 / annuity4)
+    assert 4 * w["walkaway_with_qo_aav"] == pytest.approx(64.14, abs=0.01)
     # Edwards (2019): $5.3M + $0.5M -> about $66M, the memo's first figure
     assert 4 * w["walkaway_with_qo_aav_edwards_2019"] == pytest.approx(65.75, abs=0.01)
 

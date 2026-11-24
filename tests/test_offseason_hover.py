@@ -124,7 +124,9 @@ def _run_node(script, page, *args):
     finally:
         srv.shutdown()
     if r.returncode:
-        pytest.skip("the browser didn't start: " + r.stderr[-300:])
+        if re.search(r"browserType\.launch|Executable doesn't exist|Host system is missing dependencies", r.stderr):
+            pytest.skip("the browser didn't start: " + r.stderr[-300:])
+        pytest.fail("the browser check failed: " + r.stderr[-1500:])   # a page or script error is a failure, not a skip
     return json.loads(r.stdout.strip().splitlines()[-1])
 
 

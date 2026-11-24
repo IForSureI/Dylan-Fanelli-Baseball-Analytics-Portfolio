@@ -25,15 +25,18 @@ def test_bullpen_memo_matches_its_saved_table():
     # expected price and its 95% prediction interval: $18.4M, $7.4M to $29.3M
     assert f"${p['aav']:.1f}M a year" in memo
     assert f"${p['lo']:.1f}M to ${p['hi']:.1f}M" in memo
-    # landing odds are the line's t distribution (n - 2 df) at the walk-away AAV: 26% at $15.0M, 47% at $18.0M
+    # landing odds are the line's t distribution (n - 2 df) at the walk-away AAV: 33% at $16.0M, 47% at $18.0M
     odds = lambda aav: 100 * tdist.cdf((aav - p["aav"]) / p["sd_pred"], line["n"] - 2)
-    assert round(odds(15.0)) == 26 and "about 26% of the time (47% at $72M)" in memo
+    assert round(odds(16.0)) == 33 and "about 33% of the time (47% at $72M)" in memo
+    assert round(odds(15.0)) == 26                                    # the Nov. 14 to Nov. 23 figure, kept as history
     assert round(odds(18.0)) == 47
-    assert odds(18.0) / 100 == pytest.approx(b["landing"][2]["chance_price_at_or_below"], abs=1e-3)
-    # the qualifying-offer cost and the walk-away it implies: 18.1 - 10.59 spread over four discounted years
-    assert b["qo"]["670970"]["total_value"] == pytest.approx(10.59) and "about $10.6M" in memo
+    land = {r["walk_away_aav"]: r["chance_price_at_or_below"] for r in b["landing"]}
+    assert odds(18.0) / 100 == pytest.approx(land[18.0], abs=1e-3) and odds(16.0) / 100 == pytest.approx(land[16.0], abs=1e-3)
+    # the qualifying-offer cost and the walk-away it implies: 18.1 - 7.20 spread over four discounted years
+    assert b["qo"]["670970"]["total_value"] == pytest.approx(7.20) and "about $7.2M" in memo
     annuity4 = sum(1 / 1.10 ** t for t in range(4))
-    assert 4 * (b["breakeven"]["(670970, 4)"]["market"] - 10.59 / annuity4) == pytest.approx(60.2, abs=0.1)
+    assert 4 * (b["breakeven"]["(670970, 4)"]["market"] - 7.20 / annuity4) == pytest.approx(64.1, abs=0.1)
+    assert "four years, $64M" in memo
     # workload retention and the availability case
     r, a = b["retention"], b["availability_case"]["(670970, 4)"]
     assert r["n"] == 170 and f"kept {100 * r['one_season']:.0f}% of that workload in 2025 and {100 * r['two_seasons']:.0f}% in 2026" in memo
@@ -464,7 +467,7 @@ def test_bullpen_memo_model_numbers_are_the_saved_run():
         best = sorted((p["grade_next"] for k, p in pitches.items() if k.startswith(pid)), reverse=True)
         assert min(60, 0.55 * best[0] + 0.35 * best[1] + 0.10 * control) == 60
     # the Morejón report's copy of the memo's grades (present / 2027)
-    for name, code, present in (("Sinker", "SI", 65), ("Changeup", "CH", 75), ("Four-seamer", "FF", 75), ("Slider", "SL", 50)):
+    for name, code, present in (("Sinker", "SI", 65), ("Changeup", "CH", 75), ("Four-seamer", "FF", 75), ("Slider", "SL", 45)):   # memo present grade 45 since the Nov. 23 rerun
         assert f"| {present} / {pitches[mo + '_' + code]['grade_next']} |" in scout[scout.index("## How these grades relate to the memo's"):], name
     assert f"a {msl['grade_stuff']} stuff grade from the physics" in scout
 

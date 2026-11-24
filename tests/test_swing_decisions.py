@@ -270,3 +270,10 @@ def test_torres_fielding_inputs_follow_statcast():
     t = S.TORRES_INPUTS
     assert t.fielding_runs == pytest.approx(-3.3333, abs=1e-3)
     assert (t.fielding_low, t.fielding_high) == pytest.approx((-5.3333, -1.3333), abs=1e-3)
+
+
+def test_baseball_age_uses_june_30():
+    import pandas as pd
+    from baseball.evaluation.swing_decisions import baseball_age_shift
+    month = pd.Series([1.0, 6.0, 7.0, 12.0, None]); day = pd.Series([15.0, 30.0, 1.0, 31.0, None])
+    assert baseball_age_shift(month, day).tolist() == [0, 0, 1, 1, 0]   # born July 1 or later: a year younger on June 30

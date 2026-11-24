@@ -69,3 +69,24 @@ def test_contact_hang_and_catcher_throw_fields():
     assert (r["contact_depth"], r["contact_height"], r["contact_side"]) == (2.2, 2.4, -0.3)
     assert (r["hang_time"], r["hit_bearing"], r["hit_max_height"]) == (4.1, -12.0, 80.0)
     assert (r["pop_time"], r["exchange_time"], r["throw_speed"]) == (1.98, 0.75, 79.5)
+
+
+def test_pitchfx_fields_follow_x0s_frame():
+    """vx0 and ax are flipped exactly when x0 is not on the release point's side in the catcher's view, for both
+    HorzBreak frames (four cases)."""
+    import pandas as pd
+    from baseball.ingest import tracking
+
+    def run(hb, relside, x0):
+        n = 8
+        df = pd.DataFrame({"PitcherThrows": ["Right"] * n, "TaggedPitchType": ["Fastball"] * n, "HorzBreak": [hb] * n,
+                           "RelSide": [relside] * n, "x0": [x0] * n, "vx0": [-6.0] * n, "ax0": [-12.0] * n})
+        out, dec = tracking.normalize_trackman(df)
+        m = dec["multiplier"]
+        return m, out["release_pos_x"].iloc[0], out["vx0"].iloc[0], out["ax"].iloc[0]
+
+    for hb in (-15.0, 15.0):                     # a right-hander's four-seamer in both HorzBreak conventions
+        for relside, x0 in ((-2.0, 1.9), (-2.0, -1.9), (2.0, -1.9), (2.0, 1.9)):
+            m, rel_x, vx0, ax = run(hb, relside, x0)
+            keep = (x0 > 0) == (rel_x > 0)        # x0 already on the catcher-view release side
+            assert (vx0, ax) == ((-6.0, -12.0) if keep else (6.0, 12.0)), (hb, relside, x0, m)

@@ -245,3 +245,19 @@ def test_lever_read_carries_the_persistence_label():
     lv = R.lever_read(pairs, answer, [1], 2026).iloc[0]
     assert lv["persistence"] == "not shown to last (borderline)"
     assert lv["implied_whiff"] == pytest.approx(1.5 * 1.06)
+
+
+def test_inning_ending_truncated_pa_is_an_out():
+    """Statcast logs an inning-ending caught stealing or pickoff as 'truncated_pa' with two out: it is the third out.
+    With fewer than two out it ends no inning and isn't counted (that out has no row of its own)."""
+    import pandas as pd
+    from baseball.evaluation import reliever as R
+    n = 3
+    d = pd.DataFrame({"game_type": ["R"] * n, "game_year": [2026] * n, "game_pk": [1] * n, "at_bat_number": [1, 2, 3], "pitch_number": [1] * n, "pitcher": [10] * n,
+                      "home_team": ["TEX"] * n, "away_team": ["SEA"] * n, "inning_topbot": ["Top"] * n,
+                      "description": ["ball", "ball", "called_strike"], "zone": [11, 12, 5], "type": ["B", "B", "S"],
+                      "events": ["truncated_pa", "truncated_pa", "strikeout"], "outs_when_up": [2, 1, 0],
+                      "estimated_woba_using_speedangle": [None] * n, "launch_speed": [None] * n, "bb_type": [None] * n,
+                      "woba_value": [None, None, 0.0], "woba_denom": [None, None, 1.0], "delta_run_exp": [0.0] * n})
+    f = R.flag(d)
+    assert f["outs"].tolist() == [1, 0, 1] and f["pa"].tolist() == [False, False, True]

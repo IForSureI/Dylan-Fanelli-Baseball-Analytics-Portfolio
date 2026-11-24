@@ -22,6 +22,11 @@ from baseball.health import il_warning as w
     ("Right hamstring strain.", "lower"),
     ("Viral illness.", "illness"),
     ("Right inflammation.", "other"),             # "inflammation" contains "lat" but not as a word
+    ("Right brachialis muscle injury.", "arm"),   # wordings and typos from MLB's own transaction text
+    ("Bone stress reaction to the left ulna.", "arm"),
+    ("Left AC Joint Sprain.", "arm"),
+    ("Right elnow sprain.", "arm"),
+    ("Unar nerve inflammation.", "arm"),
     ("", "unspecified"),
 ])
 def test_classify_injury(reason, cat):
@@ -72,6 +77,18 @@ def test_appearances_starter_team_and_pitch_count():
     assert a.loc[10, "team"] == "HOM" and a.loc[20, "team"] == "AWY" and a.loc[11, "team"] == "HOM"
     assert a.loc[10, "starter"] == 1 and a.loc[20, "starter"] == 1 and a.loc[11, "starter"] == 0
     assert a.loc[10, "pitches"] == 3 and a.loc[11, "pitches"] == 1
+
+
+def test_pitch_clock_automatic_balls_and_strikes_are_not_pitches():
+    """FICTIONAL: pitcher 10 throws two pitches and is charged an automatic ball (no pitch thrown, no tracking).
+    His count is 2, not 3; a row without the description column counts every row."""
+    rows = [_pitch(1, "2026-05-01", 1, 1, 10, "Top", "FF", 95), _pitch(1, "2026-05-01", 1, 2, 10, "Top", "FF", 95),
+            _pitch(1, "2026-05-01", 1, 3, 10, "Top", None, float("nan"))]
+    for r, d in zip(rows, ("ball", "called_strike", "automatic_ball")):
+        r["description"] = d
+    assert w.appearances(pd.DataFrame(rows)).set_index("pitcher").loc[10, "pitches"] == 2
+    rows[2]["description"] = "automatic_strike"
+    assert w.appearances(pd.DataFrame(rows)).set_index("pitcher").loc[10, "pitches"] == 2
 
 
 def test_type_games_means_and_within_game_sum_of_squares():
