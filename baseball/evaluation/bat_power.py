@@ -54,7 +54,8 @@ def load(season: int) -> pd.DataFrame:
 
 
 def seasons_table(d: pd.DataFrame) -> pd.DataFrame:
-    pa = d[d.events.notna() & (d.events != "")]
+    # a truncated PA (the inning ended on the bases mid-at-bat) is not a plate appearance in MLB's count
+    pa = d[d.events.notna() & (d.events != "") & (d.events != "truncated_pa")]
     ab = pa[~pa.events.isin(NOT_AB)]
     g = pd.DataFrame({
         "pa": pa.groupby("batter").size(),
