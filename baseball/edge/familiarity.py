@@ -68,7 +68,7 @@ def seq_parts(season: int) -> list[Path]:
 def load_seq(season: int) -> pd.DataFrame:
     parts = seq_parts(season)
     if not parts:
-        raise FileNotFoundError(f"No sequence data for {season} in {SEQ_DIR}. The monthly update writes it on the Mac.")
+        raise FileNotFoundError(f"No sequence data for {season} in {SEQ_DIR}. Run `bb seq {season}` first; it builds data/seq/ from the league files.")
     return pd.concat([pd.read_parquet(p) for p in parts], ignore_index=True)
 
 

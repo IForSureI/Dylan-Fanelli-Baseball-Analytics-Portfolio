@@ -73,6 +73,10 @@ def savant_name(s: str) -> str:
     return f"{first} {last}"
 
 
+# the people table drops these accents; MLB Stats API spellings (checked Nov. 24, 2026)
+NAME_FIX = {680604: "Blas Castaño", 695684: "Elmer Rodríguez"}
+
+
 def names(ids, fallback: dict[int, str], people_path: Path = PEOPLE) -> dict[int, list[str]]:
     """[display name, extra search text] per pitcher id. The display name is the people table's; the pitch files'
     spelling is kept as search text where it differs, so 'Matthew Boyd' still finds Matt Boyd."""
@@ -83,7 +87,7 @@ def names(ids, fallback: dict[int, str], people_path: Path = PEOPLE) -> dict[int
     out = {}
     for i in ids:
         alt = savant_name(fallback.get(i, ""))
-        name = table.get(i) or alt or str(i)
+        name = NAME_FIX.get(int(i)) or table.get(i) or alt or str(i)
         out[i] = [name, alt if plain(alt) != plain(name) else ""]
     return out
 
@@ -285,6 +289,9 @@ def select(data: dict, search: str = "", pitch: str = "", club: str = "", hand: 
 
 
 def write(data: dict, out: Path = PAGE) -> Path:
+    for pid, name in NAME_FIX.items():   # also applies to a restyle of an older page's data
+        if str(pid) in data.get("pitchers", {}):
+            data["pitchers"][str(pid)][0] = name
     html = TEMPLATE.read_text(encoding="utf-8")
     blob = json.dumps(data, separators=(",", ":"), ensure_ascii=False).replace("</", "<\\/")
     out.write_text(html.replace("/*DATA*/null", blob), encoding="utf-8")

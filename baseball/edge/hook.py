@@ -63,7 +63,7 @@ def load_pitches(season: int, columns: list[str] = PITCH_COLUMNS) -> pd.DataFram
     """Regular-season pitches of a season from the sequence copy (data/seq/), only the columns used here."""
     parts = seq_parts(season)
     if not parts:
-        raise FileNotFoundError(f"No sequence data for {season}. Run `bb seq {season}` on the Mac.")
+        raise FileNotFoundError(f"No sequence data for {season}. Run `bb seq {season}` first; it builds data/seq/ from the league files.")
     return pd.concat([pd.read_parquet(p, columns=columns) for p in parts], ignore_index=True)
 
 
@@ -113,18 +113,21 @@ def plate_appearances(p: pd.DataFrame) -> pd.DataFrame:
     p["whiff"] = p["description"].isin(WHIFFS).astype(int)
     p["fbv"] = p["release_speed"].where(p["pitch_type"].isin(FASTBALLS))
     p["delta_run_exp"] = p["delta_run_exp"].fillna(0.0)
+    p["thrown"] = (~p["description"].isin(("automatic_ball", "automatic_strike"))).astype(int)   # no pitch thrown
 
     # pitcher x PA level (a PA can have two pitchers)
     k3 = ["game_pk", "at_bat_number", "pitcher"]
     g = p.groupby(k3, sort=False)
-    pp = g.agg(batter=("batter", "first"), inning=("inning", "first"), n=("pitch_number", "size"),
+    pp = g.agg(batter=("batter", "first"), inning=("inning", "first"), n=("thrown", "sum"),
                rv_p=("delta_run_exp", "sum"), whiffs=("whiff", "sum"), swings=("swing", "sum"),
                fb_sum=("fbv", "sum"), fb_n=("fbv", "count"))
-    cnt = p.groupby(k3 + ["pt"], sort=False).size().unstack(fill_value=0)
+    cnt = p[p["thrown"].eq(1)].groupby(k3 + ["pt"], sort=False).size().unstack(fill_value=0)
     types = list(COST_TYPES) + ["OT"]
     cnt = cnt.reindex(columns=types, fill_value=0).add_prefix("n_")
-    pp = pp.join(cnt).reset_index().sort_values(["game_pk", "at_bat_number"]).reset_index(drop=True)
     ncols = [f"n_{t}" for t in types]
+    pp = pp.join(cnt)
+    pp[ncols] = pp[ncols].fillna(0).astype(int)              # a PA of only pitch-clock calls has no thrown pitch
+    pp = pp.reset_index().sort_values(["game_pk", "at_bat_number"]).reset_index(drop=True)
 
     gp = ["game_pk", "pitcher"]
     before = _cum_before(pp, gp, ["n", "rv_p", "whiffs", "swings"])

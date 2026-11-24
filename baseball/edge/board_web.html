@@ -173,6 +173,13 @@ footer li { margin-bottom: 4px; }
   #tip { display: none; }
   .charts .axis text { font-size: 14px; } .charts .axis-title { font-size: 14px; } .charts .corner { font-size: 13px; } .charts .pt-label { font-size: 13.5px; }
 }
+@media print {
+  .scroll { overflow: visible; }
+  table.grid { font-size: 9px; }
+  table.grid td, table.grid th button { padding: 3px 4px; }
+  .filterbar, #csv, #more { display: none; }
+  #tip { display: none !important; }
+}
 </style>
 </head>
 <body>
@@ -384,8 +391,9 @@ thead.addEventListener("click", e => {
   const k = b.dataset.k;
   if (S.sort === k) S.dir = -S.dir; else { S.sort = k; S.dir = TEXT[k] ? 1 : -1; }
   S.limit = 50; render();
+  const again = thead.querySelector("button[data-k=\"" + k + "\"]"); if (again) again.focus();
 });
-tbody.addEventListener("click", e => { const tr = e.target.closest("tr"); if (tr) select(+tr.dataset.id, true); });
+tbody.addEventListener("click", e => { const tr = e.target.closest("tr[data-id]"); if (tr) select(+tr.dataset.id, true); });
 function drawTable(rows) {
   drawHead();
   const shown = sorted(rows).slice(0, S.limit);
@@ -399,7 +407,9 @@ function drawTable(rows) {
 }
 $("more").addEventListener("click", e => {
   const b = e.target.closest("button"); if (!b) return;
+  const before = tbody.querySelectorAll("tr[data-id]").length;
   S.limit = b.dataset.n === "all" ? ROWS.length : S.limit + 50; render();
+  const next = tbody.querySelectorAll(".who-btn")[before]; if (next) next.focus();   // first new row
 });
 $("key").innerHTML = "<b>Reading the table.</b> Click a column head to sort, click again to flip. Click a row to open the pitcher. A gap in <b>bold</b> is outside the 95% interval. Grades of 60 and up are filled, 40 and under are outlined, and a dashed grade with an asterisk is a sweeper stuff grade, which is unproven.";
 
@@ -544,13 +554,19 @@ function drawPitcher() {
   $("p-only").addEventListener("click", () => { Object.assign(S, DEFAULT, { q: p.name }); changed(); });
 }
 function select(id, scroll) {
+  if (id != null && !BY_PITCHER[id]) return;         // only a pitcher on the board can open
+  const from = S.sel;
   S.sel = id === S.sel && !scroll ? null : id;
   render();
   if (scroll && S.sel != null) {
     const box = $("pitcher"), top = box.getBoundingClientRect().top;
     if (top < 0 || top > window.innerHeight * 0.55) box.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+    const c = $("p-close"); if (c) c.focus({ preventScroll: true });
+  } else if (S.sel == null && from != null) {        // closed: back to his row
+    const b = tbody.querySelector(".who-btn[data-id=\"" + from + "\"]"); if (b) b.focus();
   }
 }
+document.addEventListener("keydown", e => { if (e.key === "Escape" && S.sel != null && !e.defaultPrevented) select(null); });
 
 /* ---------------------------------------------------------------- CSV of the rows on screen */
 $("csv").addEventListener("click", () => {
