@@ -249,7 +249,7 @@ footer .by{color:var(--ink);font-size:.86rem}
 .ponly{display:none}
 .loading{padding:40px 0;color:var(--muted)}
 
-/* hover cards: my snippets' card (opens beside what it explains, flips at the edges, pinned on a tap or click, a
+/* hover cards: my snippets' card (opens beside what it explains, flips at the edges, pinned on a tap or a keyboard press, a
    sheet on phones), drawn as a Savant table panel: white, a hairline frame, small uppercase headers, tabular numbers */
 [data-hv]{cursor:help}
 tr.r[data-hv],.lbt [data-hv]{cursor:pointer}
@@ -1195,6 +1195,9 @@ function hvHide() {
   if (hvActive) { hvActive.classList.remove("hv-on"); hvActive.removeAttribute("aria-describedby"); }
   hvActive = hvPinned = null;
 }
+/* focus keeps a card open only when it came from the keyboard: a mouse click also focuses a row or a number,
+   and that must not leave its card stuck after the pointer moves off */
+const hvKbdFocus = () => { try { return document.activeElement === hvActive && hvActive.matches(":focus-visible"); } catch (e) { return false; } };
 const hvGone = () => { if (hvActive && !hvActive.isConnected) hvHide(); };
 /* beside the target, never over it: below it, else above it, else to its side; inside the window; a sheet on phones */
 function hvPlace() {
@@ -1230,13 +1233,13 @@ document.addEventListener("mouseover", e => {
 });
 document.addEventListener("mousemove", e => { if (!hvTouch && !hvPinned && hvActive) { hvX = e.clientX; hvPlace(); } }, {passive: true});
 document.addEventListener("mouseout", e => {
-  if (hvTouch || hvPinned || !hvActive || document.activeElement === hvActive) return;
+  if (hvTouch || hvPinned || !hvActive || hvKbdFocus()) return;
   const to = e.relatedTarget && e.relatedTarget.closest ? e.relatedTarget.closest("[data-hv]") : null;
   if (!to) hvHide();
 });
 document.addEventListener("focusin", e => {
   if (hvTouch || hvPinned || hvEl.contains(e.target)) return;
-  if (e.target.matches && e.target.matches("[data-hv]")) hvShow(e.target, null, false);
+  if (e.target.matches && e.target.matches("[data-hv]:focus-visible")) hvShow(e.target, null, false);
 });
 document.addEventListener("focusout", e => { if (!hvPinned && e.target === hvActive) hvHide(); });
 document.addEventListener("click", e => {
@@ -1244,13 +1247,13 @@ document.addEventListener("click", e => {
   const t = e.target.closest("[data-hv]");
   if (!t || !t.isConnected || e.target.closest("a,button,select,input") || t.matches("tr.r")) { hvHide(); return; }
   if (hvPinned === t) { hvHide(); return; }
-  hvShow(t, e.clientX || null, true);
+  hvShow(t, e.clientX || null, hvTouch || e.detail === 0);   // pinned on a tap or a keyboard press; a mouse click leaves it a hover card
 });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && hvActive) { hvHide(); } });
 window.addEventListener("scroll", () => {
   if (!hvActive) return;
   if (!hvActive.isConnected) return hvHide();
-  if (hvPinned || document.activeElement === hvActive) hvPlace(); else hvHide();
+  if (hvPinned || hvKbdFocus()) hvPlace(); else hvHide();
 }, {passive: true, capture: true});
 window.addEventListener("resize", () => hvPlace());
 

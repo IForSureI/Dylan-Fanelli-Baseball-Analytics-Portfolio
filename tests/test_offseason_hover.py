@@ -154,3 +154,32 @@ def test_hover_numbers_equal_data_json():
     h = got[f"ls|arozarena|{sw['play_id']}"]
     assert f"{sw['launch_speed']:.1f}" in h and f"{sw['bat_speed']:.1f}" in h and sw["home_team"] in h
     assert f"{round(sw['down_to_contact_ms'])} ms" in h and f"{sw['head_drop']:.2f}" in h and str(int(sw["contact_frame"])) in h
+
+
+LEAVE_SCRIPT = r"""
+const { chromium } = require('playwright');
+(async () => {
+  const b = await chromium.launch();
+  const p = await b.newPage({ viewport: { width: 1280, height: 800 } });
+  await p.goto(process.argv[1] + '#board', { waitUntil: 'networkidle' });
+  const on = () => p.evaluate(() => document.getElementById('hv').classList.contains('on'));
+  const row = p.locator('#app tr.r[data-rank="9"]'); await row.scrollIntoViewIfNeeded();
+  const out = {};
+  await row.click(); const r = await row.boundingBox();
+  await p.mouse.move(r.x + r.width * 0.75, r.y + r.height / 2); out.row_hover = await on();
+  await p.mouse.move(r.x + r.width * 0.75, r.y + 300, { steps: 8 }); out.row_after_click_leave = await on();   // down into the open drawer
+  await p.locator('#app tr.r[data-rank="9"] span[data-hv="bs|9"]').click(); out.mark_click = await on();
+  await p.mouse.move(1265, 60, { steps: 8 }); out.mark_after_click_leave = await on();
+  await p.focus('#app tr.r[data-rank="9"]'); await p.keyboard.press('Shift+Tab'); await p.keyboard.press('Tab');
+  await p.mouse.move(1265, 80, { steps: 4 }); out.keyboard_focus_stays = await on();
+  console.log(JSON.stringify(out)); await b.close();
+})();
+"""
+
+
+def test_card_closes_when_the_mouse_leaves_after_a_click():
+    # a mouse click focuses the row or number; that focus must not keep its card open once the pointer moves off
+    # (keyboard focus still does, and a tap still pins)
+    got = _run_node(LEAVE_SCRIPT, "offseason/")
+    assert got == {"row_hover": True, "row_after_click_leave": False, "mark_click": True,
+                   "mark_after_click_leave": False, "keyboard_focus_stays": True}, got
