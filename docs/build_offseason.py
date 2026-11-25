@@ -194,6 +194,9 @@ for k, (mid, stand, title) in LATER_LABS.items():
         labs[k] = lab(k, mid, stand, title)
         _t = B.table(k, mid, stand)
         labs[k]['detectable'] = B.save(k, _t)['detectable_change']
+# a lab whose clips aren't on this machine keeps the previous build's version, so a rebuild never drops a hitter
+for k, v in (PREV or {}).get('labs', {}).items():
+    labs.setdefault(k, v)
 def home_clubs(labs):
     """The home club of each home run (whose park it was in), for the hover cards: joined from the pitch files on
     batter, date, exit velocity and launch angle when they are here; otherwise the previous build's value is kept."""

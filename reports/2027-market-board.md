@@ -69,12 +69,12 @@ So the edge is in one big miss, not in the typical player. MLBTR's worst miss la
 ## The board
 
 <!-- board:start -->
-**Score so far (1 of 38 signed):** AAV error mine $5.0M vs MLBTR $1.0M; mine closer on 0; over/under Brier 0.040 (a coin flip scores 0.250).
+**Score so far (3 of 38 signed):** AAV error mine $3.0M vs MLBTR $3.0M; mine closer on 2; over/under Brier 0.095 (a coin flip scores 0.250).
 
 | # | Player | MLBTR's call (Nov. 2) | MLBTR AAV | My AAV | P(beats MLBTR AAV) | WAR (5/4/3 average), age | Signed | Result |
 |---|---|---|---|---|---|---|---|---|
 | 2 | Trevor Rogers | Five years, $115MM | $23.0M | $29.0M | 0.80 | 2.8, 28 | Signed with Cubs for five years, $120MM (agreed Nov. 23, after my calls; official after physical) | $24.0M AAV; MLBTR closer |
-| 3 | Freddy Peralta | Five years, $110MM | $22.0M | $24.6M | 0.65 | 2.8, 30 |  |  |
+| 3 | Freddy Peralta | Five years, $110MM | $22.0M | $24.6M | 0.65 | 2.8, 30 | Signed with Orioles for five years, $125MM | $25.0M AAV; mine closer |
 | 4 | Seiya Suzuki | Four years, $105MM | $26.25M | $33.2M | 0.80 | 3.9, 31 |  |  |
 | 5 | Randy Arozarena | Four years, $100MM | $25.0M | $33.0M | 0.80 | 4.1, 31 |  |  |
 | 6 | Michael King | Four years, $92MM | $23.0M | $26.4M | 0.70 | 3.2, 31 |  |  |
@@ -108,16 +108,16 @@ So the edge is in one big miss, not in the typical player. MLBTR's worst miss la
 | 44 | Joc Pederson | One year, $14MM | $14.0M | $10.6M | 0.20 | 1.3, 34 |  |  |
 | 46 | JoJo Romero | Two years, $13MM | $6.5M | $8.8M | 0.85 | 1.1 (RP), 29 |  |  |
 | 47 | Matthew Boyd | One year, $13MM | $13.0M | $9.6M | 0.15 | 1.5, 35 |  |  |
-| 48 | Kris Bubic | One year, $12.5MM | $12.5M | $13.9M | 0.65 | 1.7, 28 |  |  |
+| 48 | Kris Bubic | One year, $12.5MM | $12.5M | $13.9M | 0.65 | 1.7, 28 | Signed with Guardians for one year, $17.5MM | $17.5M AAV; mine closer |
 | 49 | Taylor Ward | One year, $12MM | $12.0M | $12.0M | 0.50 | 2.3, 32 |  |  |
 | 50 | Robbie Ray | One year, $12MM | $12.0M | $10.3M | 0.30 | 1.9, 34 |  |  |
 
 No call from me (signed before Nov. 23, or no MLB record):
 
 - 1. Tarik Skubal: signed before the board; Signed with Mets for nine years, $450MM (agreed Nov. 22; official after physical).
-- 7. Teruaki Sato: no MLB record.
+- 7. Teruaki Sato: no MLB record; Signed with Cubs for six years, $120MM.
 - 9. Ryan Jeffers: signed before the board; Accepted $23.15MM qualifying offer from Twins.
-- 10. Kaima Taira: no MLB record.
+- 10. Kaima Taira: no MLB record; Signed with Blue Jays for five years, $80MM. Includes opt-out after third year.
 - 12. David Bednar: signed before the board; Accepted $23.15MM qualifying offer from Yankees.
 - 13. Sonny Gray: signed before the board; Signed with Twins for two years, $55MM. Includes second-year player option.
 - 24. Dustin May: signed before the board; Signed with White Sox for three years, $52.5MM.

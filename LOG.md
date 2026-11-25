@@ -2,6 +2,22 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-24: Peralta and Bubic signed; the board at 3 of 38
+**Scored**
+- **Three called players have signed** (MLB Trade Rumors' signing lines, pulled Nov. 24, 2026):
+
+  | Player | Deal | AAV | My call | MLBTR | Closer | My over/under |
+  |---|---|---|---|---|---|---|
+  | Trevor Rogers | Cubs, five years, $120M | $24.0M | $29.0M | $23.0M | MLBTR | 0.80, signed above |
+  | Freddy Peralta | Orioles, five years, $125M | $25.0M | $24.6M | $22.0M | mine | 0.65, signed above |
+  | Kris Bubic | Guardians, one year, $17.5M | $17.5M | $13.9M | $12.5M | mine | 0.65, signed above |
+
+- **So far:** $3.00M average miss each; mine closer on 2 of 3; over/under Brier 0.095 (coin flip 0.250).
+- **No call:** Teruaki Sato (Cubs, six years, $120M) and Kaima Taira (Blue Jays, five years, $80M) also signed. I made no call on either, because neither has an MLB record.
+
+**Fixed**
+- **Packet builder:** a full rebuild dropped any swing lab whose clips weren't on the machine. It now keeps the previous build's lab.
+
 ## 2026-11-24: Five sweeps through the repo, catcher photos, the $64M walk-away
 **Fixed: numbers a reader sees**
 - **Morejón's walk-away is $64M, not $60M.** My house draft-pick values (`acquisition.PICK_VALUE_OWN`) were read from a column of my draft table that floors each season at zero, so they ran about 1.4 times too high. The unfloored, equally weighted column puts pick 55 at $6.70M after its slot; with $0.5M of pool the QO costs $7.2M, not $10.6M, and the walk-away with the QO is $16.0M a year. The odds of landing him at that price are 33% on the memo's market line (7% on the board's). Memo (dated Nov. 24 update; older updates kept as history), one-page, scouting report and its PDF, packet, portfolio, README, at-a-glance image, market board and prediction-log note all changed. `bullpen-2026.json` got the new QO cost and a $16.0M landing row; nothing else in it was rerun.
