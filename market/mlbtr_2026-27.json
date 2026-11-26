@@ -3,7 +3,7 @@
  "source": "https://www.mlbtraderumors.com/2026/11/2026-27-top-50-free-agents-with-predictions.html",
  "published": "2026-11-02",
  "war_source": "Baseball-Reference WAR files (war_daily_bat.txt, war_daily_pitch.txt)",
- "pulled": "2026-11-24",
+ "pulled": "2026-11-25",
  "players": [
   {
    "rank": 1,
@@ -268,7 +268,7 @@
    "name": "Kevin Gausman",
    "pos": "RHP",
    "mlbtr": "Two years, $44MM",
-   "signed": "",
+   "signed": "Signed with Tigers for one year, $25MM",
    "bref_id": "gausmke01",
    "age": 35.0,
    "war": [
@@ -277,7 +277,7 @@
     1.09
    ],
    "reliever": false,
-   "first_seen": null
+   "first_seen": "2026-11-25"
   },
   {
    "rank": 19,
@@ -332,7 +332,7 @@
    "name": "Foster Griffin",
    "pos": "LHP",
    "mlbtr": "Three years, $39MM",
-   "signed": "",
+   "signed": "Signed with Guardians for three years, $48MM",
    "bref_id": "grifffo01",
    "age": 30.0,
    "war": [
@@ -341,7 +341,7 @@
     0.0
    ],
    "reliever": false,
-   "first_seen": null
+   "first_seen": "2026-11-25"
   },
   {
    "rank": 23,
@@ -460,7 +460,7 @@
    "name": "David Peterson",
    "pos": "LHP",
    "mlbtr": "Two years, $24MM",
-   "signed": "",
+   "signed": "Signed with Rockies for two years, $32MM",
    "bref_id": "peterda01",
    "age": 30.0,
    "war": [
@@ -469,7 +469,7 @@
     2.87
    ],
    "reliever": false,
-   "first_seen": null
+   "first_seen": "2026-11-25"
   },
   {
    "rank": 31,
@@ -613,7 +613,7 @@
    "name": "Tyler Stephenson",
    "pos": "C",
    "mlbtr": "Two years, $15MM",
-   "signed": "",
+   "signed": "Signed with Reds for three years, $30MM",
    "bref_id": "stephty01",
    "age": 29.0,
    "war": [
@@ -622,7 +622,7 @@
     2.4
    ],
    "reliever": false,
-   "first_seen": null
+   "first_seen": "2026-11-25"
   },
   {
    "rank": 41,
@@ -661,7 +661,7 @@
    "name": "Luis Robert Jr.",
    "pos": "CF",
    "mlbtr": "One year, $14MM",
-   "signed": "",
+   "signed": "Signed with Orioles for one year, $12MM",
    "bref_id": "roberlu01",
    "age": 28.0,
    "war": [
@@ -670,7 +670,7 @@
     1.32
    ],
    "reliever": false,
-   "first_seen": null
+   "first_seen": "2026-11-25"
   },
   {
    "rank": 44,
@@ -693,7 +693,7 @@
    "name": "Jonathan Loáisiga",
    "pos": "RHP",
    "mlbtr": "Two years, $13MM",
-   "signed": "Signed with Yankees for two years, $18MM",
+   "signed": "Signed with Yankees for two years, $19MM",
    "bref_id": "loaisjo01",
    "age": 31.0,
    "war": [
@@ -702,14 +702,15 @@
     0.34
    ],
    "reliever": true,
-   "first_seen": "2026-11-23"
+   "first_seen": "2026-11-23",
+   "revised": "2026-11-25"
   },
   {
    "rank": 46,
    "name": "JoJo Romero",
    "pos": "LHP",
    "mlbtr": "Two years, $13MM",
-   "signed": "",
+   "signed": "Signed with Padres for three years, $21MM",
    "bref_id": "romerjo01",
    "age": 29.0,
    "war": [
@@ -718,7 +719,7 @@
     0.83
    ],
    "reliever": true,
-   "first_seen": null
+   "first_seen": "2026-11-25"
   },
   {
    "rank": 47,

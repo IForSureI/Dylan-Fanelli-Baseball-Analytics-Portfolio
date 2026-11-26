@@ -69,7 +69,7 @@ So the edge is in one big miss, not in the typical player. MLBTR's worst miss la
 ## The board
 
 <!-- board:start -->
-**Score so far (3 of 38 signed):** AAV error mine $3.0M vs MLBTR $3.0M; mine closer on 2; over/under Brier 0.095 (a coin flip scores 0.250).
+**Score so far (9 of 38 signed):** AAV error mine $3.4M vs MLBTR $2.7M; mine closer on 3; over/under Brier 0.219 (a coin flip scores 0.250).
 
 | # | Player | MLBTR's call (Nov. 2) | MLBTR AAV | My AAV | P(beats MLBTR AAV) | WAR (5/4/3 average), age | Signed | Result |
 |---|---|---|---|---|---|---|---|---|
@@ -84,29 +84,29 @@ So the edge is in one big miss, not in the typical player. MLBTR's worst miss la
 | 15 | Luis Arraez | Three years, $48MM | $16.0M | $17.3M | 0.60 | 1.9, 29 |  |  |
 | 16 | Clay Holmes | Three years, $45MM | $15.0M | $12.7M | 0.30 | 1.7, 33 |  |  |
 | 17 | Ian Happ | Three years, $45MM | $15.0M | $18.6M | 0.75 | 3.4, 31 |  |  |
-| 18 | Kevin Gausman | Two years, $44MM | $22.0M | $16.9M | 0.20 | 2.1, 35 |  |  |
+| 18 | Kevin Gausman | Two years, $44MM | $22.0M | $16.9M | 0.20 | 2.1, 35 | Signed with Tigers for one year, $25MM | $25.0M AAV; MLBTR closer |
 | 19 | Nick Martinez | Two years, $42MM | $21.0M | $20.1M | 0.45 | 3.3, 35 |  |  |
 | 20 | Jazz Chisholm Jr. | Two years, $40MM (with an opt-out) | $20.0M | $25.5M | 0.80 | 2.8, 28 |  |  |
 | 21 | Shota Imanaga | Two years, $40MM | $20.0M | $18.4M | 0.40 | 2.1, 32 |  |  |
-| 22 | Foster Griffin | Three years, $39MM | $13.0M | $12.5M | 0.45 | 1.4, 30 |  |  |
+| 22 | Foster Griffin | Three years, $39MM | $13.0M | $12.5M | 0.45 | 1.4, 30 | Signed with Guardians for three years, $48MM | $16.0M AAV; MLBTR closer |
 | 23 | Ty France | Two years, $32MM | $16.0M | $16.0M | 0.50 | 2.1, 31 |  |  |
 | 25 | Casey Mize | Two years, $28MM (opt-out) | $14.0M | $13.5M | 0.45 | 1.2, 29 |  |  |
 | 26 | Michael Soroka | Two years, $26MM (opt-out) | $13.0M | $13.6M | 0.55 | 1.3, 28 |  |  |
 | 27 | Alex Vesia | Two years, $26MM | $13.0M | $16.2M | 0.75 | 1.4 (RP), 30 |  |  |
 | 28 | Nick Pivetta | Two years, $26MM | $13.0M | $12.5M | 0.45 | 2.5, 33 |  |  |
-| 30 | David Peterson | Two years, $24MM | $12.0M | $11.2M | 0.40 | 1.2, 30 |  |  |
+| 30 | David Peterson | Two years, $24MM | $12.0M | $11.2M | 0.40 | 1.2, 30 | Signed with Rockies for two years, $32MM | $16.0M AAV; MLBTR closer |
 | 32 | Bryan Abreu | Two years, $22MM (opt-out) | $11.0M | $15.4M | 0.85 | 1.7 (RP), 29 |  |  |
 | 33 | Carson Kelly | Two years, $20MM | $10.0M | $10.5M | 0.55 | 2.1, 31 |  |  |
 | 34 | Daulton Varsho | Two years, $20MM | $10.0M | $12.2M | 0.75 | 2.4, 29 |  |  |
 | 37 | Mauricio Dubón | Two years, $18MM | $9.0M | $9.3M | 0.55 | 1.9, 31 |  |  |
 | 38 | Raisel Iglesias | One year, $17MM | $17.0M | $15.8M | 0.40 | 1.7 (RP), 36 |  |  |
 | 39 | J.P. Crawford | Two years, $16MM | $8.0M | $8.7M | 0.60 | 2.2, 31 |  |  |
-| 40 | Tyler Stephenson | Two years, $15MM | $7.5M | $9.0M | 0.75 | 2.1, 29 |  |  |
+| 40 | Tyler Stephenson | Two years, $15MM | $7.5M | $9.0M | 0.75 | 2.1, 29 | Signed with Reds for three years, $30MM | $10.0M AAV; mine closer |
 | 41 | Paul Blackburn | Two years, $15MM | $7.5M | $8.8M | 0.70 | 1.2 (RP), 32 |  |  |
 | 42 | Steven Okert | Two years, $14MM | $7.0M | $7.5M | 0.60 | 1.4 (RP), 34 |  |  |
-| 43 | Luis Robert Jr. | One year, $14MM | $14.0M | $14.3M | 0.55 | 1.2, 28 |  |  |
+| 43 | Luis Robert Jr. | One year, $14MM | $14.0M | $14.3M | 0.55 | 1.2, 28 | Signed with Orioles for one year, $12MM | $12.0M AAV; MLBTR closer |
 | 44 | Joc Pederson | One year, $14MM | $14.0M | $10.6M | 0.20 | 1.3, 34 |  |  |
-| 46 | JoJo Romero | Two years, $13MM | $6.5M | $8.8M | 0.85 | 1.1 (RP), 29 |  |  |
+| 46 | JoJo Romero | Two years, $13MM | $6.5M | $8.8M | 0.85 | 1.1 (RP), 29 | Signed with Padres for three years, $21MM | $7.0M AAV; MLBTR closer |
 | 47 | Matthew Boyd | One year, $13MM | $13.0M | $9.6M | 0.15 | 1.5, 35 |  |  |
 | 48 | Kris Bubic | One year, $12.5MM | $12.5M | $13.9M | 0.65 | 1.7, 28 | Signed with Guardians for one year, $17.5MM | $17.5M AAV; mine closer |
 | 49 | Taylor Ward | One year, $12MM | $12.0M | $12.0M | 0.50 | 2.3, 32 |  |  |
@@ -125,7 +125,7 @@ No call from me (signed before Nov. 23, or no MLB record):
 - 31. Jake Bauers: signed before the board; Signed with Red Sox for four years, $58MM.
 - 35. Emilio Pagán: signed before the board; Signed with Tigers for one year, $11.5MM.
 - 36. Hiromi Itoh: no MLB record.
-- 45. Jonathan Loáisiga: signed before the board; Signed with Yankees for two years, $18MM.
+- 45. Jonathan Loáisiga: signed before the board; Signed with Yankees for two years, $19MM.
 <!-- board:end -->
 
 ## Where the board disagrees most with MLBTR

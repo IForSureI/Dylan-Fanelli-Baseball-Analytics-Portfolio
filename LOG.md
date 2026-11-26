@@ -2,6 +2,23 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-25: Six more signed; the board at 9 of 38
+**Scored**
+- **Six called players signed** (MLB Trade Rumors' signing lines, pulled Nov. 25, 2026):
+
+  | Player | Deal | AAV | My call | MLBTR | Closer | My over/under |
+  |---|---|---|---|---|---|---|
+  | Kevin Gausman | Tigers, one year, $25M | $25.0M | $16.9M | $22.0M | MLBTR | 0.20, signed above |
+  | Foster Griffin | Guardians, three years, $48M | $16.0M | $12.5M | $13.0M | MLBTR | 0.45, signed above |
+  | David Peterson | Rockies, two years, $32M | $16.0M | $11.2M | $12.0M | MLBTR | 0.40, signed above |
+  | Tyler Stephenson | Reds, three years, $30M | $10.0M | $9.0M | $7.5M | mine | 0.75, signed above |
+  | Luis Robert Jr. | Orioles, one year, $12M | $12.0M | $14.3M | $14.0M | MLBTR | 0.55, signed below |
+  | JoJo Romero | Padres, three years, $21M | $7.0M | $8.8M | $6.5M | MLBTR | 0.85, signed above |
+
+- **So far (9 of 38):** my average miss $3.39M against MLBTR's $2.67M; mine closer on 3 of 9; over/under Brier 0.219 (coin flip 0.250). The night went to MLBTR: five of six went its way, and Gausman's one-year $25M is my worst miss yet ($8.1M). I had him falling at 35; the market paid for one year instead of discounting two.
+- **Five of the six signed above MLBTR's AAV.** Short, rich deals (Gausman, Peterson) and an extra year (Griffin, Stephenson, Romero) both pushed AAV up. My over/under said above on three of those five.
+- **Loáisiga's line changed** from two years, $18M to two years, $19M. I made no call on him, so nothing scored moved.
+
 ## 2026-11-24: Peralta and Bubic signed; the board at 3 of 38
 **Scored**
 - **Three called players have signed** (MLB Trade Rumors' signing lines, pulled Nov. 24, 2026):
