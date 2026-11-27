@@ -2,7 +2,7 @@
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← GM tree](2026-gm-tree.md) &nbsp;|&nbsp; [Advance packet →](2026-advance-packet-tb.md)</sub>
 <!-- /portfolio:header -->
 
-# Adrián Morejón (LHP, pending free agent): pro scouting report
+# Adrián Morejón (LHP, free agent): pro scouting report
 
 <!-- portfolio:glance -->
 <p><img src="https://img.shields.io/badge/status-reviewed-1d5c3f" alt="status: reviewed"> <img src="https://img.shields.io/badge/data-public-1f1f1f" alt="data: public"> <img src="https://img.shields.io/badge/for-Pro%20scouting-6b6b6b" alt="for: Pro scouting"> <img src="https://img.shields.io/badge/method-20--80%20scouting-b4532a" alt="method: 20-80 scouting"> <img src="https://img.shields.io/badge/method-Statcast-b4532a" alt="method: Statcast"> <img src="https://img.shields.io/badge/method-role%20and%20risk-b4532a" alt="method: role and risk"></p>
@@ -276,5 +276,5 @@ print(f"Morejon FIP {(13 * 4 + 3 * (28 - 7 + 5) - 2 * 107) / 86 + c:.2f}")'
 ---
 <sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← GM tree](2026-gm-tree.md) &nbsp;|&nbsp; [Advance packet →](2026-advance-packet-tb.md)</sub>
 
-<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Adrián Morejón (LHP, pending free agent): pro scouting report*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-morejon-pro-scouting-report.md</sub>
+<sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *Adrián Morejón (LHP, free agent): pro scouting report*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-morejon-pro-scouting-report.md</sub>
 <!-- /portfolio:footer -->

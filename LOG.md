@@ -2,6 +2,15 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-26: README links for the R and Bayes studies; small fixes
+**Added**
+- **The R rebuild and the PyMC model are linked from the README** (a research-table row and the R&D row), with numbers copied from their own READMEs: M = 54.5 swings in R vs 54.7 in Python, 79 of 79 checks; RMSE 4.94 vs 4.95 on 520 hitters, 95% coverage 95.8% for both.
+
+**Fixed**
+- **README:** the bullpen memo row is dated Nov. 24, 2026 (the $64M walk-away's update), not Nov. 18. The test count reads about 650 (649 passed on this commit), not more than 400.
+- **Morejón report:** the title and citation say "free agent", not "pending free agent"; he declined the qualifying offer Nov. 17. No grade changed.
+- **Market pull:** a signing line's revision date stayed only on the night MLBTR changed the line; the next pull dropped it. It now stays (Loáisiga's Nov. 25 revision). No signings were new on the Nov. 26 pull; the board stands at 9 of 38.
+
 ## 2026-11-25: Six more signed; the board at 9 of 38
 **Scored**
 - **Six called players signed** (MLB Trade Rumors' signing lines, pulled Nov. 25, 2026):

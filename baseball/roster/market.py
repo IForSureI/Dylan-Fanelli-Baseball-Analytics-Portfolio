@@ -338,15 +338,18 @@ def pull(season: int, raw: Path = RAW, root: Path = MARKET, pulled: str | None =
     prev = root / f"mlbtr_{season}-{(season + 1) % 100:02d}.json"
     seen = {}
     if prev.exists():
-        seen = {q["rank"]: (q.get("signed", ""), q.get("first_seen")) for q in json.loads(prev.read_text())["players"]}
+        seen = {q["rank"]: (q.get("signed", ""), q.get("first_seen"), q.get("revised"))
+                for q in json.loads(prev.read_text())["players"]}
     for r in parse_list(page, season):
         f = player_features(r["name"], r["bref_id"], season, bat, pit)
-        old_line, old_seen = seen.get(r["rank"], ("", None))
+        old_line, old_seen, old_rev = seen.get(r["rank"], ("", None, None))
         # the first date any signing line appeared stays, even if MLBTR later edits the line (to add an opt-out, say)
         first = (old_seen or when) if r["signed"] else None
         rec = {**{k: r[k] for k in ("rank", "name", "pos", "mlbtr", "signed")}, **f, "first_seen": first}
         if old_line and r["signed"] and old_line != r["signed"]:
             rec["revised"] = when
+        elif r["signed"] and old_rev:
+            rec["revised"] = old_rev      # an earlier revision date stays once the line stops changing
         players.append(rec)
     out = root / f"mlbtr_{season}-{(season + 1) % 100:02d}.json"
     out.write_text(json.dumps(dict(season=season, source=LISTS[season], published=parse_list(page, season)[0]["published"],
