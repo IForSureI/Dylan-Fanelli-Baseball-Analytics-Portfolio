@@ -1,0 +1,1936 @@
+{
+ "seasons": [
+  2025,
+  2026
+ ],
+ "first": {
+  "stand": "R",
+  "pitches": 2881,
+  "pa": 709,
+  "strikeout": {
+   "k": 191,
+   "n": 709,
+   "pct": 26.9,
+   "lo": 23.8,
+   "hi": 30.3
+  },
+  "walk": {
+   "k": 64,
+   "n": 709,
+   "pct": 9.0,
+   "lo": 7.1,
+   "hi": 11.4
+  },
+  "discipline": {
+   "chase": {
+    "k": 361,
+    "n": 1437,
+    "pct": 25.1,
+    "lo": 22.9,
+    "hi": 27.4
+   },
+   "zone_swing": {
+    "k": 902,
+    "n": 1444,
+    "pct": 62.5,
+    "lo": 59.9,
+    "hi": 64.9
+   },
+   "zone_contact": {
+    "k": 684,
+    "n": 902,
+    "pct": 75.8,
+    "lo": 72.9,
+    "hi": 78.5
+   },
+   "chase_contact": {
+    "k": 203,
+    "n": 361,
+    "pct": 56.2,
+    "lo": 51.1,
+    "hi": 61.3
+   },
+   "whiff_per_swing": {
+    "k": 376,
+    "n": 1263,
+    "pct": 29.8,
+    "lo": 27.3,
+    "hi": 32.4
+   },
+   "first_pitch_swing": {
+    "k": 213,
+    "n": 713,
+    "pct": 29.9,
+    "lo": 26.6,
+    "hi": 33.3
+   }
+  },
+  "two_strikes": {
+   "pa_reaching": {
+    "k": 408,
+    "n": 709,
+    "pct": 57.5,
+    "lo": 53.9,
+    "hi": 61.1
+   },
+   "strikeout_once_there": {
+    "k": 191,
+    "n": 408,
+    "pct": 46.8,
+    "lo": 42.0,
+    "hi": 51.7
+   },
+   "chase": {
+    "k": 175,
+    "n": 521,
+    "pct": 33.6,
+    "lo": 29.7,
+    "hi": 37.8
+   },
+   "zone_swing": {
+    "k": 333,
+    "n": 379,
+    "pct": 87.9,
+    "lo": 84.2,
+    "hi": 90.8
+   },
+   "chase_contact": {
+    "k": 100,
+    "n": 175,
+    "pct": 57.1,
+    "lo": 49.7,
+    "hi": 64.2
+   },
+   "zone_contact": {
+    "k": 262,
+    "n": 333,
+    "pct": 78.7,
+    "lo": 74.0,
+    "hi": 82.7
+   },
+   "swing_two_strikes": {
+    "bat_speed": {
+     "mean": 68.7,
+     "n": 488,
+     "sd": 8.34
+    },
+    "swing_length": {
+     "mean": 7.33,
+     "n": 488,
+     "sd": 0.745
+    },
+    "attack_angle": {
+     "mean": 8.8,
+     "n": 488,
+     "sd": 8.32
+    },
+    "contact_depth_in": {
+     "mean": 31.4,
+     "n": 486,
+     "sd": 11.91
+    }
+   },
+   "swing_fewer_strikes": {
+    "bat_speed": {
+     "mean": 71.1,
+     "n": 726,
+     "sd": 8.61
+    },
+    "swing_length": {
+     "mean": 7.44,
+     "n": 726,
+     "sd": 0.735
+    },
+    "attack_angle": {
+     "mean": 8.4,
+     "n": 726,
+     "sd": 8.32
+    },
+    "contact_depth_in": {
+     "mean": 30.4,
+     "n": 721,
+     "sd": 11.76
+    }
+   },
+   "batted": {
+    "n": 165,
+    "ground_ball": {
+     "k": 71,
+     "n": 165,
+     "pct": 43.0,
+     "lo": 35.7,
+     "hi": 50.7
+    },
+    "line_drive": {
+     "k": 32,
+     "n": 165,
+     "pct": 19.4,
+     "lo": 14.1,
+     "hi": 26.1
+    },
+    "fly_ball": {
+     "k": 44,
+     "n": 165,
+     "pct": 26.7,
+     "lo": 20.5,
+     "hi": 33.9
+    },
+    "popup": {
+     "k": 18,
+     "n": 165,
+     "pct": 10.9,
+     "lo": 7.0,
+     "hi": 16.6
+    },
+    "hard_hit": {
+     "k": 74,
+     "n": 165,
+     "pct": 44.8,
+     "lo": 37.5,
+     "hi": 52.5
+    },
+    "hard_hit_on_ground": {
+     "k": 30,
+     "n": 74,
+     "pct": 40.5,
+     "lo": 30.1,
+     "hi": 51.9
+    },
+    "launch_angle": {
+     "mean": 11.6,
+     "n": 165,
+     "sd": 35.12
+    },
+    "launch_angle_hard_hit": {
+     "mean": 12.0,
+     "n": 74,
+     "sd": 19.34
+    },
+    "exit_velo": {
+     "mean": 88.9,
+     "n": 165,
+     "sd": 14.83
+    },
+    "ev90": 104.2,
+    "xwoba_con": 0.354,
+    "woba_con": 0.385,
+    "by_type": {
+     "fly_ball": {
+      "n": 44,
+      "woba": 0.526,
+      "xwoba": 0.471
+     },
+     "ground_ball": {
+      "n": 71,
+      "woba": 0.311,
+      "xwoba": 0.242
+     },
+     "line_drive": {
+      "n": 32,
+      "woba": 0.573,
+      "xwoba": 0.613
+     },
+     "popup": {
+      "n": 18,
+      "woba": 0.0,
+      "xwoba": 0.045
+     }
+    }
+   },
+   "batted_chase": {
+    "n": 47,
+    "ground_ball": {
+     "k": 22,
+     "n": 47,
+     "pct": 46.8,
+     "lo": 33.3,
+     "hi": 60.8
+    },
+    "line_drive": {
+     "k": 10,
+     "n": 47,
+     "pct": 21.3,
+     "lo": 12.0,
+     "hi": 34.9
+    },
+    "fly_ball": {
+     "k": 10,
+     "n": 47,
+     "pct": 21.3,
+     "lo": 12.0,
+     "hi": 34.9
+    },
+    "popup": {
+     "k": 5,
+     "n": 47,
+     "pct": 10.6,
+     "lo": 4.6,
+     "hi": 22.6
+    },
+    "hard_hit": {
+     "k": 15,
+     "n": 47,
+     "pct": 31.9,
+     "lo": 20.4,
+     "hi": 46.2
+    },
+    "hard_hit_on_ground": {
+     "k": 6,
+     "n": 15,
+     "pct": 40.0,
+     "lo": 19.8,
+     "hi": 64.3
+    },
+    "launch_angle": {
+     "mean": 4.4,
+     "n": 47,
+     "sd": 42.36
+    },
+    "launch_angle_hard_hit": {
+     "mean": 12.3,
+     "n": 15,
+     "sd": 20.52
+    },
+    "exit_velo": {
+     "mean": 83.1,
+     "n": 47,
+     "sd": 17.47
+    },
+    "ev90": 102.0,
+    "xwoba_con": 0.31,
+    "woba_con": 0.346,
+    "by_type": {
+     "fly_ball": {
+      "n": 10,
+      "woba": 0.6,
+      "xwoba": 0.444
+     },
+     "ground_ball": {
+      "n": 22,
+      "woba": 0.327,
+      "xwoba": 0.224
+     },
+     "line_drive": {
+      "n": 10,
+      "woba": 0.305,
+      "xwoba": 0.521
+     },
+     "popup": {
+      "n": 5,
+      "woba": 0.0,
+      "xwoba": 0.004
+     }
+    }
+   }
+  },
+  "batted": {
+   "n": 427,
+   "ground_ball": {
+    "k": 182,
+    "n": 427,
+    "pct": 42.6,
+    "lo": 38.0,
+    "hi": 47.4
+   },
+   "line_drive": {
+    "k": 91,
+    "n": 427,
+    "pct": 21.3,
+    "lo": 17.7,
+    "hi": 25.4
+   },
+   "fly_ball": {
+    "k": 115,
+    "n": 427,
+    "pct": 26.9,
+    "lo": 22.9,
+    "hi": 31.3
+   },
+   "popup": {
+    "k": 39,
+    "n": 427,
+    "pct": 9.1,
+    "lo": 6.8,
+    "hi": 12.2
+   },
+   "hard_hit": {
+    "k": 216,
+    "n": 426,
+    "pct": 50.7,
+    "lo": 46.0,
+    "hi": 55.4
+   },
+   "hard_hit_on_ground": {
+    "k": 88,
+    "n": 216,
+    "pct": 40.7,
+    "lo": 34.4,
+    "hi": 47.4
+   },
+   "launch_angle": {
+    "mean": 12.8,
+    "n": 427,
+    "sd": 31.49
+   },
+   "launch_angle_hard_hit": {
+    "mean": 13.3,
+    "n": 216,
+    "sd": 19.67
+   },
+   "exit_velo": {
+    "mean": 91.1,
+    "n": 426,
+    "sd": 15.01
+   },
+   "ev90": 106.7,
+   "xwoba_con": 0.395,
+   "woba_con": 0.416,
+   "by_type": {
+    "fly_ball": {
+     "n": 115,
+     "woba": 0.537,
+     "xwoba": 0.527
+    },
+    "ground_ball": {
+     "n": 182,
+     "woba": 0.309,
+     "xwoba": 0.26
+    },
+    "line_drive": {
+     "n": 91,
+     "woba": 0.653,
+     "xwoba": 0.654
+    },
+    "popup": {
+     "n": 39,
+     "woba": 0.0,
+     "xwoba": 0.031
+    }
+   }
+  },
+  "swing": {
+   "bat_speed": {
+    "mean": 70.1,
+    "n": 1214,
+    "sd": 8.59
+   },
+   "swing_length": {
+    "mean": 7.39,
+    "n": 1214,
+    "sd": 0.741
+   },
+   "attack_angle": {
+    "mean": 8.6,
+    "n": 1214,
+    "sd": 8.32
+   },
+   "contact_depth_in": {
+    "mean": 30.8,
+    "n": 1207,
+    "sd": 11.82
+   }
+  },
+  "high_fastball": {
+   "pitches": 540,
+   "swing": {
+    "k": 166,
+    "n": 540,
+    "pct": 30.7,
+    "lo": 27.0,
+    "hi": 34.8
+   },
+   "whiff": {
+    "k": 63,
+    "n": 166,
+    "pct": 38.0,
+    "lo": 30.9,
+    "hi": 45.5
+   },
+   "swing_shape": {
+    "bat_speed": {
+     "mean": 69.1,
+     "n": 157,
+     "sd": 7.71
+    },
+    "swing_length": {
+     "mean": 6.78,
+     "n": 157,
+     "sd": 0.607
+    },
+    "attack_angle": {
+     "mean": 8.6,
+     "n": 157,
+     "sd": 6.81
+    },
+    "contact_depth_in": {
+     "mean": 23.9,
+     "n": 157,
+     "sd": 9.58
+    }
+   },
+   "batted": {
+    "n": 43,
+    "ground_ball": {
+     "k": 8,
+     "n": 43,
+     "pct": 18.6,
+     "lo": 9.7,
+     "hi": 32.6
+    },
+    "line_drive": {
+     "k": 12,
+     "n": 43,
+     "pct": 27.9,
+     "lo": 16.7,
+     "hi": 42.7
+    },
+    "fly_ball": {
+     "k": 17,
+     "n": 43,
+     "pct": 39.5,
+     "lo": 26.4,
+     "hi": 54.4
+    },
+    "popup": {
+     "k": 6,
+     "n": 43,
+     "pct": 14.0,
+     "lo": 6.6,
+     "hi": 27.3
+    },
+    "hard_hit": {
+     "k": 26,
+     "n": 43,
+     "pct": 60.5,
+     "lo": 45.6,
+     "hi": 73.6
+    },
+    "hard_hit_on_ground": {
+     "k": 5,
+     "n": 26,
+     "pct": 19.2,
+     "lo": 8.5,
+     "hi": 37.9
+    },
+    "launch_angle": {
+     "mean": 25.6,
+     "n": 43,
+     "sd": 29.75
+    },
+    "launch_angle_hard_hit": {
+     "mean": 19.7,
+     "n": 26,
+     "sd": 13.69
+    },
+    "exit_velo": {
+     "mean": 95.4,
+     "n": 43,
+     "sd": 13.26
+    },
+    "ev90": 107.5,
+    "xwoba_con": 0.555,
+    "woba_con": 0.491,
+    "by_type": {
+     "fly_ball": {
+      "n": 17,
+      "woba": 0.471,
+      "xwoba": 0.595
+     },
+     "ground_ball": {
+      "n": 8,
+      "woba": 0.381,
+      "xwoba": 0.371
+     },
+     "line_drive": {
+      "n": 12,
+      "woba": 0.838,
+      "xwoba": 0.895
+     },
+     "popup": {
+      "n": 6,
+      "woba": 0.0,
+      "xwoba": 0.008
+     }
+    }
+   }
+  },
+  "low_away_soft": {
+   "pitches": 559,
+   "swing": {
+    "k": 239,
+    "n": 559,
+    "pct": 42.8,
+    "lo": 38.7,
+    "hi": 46.9
+   },
+   "whiff": {
+    "k": 106,
+    "n": 239,
+    "pct": 44.4,
+    "lo": 38.2,
+    "hi": 50.7
+   },
+   "swing_shape": {
+    "bat_speed": {
+     "mean": 65.7,
+     "n": 231,
+     "sd": 11.49
+    },
+    "swing_length": {
+     "mean": 7.95,
+     "n": 231,
+     "sd": 0.585
+    },
+    "attack_angle": {
+     "mean": 12.1,
+     "n": 231,
+     "sd": 8.72
+    },
+    "contact_depth_in": {
+     "mean": 38.0,
+     "n": 227,
+     "sd": 12.36
+    }
+   },
+   "batted": {
+    "n": 71,
+    "ground_ball": {
+     "k": 43,
+     "n": 71,
+     "pct": 60.6,
+     "lo": 48.9,
+     "hi": 71.1
+    },
+    "line_drive": {
+     "k": 11,
+     "n": 71,
+     "pct": 15.5,
+     "lo": 8.9,
+     "hi": 25.7
+    },
+    "fly_ball": {
+     "k": 12,
+     "n": 71,
+     "pct": 16.9,
+     "lo": 9.9,
+     "hi": 27.3
+    },
+    "popup": {
+     "k": 5,
+     "n": 71,
+     "pct": 7.0,
+     "lo": 3.0,
+     "hi": 15.4
+    },
+    "hard_hit": {
+     "k": 19,
+     "n": 71,
+     "pct": 26.8,
+     "lo": 17.9,
+     "hi": 38.1
+    },
+    "hard_hit_on_ground": {
+     "k": 14,
+     "n": 19,
+     "pct": 73.7,
+     "lo": 51.2,
+     "hi": 88.2
+    },
+    "launch_angle": {
+     "mean": -0.7,
+     "n": 71,
+     "sd": 35.18
+    },
+    "launch_angle_hard_hit": {
+     "mean": -0.6,
+     "n": 19,
+     "sd": 17.43
+    },
+    "exit_velo": {
+     "mean": 83.6,
+     "n": 71,
+     "sd": 17.01
+    },
+    "ev90": 101.5,
+    "xwoba_con": 0.226,
+    "woba_con": 0.263,
+    "by_type": {
+     "fly_ball": {
+      "n": 12,
+      "woba": 0.075,
+      "xwoba": 0.182
+     },
+     "ground_ball": {
+      "n": 43,
+      "woba": 0.293,
+      "xwoba": 0.205
+     },
+     "line_drive": {
+      "n": 11,
+      "woba": 0.473,
+      "xwoba": 0.458
+     },
+     "popup": {
+      "n": 5,
+      "woba": 0.0,
+      "xwoba": 0.004
+     }
+    }
+   }
+  },
+  "regions": {
+   "heart": {
+    "n": 717,
+    "swing": {
+     "k": 501,
+     "n": 717,
+     "pct": 69.9,
+     "lo": 66.4,
+     "hi": 73.1
+    },
+    "rv_swing": 1.7,
+    "rv_take": -12.9
+   },
+   "shadow": {
+    "n": 1182,
+    "swing": {
+     "k": 576,
+     "n": 1182,
+     "pct": 48.7,
+     "lo": 45.9,
+     "hi": 51.6
+    },
+    "rv_swing": -3.4,
+    "rv_take": -5.1
+   },
+   "chase": {
+    "n": 640,
+    "swing": {
+     "k": 153,
+     "n": 640,
+     "pct": 23.9,
+     "lo": 20.8,
+     "hi": 27.4
+    },
+    "rv_swing": -15.1,
+    "rv_take": 31.0
+   },
+   "waste": {
+    "n": 334,
+    "swing": {
+     "k": 33,
+     "n": 334,
+     "pct": 9.9,
+     "lo": 7.1,
+     "hi": 13.6
+    },
+    "rv_swing": -2.9,
+    "rv_take": 19.8
+   }
+  },
+  "zones": {
+   "1": {
+    "n": 118,
+    "swings": 65,
+    "whiff": {
+     "k": 26,
+     "n": 65,
+     "pct": 40.0,
+     "lo": 29.0,
+     "hi": 52.1
+    },
+    "xwoba_con": 0.412,
+    "bip": 11
+   },
+   "2": {
+    "n": 135,
+    "swings": 72,
+    "whiff": {
+     "k": 19,
+     "n": 72,
+     "pct": 26.4,
+     "lo": 17.6,
+     "hi": 37.6
+    },
+    "xwoba_con": 0.439,
+    "bip": 25
+   },
+   "3": {
+    "n": 154,
+    "swings": 89,
+    "whiff": {
+     "k": 30,
+     "n": 89,
+     "pct": 33.7,
+     "lo": 24.7,
+     "hi": 44.0
+    },
+    "xwoba_con": 0.597,
+    "bip": 24
+   },
+   "4": {
+    "n": 148,
+    "swings": 95,
+    "whiff": {
+     "k": 22,
+     "n": 95,
+     "pct": 23.2,
+     "lo": 15.8,
+     "hi": 32.6
+    },
+    "xwoba_con": 0.372,
+    "bip": 30
+   },
+   "5": {
+    "n": 229,
+    "swings": 173,
+    "whiff": {
+     "k": 39,
+     "n": 173,
+     "pct": 22.5,
+     "lo": 17.0,
+     "hi": 29.3
+    },
+    "xwoba_con": 0.452,
+    "bip": 65
+   },
+   "6": {
+    "n": 215,
+    "swings": 137,
+    "whiff": {
+     "k": 34,
+     "n": 137,
+     "pct": 24.8,
+     "lo": 18.3,
+     "hi": 32.7
+    },
+    "xwoba_con": 0.344,
+    "bip": 56
+   },
+   "7": {
+    "n": 108,
+    "swings": 61,
+    "whiff": {
+     "k": 9,
+     "n": 61,
+     "pct": 14.8,
+     "lo": 8.0,
+     "hi": 25.7
+    },
+    "xwoba_con": 0.503,
+    "bip": 19
+   },
+   "8": {
+    "n": 180,
+    "swings": 117,
+    "whiff": {
+     "k": 16,
+     "n": 117,
+     "pct": 13.7,
+     "lo": 8.6,
+     "hi": 21.1
+    },
+    "xwoba_con": 0.473,
+    "bip": 58
+   },
+   "9": {
+    "n": 157,
+    "swings": 93,
+    "whiff": {
+     "k": 23,
+     "n": 93,
+     "pct": 24.7,
+     "lo": 17.1,
+     "hi": 34.4
+    },
+    "xwoba_con": 0.317,
+    "bip": 37
+   },
+   "11": {
+    "n": 232,
+    "swings": 32,
+    "whiff": {
+     "k": 14,
+     "n": 32,
+     "pct": 43.8,
+     "lo": 28.2,
+     "hi": 60.7
+    },
+    "xwoba_con": 0.383,
+    "bip": 7
+   },
+   "12": {
+    "n": 316,
+    "swings": 59,
+    "whiff": {
+     "k": 20,
+     "n": 59,
+     "pct": 33.9,
+     "lo": 23.1,
+     "hi": 46.6
+    },
+    "xwoba_con": 0.454,
+    "bip": 22
+   },
+   "13": {
+    "n": 245,
+    "swings": 61,
+    "whiff": {
+     "k": 24,
+     "n": 61,
+     "pct": 39.3,
+     "lo": 28.1,
+     "hi": 51.9
+    },
+    "xwoba_con": 0.408,
+    "bip": 11
+   },
+   "14": {
+    "n": 636,
+    "swings": 209,
+    "whiff": {
+     "k": 100,
+     "n": 209,
+     "pct": 47.8,
+     "lo": 41.2,
+     "hi": 54.6
+    },
+    "xwoba_con": 0.214,
+    "bip": 62
+   }
+  }
+ },
+ "second": {
+  "stand": "R",
+  "pitches": 2759,
+  "pa": 670,
+  "strikeout": {
+   "k": 145,
+   "n": 670,
+   "pct": 21.6,
+   "lo": 18.7,
+   "hi": 24.9
+  },
+  "walk": {
+   "k": 68,
+   "n": 670,
+   "pct": 10.1,
+   "lo": 8.1,
+   "hi": 12.7
+  },
+  "discipline": {
+   "chase": {
+    "k": 450,
+    "n": 1474,
+    "pct": 30.5,
+    "lo": 28.2,
+    "hi": 32.9
+   },
+   "zone_swing": {
+    "k": 814,
+    "n": 1285,
+    "pct": 63.3,
+    "lo": 60.7,
+    "hi": 65.9
+   },
+   "zone_contact": {
+    "k": 624,
+    "n": 814,
+    "pct": 76.7,
+    "lo": 73.6,
+    "hi": 79.4
+   },
+   "chase_contact": {
+    "k": 308,
+    "n": 450,
+    "pct": 68.4,
+    "lo": 64.0,
+    "hi": 72.6
+   },
+   "whiff_per_swing": {
+    "k": 332,
+    "n": 1264,
+    "pct": 26.3,
+    "lo": 23.9,
+    "hi": 28.8
+   },
+   "first_pitch_swing": {
+    "k": 191,
+    "n": 672,
+    "pct": 28.4,
+    "lo": 25.1,
+    "hi": 31.9
+   }
+  },
+  "two_strikes": {
+   "pa_reaching": {
+    "k": 395,
+    "n": 670,
+    "pct": 59.0,
+    "lo": 55.2,
+    "hi": 62.6
+   },
+   "strikeout_once_there": {
+    "k": 145,
+    "n": 395,
+    "pct": 36.7,
+    "lo": 32.1,
+    "hi": 41.6
+   },
+   "chase": {
+    "k": 242,
+    "n": 540,
+    "pct": 44.8,
+    "lo": 40.7,
+    "hi": 49.0
+   },
+   "zone_swing": {
+    "k": 306,
+    "n": 332,
+    "pct": 92.2,
+    "lo": 88.8,
+    "hi": 94.6
+   },
+   "chase_contact": {
+    "k": 180,
+    "n": 242,
+    "pct": 74.4,
+    "lo": 68.5,
+    "hi": 79.5
+   },
+   "zone_contact": {
+    "k": 248,
+    "n": 306,
+    "pct": 81.0,
+    "lo": 76.3,
+    "hi": 85.0
+   },
+   "swing_two_strikes": {
+    "bat_speed": {
+     "mean": 67.7,
+     "n": 526,
+     "sd": 7.3
+    },
+    "swing_length": {
+     "mean": 7.02,
+     "n": 526,
+     "sd": 0.762
+    },
+    "attack_angle": {
+     "mean": 7.8,
+     "n": 526,
+     "sd": 8.48
+    },
+    "contact_depth_in": {
+     "mean": 29.2,
+     "n": 526,
+     "sd": 11.51
+    }
+   },
+   "swing_fewer_strikes": {
+    "bat_speed": {
+     "mean": 69.3,
+     "n": 693,
+     "sd": 9.68
+    },
+    "swing_length": {
+     "mean": 7.18,
+     "n": 693,
+     "sd": 0.833
+    },
+    "attack_angle": {
+     "mean": 6.7,
+     "n": 693,
+     "sd": 9.8
+    },
+    "contact_depth_in": {
+     "mean": 27.9,
+     "n": 689,
+     "sd": 12.92
+    }
+   },
+   "batted": {
+    "n": 198,
+    "ground_ball": {
+     "k": 90,
+     "n": 198,
+     "pct": 45.5,
+     "lo": 38.7,
+     "hi": 52.4
+    },
+    "line_drive": {
+     "k": 60,
+     "n": 198,
+     "pct": 30.3,
+     "lo": 24.3,
+     "hi": 37.0
+    },
+    "fly_ball": {
+     "k": 37,
+     "n": 198,
+     "pct": 18.7,
+     "lo": 13.9,
+     "hi": 24.7
+    },
+    "popup": {
+     "k": 11,
+     "n": 198,
+     "pct": 5.6,
+     "lo": 3.1,
+     "hi": 9.7
+    },
+    "hard_hit": {
+     "k": 79,
+     "n": 198,
+     "pct": 39.9,
+     "lo": 33.3,
+     "hi": 46.8
+    },
+    "hard_hit_on_ground": {
+     "k": 34,
+     "n": 79,
+     "pct": 43.0,
+     "lo": 32.7,
+     "hi": 54.0
+    },
+    "launch_angle": {
+     "mean": 11.3,
+     "n": 198,
+     "sd": 25.05
+    },
+    "launch_angle_hard_hit": {
+     "mean": 8.8,
+     "n": 79,
+     "sd": 15.3
+    },
+    "exit_velo": {
+     "mean": 89.7,
+     "n": 198,
+     "sd": 12.86
+    },
+    "ev90": 102.9,
+    "xwoba_con": 0.347,
+    "woba_con": 0.411,
+    "by_type": {
+     "fly_ball": {
+      "n": 37,
+      "woba": 0.5,
+      "xwoba": 0.319
+     },
+     "ground_ball": {
+      "n": 90,
+      "woba": 0.224,
+      "xwoba": 0.232
+     },
+     "line_drive": {
+      "n": 60,
+      "woba": 0.711,
+      "xwoba": 0.595
+     },
+     "popup": {
+      "n": 11,
+      "woba": 0.0,
+      "xwoba": 0.021
+     }
+    }
+   },
+   "batted_chase": {
+    "n": 71,
+    "ground_ball": {
+     "k": 31,
+     "n": 71,
+     "pct": 43.7,
+     "lo": 32.7,
+     "hi": 55.2
+    },
+    "line_drive": {
+     "k": 19,
+     "n": 71,
+     "pct": 26.8,
+     "lo": 17.9,
+     "hi": 38.1
+    },
+    "fly_ball": {
+     "k": 16,
+     "n": 71,
+     "pct": 22.5,
+     "lo": 14.4,
+     "hi": 33.5
+    },
+    "popup": {
+     "k": 5,
+     "n": 71,
+     "pct": 7.0,
+     "lo": 3.0,
+     "hi": 15.4
+    },
+    "hard_hit": {
+     "k": 29,
+     "n": 71,
+     "pct": 40.8,
+     "lo": 30.2,
+     "hi": 52.5
+    },
+    "hard_hit_on_ground": {
+     "k": 11,
+     "n": 29,
+     "pct": 37.9,
+     "lo": 22.7,
+     "hi": 56.0
+    },
+    "launch_angle": {
+     "mean": 11.9,
+     "n": 71,
+     "sd": 27.48
+    },
+    "launch_angle_hard_hit": {
+     "mean": 9.9,
+     "n": 29,
+     "sd": 15.33
+    },
+    "exit_velo": {
+     "mean": 89.2,
+     "n": 71,
+     "sd": 13.46
+    },
+    "ev90": 101.8,
+    "xwoba_con": 0.35,
+    "woba_con": 0.393,
+    "by_type": {
+     "fly_ball": {
+      "n": 16,
+      "woba": 0.531,
+      "xwoba": 0.392
+     },
+     "ground_ball": {
+      "n": 31,
+      "woba": 0.261,
+      "xwoba": 0.232
+     },
+     "line_drive": {
+      "n": 19,
+      "woba": 0.595,
+      "xwoba": 0.592
+     },
+     "popup": {
+      "n": 5,
+      "woba": 0.0,
+      "xwoba": 0.026
+     }
+    }
+   }
+  },
+  "batted": {
+   "n": 431,
+   "ground_ball": {
+    "k": 209,
+    "n": 431,
+    "pct": 48.5,
+    "lo": 43.8,
+    "hi": 53.2
+   },
+   "line_drive": {
+    "k": 101,
+    "n": 431,
+    "pct": 23.4,
+    "lo": 19.7,
+    "hi": 27.7
+   },
+   "fly_ball": {
+    "k": 102,
+    "n": 431,
+    "pct": 23.7,
+    "lo": 19.9,
+    "hi": 27.9
+   },
+   "popup": {
+    "k": 19,
+    "n": 431,
+    "pct": 4.4,
+    "lo": 2.8,
+    "hi": 6.8
+   },
+   "hard_hit": {
+    "k": 187,
+    "n": 430,
+    "pct": 43.5,
+    "lo": 38.9,
+    "hi": 48.2
+   },
+   "hard_hit_on_ground": {
+    "k": 83,
+    "n": 187,
+    "pct": 44.4,
+    "lo": 37.4,
+    "hi": 51.5
+   },
+   "launch_angle": {
+    "mean": 9.9,
+    "n": 431,
+    "sd": 27.02
+   },
+   "launch_angle_hard_hit": {
+    "mean": 10.6,
+    "n": 187,
+    "sd": 16.57
+   },
+   "exit_velo": {
+    "mean": 90.8,
+    "n": 430,
+    "sd": 13.14
+   },
+   "ev90": 104.4,
+   "xwoba_con": 0.388,
+   "woba_con": 0.448,
+   "by_type": {
+    "fly_ball": {
+     "n": 102,
+     "woba": 0.582,
+     "xwoba": 0.511
+    },
+    "ground_ball": {
+     "n": 209,
+     "woba": 0.285,
+     "xwoba": 0.251
+    },
+    "line_drive": {
+     "n": 101,
+     "woba": 0.726,
+     "xwoba": 0.613
+    },
+    "popup": {
+     "n": 19,
+     "woba": 0.047,
+     "xwoba": 0.048
+    }
+   }
+  },
+  "swing": {
+   "bat_speed": {
+    "mean": 68.6,
+    "n": 1219,
+    "sd": 8.76
+   },
+   "swing_length": {
+    "mean": 7.11,
+    "n": 1219,
+    "sd": 0.806
+   },
+   "attack_angle": {
+    "mean": 7.2,
+    "n": 1219,
+    "sd": 9.26
+   },
+   "contact_depth_in": {
+    "mean": 28.5,
+    "n": 1215,
+    "sd": 12.34
+   }
+  },
+  "high_fastball": {
+   "pitches": 448,
+   "swing": {
+    "k": 158,
+    "n": 448,
+    "pct": 35.3,
+    "lo": 31.0,
+    "hi": 39.8
+   },
+   "whiff": {
+    "k": 52,
+    "n": 158,
+    "pct": 32.9,
+    "lo": 26.1,
+    "hi": 40.6
+   },
+   "swing_shape": {
+    "bat_speed": {
+     "mean": 64.4,
+     "n": 148,
+     "sd": 10.18
+    },
+    "swing_length": {
+     "mean": 6.33,
+     "n": 148,
+     "sd": 0.654
+    },
+    "attack_angle": {
+     "mean": 7.4,
+     "n": 148,
+     "sd": 7.09
+    },
+    "contact_depth_in": {
+     "mean": 20.7,
+     "n": 148,
+     "sd": 8.88
+    }
+   },
+   "batted": {
+    "n": 38,
+    "ground_ball": {
+     "k": 19,
+     "n": 38,
+     "pct": 50.0,
+     "lo": 34.8,
+     "hi": 65.2
+    },
+    "line_drive": {
+     "k": 8,
+     "n": 38,
+     "pct": 21.1,
+     "lo": 11.1,
+     "hi": 36.3
+    },
+    "fly_ball": {
+     "k": 11,
+     "n": 38,
+     "pct": 28.9,
+     "lo": 17.0,
+     "hi": 44.8
+    },
+    "popup": {
+     "k": 0,
+     "n": 38,
+     "pct": 0.0,
+     "lo": 0.0,
+     "hi": 9.2
+    },
+    "hard_hit": {
+     "k": 18,
+     "n": 38,
+     "pct": 47.4,
+     "lo": 32.5,
+     "hi": 62.7
+    },
+    "hard_hit_on_ground": {
+     "k": 8,
+     "n": 18,
+     "pct": 44.4,
+     "lo": 24.6,
+     "hi": 66.3
+    },
+    "launch_angle": {
+     "mean": 8.6,
+     "n": 38,
+     "sd": 27.6
+    },
+    "launch_angle_hard_hit": {
+     "mean": 13.0,
+     "n": 18,
+     "sd": 19.06
+    },
+    "exit_velo": {
+     "mean": 91.0,
+     "n": 38,
+     "sd": 14.46
+    },
+    "ev90": 102.7,
+    "xwoba_con": 0.354,
+    "woba_con": 0.437,
+    "by_type": {
+     "fly_ball": {
+      "n": 11,
+      "woba": 0.445,
+      "xwoba": 0.282
+     },
+     "ground_ball": {
+      "n": 19,
+      "woba": 0.379,
+      "xwoba": 0.296
+     },
+     "line_drive": {
+      "n": 8,
+      "woba": 0.562,
+      "xwoba": 0.594
+     }
+    }
+   }
+  },
+  "low_away_soft": {
+   "pitches": 516,
+   "swing": {
+    "k": 253,
+    "n": 516,
+    "pct": 49.0,
+    "lo": 44.7,
+    "hi": 53.3
+   },
+   "whiff": {
+    "k": 86,
+    "n": 253,
+    "pct": 34.0,
+    "lo": 28.4,
+    "hi": 40.0
+   },
+   "swing_shape": {
+    "bat_speed": {
+     "mean": 67.1,
+     "n": 244,
+     "sd": 9.24
+    },
+    "swing_length": {
+     "mean": 7.7,
+     "n": 244,
+     "sd": 0.62
+    },
+    "attack_angle": {
+     "mean": 10.2,
+     "n": 244,
+     "sd": 8.8
+    },
+    "contact_depth_in": {
+     "mean": 35.4,
+     "n": 244,
+     "sd": 12.16
+    }
+   },
+   "batted": {
+    "n": 87,
+    "ground_ball": {
+     "k": 50,
+     "n": 87,
+     "pct": 57.5,
+     "lo": 47.0,
+     "hi": 67.3
+    },
+    "line_drive": {
+     "k": 15,
+     "n": 87,
+     "pct": 17.2,
+     "lo": 10.7,
+     "hi": 26.5
+    },
+    "fly_ball": {
+     "k": 20,
+     "n": 87,
+     "pct": 23.0,
+     "lo": 15.4,
+     "hi": 32.9
+    },
+    "popup": {
+     "k": 2,
+     "n": 87,
+     "pct": 2.3,
+     "lo": 0.6,
+     "hi": 8.0
+    },
+    "hard_hit": {
+     "k": 36,
+     "n": 87,
+     "pct": 41.4,
+     "lo": 31.6,
+     "hi": 51.9
+    },
+    "hard_hit_on_ground": {
+     "k": 20,
+     "n": 36,
+     "pct": 55.6,
+     "lo": 39.6,
+     "hi": 70.5
+    },
+    "launch_angle": {
+     "mean": 4.5,
+     "n": 87,
+     "sd": 26.51
+    },
+    "launch_angle_hard_hit": {
+     "mean": 5.5,
+     "n": 36,
+     "sd": 16.07
+    },
+    "exit_velo": {
+     "mean": 88.9,
+     "n": 87,
+     "sd": 13.62
+    },
+    "ev90": 103.0,
+    "xwoba_con": 0.331,
+    "woba_con": 0.443,
+    "by_type": {
+     "fly_ball": {
+      "n": 20,
+      "woba": 0.47,
+      "xwoba": 0.391
+     },
+     "ground_ball": {
+      "n": 50,
+      "woba": 0.367,
+      "xwoba": 0.23
+     },
+     "line_drive": {
+      "n": 15,
+      "woba": 0.717,
+      "xwoba": 0.621
+     },
+     "popup": {
+      "n": 2,
+      "woba": 0.0,
+      "xwoba": 0.061
+     }
+    }
+   }
+  },
+  "regions": {
+   "heart": {
+    "n": 590,
+    "swing": {
+     "k": 405,
+     "n": 590,
+     "pct": 68.6,
+     "lo": 64.8,
+     "hi": 72.3
+    },
+    "rv_swing": 10.4,
+    "rv_take": -11.0
+   },
+   "shadow": {
+    "n": 1061,
+    "swing": {
+     "k": 583,
+     "n": 1061,
+     "pct": 54.9,
+     "lo": 51.9,
+     "hi": 57.9
+    },
+    "rv_swing": -0.4,
+    "rv_take": -5.1
+   },
+   "chase": {
+    "n": 713,
+    "swing": {
+     "k": 223,
+     "n": 713,
+     "pct": 31.3,
+     "lo": 28.0,
+     "hi": 34.8
+    },
+    "rv_swing": -6.3,
+    "rv_take": 32.2
+   },
+   "waste": {
+    "n": 388,
+    "swing": {
+     "k": 52,
+     "n": 388,
+     "pct": 13.4,
+     "lo": 10.4,
+     "hi": 17.2
+    },
+    "rv_swing": -2.9,
+    "rv_take": 20.4
+   }
+  },
+  "zones": {
+   "1": {
+    "n": 105,
+    "swings": 53,
+    "whiff": {
+     "k": 26,
+     "n": 53,
+     "pct": 49.1,
+     "lo": 36.1,
+     "hi": 62.1
+    },
+    "xwoba_con": 0.228,
+    "bip": 8
+   },
+   "2": {
+    "n": 135,
+    "swings": 98,
+    "whiff": {
+     "k": 33,
+     "n": 98,
+     "pct": 33.7,
+     "lo": 25.1,
+     "hi": 43.5
+    },
+    "xwoba_con": 0.32,
+    "bip": 30
+   },
+   "3": {
+    "n": 135,
+    "swings": 85,
+    "whiff": {
+     "k": 26,
+     "n": 85,
+     "pct": 30.6,
+     "lo": 21.8,
+     "hi": 41.0
+    },
+    "xwoba_con": 0.444,
+    "bip": 28
+   },
+   "4": {
+    "n": 123,
+    "swings": 61,
+    "whiff": {
+     "k": 10,
+     "n": 61,
+     "pct": 16.4,
+     "lo": 9.2,
+     "hi": 27.6
+    },
+    "xwoba_con": 0.326,
+    "bip": 23
+   },
+   "5": {
+    "n": 208,
+    "swings": 159,
+    "whiff": {
+     "k": 25,
+     "n": 159,
+     "pct": 15.7,
+     "lo": 10.9,
+     "hi": 22.2
+    },
+    "xwoba_con": 0.408,
+    "bip": 68
+   },
+   "6": {
+    "n": 183,
+    "swings": 129,
+    "whiff": {
+     "k": 28,
+     "n": 129,
+     "pct": 21.7,
+     "lo": 15.5,
+     "hi": 29.6
+    },
+    "xwoba_con": 0.439,
+    "bip": 53
+   },
+   "7": {
+    "n": 94,
+    "swings": 49,
+    "whiff": {
+     "k": 11,
+     "n": 49,
+     "pct": 22.4,
+     "lo": 13.0,
+     "hi": 35.9
+    },
+    "xwoba_con": 0.289,
+    "bip": 12
+   },
+   "8": {
+    "n": 153,
+    "swings": 93,
+    "whiff": {
+     "k": 13,
+     "n": 93,
+     "pct": 14.0,
+     "lo": 8.4,
+     "hi": 22.5
+    },
+    "xwoba_con": 0.436,
+    "bip": 46
+   },
+   "9": {
+    "n": 149,
+    "swings": 87,
+    "whiff": {
+     "k": 18,
+     "n": 87,
+     "pct": 20.7,
+     "lo": 13.5,
+     "hi": 30.4
+    },
+    "xwoba_con": 0.42,
+    "bip": 40
+   },
+   "11": {
+    "n": 290,
+    "swings": 44,
+    "whiff": {
+     "k": 14,
+     "n": 44,
+     "pct": 31.8,
+     "lo": 20.0,
+     "hi": 46.6
+    },
+    "xwoba_con": 0.227,
+    "bip": 5
+   },
+   "12": {
+    "n": 299,
+    "swings": 105,
+    "whiff": {
+     "k": 27,
+     "n": 105,
+     "pct": 25.7,
+     "lo": 18.3,
+     "hi": 34.8
+    },
+    "xwoba_con": 0.359,
+    "bip": 33
+   },
+   "13": {
+    "n": 247,
+    "swings": 72,
+    "whiff": {
+     "k": 21,
+     "n": 72,
+     "pct": 29.2,
+     "lo": 19.9,
+     "hi": 40.5
+    },
+    "xwoba_con": 0.484,
+    "bip": 16
+   },
+   "14": {
+    "n": 631,
+    "swings": 228,
+    "whiff": {
+     "k": 80,
+     "n": 228,
+     "pct": 35.1,
+     "lo": 29.2,
+     "hi": 41.5
+    },
+    "xwoba_con": 0.349,
+    "bip": 68
+   }
+  }
+ },
+ "tests": {
+  "strikeout": {
+   "from": 26.9,
+   "to": 21.6,
+   "diff": -5.3,
+   "p": 0.022,
+   "q": 0.0312
+  },
+  "chase": {
+   "from": 25.1,
+   "to": 30.5,
+   "diff": 5.4,
+   "p": 0.0011,
+   "q": 0.0031
+  },
+  "two_strike_chase": {
+   "from": 33.6,
+   "to": 44.8,
+   "diff": 11.2,
+   "p": 0.0002,
+   "q": 0.0007
+  },
+  "two_strike_chase_contact": {
+   "from": 57.1,
+   "to": 74.4,
+   "diff": 17.3,
+   "p": 0.0002,
+   "q": 0.0007
+  },
+  "two_strike_zone_contact": {
+   "from": 78.7,
+   "to": 81.0,
+   "diff": 2.3,
+   "p": 0.4565,
+   "q": 0.4604
+  },
+  "strikeout_once_at_two_strikes": {
+   "from": 46.8,
+   "to": 36.7,
+   "diff": -10.1,
+   "p": 0.0037,
+   "q": 0.0079
+  },
+  "ground_ball": {
+   "from": 42.6,
+   "to": 48.5,
+   "diff": 5.9,
+   "p": 0.0844,
+   "q": 0.1025
+  },
+  "popup": {
+   "from": 9.1,
+   "to": 4.4,
+   "diff": -4.7,
+   "p": 0.0058,
+   "q": 0.011
+  },
+  "hard_hit": {
+   "from": 50.7,
+   "to": 43.5,
+   "diff": -7.2,
+   "p": 0.0345,
+   "q": 0.0451
+  },
+  "hard_hit_on_ground": {
+   "from": 40.7,
+   "to": 44.4,
+   "diff": 3.7,
+   "p": 0.4604,
+   "q": 0.4604
+  },
+  "high_fb_whiff": {
+   "from": 38.0,
+   "to": 32.9,
+   "diff": -5.1,
+   "p": 0.3433,
+   "q": 0.3891
+  },
+  "high_fb_bat_speed": {
+   "from": 69.1,
+   "to": 64.4,
+   "diff": -4.7,
+   "p": 0.0,
+   "n": [
+    157,
+    148
+   ],
+   "q": 0.0
+  },
+  "high_fb_contact_depth": {
+   "from": 23.9,
+   "to": 20.7,
+   "diff": -3.2,
+   "p": 0.0025,
+   "n": [
+    157,
+    148
+   ],
+   "q": 0.0061
+  },
+  "high_fb_launch_angle": {
+   "from": 25.6,
+   "to": 8.6,
+   "diff": -17.0,
+   "p": 0.0094,
+   "n": [
+    43,
+    38
+   ],
+   "q": 0.016
+  },
+  "low_away_soft_whiff": {
+   "from": 44.4,
+   "to": 34.0,
+   "diff": -10.4,
+   "p": 0.0186,
+   "q": 0.0287
+  },
+  "bat_speed_all_swings": {
+   "from": 70.1,
+   "to": 68.6,
+   "diff": -1.5,
+   "p": 0.0,
+   "n": [
+    1214,
+    1219
+   ],
+   "q": 0.0
+  },
+  "contact_depth_all_swings": {
+   "from": 30.8,
+   "to": 28.5,
+   "diff": -2.3,
+   "p": 0.0,
+   "n": [
+    1207,
+    1215
+   ],
+   "q": 0.0
+  }
+ }
+}

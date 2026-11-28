@@ -2,6 +2,17 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-27: Arozarena breakdown, second video study and the approach splits
+**Added**
+- **41 of his swings watched frame by frame on MLB.TV's archived broadcasts,** 28 from eight failure groups chosen before watching, each logged with release, foot down and contact times, a read (late, fooled, or on time with the wrong bat path) and a link to its Savant video page. Five have a second camera angle.
+- **The approach splits** (`baseball/evaluation/approach_splits.py`): plate discipline, two-strike outcomes, batted-ball mix, high fastballs, soft stuff low and away, attack-region run value and a 13-zone hole map, with 17 season-over-season tests and Benjamini-Hochberg q-values. The strikeout drop is contact on two-strike chases (57.1% to 74.4%, q < .001); the swing got shorter, slower and met the ball 2.3 inches deeper; high-fastball bat speed fell 4.7 mph and launch angle on those balls from 25.6° to 8.6°; wOBA on contact ran .060 above expected, about 70% of it on line drives and fly balls.
+- **A "How to read these numbers" section** defining every metric the report uses, a percentile table, and the hole-map figure (`scripts/arozarena_approach_figures.py`, Roboto Condensed added to `assets/fonts`).
+- `tests/test_approach_splits.py`: the definitions on a hand-built season and the report's numbers against the saved outputs.
+
+**Decided**
+- **Tracking over the camera on timing.** By eye, his 2025 high-fastball misses looked later than 2026's; bat tracking on 305 swings says 2026's contact point was 3 inches deeper. That gap is about 2 ms, under one frame, so the report goes with the tracking.
+- **The conclusion and the projection are unchanged:** .169 to .180 ISO for 2027, and call 6 stands.
+
 ## 2026-11-26: README links for the R and Bayes studies; small fixes
 **Added**
 - **The R rebuild and the PyMC model are linked from the README** (a research-table row and the R&D row), with numbers copied from their own READMEs: M = 54.5 swings in R vs 54.7 in Python, 79 of 79 checks; RMSE 4.94 vs 4.95 on 520 hitters, 95% coverage 95.8% for both.
