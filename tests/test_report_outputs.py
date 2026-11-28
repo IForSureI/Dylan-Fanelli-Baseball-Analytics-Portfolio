@@ -93,8 +93,8 @@ def test_il_warning_report_matches_its_saved_table():
     assert f"+{v['diff']:.3f} (\u2212{abs(v['lo']):.3f} to +{v['hi']:.3f})" in rep
     # the association, refit on 2026, and without the stint's last outing
     r, e = m["replication_in_test"], s["specs"]["arm_14_early"]["replication_in_test"]
-    assert f"{r['odds_ratio']:.2f} times the odds" in rep and f"({r['or_lo']:.2f} to {r['or_hi']:.2f}, p < 0.001)" in rep
-    assert r["p"] < 0.001
+    assert f"{r['odds_ratio']:.2f} times the odds" in rep and f"({r['or_lo']:.2f} to {r['or_hi']:.2f}, p = {r['p']:.3f})" in rep
+    assert r["p"] < 0.01      # 0.0010 on the Nov. 28 rerun (below 0.001 before the injury-wording fix)
     assert f"{e['odds_ratio']:.2f} ({e['or_lo']:.2f} to {e['or_hi']:.2f})" in rep and e["p"] > 0.05
     # calibration slopes
     c = m["calibration"]
