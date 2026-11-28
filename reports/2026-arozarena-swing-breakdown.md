@@ -10,11 +10,11 @@
 **At a glance**
 
 - **The question:** Is Randy Arozarena's 2026 power real, and did his swing change?
-- **The answer:** Not as power. The strikeout drop (26.9% to 21.6%) came from contact on two-strike chases (57% to 74%) with a shorter, slower swing, while hard-hit rate, barrels and bat speed fell and his .379 wOBA ran ahead of a .348 xwOBA. The league model chosen on training data puts his 2027 ISO at .169-.180. On 41 swings watched frame by frame on MLB.TV, his 2026 failures split among late fastballs, chased spin, and on-time swings with the wrong path; on high fastballs his bat got 4.7 mph slower.
+- **The answer:** Not as power. The strikeout drop (26.9% to 21.6%) came from contact on two-strike chases (57% to 74%) with a shorter, slower swing, while hard-hit rate, barrels and bat speed fell and his .379 wOBA ran ahead of a .348 xwOBA. The league model chosen on training data puts his 2027 ISO at .169-.180. On 41 swings reviewed frame by frame on MLB.TV, his 2026 failures split among late fastballs, chased spin, and on-time swings with the wrong path; on high fastballs his bat got 4.7 mph slower.
 - **For a club:** Price the 2024-25 hitter, pitch him up and in, and make the high fastball the development ask; video used to name the move behind each number, with the camera's limits stated.
 <!-- /portfolio:glance -->
 
-Dylan Fanelli. Updated Nov. 27, 2026 with a second video study: 41 of his swings, mostly failures, watched frame by frame on MLB.TV's archived broadcasts, and a pitch-by-pitch split of his 2025 and 2026 seasons. Data: Statcast pitch and bat-tracking data 2024-26 via Baseball Savant (pulled Nov. 23 and Nov. 27, 2026); MLB.TV archived game broadcasts; MLB's highlight clips of all 73 of his 2024-26 home runs (MLB Stats API content feed, 1280x720 at 59.94 frames a second).
+Dylan Fanelli. Updated Nov. 27, 2026 with a second video study: 41 of his swings, mostly failures, reviewed frame by frame on MLB.TV's archived broadcasts, and a pitch-by-pitch split of his 2025 and 2026 seasons. Data: Statcast pitch and bat-tracking data 2024-26 via Baseball Savant (pulled Nov. 23 and Nov. 27, 2026); MLB.TV archived game broadcasts; MLB's highlight clips of all 73 of his 2024-26 home runs (MLB Stats API content feed, 1280x720 at 59.94 frames a second).
 
 **The question:** Arozarena posted a 151 wRC+ in 2026 and is one of this winter's top free agents. My [prediction log](2027-prediction-log.md) says his 2027 wRC+ will be 130 or lower (call 6, 0.70), and my [market board](2027-market-board.md) has him at $33.0M a year against MLB Trade Rumors' $25.0M. Did something change that a club should pay for?
 
@@ -135,7 +135,7 @@ Statcast bat tracking, all tracked swings.
 | Expected wOBA on contact | .555 | .354 | -.201 | |
 
 - **He misses them a little less, and hurts them far less.** The high fastball was his best pitch to hit in 2025 (.555 expected wOBA on contact; on every pitch type in the zone's top-away corner, .597). In 2026 he swung 4.7 mph slower at it, met it 3 inches deeper, and put half of them on the ground.
-- **On video, the misses are mixed, and the change is speed and depth, not a steeper path.** Of the eight 2026 high fastballs I watched (swings 9-13, 24, 26, 27; I picked them as "up" by eye, and three sit just under 3.0 ft), four were late, two swung under on an uphill path (10, 13), and two got on top and rolled it over (24, 27: a 91 mph four-seamer from Jacob Lopez for a 103 mph double-play grounder, and a 95 from Jack Kochanowicz for a -54° roller). Bat tracking doesn't show those two coming down steeper: they were +9.8° and +10.9°, about the same as his 2026 home run off Cole Ragans on a 95.6 mph fastball up (swing 34, +11.5°), and his attack angle on all high fastballs moved only from 8.6° to 7.4°. What the tracking does show is a bat 4.7 mph slower meeting the ball 3 inches deeper. The 2025 version of the pitch, swing 37 (a 92.6 four-seamer from Brandon Walter), went for a 110.5 mph home run.
+- **On video, the misses are mixed, and the change is speed and depth, not a steeper path.** Of the eight 2026 high fastballs I reviewed (swings 9-13, 24, 26, 27; I picked them as "up" by eye, and three sit just under 3.0 ft), four were late, two swung under on an uphill path (10, 13), and two got on top and rolled it over (24, 27: a 91 mph four-seamer from Jacob Lopez for a 103 mph double-play grounder, and a 95 from Jack Kochanowicz for a -54° roller). Bat tracking doesn't show those two coming down steeper: they were +9.8° and +10.9°, about the same as his 2026 home run off Cole Ragans on a 95.6 mph fastball up (swing 34, +11.5°), and his attack angle on all high fastballs moved only from 8.6° to 7.4°. What the tracking does show is a bat 4.7 mph slower meeting the ball 3 inches deeper. The 2025 version of the pitch, swing 37 (a 92.6 four-seamer from Brandon Walter), went for a 110.5 mph home run.
 - **Up and in looks worse, but the sample is thin.** Zone 1 (the top of the zone, inside, all pitch types) went from 40% whiffs to 49% on 65 and 53 swings (p = .32, not significant), and expected wOBA on contact from .412 to .228 on only 11 and 8 balls in play. Above the zone inside (zone 11) rests on 7 and 5. I treat up and in as a lead to watch, not a finding.
 
 **Soft stuff low and away** (breaking balls and offspeed in zones 9 and 14) moved the other way: whiffs fell from 44.4% to 34.0% and expected wOBA on contact rose from .226 to .331, though 57.5% of those balls in play were still on the ground. It fits the two-strike contact gain, but I didn't split two-strike contact by location, so I can't say how much of that gain came from here.
@@ -212,7 +212,7 @@ All three use the same residual spread (.038, from the both-pairs fit).
 
 ## What the video shows, part 1: 41 swings on MLB.TV
 
-The home-run study below only sees his best swings. To see the rest, I picked 41 swings from his 2025 and 2026 Statcast pitches and watched each one on the archived MLB.TV broadcast of that game.
+The home-run study below only sees his best swings. To see the rest, I picked 41 swings from his 2025 and 2026 Statcast pitches and reviewed each one on the archived MLB.TV broadcast of that game.
 
 **How I picked them:** 12 groups chosen before watching, 8 of them failure groups (28 of the 41 swings; one, swing 4, turned out to be a two-strike double), and 4 comparison groups in the same pitch types and locations. 40 came from MLB.TV. For swing 39, the home feed was on a booth shot at the pitch and the road feed showed it only in a small inset, so I used MLB's video clip of the play from the same broadcast.
 
@@ -365,7 +365,7 @@ His home-run swings got slightly slower and steeper in 2026, even as his attack 
 
 ## Limits
 
-- **Sample:** 23 measured home-run swings and 41 watched swings. The 41 were chosen by group, mostly failures, so the tallies describe kinds of failure, not how often each happens. The 2025 groups were whiffs and good swings only.
+- **Sample:** 23 measured home-run swings and 41 reviewed swings. The 41 were chosen by group, mostly failures, so the tallies describe kinds of failure, not how often each happens. The 2025 groups were whiffs and good swings only.
 - **The swing reads are mine, by eye:** one viewer, frame by frame, at 1/60 s (1/30 or 1/40 s on a few feeds). Three swings have release times I flag as late, and six have no foot-down time.
 - **Pose estimates:** 2-D, from a camera behind the pitcher. Wrists blur during the swing, so nothing in the home-run study uses them. Every event comes from the shoulders, hips, knees, ankles and head.
 - **Contact in the home-run study:** timed by a fixed offset from shoulders square, read by eye on seven swings (spread of about one frame).
@@ -375,7 +375,7 @@ His home-run swings got slightly slower and steeper in 2026, even as his attack 
 
 ## Sources
 
-- MLB.TV archived game broadcasts, 2025-26 regular season (home or national feed as offered), watched Nov. 27, 2026; each swing links to its Baseball Savant video page.
+- MLB.TV archived game broadcasts, 2025-26 regular season (home or national feed as offered), reviewed Nov. 27, 2026; each swing links to its Baseball Savant video page.
 - MLB highlight clips, via the MLB Stats API game content feed (/api/v1/game/{game_pk}/content), matched to plays by Statcast play id; each measured swing's MLB.com page is listed in `reports/outputs/arozarena_swings.json`. Pulled Nov. 23, 2026.
 - Statcast pitch-level and bat-tracking data, 2024-26 regular seasons, and the custom, bat-tracking, swing-path, exit-velocity and sprint-speed leaderboards, via [Baseball Savant](https://baseballsavant.mlb.com/); pulled Nov. 23 and Nov. 27, 2026.
 - Metric definitions: [Baseball Savant bat-tracking leaderboard glossary](https://baseballsavant.mlb.com/leaderboard/bat-tracking) and the [MLB.com glossary](https://www.mlb.com/glossary).
