@@ -2,6 +2,22 @@
 
 Newest first. One entry per working session: what was built, what was decided, what was learned.
 
+## 2026-11-28: IL early warning rerun, the run-up, two new signals, repeat flags and 34 outings on MLB.TV
+**Rerun**
+- **The Nov. 24 fixes are in the numbers now** (five missed arm wordings, pitch-clock automatic balls and strikes). 2026 arm stints in the main row 175 to 176; AUC 0.571 and 0.576 to 0.568 and 0.574; the 2026 refit 1.18 to 1.17 (p = 0.001); the 2 mph rule unchanged at 164 flags, 10.4%. Figures redrawn on white.
+
+**Added**
+- **"Why public data, and what this can't see":** what a club's own data would add, and why I did this as a public-data project anyway.
+- **"How to read these numbers":** the baseline and z, the outcome, AUC, log loss, Brier, calibration, odds ratios, precision, lift, false alarms, recall, lead time and the interval and correction methods.
+- **The run-up** (`baseball/health/il_followup.py`, figure `2026-il-run-up.png`): the mean drop is +0.43 mph in the last outing before a 2026 arm stint and about a tenth before that, against 0.78 mph of outing-to-outing noise.
+- **Two new signals,** the in-game fade and breaking-ball and changeup velocity, scored like the tracking terms: neither adds anything (q = 0.92 for both).
+- **Repeat flags:** two straight 2 mph outings went 8 of 20 on 2024–25 and 2 of 14 on 2026.
+- **34 flagged 2026 outings coded blind from the MLB.TV broadcasts,** 17 followed by an arm stint and 17 false alarms matched on role: 4 of the 17 looked hurt on TV (all placed the next day), none of the false alarms did. Saved in `reports/outputs/il-video-coding-2026.json`.
+- `tests/test_il_followup.py`; `tests/test_report_outputs.py` now reads the refit's p as 0.001.
+
+**Decided**
+- **No conclusion changed.** The flag is a same-day trainer check, the forecast gain isn't detected, and earlier warning needs a club's own data.
+
 ## 2026-11-27: Arozarena breakdown, second video study and the approach splits
 **Added**
 - **41 of his swings watched frame by frame on MLB.TV's archived broadcasts,** 28 from eight failure groups chosen before watching, each logged with release, foot down and contact times, a read (late, fooled, or on time with the wrong bat path) and a link to its Savant video page. Five have a second camera angle.
