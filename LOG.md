@@ -13,6 +13,13 @@ Newest first. One entry per working session: what was built, what was decided, w
 - **Tracking over the camera on timing.** By eye, his 2025 high-fastball misses looked later than 2026's; bat tracking on 305 swings says 2026's contact point was 3 inches deeper. That gap is about 2 ms, under one frame, so the report goes with the tracking.
 - **The conclusion and the projection are unchanged:** .169 to .180 ISO for 2027, and call 6 stands.
 
+## 2026-11-27: The Levonas amateur report, my first public amateur sample
+**Added**
+- **[Chris Levonas (RHP, Wake Forest, 2027 draft)](reports/amateur/2027-draft-chris-levonas.md)**, with its [one page](reports/amateur/2027-draft-chris-levonas.pdf): OFP 55, a No. 3-4 starter if the fastball command gets to average, high-leverage reliever as the fallback; 1st round, picks 10-20, at full slot. Graded from public data only, with the look still needed written out. The README has a new "Amateur scouting" section for it, and the "What a club gets" row links it.
+
+**Changed**
+- **Report pages can live in a subfolder.** `docs/build_pages.py` writes the header and footer links relative to the report's own folder, so `reports/amateur/` pages link back correctly, and the link test now reads `reports/amateur/` too.
+
 ## 2026-11-26: README links for the R and Bayes studies; small fixes
 **Added**
 - **The R rebuild and the PyMC model are linked from the README** (a research-table row and the R&D row), with numbers copied from their own READMEs: M = 54.5 swings in R vs 54.7 in Python, 79 of 79 checks; RMSE 4.94 vs 4.95 on 520 hitters, 95% coverage 95.8% for both.

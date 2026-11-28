@@ -16,6 +16,7 @@ import argparse
 import re
 import sys
 import textwrap
+import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -161,6 +162,11 @@ PAGES = [
          question="What changed across the league this month?",
          answer="Release tells, 292 candidate in-season pitch changes in 2026, results beyond stuff, and next-season whiff projections that cut error 6.4% on a held-out season against a regressed baseline.",
          club="A list of leads for pro scouts and coaches. The toolkit rebuilds it monthly; this page shows the Oct. 17 run."),
+    dict(slug="amateur/2027-draft-chris-levonas", short="Levonas report", dept="Amateur scouting",
+         status="reviewed", tags=["20-80 scouting", "draft base rates"],
+         question='What would an amateur scout write on one of the top college arms in the 2027 draft, from public data and public reporting alone?',
+         answer='Chris Levonas, Wake Forest RHP: OFP 55, a No. 3-4 starter if his fastball command gets to average, with a high-leverage reliever as the fallback. Starter call: Needs Development. Risk: high. Round range: 1st round, picks 10-20, at full slot.',
+         club='Put him on the preference list and send the first look to opening weekend in February 2027 with one job: fastball strikes and what he throws to left-handed hitters.'),
 ]
 SUPPORT = {  # supporting pages: navigation back to their parent only
     "2026-bullpen-one-page": "2026-bullpen-acquisition-memo",
@@ -213,11 +219,14 @@ def stamp_reports(only: set[str] | None = None) -> None:
             continue
         path = REPORTS / f"{p['slug']}.md"
         text = _strip_blocks(path.read_text())
-        nav = ["[← Portfolio](../README.md)"]
+        # a report can sit in a subfolder of reports/ (reports/amateur/): links are relative to its own folder
+        here = os.path.dirname(p["slug"]) or "."
+        rel = lambda slug: os.path.relpath(f"{slug}.md", here)
+        nav = [f"[← Portfolio]({os.path.relpath('../README.md', here)})"]
         if i > 0:
-            nav.append(f"[← {PAGES[i - 1]['short']}]({order[i - 1]}.md)")
+            nav.append(f"[← {PAGES[i - 1]['short']}]({rel(order[i - 1])})")
         if i + 1 < len(PAGES):
-            nav.append(f"[{PAGES[i + 1]['short']} →]({order[i + 1]}.md)")
+            nav.append(f"[{PAGES[i + 1]['short']} →]({rel(order[i + 1])})")
         navline = "<sub>" + " &nbsp;|&nbsp; ".join(nav) + "</sub>"
         title = next(ln[2:].strip() for ln in text.split("\n") if ln.startswith("# "))
         header = f"{H0}\n{navline}\n{H1}\n\n"

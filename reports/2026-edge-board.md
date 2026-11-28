@@ -1,5 +1,5 @@
 <!-- portfolio:header -->
-<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Skubal arsenal](2025-skubal-arsenal.md)</sub>
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Skubal arsenal](2025-skubal-arsenal.md) &nbsp;|&nbsp; [Levonas report →](amateur/2027-draft-chris-levonas.md)</sub>
 <!-- /portfolio:header -->
 
 # The Edge Board, 2026: a monthly league scan
@@ -101,7 +101,7 @@ Every season-over-season change is read against the league's: for each pitch typ
 
 <!-- portfolio:footer -->
 ---
-<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Skubal arsenal](2025-skubal-arsenal.md)</sub>
+<sub>[← Portfolio](../README.md) &nbsp;|&nbsp; [← Skubal arsenal](2025-skubal-arsenal.md) &nbsp;|&nbsp; [Levonas report →](amateur/2027-draft-chris-levonas.md)</sub>
 
 <sub>© 2026 Dylan Fanelli. All rights reserved. To cite: Fanelli, D. (2026). *The Edge Board, 2026: a monthly league scan*. Dylan Fanelli Baseball Analytics Portfolio. https://github.com/IForSureI/Dylan-Fanelli-Baseball-Analytics-Portfolio/blob/main/reports/2026-edge-board.md</sub>
 <!-- /portfolio:footer -->

@@ -27,7 +27,7 @@ def test_front_page_links_and_images_resolve():
 
 def test_report_pages_links_and_images_resolve():
     missing = []
-    for md in (ROOT / "reports").glob("*.md"):
+    for md in [*(ROOT / "reports").glob("*.md"), *(ROOT / "reports" / "amateur").glob("*.md")]:
         missing += [f"{md.name}: {t}" for t in _local_targets(md) if not (md.parent / t).resolve().exists()]
     assert not missing, missing
 

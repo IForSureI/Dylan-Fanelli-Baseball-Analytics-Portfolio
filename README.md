@@ -55,6 +55,12 @@ My baseball-operations research and tools, built on every public pitch of 2024â€
 | Can I call this winter's free-agent contracts better than MLB Trade Rumors, before they sign? | 38 calls dated Nov. 23, 2026, scored against MLBTR's as players sign. On last winter's class the edge came from one player: without Kyle Tucker my model and MLBTR were tied. So the board is a public test of whether last winter's pattern (shorter, richer deals; relievers paid more) repeats. | [Board](reports/2027-market-board.md) |
 | Was Tarik Skubal's 2025 change real? | Yes, and the change was his: he ranked at the 80thâ€“98th percentile on the changes, and the league didn't move. His changeup's 46.6% whiff rate (997 swings, 2024-25; 95% interval 43.6 to 49.7%) is an observed rate, not a regressed one. The page was written before 2026 and its "what to watch" list has not been scored. | [Report](reports/2025-skubal-arsenal.md) |
 
+## Amateur scouting
+
+| Question | Answer | Report |
+|---|---|---|
+| What would an amateur scout write on a top 2027 college arm, from public data alone? | Chris Levonas, Wake Forest RHP: OFP 55, a No. 3-4 starter if his fastball command gets to average, with a high-leverage reliever as the fallback. The slider is the separator (56.6% whiffs through Apr. 23); 38.9% strikeouts against 11.1% walks in 2026. Starter call: Needs Development. Risk high; 1st round, picks 10-20, at full slot. Grades are from public data, with the look still needed written out. | [Report](reports/amateur/2027-draft-chris-levonas.md), [one page](reports/amateur/2027-draft-chris-levonas.pdf) |
+
 The **Edge Board** is a league scan built by `bb edge` and `bb board` ([numbers](reports/2026-edge-board.md), from the Oct. 17 run). It covers:
 - release tells
 - candidate in-season pitch changes (292 in 2026, by 225 pitchers; shuffling game order gives about 33 by chance, 11% of the 292)
@@ -92,7 +98,7 @@ Ten quick charts on the 2026 postseason, from the Wild Card Series through the B
 | Player development | Which pitch-design changes stick and pay, and how is a plan tracked? | [Pitch-design levers](reports/2026-pitch-design-levers.md) |
 | Medical and performance | Does a velocity drop warn of an injury, and what alert can a trainer live with? | [IL early warning](reports/2026-il-early-warning.md) |
 | In-game strategy | Do pitches wear out, and should that change the hook? | [Pitch familiarity](reports/2026-league-pitch-familiarity.md), [exposure-aware hook](reports/2026-exposure-aware-hook.md) |
-| Amateur scouting | What is a pick worth, and what does a college line still add? | [Draft analytics](reports/2026-mlb-draft-analytics.md) |
+| Amateur scouting | What is a pick worth, and what does a college line still add? | [Draft analytics](reports/2026-mlb-draft-analytics.md), [Levonas report](reports/amateur/2027-draft-chris-levonas.md) |
 | R&D, every department | How much should we believe this number? | [Reliability Atlas](reports/2026-reliability-atlas.md), [R rebuild](reports/r/README.md), [Bayesian model](reports/bayes/README.md), [shape exposure](reports/2026-shape-exposure.md) |
 
 Every report page opens the same way: the question, the answer and what a club does with it, then the full work. The format is written down in the [report standard](docs/report-standard.md).
